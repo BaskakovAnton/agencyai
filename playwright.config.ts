@@ -1,15 +1,10 @@
-import { defineConfig, devices } from "@playwright/test";
 import { existsSync } from "node:fs";
-import { join } from "node:path";
+import { defineConfig, devices } from "@playwright/test";
 
-/** Шелл Playwright не наследует PATH с bun, поэтому подставляем абсолютный путь. */
-const home = process.env.USERPROFILE ?? process.env.HOME ?? "";
-const bunCandidates = [
-  process.env.BUN_BIN ?? "",
-  /bun/i.test(process.execPath) ? process.execPath : "",
-  home ? join(home, ".bun", "bin", process.platform === "win32" ? "bun.exe" : "bun") : "",
-].filter((candidate) => candidate.length > 0);
-const bunBin = bunCandidates.find((candidate) => existsSync(candidate)) ?? "bun";
+/** Рантайм для webServer: локально bun лежит вне PATH, в CI — в PATH. */
+const BUN = [process.env.BUN_BIN, "C:\\Users\\Pavel\\.bun\\bin\\bun.exe"].find(
+  (candidate): candidate is string => Boolean(candidate) && existsSync(candidate as string),
+) ?? "bun";
 
 export default defineConfig({
   testDir: "e2e",
@@ -22,7 +17,7 @@ export default defineConfig({
   },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
   webServer: {
-    command: `"${bunBin}" run scripts/serve-demo.ts`,
+    command: `"${BUN}" run scripts/serve-demo.ts`,
     url: "http://127.0.0.1:4321/index.html",
     reuseExistingServer: !process.env.CI,
     timeout: 30_000,
