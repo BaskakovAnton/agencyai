@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Плеер процессов — 37 ситуаций</title>
+<style>
+:root{
+  --bg:#f5f6f8; --panel:#fff; --border:#dbe0e6; --text:#1f2937; --muted:#6b7280;
+  --accent:#2563eb; --accent-dark:#1d4ed8; --accent-soft:#eaf0fd;
+  --human:#0f766e; --human-soft:#e6f6f4; --human-bd:#8fd6cf;
+  --contractor:#b8860b; --contractor-soft:#faf1d8; --contractor-bd:#e6c766;
+  --system:#475569; --system-soft:#eef1f6; --system-bd:#cfd5dd;
+  --observer:#374151; --observer-soft:#f3f4f6; --observer-bd:#d1d5db;
+  --ok-bg:#d9f2df; --ok-bd:#8fd6a4; --ok-tx:#166534;
+  --no-bg:#fde8e6; --no-bd:#f0a8a0; --no-tx:#991b1b;
+  --part-bg:#fdf3d0; --part-bd:#e6c766; --part-tx:#854d0e;
+  --radius:8px; --shadow:0 4px 14px rgba(15,23,42,.08);
+  --mono:Consolas,"Cascadia Mono",monospace;
+  --dim:0.3;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg); color:var(--text); font-size:13px; line-height:1.45;
+  font-family:"Segoe UI",Roboto,Arial,sans-serif; padding-bottom:40px;
+}
+a{color:var(--accent); text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+/* Шапка */
+header.app{
+  position:sticky; top:0; z-index:40; background:var(--panel);
+  border-bottom:1px solid var(--border); padding:10px 16px;
+}
+header.app h1{font-size:16px; margin:0 0 3px;}
+header.app .sub{color:var(--muted); font-size:12px; margin-bottom:8px; line-height:1.45;}
+.toolbar{display:flex; flex-wrap:wrap; gap:8px; align-items:center;}
+.toolbar .grow{flex:1 1 auto;}
+
+button,.btn{
+  cursor:pointer; border:1px solid var(--border); background:var(--panel);
+  border-radius:6px; padding:6px 10px; font-size:12px; color:var(--text);
+  font-family:inherit; display:inline-block;
+}
+button:hover,.btn:hover{background:#eef1f5; text-decoration:none;}
+button.primary{background:var(--accent); border-color:var(--accent-dark); color:#fff;}
+button.primary:hover{background:var(--accent-dark);}
+button:disabled{opacity:.4; cursor:not-allowed;}
+button.primary:disabled{background:var(--muted); border-color:var(--muted);}
+select,input[type=text],input[type=search]{
+  padding:6px 8px; border:1px solid var(--border); border-radius:6px;
+  font-size:12px; background:#fff; font-family:inherit; color:var(--text);
+}
+label.inline{display:inline-flex; align-items:center; gap:6px; color:var(--muted); font-size:11px;}
+
+/* Плеер */
+.player-wrap{
+  padding:12px 16px; background:var(--panel);
+  border-bottom:1px solid var(--border);
+}
+.player-bar{
+  display:flex; flex-wrap:wrap; gap:8px; align-items:center;
+}
+.player-bar button{min-width:36px; font-size:14px; padding:6px 10px;}
+.step-info{
+  flex:1 1 280px; min-width:200px; padding:4px 12px;
+  background:#f8fafc; border-left:3px solid var(--accent); border-radius:0 6px 6px 0;
+}
+.step-info .lane-badge{
+  display:inline-block; font-size:10.5px; font-weight:700;
+  padding:1px 7px; border-radius:4px; margin-right:6px;
+  text-transform:uppercase; letter-spacing:.03em;
+}
+.step-info .lane-badge.human     { background:var(--human-soft); color:var(--human); }
+.step-info .lane-badge.contractor{ background:var(--contractor-soft); color:var(--contractor); }
+.step-info .lane-badge.system    { background:var(--system-soft); color:var(--system); }
+.step-info .lane-badge.observer  { background:var(--observer-soft); color:var(--observer); }
+.step-info .step-title{font-weight:600; font-size:13px; line-height:1.3; display:inline;}
+.step-info .step-note{font-size:11.5px; color:var(--muted); margin-top:2px; line-height:1.4;}
+.counter{
+  font-family:var(--mono); font-size:11.5px; color:var(--muted); white-space:nowrap;
+}
+.progress{height:6px; background:#e5e7eb; border-radius:99px; overflow:hidden; margin-top:10px;}
+.progress > i{display:block; height:100%; background:var(--accent); width:0%; transition:width .3s ease;}
+
+/* Сценарий-заголовок */
+.scenario-head{
+  padding:12px 16px 0;
+}
+.scenario-head .sid{
+  font-family:var(--mono); font-size:11px; color:var(--muted); font-weight:700;
+}
+.scenario-head .stitle{
+  font-size:16px; font-weight:600; margin:2px 0 3px;
+}
+.scenario-head .ssum{
+  font-size:12px; color:var(--muted); line-height:1.5;
+}
+.scenario-head .sbadges{
+  display:flex; flex-wrap:wrap; gap:6px; margin-top:6px;
+}
+.badge{
+  display:inline-block; background:#eef1f6; border-radius:4px; padding:2px 6px;
+  font-size:11px; color:var(--muted); white-space:nowrap;
+}
+.badge.urgent{background:var(--no-bg); color:var(--no-tx);}
+.badge.normal{background:var(--part-bg); color:var(--part-tx);}
+.badge.sla{background:var(--accent-soft); color:var(--accent-dark);}
+
+/* Swim lanes */
+.swim-wrap{
+  padding:12px 16px 40px; overflow-x:auto;
+}
+.swim{
+  display:grid; gap:8px; min-width:max-content;
+  background:transparent;
+}
+.lane-label{
+  display:flex; align-items:center; justify-content:flex-start;
+  padding:10px 12px; border-radius:8px;
+  font-weight:700; font-size:12px; line-height:1.3;
+  background:var(--system-soft); color:var(--system);
+  white-space:nowrap;
+}
+.lane-label.human     { background:var(--human-soft); color:var(--human); }
+.lane-label.contractor{ background:var(--contractor-soft); color:var(--contractor); }
+.lane-label.system    { background:var(--system-soft); color:var(--system); }
+.lane-label.observer  { background:var(--observer-soft); color:var(--observer); }
+
+.node{
+  display:flex; flex-direction:column; gap:4px;
+  padding:9px 10px; border:1.5px solid var(--border); border-radius:10px;
+  background:#fff; color:inherit; text-align:left;
+  font:inherit; cursor:pointer; position:relative;
+  min-height:70px;
+  transition:transform .12s, box-shadow .12s, opacity .25s, border-color .2s;
+}
+.node:hover{transform:translateY(-1px); box-shadow:var(--shadow);}
+.node.visited{ border-color:var(--border); background:linear-gradient(#fff,#f8fafc); }
+.node.dim{ opacity:var(--dim); }
+.node.play-active{
+  outline:2px solid var(--accent); outline-offset:1px;
+  box-shadow:0 0 0 4px rgba(37,99,235,.14);
+  animation:pulse 1.6s ease-in-out infinite;
+}
+.node.play-active.human     { outline-color:var(--human); box-shadow:0 0 0 4px rgba(15,118,110,.15); animation-name:pulseHuman; }
+.node.play-active.contractor{ outline-color:var(--contractor); box-shadow:0 0 0 4px rgba(184,134,11,.15); animation-name:pulseContractor; }
+.node.play-active.observer  { outline-color:var(--observer); box-shadow:0 0 0 4px rgba(55,65,81,.15); }
+@keyframes pulse {
+  0%,100%{box-shadow:0 0 0 4px rgba(37,99,235,.14);}
+  50%{box-shadow:0 0 0 8px rgba(37,99,235,.05);}
+}
+@keyframes pulseHuman {
+  0%,100%{box-shadow:0 0 0 4px rgba(15,118,110,.15);}
+  50%{box-shadow:0 0 0 8px rgba(15,118,110,.05);}
+}
+@keyframes pulseContractor {
+  0%,100%{box-shadow:0 0 0 4px rgba(184,134,11,.15);}
+  50%{box-shadow:0 0 0 8px rgba(184,134,11,.05);}
+}
+.node.human     { border-left:3px solid var(--human-bd); }
+.node.contractor{ border-left:3px solid var(--contractor-bd); }
+.node.system    { border-left:3px solid var(--system-bd); }
+.node.observer  { border-left:3px solid var(--observer-bd); }
+.node .nid{
+  font-family:var(--mono); font-size:9.5px; color:var(--muted); font-weight:700;
+  display:flex; align-items:center; gap:4px;
+}
+.node .nid .check{color:var(--ok-tx);}
+.node .ntitle{
+  font-size:11.5px; font-weight:600; line-height:1.3; flex:1;
+  overflow-wrap:anywhere;
+}
+.node .nmsg{
+  font-size:10.5px; color:var(--muted); line-height:1.35;
+  overflow-wrap:anywhere;
+  display:none; /* показываем только в мобильной версии и в активном узле */
+}
+.node.play-active .nmsg{display:block;}
+
+/* Пустая ячейка в swim lane (пропуск) */
+.cell-empty{
+  border:1px dashed #eef1f4; border-radius:10px;
+  min-height:70px; background:transparent;
+}
+
+/* Мобильная версия */
+@media (max-width: 900px){
+  header.app{padding:9px 12px 10px;}
+  header.app h1{font-size:15px;}
+  .toolbar{gap:6px;}
+  select,input[type=search]{font-size:16px;}
+  .player-wrap{padding:10px 12px;}
+  .player-bar{gap:6px;}
+  .player-bar button{min-width:40px; min-height:40px;}
+  .step-info{padding:6px 10px; flex:1 1 100%; order:-1; margin-bottom:4px;}
+  .counter{font-size:11px;}
+  .scenario-head{padding:10px 12px 0;}
+  .scenario-head .stitle{font-size:14px;}
+  .swim-wrap{padding:10px 12px 100px; overflow-x:visible;}
+  .swim{
+    display:flex !important; flex-direction:column; gap:8px;
+    min-width:0;
+  }
+  .lane-label{display:none;}
+  .node{
+    width:100%; min-height:0;
+  }
+  .node .nmsg{display:block;}
+  .cell-empty{display:none;}
+}
+
+/* Плавающие кнопки плеера на мобильном */
+.player-dock{
+  display:none;
+}
+@media (max-width: 900px){
+  .player-dock{
+    display:flex; position:fixed; left:0; right:0; bottom:0; z-index:60;
+    gap:8px; padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px));
+    background:var(--panel); border-top:1px solid var(--border);
+    box-shadow:0 -4px 14px rgba(15,23,42,.10);
+  }
+  .player-dock button{
+    flex:1; min-height:46px; font-size:14px; font-weight:600;
+  }
+  .player-dock button.primary{background:var(--accent); border-color:var(--accent-dark); color:#fff;}
+}
+
+@media (max-width: 480px){
+  .scenario-head .stitle{font-size:13px;}
+  .step-info .step-title{font-size:12px;}
+  .step-info .step-note{font-size:11px;}
+}
+</style>
+</head>
+<body>
+
+<header class="app">
+  <h1>Плеер процессов — 37 ситуаций</h1>
+  <div class="sub">
+    Житель → депутат-диспетчер → подрядчик. Каждый узел — шаг в своей роли.
+    Нажмите ▶ или листайте ‹ › / стрелками клавиатуры. Клик по узлу — переход к нему.
+  </div>
+  <div class="toolbar">
+    <select id="scenarioSelect" style="min-width:280px;max-width:100%;"></select>
+    <button id="btnPrevScenario" title="Предыдущая ситуация">← ситуация</button>
+    <button id="btnNextScenario" title="Следующая ситуация">ситуация →</button>
+    <div class="grow"></div>
+    <label class="inline">Скорость
+      <select id="speedSelect">
+        <option value="3000">Медленно</option>
+        <option value="1600" selected>Обычно</option>
+        <option value="800">Быстро</option>
+      </select>
+    </label>
+    <a class="btn" href="index.html">← Матрица</a>
+    <a class="btn" href="process.html">37 ситуаций</a>
+  </div>
+</header>
+
+<div class="player-wrap">
+  <div class="player-bar">
+    <button id="btnReset" title="В начало (R)">⟲</button>
+    <button id="btnPrevStep" title="Назад (←)">‹</button>
+    <button id="btnPlay" class="primary" id="btnPlay" title="Играть (Space)">▶</button>
+    <button id="btnNextStep" title="Вперёд (→)">›</button>
+    <div class="step-info">
+      <span class="lane-badge" id="curLane">—</span>
+      <span class="step-title" id="curTitle">—</span>
+      <div class="step-note" id="curNote">—</div>
+    </div>
+    <span class="counter" id="counter">0 / 0</span>
+  </div>
+  <div class="progress"><i id="progressBar"></i></div>
+</div>
+
+<div class="scenario-head" id="scenarioHead"></div>
+<div class="swim-wrap">
+  <div class="swim" id="swim"></div>
+</div>
+
+<div class="player-dock">
+  <button id="btnPrevStepDock" title="Назад">‹</button>
+  <button id="btnPlayDock" class="primary" title="Играть">▶</button>
+  <button id="btnNextStepDock" title="Вперёд">›</button>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ── Роли ────────────────────────────────────────────────────────────── */
+  var LANES = {
+    resident:   { name:'Житель',       cls:'human' },
+    deputy:     { name:'Депутат',      cls:'human' },
+    assistant:  { name:'Помощник',     cls:'human' },
+    contractor: { name:'Подрядчик',    cls:'contractor' },
+    system:     { name:'Система',      cls:'system' },
+    observer:   { name:'Наблюдатель',  cls:'observer' }
+  };
+
+  /* ── Все 37 ситуаций ──────────────────────────────────────────────────
+     Каждый шаг: [роль, заголовок, сообщение / что происходит]
+     ──────────────────────────────────────────────────────────────────── */
+  var SCENARIOS = [
+    /* 8.1 ДО ПРИНЯТИЯ */
+    { id:'С1', title:'Житель подал неполно', summary:'Нет адреса, фото, конкретики.', sla:'1 раб. день', priority:'normal',
+      steps:[
+        ['resident', 'Неполное обращение', 'Житель подал без адреса и фото'],
+        ['deputy', 'Уточняет', 'Звонок жителю в течение 1 рабочего дня'],
+        ['system', 'Уточнение', 'Житель молчит 3 дня — SLA пересчитывается с момента ответа'],
+        ['deputy', 'Закрытие', 'Недоступен 10 дней — «Закрыто без ответа»']
+      ]},
+    { id:'С2', title:'Дубликат', summary:'Тот же житель, та же проблема.', priority:'normal',
+      steps:[
+        ['resident', 'Повторно', 'Пишет снова по той же проблеме'],
+        ['system', 'Проверка', 'Житель + адрес + категория за последние 30 дней'],
+        ['deputy', 'Объединение', 'Или новое с пометкой «повторное», если обстоятельства изменились'],
+        ['deputy', 'Ответ', 'Житель получает ответ по старому номеру']
+      ]},
+    { id:'С3', title:'Коллективное обращение', summary:'10+ подписей или ТСЖ.', priority:'normal',
+      steps:[
+        ['resident', 'Коллектив', '10+ подписей или ТСЖ'],
+        ['deputy', 'Регистрация', 'Атрибут «коллективное», приоритет +1'],
+        ['deputy', 'Публичный ответ', 'На доске в подъезде или на сайте']
+      ]},
+    { id:'С4', title:'Не по адресу', summary:'Федеральная или региональная проблема.', priority:'none',
+      steps:[
+        ['resident', 'Проблема не в зоне', 'Депутат не решает'],
+        ['deputy', 'Переадресация', 'В администрацию или профильный орган'],
+        ['deputy', 'Уведомление', 'Житель с контактом. Не закрывает без ответа']
+      ]},
+    { id:'С5', title:'Жалоба на депутата', summary:'Или на помощника. Конфликт интересов.', priority:'none',
+      steps:[
+        ['resident', 'Жалоба', 'На депутата или помощника'],
+        ['deputy', 'Передача', 'Председателю комиссии или руководству объединения'],
+        ['deputy', 'Не рассматривает сам', 'Правило: жалобу на себя — третьему лицу']
+      ]},
+    { id:'С6', title:'Личная просьба', summary:'Не про территорию. «Устроить в сад».', priority:'none',
+      steps:[
+        ['resident', 'Просьба', 'Не про территорию округа'],
+        ['deputy', 'Иное', 'Без SLA'],
+        ['deputy', 'Переадресация', 'В соцзащиту']
+      ]},
+    { id:'С7', title:'Анонимное обращение', summary:'Без ФИО. Ответ публичный.', priority:'normal',
+      steps:[
+        ['resident', 'Анонимно', 'Без ФИО'],
+        ['deputy', 'Регистрация', 'Без уточнений по контакту'],
+        ['deputy', 'Публичный ответ', 'На сайте или в соцсетях, если есть интерес']
+      ]},
+    { id:'С8', title:'Обращение от юрлица', summary:'ТСЖ или УК. Часто сигнал о неисполнении.', priority:'normal',
+      steps:[
+        ['resident', 'Обращение от ТСЖ/УК', 'Сигнал о неисполнении обязательств'],
+        ['deputy', 'Отдельная категория', 'SLA по договору с юрлицом'],
+        ['deputy', 'Проверка УК', 'Не сама ли УК не выполняет обязательства']
+      ]},
+
+    /* 8.2 В РАБОТЕ */
+    { id:'С9', title:'Срочная авария', summary:'Прорыв, нет тепла, обрыв, обрушение.', sla:'1 час', priority:'urgent',
+      steps:[
+        ['resident', 'Звонок', 'Прорыв трубы, нет тепла зимой'],
+        ['deputy', 'Звонок аварийке', 'Не ждёт электронного приёма, звонит лично'],
+        ['deputy', 'Регистрация', 'Параллельно, с пометкой «экстренно»'],
+        ['system', 'SLA 1 час', 'Таймер пошёл'],
+        ['deputy', 'Эскалация', 'Не берут трубку — руководителю аварийки и в администрацию']
+      ]},
+    { id:'С10', title:'Угроза жизни и здоровью', summary:'Обрушение, газ, оголённый провод.', sla:'Немедленно', priority:'urgent',
+      steps:[
+        ['resident', 'Опасность', 'Обрушение, газ, провод под напряжением'],
+        ['deputy', '112', 'Порядок: 112 → аварийная → администрация → житель'],
+        ['deputy', 'Регистрация после', 'Пометка «экстренно»'],
+        ['system', 'Приоритет', 'Наивысший, без задержек']
+      ]},
+    { id:'С11', title:'Подрядчик не отвечает', summary:'Молчание на заявку.', priority:'normal',
+      steps:[
+        ['deputy', 'Заявка', 'Отправлена подрядчику'],
+        ['contractor', 'Молчание', 'День 1'],
+        ['deputy', 'Звонок', 'День 2 — руководителю подрядчика'],
+        ['deputy', 'Письмо', 'День 3 — эскалация в администрацию'],
+        ['deputy', 'Жалоба', 'Если системно — в жилищную инспекцию или прокуратуру']
+      ]},
+    { id:'С12', title:'Подрядчик отказался', summary:'«Не наша зона», «нет денег».', priority:'normal',
+      steps:[
+        ['contractor', 'Отказ', '«Не наша зона», «нет денег», «нет техники»'],
+        ['deputy', 'Фиксация', 'Письменно, email'],
+        ['deputy', 'Альтернатива', 'Другой подрядчик или администрация, переадресация жителю'],
+        ['deputy', 'Жалоба', 'В надзорный орган, если отказ незаконен']
+      ]},
+    { id:'С13', title:'Просрочка подрядчика', summary:'Срок истёк, работы не завершены.', sla:'> 3 дней → администрация', priority:'normal',
+      steps:[
+        ['system', 'SLA истёк', 'Автоматическая эскалация руководителю'],
+        ['deputy', 'Звонок', 'Лично, фиксация попытки'],
+        ['deputy', 'Обращение', 'В администрацию или жилищную инспекцию'],
+        ['deputy', 'Уведомление', 'Жителю — с новой датой и причиной']
+      ]},
+    { id:'С14', title:'Переделка', summary:'Результат не соответствует задаче.', sla:'3 раб. дня на переделку', priority:'normal',
+      steps:[
+        ['contractor', 'Выполнено', 'Отметил «выполнено»'],
+        ['deputy', 'Проверка', 'Фото до / после, сверка с задачей'],
+        ['deputy', 'Переделка', '3 рабочих дня'],
+        ['deputy', 'Смена', 'При повторной переделке — через администрацию']
+      ]},
+    { id:'С15', title:'Житель не даёт доступ', summary:'Нет доступа в квартиру или к стояку.', priority:'normal',
+      steps:[
+        ['contractor', 'Нужен доступ', 'В квартиру, к стояку'],
+        ['resident', 'Отказ', 'Не пускает'],
+        ['system', 'SLA на паузе', 'Приостановлено'],
+        ['deputy', 'Связь', 'Объясняет необходимость'],
+        ['deputy', 'Уведомление', 'Перенос, возможно, суд']
+      ]},
+    { id:'С16', title:'Нужны согласования', summary:'Смежники, сети, Роспотребнадзор.', priority:'normal',
+      steps:[
+        ['deputy', 'Согласование', 'Смежники, сети, Роспотребнадзор'],
+        ['system', 'Приостановлено', 'SLA на паузе'],
+        ['deputy', 'Эскалация', '> 10 дней — эскалация'],
+        ['deputy', 'Уведомление', 'Жителю — причина и срок']
+      ]},
+    { id:'С17', title:'Погодные условия', summary:'Асфальт зимой, краска в дождь.', priority:'none',
+      steps:[
+        ['contractor', 'Нельзя по погоде', 'Асфальт зимой, краска в дождь'],
+        ['system', 'Приостановлено', 'С указанием причины'],
+        ['deputy', 'План на сезон', 'Уведомление жителя конкретной датой («май 2027»)'],
+        ['system', 'Не просрочка', 'Сезон — не нарушение SLA']
+      ]},
+    { id:'С18', title:'Нужно финансирование', summary:'Сверх бюджета.', priority:'none',
+      steps:[
+        ['deputy', 'Оценка', 'Заявка в администрацию, депутатский фонд, спонсоры'],
+        ['system', 'Приостановлено', '—'],
+        ['deputy', 'Уведомление', 'Житель о процессе'],
+        ['deputy', 'Переадресация', 'Если денег нет']
+      ]},
+    { id:'С19', title:'За пределами полномочий', summary:'Региональная дорога или федеральный объект.', priority:'none',
+      steps:[
+        ['resident', 'Проблема региональная', 'Например, дорога рег. значения'],
+        ['deputy', 'Переадресация', 'В администрацию региона'],
+        ['deputy', 'Уведомление', 'Житель — контакт и объяснение'],
+        ['deputy', 'Ходатайство', 'Может, но не отвечает за срок']
+      ]},
+    { id:'С20', title:'Житель отозвал обращение', summary:'Передумал.', priority:'none',
+      steps:[
+        ['resident', 'Отзыв', 'Передумал'],
+        ['system', 'Отозвано', 'Статус'],
+        ['deputy', 'Если в работе', 'Сообщить жителю — после завершения'],
+        ['system', 'Не нарушение', 'SLA не считается']
+      ]},
+    { id:'С21', title:'Житель недоволен ответом', summary:'Не согласен с решением.', priority:'normal',
+      steps:[
+        ['resident', 'Не согласен', 'С решением'],
+        ['deputy', 'Пересмотр', 'Лично'],
+        ['deputy', 'Эскалация', 'Руководителю объединения'],
+        ['deputy', 'Личный приём', 'Фиксация в протоколе'],
+        ['deputy', 'Комиссия', 'При системной проблеме']
+      ]},
+    { id:'С22', title:'Массовое обращение', summary:'Одна проблема — 50 заявок.', priority:'normal',
+      steps:[
+        ['resident', '50 заявок', 'Одна проблема'],
+        ['system', 'Объединение', 'В одну проблему (issue)'],
+        ['deputy', 'Один ответ', 'Всем жителям по одной ветке'],
+        ['deputy', 'Администрация', 'Отдельная коммуникация'],
+        ['system', 'Одна в отчёте', 'Не 50 заявок']
+      ]},
+    { id:'С23', title:'Повторное обращение', summary:'Пишет снова.', priority:'normal',
+      steps:[
+        ['resident', 'Снова пишет', 'Вернулась проблема или не была решена'],
+        ['deputy', 'Проверка', 'Рецидив или эскалация'],
+        ['deputy', 'Рецидив', 'Новое обращение с пометкой'],
+        ['deputy', 'Не решена', 'Эскалация + жалоба на подрядчика']
+      ]},
+    { id:'С24', title:'Вандализм', summary:'Сломали лавочку, разбили окно.', priority:'normal',
+      steps:[
+        ['resident', 'Порча', 'Сломали лавочку, разбили окно'],
+        ['deputy', 'Полиция', 'Заявление'],
+        ['deputy', 'Страховая', 'Если застраховано'],
+        ['contractor', 'Восстановление', 'Подрядчик'],
+        ['deputy', 'Координация', 'Не расследует']
+      ]},
+    { id:'С25', title:'Жалоба на другого подрядчика', summary:'Не в зоне ответственности.', priority:'none',
+      steps:[
+        ['resident', 'Жалоба', 'На другого подрядчика или службу'],
+        ['deputy', 'Не в зоне', 'Переадресация с контактом'],
+        ['deputy', 'Ходатайство', 'В администрацию, если системно']
+      ]},
+    { id:'С26', title:'Житель другого округа', summary:'Обратился не к своему.', priority:'none',
+      steps:[
+        ['resident', 'Чужой округ', 'Обратился не к своему депутату'],
+        ['deputy', 'Передача', 'Депутату того округа, с согласия'],
+        ['deputy', 'Или контакт', 'Переадресация с объяснением']
+      ]},
+    { id:'С27', title:'Нерабочее время', summary:'Вечер, выходной.', priority:'normal',
+      steps:[
+        ['resident', 'Вечер / выходной', 'Звонок или письмо'],
+        ['system', 'Первый рабочий день', 'Регистрация'],
+        ['deputy', 'Исключение — аварии', 'Принимает немедленно'],
+        ['system', 'После факта', 'Пометка «после факта»']
+      ]},
+    { id:'С28', title:'Двойное обращение', summary:'Звонок + email + соцсети.', priority:'normal',
+      steps:[
+        ['resident', 'Несколько каналов', 'Звонок + email + соцсети, один повод'],
+        ['system', 'Дедупликация', 'По телефону + тексту + адресу'],
+        ['deputy', 'Объединение', 'Житель получает один номер']
+      ]},
+
+    /* 8.3 ПОДРЯДЧИКИ */
+    { id:'С29', title:'Подрядчик не в системе', summary:'Нет API, только телефон.', priority:'normal',
+      steps:[
+        ['deputy', 'Заявка', 'Email или звонок'],
+        ['contractor', 'Ответ', 'По телефону или email'],
+        ['deputy', 'Фиксация', 'В системе вручную'],
+        ['system', 'Допустимо', 'Но требует дисциплины']
+      ]},
+    { id:'С30', title:'Аварийная служба 24/7', summary:'Всегда телефон + дежурный.', sla:'1 час', priority:'urgent',
+      steps:[
+        ['resident', 'Авария', 'Прорыв ночью'],
+        ['deputy', 'Звонок дежурному', 'Лично, не заявка'],
+        ['deputy', 'Регистрация', 'Параллельно']
+      ]},
+    { id:'С31', title:'Подрядчик — сам депутат', summary:'Конфликт интересов.', priority:'none',
+      steps:[
+        ['deputy', 'Заявка', 'Сам себе?'],
+        ['assistant', 'Проверка', 'Вместо депутата'],
+        ['deputy', 'Не закрывает', 'Правило: свою работу не проверяет']
+      ]},
+    { id:'С32', title:'Сезонные работы', summary:'Снег, ямочный ремонт, озеленение.', sla:'в течение сезона', priority:'routine',
+      steps:[
+        ['deputy', 'План', 'На сезон'],
+        ['system', 'SLA — сезон', 'В течение сезона'],
+        ['deputy', 'Отчёт', 'Запланировано / выполнено']
+      ]},
+    { id:'С33', title:'Ведомственная подчинённость', summary:'МЧС, МВД, скорая.', priority:'urgent',
+      steps:[
+        ['resident', 'Обращение через депутата', 'МЧС, МВД, скорая'],
+        ['deputy', '112', 'Не диспетчеризует сам'],
+        ['deputy', 'Координация', 'С дежурным'],
+        ['system', 'Внешняя служба', 'Пометка']
+      ]},
+
+    /* 8.4 ОТЧЁТНОСТЬ */
+    { id:'С34', title:'Житель хочет знать статус', summary:'Что с обращением.', priority:'none',
+      steps:[
+        ['resident', 'Спрашивает', 'Что с обращением'],
+        ['system', 'Личный кабинет', 'Или SMS, или звонок в приёмную'],
+        ['system', 'Статусы', 'Принято / Назначено / В работе / Выполнено / Закрыто']
+      ]},
+    { id:'С35', title:'Жалоба на депутата', summary:'Отдельный контур.', priority:'none',
+      steps:[
+        ['resident', 'Жалоба', 'На депутата'],
+        ['deputy', 'Отдельно', 'Регистрируется отдельно'],
+        ['deputy', 'Руководству', 'Не рассматривает сам']
+      ]},
+    { id:'С36', title:'Ежемесячный отчёт', summary:'Автоматический свод.', priority:'none',
+      steps:[
+        ['system', 'Свод', 'Обращения, категории, сроки, топ подрядчиков по просрочкам'],
+        ['deputy', 'Публикация', 'На сайте и в соцсетях']
+      ]},
+    { id:'С37', title:'Запрос от прокуратуры', summary:'Выгрузка с аудитом.', priority:'none',
+      steps:[
+        ['observer', 'Запрос', 'От прокуратуры или администрации'],
+        ['system', 'Выгрузка', 'С журналом действий'],
+        ['observer', 'Только для наблюдателей', 'Остальные роли не видят']
+      ]}
+  ];
+
+  /* ── Утилиты ─────────────────────────────────────────────────────────── */
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function laneCls(l){ return (LANES[l]||{}).cls || 'system'; }
+  function laneName(l){ return (LANES[l]||{}).name || l; }
+  function priorityBadge(p){
+    if (p==='urgent') return '<span class="badge urgent">Авария</span>';
+    if (p==='normal') return '<span class="badge normal">Неотложное</span>';
+    if (p==='routine') return '<span class="badge">Обычное</span>';
+    return '<span class="badge">Вне SLA</span>';
+  }
+
+  /* ── Состояние ──────────────────────────────────────────────────────── */
+  var state = {
+    scenarioIdx: 0,
+    step: 0,
+    playing: false,
+    timer: null,
+    speed: 1600
+  };
+
+  function cur() { return SCENARIOS[state.scenarioIdx]; }
+  function curStep() { return cur().steps[state.step]; }
+
+  /* ── Рендер: сценарий-заголовок ──────────────────────────────────────── */
+  function renderHead() {
+    var s = cur();
+    document.getElementById('scenarioHead').innerHTML =
+      '<div class="sid">' + esc(s.id) + ' · ситуация ' + (state.scenarioIdx + 1) + ' из ' + SCENARIOS.length + '</div>' +
+      '<div class="stitle">' + esc(s.title) + '</div>' +
+      '<div class="ssum">' + esc(s.summary) + '</div>' +
+      '<div class="sbadges">' +
+        priorityBadge(s.priority) +
+        (s.sla ? '<span class="badge sla">⏱ ' + esc(s.sla) + '</span>' : '') +
+        '<span class="badge">' + s.steps.length + ' шаг' + (s.steps.length>1?'а':'') + '</span>' +
+        '<span class="badge">' + uniqueLanes(s).length + ' рол' + (uniqueLanes(s).length>1?'и':'ь') + '</span>' +
+      '</div>';
+  }
+
+  function uniqueLanes(s) {
+    var seen = {};
+    var arr = [];
+    s.steps.forEach(function(st){ if (!seen[st[0]]) { seen[st[0]] = true; arr.push(st[0]); } });
+    return arr;
+  }
+
+  /* ── Рендер: swim lanes ──────────────────────────────────────────────── */
+  function renderSwim() {
+    var s = cur();
+    var lanes = uniqueLanes(s);
+    var N = s.steps.length;
+
+    var html = '';
+
+    // На десктопе — с колонкой подписей, на мобильном её скрывает CSS
+    var gridStyle = 'grid-template-columns: 140px repeat(' + N + ', minmax(150px, 1fr));';
+    html += '<div style="display:contents;" data-grid-cols="' + gridStyle + '"></div>';
+
+    // Подписи ролей — 1 колонка, по строке на роль
+    lanes.forEach(function(lane, i) {
+      html += '<div class="lane-label ' + laneCls(lane) + '" style="grid-row:' + (i+1) + ';grid-column:1;">' +
+        esc(laneName(lane)) +
+      '</div>';
+    });
+
+    // Узлы — по шагам
+    s.steps.forEach(function(st, i) {
+      var laneIdx = lanes.indexOf(st[0]);
+      var cls = 'node ' + laneCls(st[0]);
+      if (i === state.step) cls += ' play-active';
+      else if (i < state.step) cls += ' visited';
+      else cls += ' dim';
+      var check = i < state.step ? '<span class="check">✓</span>' : '';
+      html += '<button class="' + cls + '" data-step="' + i + '" style="grid-row:' + (laneIdx+1) + ';grid-column:' + (i+2) + ';">' +
+        '<span class="nid">' + check + ' шаг ' + (i+1) + ' · ' + esc(laneName(st[0])) + '</span>' +
+        '<span class="ntitle">' + esc(st[1]) + '</span>' +
+        '<span class="nmsg">' + esc(st[2]) + '</span>' +
+      '</button>';
+    });
+
+    var swim = document.getElementById('swim');
+    swim.style.gridTemplateColumns = '140px repeat(' + N + ', minmax(150px, 1fr))';
+    swim.innerHTML = html;
+  }
+
+  /* ── Рендер: плеер-бар ───────────────────────────────────────────────── */
+  function renderPlayer() {
+    var s = cur();
+    var st = curStep();
+
+    document.getElementById('curLane').className = 'lane-badge ' + laneCls(st[0]);
+    document.getElementById('curLane').textContent = laneName(st[0]);
+    document.getElementById('curTitle').textContent = st[1];
+    document.getElementById('curNote').textContent = st[2];
+
+    document.getElementById('counter').textContent = 'Шаг ' + (state.step + 1) + ' / ' + s.steps.length;
+
+    var pct = s.steps.length > 1 ? Math.round((state.step + 1) / s.steps.length * 100) : 100;
+    document.getElementById('progressBar').style.width = pct + '%';
+
+    var atStart = state.step === 0;
+    var atEnd = state.step === s.steps.length - 1;
+
+    document.getElementById('btnPrevStep').disabled = atStart;
+    document.getElementById('btnNextStep').disabled = atEnd;
+    document.getElementById('btnPrevStepDock').disabled = atStart;
+    document.getElementById('btnNextStepDock').disabled = atEnd;
+    document.getElementById('btnPrevScenario').disabled = state.scenarioIdx === 0;
+    document.getElementById('btnNextScenario').disabled = state.scenarioIdx === SCENARIOS.length - 1;
+  }
+
+  /* ── Полный рендер ───────────────────────────────────────────────────── */
+  function render() {
+    renderHead();
+    renderSwim();
+    renderPlayer();
+  }
+
+  /* ── Навигация по шагам ─────────────────────────────────────────────── */
+  function goToStep(idx) {
+    var s = cur();
+    if (idx < 0) idx = 0;
+    if (idx >= s.steps.length) idx = s.steps.length - 1;
+    state.step = idx;
+    render();
+  }
+  function nextStep() { goToStep(state.step + 1); }
+  function prevStep() { goToStep(state.step - 1); }
+
+  /* ── Навигация по сценариям ─────────────────────────────────────────── */
+  function goToScenario(idx) {
+    if (idx < 0) idx = 0;
+    if (idx >= SCENARIOS.length) idx = SCENARIOS.length - 1;
+    pause();
+    state.scenarioIdx = idx;
+    state.step = 0;
+    document.getElementById('scenarioSelect').value = idx;
+    render();
+  }
+  function nextScenario() { goToScenario(state.scenarioIdx + 1); }
+  function prevScenario() { goToScenario(state.scenarioIdx - 1); }
+
+  /* ── Плеер ──────────────────────────────────────────────────────────── */
+  function tick() {
+    if (!state.playing) return;
+    var s = cur();
+    if (state.step >= s.steps.length - 1) { pause(); return; }
+    nextStep();
+    state.timer = setTimeout(tick, state.speed);
+  }
+  function play() {
+    if (state.playing) return;
+    var s = cur();
+    if (state.step >= s.steps.length - 1) goToStep(0);
+    state.playing = true;
+    updatePlayButton();
+    state.timer = setTimeout(tick, state.speed);
+  }
+  function pause() {
+    state.playing = false;
+    if (state.timer) { clearTimeout(state.timer); state.timer = null; }
+    updatePlayButton();
+  }
+  function togglePlay() { if (state.playing) pause(); else play(); }
+  function updatePlayButton() {
+    var t = state.playing ? '⏸' : '▶';
+    var b1 = document.getElementById('btnPlay');
+    var b2 = document.getElementById('btnPlayDock');
+    if (b1) b1.textContent = t;
+    if (b2) b2.textContent = t;
+  }
+  function reset() { pause(); goToStep(0); }
+
+  /* ── Заполнение селектора ───────────────────────────────────────────── */
+  function fillSelect() {
+    var sel = document.getElementById('scenarioSelect');
+    sel.innerHTML = SCENARIOS.map(function(s, i) {
+      return '<option value="' + i + '">' + esc(s.id + ' · ' + s.title) + '</option>';
+    }).join('');
+    sel.value = state.scenarioIdx;
+  }
+
+  /* ── События ────────────────────────────────────────────────────────── */
+  document.getElementById('scenarioSelect').addEventListener('change', function(e){
+    goToScenario(parseInt(e.target.value, 10));
+  });
+  document.getElementById('btnPrevScenario').addEventListener('click', prevScenario);
+  document.getElementById('btnNextScenario').addEventListener('click', nextScenario);
+
+  document.getElementById('btnReset').addEventListener('click', reset);
+  document.getElementById('btnPrevStep').addEventListener('click', function(){ pause(); prevStep(); });
+  document.getElementById('btnNextStep').addEventListener('click', function(){ pause(); nextStep(); });
+  document.getElementById('btnPlay').addEventListener('click', togglePlay);
+
+  document.getElementById('btnPrevStepDock').addEventListener('click', function(){ pause(); prevStep(); });
+  document.getElementById('btnNextStepDock').addEventListener('click', function(){ pause(); nextStep(); });
+  document.getElementById('btnPlayDock').addEventListener('click', togglePlay);
+
+  document.getElementById('speedSelect').addEventListener('change', function(e){
+    state.speed = parseInt(e.target.value, 10);
+    if (state.playing) { clearTimeout(state.timer); state.timer = setTimeout(tick, state.speed); }
+  });
+
+  document.getElementById('swim').addEventListener('click', function(e){
+    var node = e.target.closest('.node'); if (!node) return;
+    pause();
+    goToStep(parseInt(node.dataset.step, 10));
+  });
+
+  document.addEventListener('keydown', function(e){
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowLeft') { e.preventDefault(); pause(); prevStep(); }
+    else if (e.key === 'ArrowRight') { e.preventDefault(); pause(); nextStep(); }
+    else if (e.key === ' ') { e.preventDefault(); togglePlay(); }
+    else if (e.key === 'r' || e.key === 'R' || e.key === 'к' || e.key === 'К') { reset(); }
+    else if (e.key === 'Escape') { pause(); }
+  });
+
+  /* ── Старт ──────────────────────────────────────────────────────────── */
+  fillSelect();
+  render();
+}());
+</script>
+
+</body>
+</html>
