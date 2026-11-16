@@ -1,9 +1,18 @@
 import { buildSummary } from "../core/report.ts";
+import { ROLE_IDS, ROLE_NAMES } from "../data/roles.ts";
 import { renderList, renderSelected } from "./card.ts";
 import type { WebState } from "./session.ts";
 
 const esc = (s: string): string =>
   s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c] as string);
+
+const roleSwitch = (state: WebState): string =>
+  ROLE_IDS.map(
+    (id) =>
+      '<button data-action="role" data-role="' + id + '"' + (id === state.session.role ? ' class="on"' : "") + ">" +
+      esc(ROLE_NAMES[id]) +
+      "</button>",
+  ).join(" ");
 
 /** Полная разметка страницы — собирается из состояния целиком. */
 export const renderPage = (state: WebState, message: string): string => {
@@ -17,8 +26,9 @@ export const renderPage = (state: WebState, message: string): string => {
       '<button data-action="reset">Сбросить (seed ' + state.seed + ")</button>" +
       "</div>",
     "</header>",
+    '<div class="rolebar"><span class="hint">Оператор:</span> <b>' + esc(ROLE_NAMES[state.session.role]) + "</b> " + roleSwitch(state) + "</div>",
     message ? '<p class="msg">' + esc(message) + "</p>" : "",
     '<main class="cols"><section class="list">' + renderList(state) + '</section><aside class="side">' + renderSelected(state) + "</aside></main>",
-    '<footer class="foot">Вся логика — в этом бандле: ядро модели, данные узлов и переходы. Без сети и сервера.</footer>',
+    '<footer class="foot">Вся логика — в этом бандле: ядро модели, данные узлов, права ролей и переходы. Без сети и сервера.</footer>',
   ].join("");
 };

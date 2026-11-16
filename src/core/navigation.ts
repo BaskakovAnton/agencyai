@@ -1,6 +1,8 @@
-import type { Graph, Incident, MoveResult } from "../types.ts";
+import type { Graph, Incident, MoveResult, RoleId } from "../types.ts";
 import { branchesOf, isNeighbor, neighborsOf } from "./graph.ts";
 import { withMove } from "./incident.ts";
+import { denyReason, roleAccess } from "./roles.ts";
+import { ROLE_NAMES } from "../data/roles.ts";
 import { pick, pickWeighted } from "../random.ts";
 
 export type Actor = "operator" | "auto" | "generator";
@@ -57,6 +59,49 @@ export const moveBackward = (
     return { ok: false, error: incident.id + ": узел " + incident.nodeId + " — начало процесса" };
   }
   return { ok: true, incident: withMove(incident, pick(prev, rand), actor, step, "шаг назад") };
+};
+
+/** Варианты перехода, доступные роли (по правам узла назначения). */
+export const allowedNext = (graph: Graph, nodeId: string, role: RoleId): readonly string[] =>
+  neighborsOf(graph, nodeId).next.filter((to) => roleAccess(graph, to, role).allowed);
+
+/** Заявка упирается в права: дальше идти некому (архив, а не удаление). */
+export const isArchived = (graph: Graph, incident: Incident, role: RoleId): boolean =>
+  allowedNext(graph, incident.nodeId, role).length === 0;
+
+/** Переход на соседний узел с проверкой прав роли. */
+export const moveToNodeAs = (
+  graph: Graph,
+  incident: Incident,
+  target: string,
+  step: number,
+  role: RoleId,
+): MoveResult => {
+  if (!roleAccess(graph, target, role).allowed) {
+    return { ok: false, error: denyReason(graph, target, role) };
+  }
+  return moveToNode(graph, incident, target, step, role === "system" ? "auto" : "operator");
+};
+
+/** Шаг вперёд с проверкой прав: выбираются только доступные роли варианты. */
+export const moveForwardAs = (
+  graph: Graph,
+  incident: Incident,
+  rand: () => number,
+  step: number,
+  role: RoleId,
+): MoveResult => {
+  const options = allowedNext(graph, incident.nodeId, role);
+  if (options.length === 0) {
+    return {
+      ok: false,
+      error: incident.id + ": узел " + incident.nodeId + " — нет доступных переходов для роли " + ROLE_NAMES[role],
+    };
+  }
+  const branch = branchesOf(graph, incident.nodeId).filter((b) => options.includes(b.to));
+  const target = branch.length > 0 ? pickWeighted(branch, (b) => b.weight, rand).to : pick(options, rand);
+  const actor = role === "system" ? "auto" : "operator";
+  return { ok: true, incident: withMove(incident, target, actor, step, "шаг вперёд (роль " + role + ")") };
 };
 
 /** Прогон: каждая заявка получает один шаг вперёд, если это возможно. */

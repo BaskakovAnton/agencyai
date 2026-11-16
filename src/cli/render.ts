@@ -1,6 +1,7 @@
-import type { Graph, Incident, Priority } from "../types.ts";
+import type { Graph, Incident, Priority, RoleId } from "../types.ts";
 import { ACCESS_MARKS, GROUP_TITLES, PRIORITY_TITLES, ROLE_IDS, ROLE_NAMES } from "../data/roles.ts";
 import { branchesOf, neighborsOf } from "../core/graph.ts";
+import { roleAccess } from "../core/roles.ts";
 import { branchShares } from "../data/edges.ts";
 import { sortIncidents } from "../core/incident.ts";
 
@@ -37,7 +38,7 @@ export const renderIncidentList = (graph: Graph, incidents: readonly Incident[])
 };
 
 /** Карточка заявки: состояние, соседи, история. */
-export const renderIncidentCard = (graph: Graph, incident: Incident): string => {
+export const renderIncidentCard = (graph: Graph, incident: Incident, role?: RoleId): string => {
   const node = graph.byId[incident.nodeId];
   const { prev, next } = neighborsOf(graph, incident.nodeId);
   const lines: string[] = [];
@@ -48,6 +49,10 @@ export const renderIncidentCard = (graph: Graph, incident: Incident): string => 
   lines.push("  назад: " + (prev.join(", ") || "— начало процесса") + " · вперёд: " + (next.join(", ") || "— конец процесса"));
   const branch = branchText(graph, incident.nodeId);
   if (branch) lines.push(branch);
+  if (role) {
+    const access = roleAccess(graph, incident.nodeId, role);
+    lines.push("  роль оператора: " + ROLE_NAMES[role] + " · на этом узле: " + access.level + " (" + access.caveat + ")" + (access.allowed ? "" : " — переходы сюда запрещены"));
+  }
   if (incident.history.length > 0) {
     lines.push("  история:");
     incident.history.slice(-6).forEach((m) => {
@@ -61,7 +66,7 @@ export const renderIncidentCard = (graph: Graph, incident: Incident): string => 
 };
 
 /** Карточка узла: описание, права ролей, соседи. */
-export const renderNodeCard = (graph: Graph, nodeId: string): string => {
+export const renderNodeCard = (graph: Graph, nodeId: string, role?: RoleId): string => {
   const node = graph.byId[nodeId];
   if (!node) return "неизвестный узел: " + nodeId;
   const { prev, next } = neighborsOf(graph, nodeId);
@@ -72,8 +77,9 @@ export const renderNodeCard = (graph: Graph, nodeId: string): string => {
   const branch = branchText(graph, nodeId);
   if (branch) lines.push(branch);
   lines.push("  доступ ролей:");
-  ROLE_IDS.forEach((role) => {
-    lines.push("    " + ACCESS_MARKS[node.access[role]] + " " + pad(ROLE_NAMES[role] + " ", 18) + node.access[role]);
+  ROLE_IDS.forEach((id) => {
+    const mark = id === role ? " ←" : "";
+    lines.push("    " + ACCESS_MARKS[node.access[id]] + " " + pad(ROLE_NAMES[id] + " ", 18) + node.access[id] + mark);
   });
   return lines.join("\n");
 };
@@ -93,6 +99,8 @@ export const renderGraphTable = (graph: Graph): string => {
 export const renderHelp = (): string =>
   [
     "Команды оператора:",
+    "  role contractor       — роль оператора (deputy, assistant, contractor, system, resident, observer, auditor)",
+    "  role                  — показать текущую роль",
     "  graph                 — список узлов процесса",
     "  node U7               — карточка узла (права ролей, соседи)",
     "  list                  — список заявок с текущими узлами",

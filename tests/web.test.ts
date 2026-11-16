@@ -83,6 +83,23 @@ test("карточка на узле с развилкой показывает 
   expect(html).toContain("60%");
 });
 
+test("страница показывает роль оператора и блокирует недоступный переход", async () => {
+  const mod = (await import(pathToFileURL(join(outDir, "app.js")).href)) as Record<string, any>;
+  const graph = mod.buildProcessGraph(mod.NODES);
+  const base = mod.createState(graph, 7);
+  const asContractor = mod.applyAction(base, { kind: "role", role: "contractor" });
+  expect(asContractor.state.session.role).toBe("contractor");
+  const atU18 = {
+    ...asContractor.state,
+    selected: asContractor.state.session.incidents.find((i: any) => i.nodeId === "U18").id,
+  };
+  const denied = mod.applyAction(atU18, { kind: "move", ref: atU18.selected, nodeId: "U19" });
+  expect(String(denied.message).toLowerCase()).toContain("не может");
+  const html = mod.renderPage(atU18, denied.message);
+  expect(html).toContain("Оператор");
+  expect(html).toContain("Подрядчик");
+});
+
 test("html самодостаточен: локальные ресурсы, viewport, русская локаль", () => {
   expect(page).toContain('lang="ru"');
   expect(page).toContain("viewport");

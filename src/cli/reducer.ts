@@ -1,5 +1,6 @@
-import type { Graph, Incident, Session } from "../types.ts";
-import { moveBackward, moveForward, moveToNode } from "../core/navigation.ts";
+import type { Graph, Incident, RoleId, Session } from "../types.ts";
+import { moveBackward, moveForwardAs, moveToNodeAs } from "../core/navigation.ts";
+import { ROLE_IDS, ROLE_NAMES } from "../data/roles.ts";
 import { buildFinalState, buildSummary, renderSummary } from "../core/report.ts";
 import { renderGraphTable, renderHelp, renderIncidentCard, renderIncidentList, renderNodeCard } from "./render.ts";
 import type { Command } from "./commands.ts";
@@ -18,6 +19,18 @@ export { normalizeRef } from "../core/refs.ts";
 import { findIncidentByRef } from "../core/refs.ts";
 
 const findIncident = (session: Session, ref: string): Incident | undefined => findIncidentByRef(session, ref);
+
+/** Разбор роли: id, русское название или префикс. */
+export const resolveRole = (input: string | null): RoleId | null => {
+  if (!input) return null;
+  const value = input.trim().toLowerCase();
+  const byId = ROLE_IDS.find((role) => role === value || role.startsWith(value));
+  if (byId) return byId;
+  const byName = ROLE_IDS.find((role) => ROLE_NAMES[role].toLowerCase().startsWith(value));
+  return byName ?? null;
+};
+
+const roleOf = (session: Session): RoleId => session.role ?? "deputy";
 
 const replace = (session: Session, incident: Incident): Session => ({
   ...session,
@@ -57,16 +70,29 @@ export const applyCommand = (
       if (!incident) return { ...base, output: ["заявка не найдена: " + command.ref] };
       return { ...base, output: [renderIncidentCard(graph, incident)] };
     }
+    case "role": {
+      if (command.role === null) {
+        return { ...base, output: ["роль оператора: " + ROLE_NAMES[roleOf(session)] + " (" + roleOf(session) + ")"] };
+      }
+      const role = resolveRole(command.role);
+      if (!role) return { ...base, output: ["неизвестная роль: " + command.role + " — доступны " + ROLE_IDS.join(", ")] };
+      return {
+        ...base,
+        session: { ...session, role },
+        output: ["роль оператора: " + ROLE_NAMES[role] + " (" + role + ") — переходы проверяются по правам этой роли"],
+      };
+    }
     case "forward": case "back": case "move": {
       const incident = findIncident(session, command.ref);
       if (!incident) return { ...base, output: ["заявка не найдена: " + command.ref] };
       const step = session.step + 1;
+      const role = roleOf(session);
       const result =
         command.kind === "forward"
-          ? moveForward(graph, incident, rand, step, "operator")
+          ? moveForwardAs(graph, incident, rand, step, role)
           : command.kind === "back"
             ? moveBackward(graph, incident, rand, step, "operator")
-            : moveToNode(graph, incident, command.nodeId, step, "operator");
+            : moveToNodeAs(graph, incident, command.nodeId, step, role);
       if (!result.ok) return { ...base, output: ["отказ: " + result.error] };
       const moved = result.incident;
       const nextSession: Session = {
@@ -83,7 +109,7 @@ export const applyCommand = (
       for (let k = 0; k < 3; k += 1) {
         const step = current.step + 1;
         const moved = current.incidents.map((i) => {
-          const r = moveForward(graph, i, rand, step, "auto");
+          const r = moveForwardAs(graph, i, rand, step, "system");
           return r.ok ? r.incident : i;
         });
         const changed = moved.filter((m, idx) => m.nodeId !== current.incidents[idx]?.nodeId).length;

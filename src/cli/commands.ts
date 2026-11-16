@@ -8,6 +8,7 @@ export type Command =
   | { readonly kind: "forward"; readonly ref: string }
   | { readonly kind: "back"; readonly ref: string }
   | { readonly kind: "move"; readonly ref: string; readonly nodeId: string }
+  | { readonly kind: "role"; readonly role: string | null }
   | { readonly kind: "sweep" }
   | { readonly kind: "report" }
   | { readonly kind: "save" }
@@ -31,6 +32,7 @@ export const parseCommand = (raw: string): Command => {
     case "forward": case "next": case "fwd": return a ? { kind: "forward", ref: a } : { kind: "unknown", raw };
     case "back": case "prev": return a ? { kind: "back", ref: a } : { kind: "unknown", raw };
     case "move": return a && b ? { kind: "move", ref: a, nodeId: b.toUpperCase() } : { kind: "unknown", raw };
+    case "role": case "роль": return { kind: "role", role: a ?? null };
     case "sweep": case "run": return { kind: "sweep" };
     case "report": return { kind: "report" };
     case "save": return { kind: "save" };

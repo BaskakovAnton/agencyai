@@ -1,10 +1,10 @@
-import type { Graph, Incident, Session } from "../types.ts";
+import type { Graph, Incident, RoleId, Session } from "../types.ts";
 import { generateIncidents } from "../core/generator.ts";
-import { moveBackward, moveForward, moveToNode } from "../core/navigation.ts";
+import { moveBackward, moveForwardAs, moveToNodeAs } from "../core/navigation.ts";
 import { resolveIncident } from "../core/refs.ts";
 import { mulberry32 } from "../random.ts";
 
-/** Состояние страницы: граф, сессия, PRNG и выбранная заявка. */
+/** Состояние страницы: граф, сессия с ролью оператора, PRNG и выбранная заявка. */
 export interface WebState {
   readonly graph: Graph;
   readonly session: Session;
@@ -19,6 +19,7 @@ export type Action =
   | { readonly kind: "move"; readonly ref: string; readonly nodeId: string }
   | { readonly kind: "sweep" }
   | { readonly kind: "select"; readonly ref: string }
+  | { readonly kind: "role"; readonly role: RoleId }
   | { readonly kind: "reset" };
 
 export interface ActionResult {
@@ -26,9 +27,9 @@ export interface ActionResult {
   readonly message: string;
 }
 
-export const createState = (graph: Graph, seed: number): WebState => ({
+export const createState = (graph: Graph, seed: number, role: RoleId = "deputy"): WebState => ({
   graph,
-  session: { step: 0, incidents: generateIncidents(graph, mulberry32(seed)), log: [] },
+  session: { step: 0, role, incidents: generateIncidents(graph, mulberry32(seed)), log: [] },
   rand: mulberry32(seed + 1),
   seed,
   selected: "",
@@ -41,12 +42,13 @@ const replace = (session: Session, incident: Incident): Session => ({
 
 const move = (state: WebState, action: Action, incident: Incident): ActionResult => {
   const step = state.session.step + 1;
+  const role = state.session.role;
   const result =
     action.kind === "forward"
-      ? moveForward(state.graph, incident, state.rand, step, "operator")
+      ? moveForwardAs(state.graph, incident, state.rand, step, role)
       : action.kind === "back"
         ? moveBackward(state.graph, incident, state.rand, step, "operator")
-        : moveToNode(state.graph, incident, (action as { nodeId: string }).nodeId, step, "operator");
+        : moveToNodeAs(state.graph, incident, (action as { nodeId: string }).nodeId, step, role);
   if (!result.ok) return { state: { ...state, selected: incident.id }, message: result.error };
   const moved = result.incident;
   return {
@@ -66,8 +68,13 @@ const move = (state: WebState, action: Action, incident: Incident): ActionResult
 /** Операторское действие — чистая функция: состояние + действие → новое состояние. */
 export const applyAction = (state: WebState, action: Action): ActionResult => {
   if (action.kind === "reset") {
-    const fresh = createState(state.graph, state.seed);
-    return { state: fresh, message: "состояние сброшено, seed " + state.seed };
+    return { state: createState(state.graph, state.seed, state.session.role), message: "состояние сброшено, seed " + state.seed };
+  }
+  if (action.kind === "role") {
+    return {
+      state: { ...state, session: { ...state.session, role: action.role } },
+      message: "роль оператора: " + action.role,
+    };
   }
   if (action.kind === "select") {
     const found = resolveIncident(state.session, action.ref);
@@ -81,7 +88,7 @@ export const applyAction = (state: WebState, action: Action): ActionResult => {
     for (let i = 0; i < 3; i += 1) {
       const step = current.session.step + 1;
       const next = current.session.incidents.map((incident) => {
-        const result = moveForward(current.graph, incident, current.rand, step, "auto");
+        const result = moveForwardAs(current.graph, incident, current.rand, step, "system");
         return result.ok ? result.incident : incident;
       });
       const moved = next.filter((incident, index) => incident.nodeId !== current.session.incidents[index]?.nodeId);
@@ -92,7 +99,7 @@ export const applyAction = (state: WebState, action: Action): ActionResult => {
         session: { ...current.session, step, incidents: next, log: [...current.session.log, "шаг " + step + ": массовый прогон, сдвинуто " + moved.length] },
       };
     }
-    return { state: current, message: changed ? "массовый прогон: сдвинуто " + changed + " заявок" : "все заявки уже в конце процесса" };
+    return { state: current, message: changed ? "массовый прогон: сдвинуто " + changed + " заявок" : "все заявки уже в архиве или в конце процесса" };
   }
   const found = resolveIncident(state.session, action.ref);
   if (!found.ok) return { state, message: found.error };
