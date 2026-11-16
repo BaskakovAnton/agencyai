@@ -29,10 +29,21 @@ test("сборка создаёт страницу, стили и бандл", a
   expect(page).toContain("./style.css");
 });
 
-test("бандл самодостаточен: нет внешних URL и импортов", () => {
-  expect(bundle).not.toMatch(/https?:\/\//);
+test("бандл самодостаточен: ничего не загружает из сети", () => {
+  // в chart.js внутри есть ссылки на документацию обычными строками — проверяем именно загрузку
+  expect(bundle).not.toMatch(/from\s+["']https?:/);
+  expect(bundle).not.toMatch(/import\s*\(\s*["']https?:/);
+  expect(bundle).not.toMatch(/fetch\(\s*["']https?:/);
   expect(bundle).not.toMatch(/^\s*import\s/m);
   expect(bundle).not.toMatch(/require\(/);
+});
+
+test("в бандл попали оба демо-модуля и роутер", () => {
+  expect(bundle).toContain("Шкала времени и когорты");
+  expect(bundle).toContain("Переписка по ролям");
+  expect(bundle).toContain("Следующий узел");
+  expect(bundle).toContain("#dashboard");
+  expect(bundle).toContain("#chat");
 });
 
 test("паритет: логика на странице совпадает с ядром", async () => {

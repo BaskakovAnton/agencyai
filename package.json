@@ -8,6 +8,14 @@
     "start": "bun run src/cli/main.ts",
     "demo": "bun run src/cli/main.ts --auto 12",
     "test": "bun test",
+    "e2e": "playwright test",
+    "serve:demo": "bun run scripts/serve-demo.ts",
     "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "chart.js": "^4.6.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.1"
   }
 }

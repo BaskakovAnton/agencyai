@@ -1,20 +1,18 @@
-import { branchesOf, buildGraph, neighborsOf } from "../core/graph.ts";
 import { generateIncidents } from "../core/generator.ts";
-import { moveBackward, moveForward, moveToNode } from "../core/navigation.ts";
-import { buildFinalState, buildSummary } from "../core/report.ts";
-import { BRANCHES, branchShares, buildProcessGraph } from "../data/edges.ts";
+import { buildProcessGraph } from "../data/edges.ts";
 import { NODES } from "../data/nodes.ts";
-import { mulberry32, pick, randInt, shuffle } from "../random.ts";
-import { applyAction, createState, type Action } from "./session.ts";
-import { renderPage } from "./view.ts";
+import { mulberry32 } from "../random.ts";
+import { mountRouter } from "./router.ts";
 
-/** Вся модель, доступная на странице (и в тестах паритета). */
+/** Вся модель доступна из бандла: её используют тесты паритета и оба демо-модуля. */
 export { NODES } from "../data/nodes.ts";
 export { branchesOf, buildGraph, neighborsOf } from "../core/graph.ts";
 export { BRANCHES, branchShares, buildProcessGraph } from "../data/edges.ts";
 export { generateIncidents } from "../core/generator.ts";
 export { moveBackward, moveForward, moveToNode } from "../core/navigation.ts";
+export { allowedNext, isArchived, moveForwardAs, moveToNodeAs } from "../core/navigation.ts";
 export { buildFinalState, buildSummary } from "../core/report.ts";
+export { allowedRoles, roleAccess } from "../core/roles.ts";
 export { mulberry32, pick, randInt, shuffle } from "../random.ts";
 export { afterMove, pauseSlaAt, resumeSlaAt, slaStatus, startSla, withClock } from "../core/sla.ts";
 export { PAUSE_REASONS, SLA_PROFILES, hoursFor } from "../data/sla.ts";
@@ -26,49 +24,36 @@ export {
   situationById,
   situationsForNode,
 } from "../data/situations.ts";
+export { COHORTS, COHORT_COLORS, COHORT_TITLES, applyFilters, cohortsByNode, defaultFilters, tooltipFor } from "../core/analytics.ts";
+export {
+  CHAT_INCIDENT_ID,
+  CHAT_INCIDENT_TITLE,
+  CHAT_SCENARIO,
+  activeRole,
+  chatStart,
+  currentStep,
+  nextStep,
+  prevStep,
+  setRoleOverride,
+  visibleMessages,
+} from "./chat.ts";
+export { mountChat } from "./chat-view.ts";
+export { mountDashboard } from "./dashboard.ts";
 export { applyAction, createState } from "./session.ts";
 export { renderPage } from "./view.ts";
 
-const readSeed = (): number => {
-  if (typeof location === "undefined") return 42;
-  const raw = new URLSearchParams(location.search).get("seed");
-  const value = Number.parseInt(raw ?? "42", 10);
-  return Number.isFinite(value) ? value : 42;
-};
-
-const actionOf = (element: HTMLElement): Action | null => {
-  const kind = element.dataset.action;
-  const ref = element.dataset.ref ?? "";
-  const nodeId = element.dataset.node ?? "";
-  if (kind === "forward" || kind === "back") return { kind, ref };
-  if (kind === "select") return { kind: "select", ref };
-  if (kind === "move") return { kind: "move", ref, nodeId };
-  if (kind === "sweep" || kind === "reset") return { kind };
-  return null;
-};
-
-const mount = (): void => {
-  const root = document.querySelector("#app");
-  if (!root) return;
-  let state = createState(buildProcessGraph(NODES), readSeed());
-  let message = "";
-  const paint = (): void => {
-    root.innerHTML = renderPage(state, message);
-  };
-  root.addEventListener("click", (event) => {
-    const target = (event.target as HTMLElement | null)?.closest("[data-action]") as HTMLElement | null;
-    if (!target) return;
-    const action = actionOf(target);
-    if (!action) return;
-    const result = applyAction(state, action);
-    state = result.state;
-    message = result.message;
-    paint();
-  });
-  paint();
+/** Модель сессии для обоих демо-модулей: 30 заявок на 30 узлах процесса. */
+export const demoModel = (seed = 7) => {
+  const graph = buildProcessGraph(NODES);
+  const incidents = generateIncidents(graph, mulberry32(seed));
+  return { graph, incidents };
 };
 
 if (typeof document !== "undefined") {
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", mount);
-  else mount();
+  const start = (): void => {
+    const { graph, incidents } = demoModel();
+    mountRouter(graph, incidents);
+  };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);
+  else start();
 }

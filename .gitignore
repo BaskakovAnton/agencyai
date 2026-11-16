@@ -21,6 +21,10 @@ dist/
 # Выгрузки терминальной модели (единственные записи на диск)
 reports/
 
+# Артефакты Playwright
+test-results/
+playwright-report/
+
 # Приватные материалы анализа: расшифровки разговоров и разборы (репозиторий публичный)
 docs/transcript-*.md
 docs/transcript-*.json
