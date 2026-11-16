@@ -14,21 +14,10 @@ export interface StepResult {
   readonly quit: boolean;
 }
 
-/** Гибкая ссылка на заявку: 5, З-5, з-5, z-5, Z-005 → З-005. */
-export const normalizeRef = (ref: string): string => {
-  const s = ref.trim().toUpperCase().replace(/\s+/g, "");
-  const m = /^(?:З|Z)?-?0*(\d{1,3})$/.exec(s);
-  if (!m) return s;
-  return "З-" + String(Number.parseInt(m[1] as string, 10)).padStart(3, "0");
-};
+export { normalizeRef } from "../core/refs.ts";
+import { findIncidentByRef } from "../core/refs.ts";
 
-const findIncident = (session: Session, ref: string): Incident | undefined => {
-  const byId = session.incidents.find((i) => i.id === normalizeRef(ref));
-  if (byId) return byId;
-  const num = Number.parseInt(ref, 10);
-  if (Number.isFinite(num) && num >= 1 && num <= session.incidents.length) return session.incidents[num - 1];
-  return undefined;
-};
+const findIncident = (session: Session, ref: string): Incident | undefined => findIncidentByRef(session, ref);
 
 const replace = (session: Session, incident: Incident): Session => ({
   ...session,

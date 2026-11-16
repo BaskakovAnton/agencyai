@@ -1,0 +1,46 @@
+import { copyFile, mkdir, writeFile } from "node:fs/promises";
+import { join } from "node:path";
+
+export interface BuildOptions {
+  readonly outDir: string;
+  readonly minify?: boolean;
+  readonly entry?: string;
+}
+
+/**
+ * Прод-сборка демо для GitHub Pages: вся логика модели запекается в один app.js.
+ * Ядро и данные среды не знают, поэтому собираются для browser без полифилов.
+ */
+export const buildWeb = async (options: BuildOptions): Promise<readonly string[]> => {
+  const outDir = options.outDir;
+  const entry = options.entry ?? "src/web/main.ts";
+  await mkdir(outDir, { recursive: true });
+
+  const result = await Bun.build({
+    entrypoints: [entry],
+    target: "browser",
+    format: "esm",
+    minify: options.minify ?? true,
+    sourcemap: "none",
+  });
+  if (!result.success) {
+    throw new Error("сборка не удалась: " + result.logs.map((log) => log.message).join("; "));
+  }
+  const artifact = result.outputs.find((o) => o.kind === "entry-point") ?? result.outputs[0];
+  if (!artifact) throw new Error("сборка не вернула артефактов");
+  const bundlePath = join(outDir, "app.js");
+  await writeFile(bundlePath, await artifact.text(), "utf8");
+
+  const pagePath = join(outDir, "index.html");
+  const stylePath = join(outDir, "style.css");
+  await copyFile("src/web/index.html", pagePath);
+  await copyFile("src/web/style.css", stylePath);
+
+  return [bundlePath, pagePath, stylePath];
+};
+
+if (import.meta.main) {
+  const outDir = process.argv[2] ?? "demo";
+  const files = await buildWeb({ outDir, minify: true });
+  console.log("собрано: " + files.join(", "));
+}

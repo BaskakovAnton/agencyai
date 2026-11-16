@@ -1,0 +1,51 @@
+:root {
+  --bg: #0f1216;
+  --surface: #171c23;
+  --surface-2: #1f2630;
+  --text: #e8ecf1;
+  --muted: #9aa4b2;
+  --line: #2b3440;
+  --accent: #4c8dff;
+  --urgent: #ff6b6b;
+  --normal: #ffc14d;
+  --routine: #7fd1a0;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.5 system-ui, "Segoe UI", Roboto, sans-serif;
+}
+#app { max-width: 1200px; margin: 0 auto; padding: 16px; }
+.top { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+.brand { font-weight: 600; }
+.stats, .hint, .meta, .group { color: var(--muted); font-size: 13px; }
+.controls { margin-left: auto; display: flex; gap: 8px; }
+button {
+  background: var(--surface-2); color: var(--text); border: 1px solid var(--line);
+  border-radius: 8px; padding: 6px 10px; cursor: pointer; font: inherit;
+}
+button:hover { border-color: var(--accent); }
+.msg { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; }
+.cols { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 16px; }
+@media (min-width: 900px) { .cols { grid-template-columns: 1.2fr 1fr; align-items: start; } }
+.incidents { list-style: none; margin: 0; padding: 0; }
+.row { display: grid; grid-template-columns: auto auto 1fr auto auto; gap: 8px; align-items: center; padding: 8px; border-bottom: 1px solid var(--line); cursor: pointer; }
+.row:hover { background: var(--surface); }
+.row.active { background: var(--surface-2); }
+.id { font-variant-numeric: tabular-nums; color: var(--muted); }
+.prio { font-size: 12px; padding: 1px 6px; border-radius: 999px; border: 1px solid var(--line); }
+.p-urgent { color: var(--urgent); }
+.p-normal { color: var(--normal); }
+.p-routine { color: var(--routine); }
+.chip { background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 1px 8px; font-size: 12px; white-space: nowrap; }
+.acts { display: flex; gap: 4px; }
+.side { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+.side h2 { font-size: 18px; margin: 0 0 6px; }
+.side h3 { font-size: 14px; margin: 16px 0 6px; color: var(--muted); }
+.moves { display: flex; gap: 8px; }
+.roles { list-style: none; margin: 0; padding: 0; font-size: 13px; }
+.roles i { color: var(--muted); font-style: normal; }
+.mark { color: var(--accent); }
+.foot { margin-top: 24px; color: var(--muted); font-size: 12px; }
