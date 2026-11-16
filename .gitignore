@@ -17,3 +17,8 @@ desktop.ini
 # Node (на будущее)
 node_modules/
 dist/
+
+# Приватные материалы анализа: расшифровки разговоров и разборы (репозиторий публичный)
+docs/transcript-*.md
+docs/transcript-*.json
+docs/analysis-*.md
