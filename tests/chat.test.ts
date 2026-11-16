@@ -9,6 +9,7 @@ import {
   nextStep,
   prevStep,
   setRoleOverride,
+  setStep,
   stepCount,
   visibleMessages,
 } from "../src/web/chat.ts";
@@ -53,6 +54,13 @@ test("ручное переключение роли перекрывает ро
   expect(activeRole(CHAT_SCENARIO, manual)).toBe("assistant");
   expect(activeRole(CHAT_SCENARIO, nextStep(manual))).toBe("assistant");
   expect(activeRole(CHAT_SCENARIO, setRoleOverride(manual, null))).toBe("resident");
+});
+
+test("setStep перескакивает на нужный шаг и клампится", () => {
+  expect(setStep(chatStart(), 2).step).toBe(2);
+  expect(activeRole(CHAT_SCENARIO, setStep(chatStart(), 2))).toBe("contractor");
+  expect(setStep(chatStart(), 99).step).toBe(3);
+  expect(setStep(chatStart(), -5).step).toBe(0);
 });
 
 test("у шага U7 есть SLA-карточка и подсказка о выезде", () => {

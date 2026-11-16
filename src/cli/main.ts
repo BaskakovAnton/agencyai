@@ -1,28 +1,8 @@
 import { generateIncidents } from "../core/generator.ts";
 import { buildProcessGraph } from "../data/edges.ts";
 import { mulberry32 } from "../random.ts";
-import { REPORTS_DIR } from "../io/writers.ts";
+import { parseArgs } from "./args.ts";
 import { runSession } from "./loop.ts";
-
-interface Args {
-  seed: number;
-  auto: number;
-  script: readonly string[];
-  outDir: string;
-}
-
-const parseArgs = (argv: readonly string[]): Args => {
-  const get = (flag: string): string | undefined => {
-    const i = argv.indexOf(flag);
-    return i >= 0 ? argv[i + 1] : undefined;
-  };
-  return {
-    seed: Number.parseInt(get("--seed") ?? "42", 10),
-    auto: Number.parseInt(get("--auto") ?? "0", 10),
-    script: (get("--script") ?? "").split(";").map((s) => s.trim()).filter(Boolean),
-    outDir: get("--out") ?? REPORTS_DIR,
-  };
-};
 
 const main = async (): Promise<void> => {
   const args = parseArgs(process.argv.slice(2));

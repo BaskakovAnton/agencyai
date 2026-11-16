@@ -16,13 +16,20 @@ export const buildWeb = async (options: BuildOptions): Promise<readonly string[]
   const entry = options.entry ?? "src/web/main.ts";
   await mkdir(outDir, { recursive: true });
 
-  const result = await Bun.build({
-    entrypoints: [entry],
-    target: "browser",
-    format: "esm",
-    minify: options.minify ?? true,
-    sourcemap: "none",
-  });
+  let result: Awaited<ReturnType<typeof Bun.build>>;
+  try {
+    result = await Bun.build({
+      entrypoints: [entry],
+      target: "browser",
+      format: "esm",
+      minify: options.minify ?? true,
+      sourcemap: "none",
+    });
+  } catch (error) {
+    // Bun.build бросает AggregateError на синтаксических и путевых ошибках — переводим в читаемый текст
+    const details = error instanceof AggregateError ? error.errors.map((item) => String(item)).join("; ") : String(error);
+    throw new Error("сборка не удалась: " + details);
+  }
   if (!result.success) {
     throw new Error("сборка не удалась: " + result.logs.map((log) => log.message).join("; "));
   }

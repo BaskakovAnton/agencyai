@@ -71,23 +71,37 @@ export const runSession = async (options: RunOptions): Promise<Session> => {
 
   const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
   try {
-    for (;;) {
-      let answer: string;
-      try {
-        answer = await rl.question("оператор> ");
-      } catch {
-        print("ввод закончился (EOF) — выход");
-        break;
-      }
-      const res = await applyAndPrint(options, session, answer, print);
-      session = res.session;
-      if (res.quit) {
-        print("выход. Отчёт и финальное состояние не записаны — используйте save, если нужны файлы.");
-        break;
-      }
-    }
+    return await runInteractive(options, session, print, () => rl.question("оператор> "));
   } finally {
     rl.close();
   }
-  return session;
+};
+
+/**
+ * Интерактивный цикл оператора. Источник строк вынесен в параметр `ask`,
+ * поэтому цикл (включая выход по EOF) проверяется юнит-тестами без терминала.
+ */
+export const runInteractive = async (
+  options: RunOptions,
+  session: Session,
+  print: (line: string) => void,
+  ask: () => Promise<string>,
+): Promise<Session> => {
+  let current = session;
+  for (;;) {
+    let answer: string;
+    try {
+      answer = await ask();
+    } catch {
+      print("ввод закончился (EOF) — выход");
+      break;
+    }
+    const res = await applyAndPrint(options, current, answer, print);
+    current = res.session;
+    if (res.quit) {
+      print("выход. Отчёт и финальное состояние не записаны — используйте save, если нужны файлы.");
+      break;
+    }
+  }
+  return current;
 };
