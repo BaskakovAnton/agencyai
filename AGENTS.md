@@ -4,7 +4,7 @@
 > Файл подхватывается DSH автоматически как workspace instructions (baseline, до первого запроса).
 > Правила: раздел «Журнал» — только дописывать (append-only, ничего не удалять); факты помечать датой; устаревшее — перечёркивать пометкой «устарело», а не стирать.
 >
-> Обновлено: 2026-11-16 (ревизия 21) · Автор записей: агент DSH (deepseek-v4.1-flash)
+> Обновлено: 2026-11-16 (ревизия 22) · Автор записей: агент DSH (deepseek-v4.1-flash)
 
 ---
 
@@ -73,7 +73,8 @@ src/           # терминальная модель: core (чистые фу�
                # node-card.ts — карточка узла по клику, chat-view + chat-html (мобильный чат),
                # theme.ts, router.ts (хэш с параметрами), session/card/view + model-view, main.ts
 e2e/           # Playwright: timeline.spec.ts, chat.spec.ts, model.spec.ts (21 сценарий)
-scripts/       # build-web.ts, serve-demo.ts (статика :4321), screenshots.ts, verify-live.ts, import-situations.ts
+scripts/       # build-web.ts, serve-demo.ts (статика :4321), screenshots.ts, verify-live.ts, import-situations.ts,
+               # audit-ui.ts — UX/a11y-аудит (axe-core + замеры DOM → docs/screenshots/audit/)
 playwright.config.ts · bunfig.toml (bun test только по tests/)
 .github/       # workflows/e2e.yml — CI: bun install → bun test → сборка → playwright chromium → e2e
 docs/screenshots/  # timeline-git.png, timeline-gantt.png, chat-2-january.png, chat-5-january.png, model.png
@@ -166,6 +167,7 @@ SHA256 перенесённых файлов (сверены с источник
 | 2026-11-16 | **Хронология и мобильный чат внедрены** по новому ТЗ: даты в модели (`createdAt`, `Move.at`), `core/timeline.ts` + `core/story.ts` (30 заявок, шаг ≈ сутки, герой З-015 по маршруту U1→U6→U7→U19 с датами 1/2/3/5 января), `core/gitgraph.ts` + `web/git-svg.ts` (Git-граф со слотами коммитов), `core/gantt.ts` + `web/gantt-grid.ts` (fallback-Гант), `core/conversation.ts` + `data/messages.ts` + `web/chat-html.ts` (мобильный мессенджер без полей ввода), роутер с параметрами `#timeline?at=&view=` и `#chat/<заявка>?at=`. Таблица когорт и `analytics.ts` удалены, `pluralize` переехал в `core/text.ts`. Тесты: **143 юнит + 20 e2e**, CI зелёный. |
 | 2026-11-16 | **Доведены демо-экраны и качество сборки:** `core/sla-at.ts` (фазы SLA на дату), `web/node-card.ts` (карточка узла), шкала времени с 24 часами и кликом по дню, легенды четырёх фаз SLA и развилок/слияний, подсветка коммита, SLA-цвета полос Ганта, цвет роли и SLA-бейдж в шапке чата, системные сообщения при смене узла; `style.css` сокращён с 323 до 175 строк (пять копий одних блоков), `main.ts` без дублей экспортов, поставлены `typescript`/`@types/bun` и включён `allowImportingTsExtensions` — `bun run typecheck` чистый; e2e дополнены проверками карточки, шкалы и легенд. Итог: **155 юнит + 21 e2e**, `demo/` пересобран, live-verifier обновлён (3 сообщения на 2 января, карточка и шкала). |
 | 2026-11-16 | **Живая проверка пройдена:** `demo/` на Pages пересобран, `scripts/verify-live.ts` вернул **LIVE OK** — шкала с 24 часами, 4 фазы SLA, карточка узла по клику, 3 сообщения на 2 января, Гант-fallback; CI `e2e` (typecheck → 155 тестов → сборка → 21 e2e) — success. |
+| 2026-11-16 | **Проведён аудит интерфейса и юзабилити** (3 ширины × 5 экранов, axe-core 4.14.1 WCAG 2.1 AA, замеры DOM): 114 находок; axe — 3 типа serious (`color-contrast`, `svg-img-alt`, `scrollable-region-focusable`). P0: список 30 заявок «Модели» и строки Ганта только мышь, коммиты графа не открываются Enter. P1: фокус падает в BODY, Esc не закрывает карточку, перемотка дня не пишет URL, кнопка сброса фильтра не появляется, горизонтальные скроллы 1438/356 px без подсказок, контраст 4.44:1 на подписях своего пузыря. P2: 167 узлов <12px, тач-цели 22–33 px, нет H1 в чате/модели, устаревшая подпись футера, тултип без `aria-describedby`. Отчёт: `docs/ui-audit-2026-11-16.md`; инструмент: `scripts/audit-ui.ts` (`bun run audit`), артефакты в `docs/screenshots/audit/`; devDependency `axe-core`.
 
 ## 7. Соглашения по работе
 

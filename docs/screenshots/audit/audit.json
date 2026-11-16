@@ -1,0 +1,782 @@
+{
+  "report": [
+    {
+      "page": "timeline",
+      "viewport": "desktop",
+      "kind": "tap-targets",
+      "count": 152,
+      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | Git-граф 74x33 | Диаграмма Ганта 127x33"
+    },
+    {
+      "page": "timeline",
+      "viewport": "desktop",
+      "kind": "unlabeled",
+      "count": 92,
+      "detail": "INPUT. | g.commit | g.commit | g.commit | g.commit"
+    },
+    {
+      "page": "timeline",
+      "viewport": "desktop",
+      "kind": "fonts-small",
+      "count": 167,
+      "detail": "текста мельче 12px: 167"
+    },
+    {
+      "page": "timeline",
+      "viewport": "desktop",
+      "kind": "canvas-scroll",
+      "detail": "canvas 1082/1438 (auto)"
+    },
+    {
+      "page": "timeline",
+      "viewport": "desktop",
+      "kind": "chips-scroll",
+      "detail": "1440/1503"
+    },
+    {
+      "page": "timeline",
+      "viewport": "desktop",
+      "kind": "slider-a11y",
+      "detail": "aria-label=нет; aria-valuetext=нет"
+    },
+    {
+      "page": "timeline",
+      "viewport": "desktop",
+      "kind": "commit-a11y",
+      "detail": "role=нет; aria-label=нет; tabindex=0"
+    },
+    {
+      "page": "timeline",
+      "viewport": "desktop",
+      "kind": "headings",
+      "count": 1,
+      "detail": "H1: Хронология заявок · Git-граф"
+    },
+    {
+      "page": "timeline",
+      "viewport": "desktop",
+      "kind": "contrast",
+      "count": 2,
+      "detail": "4.44 10px Депутат-диспетчер | 4.44 10px 2 января · 10:00"
+    },
+    {
+      "page": "timeline",
+      "viewport": "desktop",
+      "kind": "axe:color-contrast",
+      "count": 2,
+      "detail": "impact=serious; .own > .bubble > .author | .own > .bubble > .time"
+    },
+    {
+      "page": "timeline",
+      "viewport": "desktop",
+      "kind": "axe:svg-img-alt",
+      "count": 1,
+      "detail": "impact=serious; svg"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "desktop",
+      "kind": "tap-targets",
+      "count": 154,
+      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | Git-граф 74x33 | Диаграмма Ганта 127x33"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "desktop",
+      "kind": "unlabeled",
+      "count": 92,
+      "detail": "INPUT. | g.commit | g.commit | g.commit | g.commit"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "desktop",
+      "kind": "fonts-small",
+      "count": 167,
+      "detail": "текста мельче 12px: 167"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "desktop",
+      "kind": "canvas-scroll",
+      "detail": "canvas 1082/1438 (auto)"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "desktop",
+      "kind": "chips-scroll",
+      "detail": "1440/1503"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "desktop",
+      "kind": "slider-a11y",
+      "detail": "aria-label=нет; aria-valuetext=нет"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "desktop",
+      "kind": "commit-a11y",
+      "detail": "role=нет; aria-label=нет; tabindex=0"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "desktop",
+      "kind": "card-position",
+      "detail": "top=905px, в окне: true"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "desktop",
+      "kind": "headings",
+      "count": 1,
+      "detail": "H1: Хронология заявок · Git-граф"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "desktop",
+      "kind": "contrast",
+      "count": 2,
+      "detail": "4.44 10px Депутат-диспетчер | 4.44 10px 2 января · 10:00"
+    },
+    {
+      "page": "gantt",
+      "viewport": "desktop",
+      "kind": "tap-targets",
+      "count": 61,
+      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | Git-граф 74x33 | Диаграмма Ганта 127x33"
+    },
+    {
+      "page": "gantt",
+      "viewport": "desktop",
+      "kind": "unlabeled",
+      "count": 1,
+      "detail": "INPUT."
+    },
+    {
+      "page": "gantt",
+      "viewport": "desktop",
+      "kind": "fonts-small",
+      "count": 137,
+      "detail": "текста мельче 12px: 137"
+    },
+    {
+      "page": "gantt",
+      "viewport": "desktop",
+      "kind": "chips-scroll",
+      "detail": "1440/1503"
+    },
+    {
+      "page": "gantt",
+      "viewport": "desktop",
+      "kind": "slider-a11y",
+      "detail": "aria-label=нет; aria-valuetext=нет"
+    },
+    {
+      "page": "gantt",
+      "viewport": "desktop",
+      "kind": "headings",
+      "count": 1,
+      "detail": "H1: Хронология заявок · Git-граф"
+    },
+    {
+      "page": "gantt",
+      "viewport": "desktop",
+      "kind": "contrast",
+      "count": 2,
+      "detail": "4.44 10px Депутат-диспетчер | 4.44 10px 2 января · 10:00"
+    },
+    {
+      "page": "gantt",
+      "viewport": "desktop",
+      "kind": "axe:color-contrast",
+      "count": 2,
+      "detail": "impact=serious; .own > .bubble > .author | .own > .bubble > .time"
+    },
+    {
+      "page": "gantt",
+      "viewport": "desktop",
+      "kind": "axe:scrollable-region-focusable",
+      "count": 1,
+      "detail": "impact=serious; .canvas"
+    },
+    {
+      "page": "chat",
+      "viewport": "desktop",
+      "kind": "tap-targets",
+      "count": 8,
+      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | ‹ Хронология 73x16 | ‹ Реплика назад 107x29"
+    },
+    {
+      "page": "chat",
+      "viewport": "desktop",
+      "kind": "fonts-small",
+      "count": 11,
+      "detail": "текста мельче 12px: 11"
+    },
+    {
+      "page": "chat",
+      "viewport": "desktop",
+      "kind": "headings",
+      "count": 1,
+      "detail": "H2: Что происходит"
+    },
+    {
+      "page": "chat",
+      "viewport": "desktop",
+      "kind": "contrast",
+      "count": 2,
+      "detail": "4.44 10px Депутат-диспетчер | 4.44 10px 2 января · 10:00"
+    },
+    {
+      "page": "chat",
+      "viewport": "desktop",
+      "kind": "axe:color-contrast",
+      "count": 2,
+      "detail": "impact=serious; .own > .bubble > .author | .own > .bubble > .time"
+    },
+    {
+      "page": "model",
+      "viewport": "desktop",
+      "kind": "tap-targets",
+      "count": 73,
+      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | +4 ч 51x33 | Массовый шаг вперёд 157x33"
+    },
+    {
+      "page": "model",
+      "viewport": "desktop",
+      "kind": "fonts-small",
+      "count": 30,
+      "detail": "текста мельче 12px: 30"
+    },
+    {
+      "page": "model",
+      "viewport": "desktop",
+      "kind": "headings",
+      "count": 1,
+      "detail": "H2: Заявки (30)"
+    },
+    {
+      "page": "keyboard",
+      "viewport": "desktop",
+      "kind": "enter-on-commit",
+      "detail": "Enter не открывает карточку"
+    },
+    {
+      "page": "timeline",
+      "viewport": "tablet",
+      "kind": "tap-targets",
+      "count": 151,
+      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | Git-граф 74x33 | Диаграмма Ганта 127x33"
+    },
+    {
+      "page": "timeline",
+      "viewport": "tablet",
+      "kind": "unlabeled",
+      "count": 92,
+      "detail": "INPUT. | g.commit | g.commit | g.commit | g.commit"
+    },
+    {
+      "page": "timeline",
+      "viewport": "tablet",
+      "kind": "fonts-small",
+      "count": 167,
+      "detail": "текста мельче 12px: 167"
+    },
+    {
+      "page": "timeline",
+      "viewport": "tablet",
+      "kind": "canvas-scroll",
+      "detail": "canvas 990/1438 (auto)"
+    },
+    {
+      "page": "timeline",
+      "viewport": "tablet",
+      "kind": "chips-scroll",
+      "detail": "1024/1503"
+    },
+    {
+      "page": "timeline",
+      "viewport": "tablet",
+      "kind": "slider-a11y",
+      "detail": "aria-label=нет; aria-valuetext=нет"
+    },
+    {
+      "page": "timeline",
+      "viewport": "tablet",
+      "kind": "commit-a11y",
+      "detail": "role=нет; aria-label=нет; tabindex=0"
+    },
+    {
+      "page": "timeline",
+      "viewport": "tablet",
+      "kind": "headings",
+      "count": 1,
+      "detail": "H1: Хронология заявок · Git-граф"
+    },
+    {
+      "page": "timeline",
+      "viewport": "tablet",
+      "kind": "contrast",
+      "count": 2,
+      "detail": "4.44 10px Депутат-диспетчер | 4.44 10px 2 января · 10:00"
+    },
+    {
+      "page": "timeline",
+      "viewport": "tablet",
+      "kind": "axe:svg-img-alt",
+      "count": 1,
+      "detail": "impact=serious; svg"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "tablet",
+      "kind": "tap-targets",
+      "count": 153,
+      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | Git-граф 74x33 | Диаграмма Ганта 127x33"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "tablet",
+      "kind": "unlabeled",
+      "count": 92,
+      "detail": "INPUT. | g.commit | g.commit | g.commit | g.commit"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "tablet",
+      "kind": "fonts-small",
+      "count": 167,
+      "detail": "текста мельче 12px: 167"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "tablet",
+      "kind": "canvas-scroll",
+      "detail": "canvas 990/1438 (auto)"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "tablet",
+      "kind": "chips-scroll",
+      "detail": "1024/1503"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "tablet",
+      "kind": "slider-a11y",
+      "detail": "aria-label=нет; aria-valuetext=нет"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "tablet",
+      "kind": "commit-a11y",
+      "detail": "role=нет; aria-label=нет; tabindex=0"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "tablet",
+      "kind": "card-position",
+      "detail": "top=723px, в окне: true"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "tablet",
+      "kind": "headings",
+      "count": 1,
+      "detail": "H1: Хронология заявок · Git-граф"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "tablet",
+      "kind": "contrast",
+      "count": 2,
+      "detail": "4.44 10px Депутат-диспетчер | 4.44 10px 2 января · 10:00"
+    },
+    {
+      "page": "gantt",
+      "viewport": "tablet",
+      "kind": "tap-targets",
+      "count": 60,
+      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | Git-граф 74x33 | Диаграмма Ганта 127x33"
+    },
+    {
+      "page": "gantt",
+      "viewport": "tablet",
+      "kind": "unlabeled",
+      "count": 1,
+      "detail": "INPUT."
+    },
+    {
+      "page": "gantt",
+      "viewport": "tablet",
+      "kind": "fonts-small",
+      "count": 137,
+      "detail": "текста мельче 12px: 137"
+    },
+    {
+      "page": "gantt",
+      "viewport": "tablet",
+      "kind": "chips-scroll",
+      "detail": "1024/1503"
+    },
+    {
+      "page": "gantt",
+      "viewport": "tablet",
+      "kind": "slider-a11y",
+      "detail": "aria-label=нет; aria-valuetext=нет"
+    },
+    {
+      "page": "gantt",
+      "viewport": "tablet",
+      "kind": "headings",
+      "count": 1,
+      "detail": "H1: Хронология заявок · Git-граф"
+    },
+    {
+      "page": "gantt",
+      "viewport": "tablet",
+      "kind": "contrast",
+      "count": 2,
+      "detail": "4.44 10px Депутат-диспетчер | 4.44 10px 2 января · 10:00"
+    },
+    {
+      "page": "gantt",
+      "viewport": "tablet",
+      "kind": "axe:scrollable-region-focusable",
+      "count": 1,
+      "detail": "impact=serious; .canvas"
+    },
+    {
+      "page": "chat",
+      "viewport": "tablet",
+      "kind": "tap-targets",
+      "count": 8,
+      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | ‹ Хронология 73x16 | ‹ Реплика назад 107x29"
+    },
+    {
+      "page": "chat",
+      "viewport": "tablet",
+      "kind": "fonts-small",
+      "count": 11,
+      "detail": "текста мельче 12px: 11"
+    },
+    {
+      "page": "chat",
+      "viewport": "tablet",
+      "kind": "headings",
+      "count": 1,
+      "detail": "H2: Что происходит"
+    },
+    {
+      "page": "chat",
+      "viewport": "tablet",
+      "kind": "contrast",
+      "count": 2,
+      "detail": "4.44 10px Депутат-диспетчер | 4.44 10px 2 января · 10:00"
+    },
+    {
+      "page": "chat",
+      "viewport": "tablet",
+      "kind": "axe:color-contrast",
+      "count": 2,
+      "detail": "impact=serious; .own > .bubble > .author | .own > .bubble > .time"
+    },
+    {
+      "page": "model",
+      "viewport": "tablet",
+      "kind": "tap-targets",
+      "count": 73,
+      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | +4 ч 51x33 | Массовый шаг вперёд 157x33"
+    },
+    {
+      "page": "model",
+      "viewport": "tablet",
+      "kind": "fonts-small",
+      "count": 30,
+      "detail": "текста мельче 12px: 30"
+    },
+    {
+      "page": "model",
+      "viewport": "tablet",
+      "kind": "headings",
+      "count": 1,
+      "detail": "H2: Заявки (30)"
+    },
+    {
+      "page": "keyboard",
+      "viewport": "tablet",
+      "kind": "enter-on-commit",
+      "detail": "Enter не открывает карточку"
+    },
+    {
+      "page": "timeline",
+      "viewport": "mobile",
+      "kind": "tap-targets",
+      "count": 151,
+      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | Git-граф 74x33 | Диаграмма Ганта 127x33"
+    },
+    {
+      "page": "timeline",
+      "viewport": "mobile",
+      "kind": "unlabeled",
+      "count": 92,
+      "detail": "INPUT. | g.commit | g.commit | g.commit | g.commit"
+    },
+    {
+      "page": "timeline",
+      "viewport": "mobile",
+      "kind": "fonts-small",
+      "count": 167,
+      "detail": "текста мельче 12px: 167"
+    },
+    {
+      "page": "timeline",
+      "viewport": "mobile",
+      "kind": "canvas-scroll",
+      "detail": "canvas 356/1438 (auto)"
+    },
+    {
+      "page": "timeline",
+      "viewport": "mobile",
+      "kind": "chips-scroll",
+      "detail": "390/1503"
+    },
+    {
+      "page": "timeline",
+      "viewport": "mobile",
+      "kind": "slider-a11y",
+      "detail": "aria-label=нет; aria-valuetext=нет"
+    },
+    {
+      "page": "timeline",
+      "viewport": "mobile",
+      "kind": "commit-a11y",
+      "detail": "role=нет; aria-label=нет; tabindex=0"
+    },
+    {
+      "page": "timeline",
+      "viewport": "mobile",
+      "kind": "headings",
+      "count": 1,
+      "detail": "H1: Хронология заявок · Git-граф"
+    },
+    {
+      "page": "timeline",
+      "viewport": "mobile",
+      "kind": "contrast",
+      "count": 2,
+      "detail": "4.44 10px Депутат-диспетчер | 4.44 10px 2 января · 10:00"
+    },
+    {
+      "page": "timeline",
+      "viewport": "mobile",
+      "kind": "axe:svg-img-alt",
+      "count": 1,
+      "detail": "impact=serious; svg"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "mobile",
+      "kind": "tap-targets",
+      "count": 153,
+      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | Git-граф 74x33 | Диаграмма Ганта 127x33"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "mobile",
+      "kind": "unlabeled",
+      "count": 92,
+      "detail": "INPUT. | g.commit | g.commit | g.commit | g.commit"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "mobile",
+      "kind": "fonts-small",
+      "count": 167,
+      "detail": "текста мельче 12px: 167"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "mobile",
+      "kind": "canvas-scroll",
+      "detail": "canvas 356/1438 (auto)"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "mobile",
+      "kind": "chips-scroll",
+      "detail": "390/1503"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "mobile",
+      "kind": "slider-a11y",
+      "detail": "aria-label=нет; aria-valuetext=нет"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "mobile",
+      "kind": "commit-a11y",
+      "detail": "role=нет; aria-label=нет; tabindex=0"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "mobile",
+      "kind": "card-position",
+      "detail": "top=764px, в окне: true"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "mobile",
+      "kind": "headings",
+      "count": 1,
+      "detail": "H1: Хронология заявок · Git-граф"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "mobile",
+      "kind": "contrast",
+      "count": 2,
+      "detail": "4.44 10px Депутат-диспетчер | 4.44 10px 2 января · 10:00"
+    },
+    {
+      "page": "gantt",
+      "viewport": "mobile",
+      "kind": "tap-targets",
+      "count": 60,
+      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | Git-граф 74x33 | Диаграмма Ганта 127x33"
+    },
+    {
+      "page": "gantt",
+      "viewport": "mobile",
+      "kind": "unlabeled",
+      "count": 1,
+      "detail": "INPUT."
+    },
+    {
+      "page": "gantt",
+      "viewport": "mobile",
+      "kind": "fonts-small",
+      "count": 137,
+      "detail": "текста мельче 12px: 137"
+    },
+    {
+      "page": "gantt",
+      "viewport": "mobile",
+      "kind": "canvas-scroll",
+      "detail": "canvas 356/656 (auto)"
+    },
+    {
+      "page": "gantt",
+      "viewport": "mobile",
+      "kind": "chips-scroll",
+      "detail": "390/1503"
+    },
+    {
+      "page": "gantt",
+      "viewport": "mobile",
+      "kind": "slider-a11y",
+      "detail": "aria-label=нет; aria-valuetext=нет"
+    },
+    {
+      "page": "gantt",
+      "viewport": "mobile",
+      "kind": "headings",
+      "count": 1,
+      "detail": "H1: Хронология заявок · Git-граф"
+    },
+    {
+      "page": "gantt",
+      "viewport": "mobile",
+      "kind": "contrast",
+      "count": 2,
+      "detail": "4.44 10px Депутат-диспетчер | 4.44 10px 2 января · 10:00"
+    },
+    {
+      "page": "gantt",
+      "viewport": "mobile",
+      "kind": "axe:scrollable-region-focusable",
+      "count": 1,
+      "detail": "impact=serious; .canvas"
+    },
+    {
+      "page": "chat",
+      "viewport": "mobile",
+      "kind": "tap-targets",
+      "count": 8,
+      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | ‹ Хронология 73x16 | ‹ Реплика назад 107x29"
+    },
+    {
+      "page": "chat",
+      "viewport": "mobile",
+      "kind": "fonts-small",
+      "count": 11,
+      "detail": "текста мельче 12px: 11"
+    },
+    {
+      "page": "chat",
+      "viewport": "mobile",
+      "kind": "headings",
+      "count": 1,
+      "detail": "H2: Что происходит"
+    },
+    {
+      "page": "chat",
+      "viewport": "mobile",
+      "kind": "contrast",
+      "count": 2,
+      "detail": "4.44 10px Депутат-диспетчер | 4.44 10px 2 января · 10:00"
+    },
+    {
+      "page": "chat",
+      "viewport": "mobile",
+      "kind": "axe:color-contrast",
+      "count": 2,
+      "detail": "impact=serious; .own > .bubble > .author | .own > .bubble > .time"
+    },
+    {
+      "page": "model",
+      "viewport": "mobile",
+      "kind": "tap-targets",
+      "count": 73,
+      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | +4 ч 51x33 | Массовый шаг вперёд 157x33"
+    },
+    {
+      "page": "model",
+      "viewport": "mobile",
+      "kind": "fonts-small",
+      "count": 30,
+      "detail": "текста мельче 12px: 30"
+    },
+    {
+      "page": "model",
+      "viewport": "mobile",
+      "kind": "headings",
+      "count": 1,
+      "detail": "H2: Заявки (30)"
+    },
+    {
+      "page": "keyboard",
+      "viewport": "mobile",
+      "kind": "enter-on-commit",
+      "detail": "Enter не открывает карточку"
+    }
+  ],
+  "shots": [
+    "docs/screenshots/audit/desktop-timeline.png",
+    "docs/screenshots/audit/desktop-timeline-card.png",
+    "docs/screenshots/audit/desktop-gantt.png",
+    "docs/screenshots/audit/desktop-chat.png",
+    "docs/screenshots/audit/desktop-model.png",
+    "docs/screenshots/audit/tablet-timeline.png",
+    "docs/screenshots/audit/tablet-timeline-card.png",
+    "docs/screenshots/audit/tablet-gantt.png",
+    "docs/screenshots/audit/tablet-chat.png",
+    "docs/screenshots/audit/tablet-model.png",
+    "docs/screenshots/audit/mobile-timeline.png",
+    "docs/screenshots/audit/mobile-timeline-card.png",
+    "docs/screenshots/audit/mobile-gantt.png",
+    "docs/screenshots/audit/mobile-chat.png",
+    "docs/screenshots/audit/mobile-model.png"
+  ]
+}
