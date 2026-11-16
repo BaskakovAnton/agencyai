@@ -1,6 +1,7 @@
 import type { GanttModel } from "../core/gantt.ts";
+import { SLA_PHASE_TITLES } from "../core/sla-at.ts";
 import { formatDay } from "../core/timeline.ts";
-import { ROLE_COLORS } from "./theme.ts";
+import { ROLE_COLORS, SLA_COLORS } from "./theme.ts";
 
 const escapeHtml = (value: string): string =>
   value.replace(/[&<>"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[char] as string);
@@ -23,9 +24,13 @@ export const renderGanttGrid = (model: GanttModel, filter = ""): string => {
           return (
             '<div class="bar" data-bar="' + row.incidentId + '" data-node="' + segment.nodeId +
             '" data-from="' + segment.fromDay + '" data-to="' + segment.toDay +
+            '" data-sla="' + segment.slaPhase + '" data-hours="' + segment.hours +
             '" style="grid-column:' + (segment.fromColumn + 2) + " / span " + span +
-            ";background:" + ROLE_COLORS[segment.role] + '" title="' +
-            escapeHtml(segment.nodeId + " · " + segment.title + " · " + formatDay(segment.fromDay)) + '">' +
+            ";background:" + ROLE_COLORS[segment.role] + ";border-color:" + SLA_COLORS[segment.slaPhase] + '" title="' +
+            escapeHtml(
+              segment.nodeId + " · " + segment.title + " · " + formatDay(segment.fromDay) + " · " +
+              SLA_PHASE_TITLES[segment.slaPhase] + " · " + segment.hours + " ч",
+            ) + '">' +
             '<span>' + segment.nodeId + "</span></div>"
           );
         })

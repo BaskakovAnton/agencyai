@@ -5,6 +5,9 @@ export const HERO_INCIDENT_ID = "З-015";
 export const HERO_TITLE = "Разбита дверь подъезда";
 export const HERO_ADDRESS = "ул. Ленина, 10";
 
+/** Разбитая дверь — авария: норматив 24 ч, поэтому перемотка времени видна на SLA героя. */
+export const HERO_PRIORITY = "urgent" as const;
+
 /** Переписка героя начинается 1 января — тогда «перемотка на 2 января» видна на нём. */
 export const HERO_START = "2026-01-01T09:00:00.000Z";
 

@@ -8,7 +8,7 @@ export interface NodeMessage {
 
 /** Тексты узлов: U1, U6, U7 и U19 — дословно из спеки демонстрации. */
 export const NODE_MESSAGES: Readonly<Record<string, NodeMessage>> = {
-  U1: { role: "resident", text: "Добрый день, разбита дверь в подъезде" },
+  U1: { role: "resident", text: "Во дворе разбита дверь подъезда" },
   U2: { role: "deputy", text: "Уточните, пожалуйста, адрес и когда это случилось" },
   U3: { role: "resident", text: "Адрес верный, дверь сломана со вчерашнего вечера" },
   U4: { role: "system", text: "Заявка зарегистрирована в реестре обращений" },

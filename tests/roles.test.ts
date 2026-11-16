@@ -21,6 +21,7 @@ const at = (g: Graph, nodeId: string, seed = 3) =>
 const sessionOf = (g: Graph, role = "deputy"): Session => ({
   step: 0,
   role: role as Session["role"],
+  clock: 0,
   incidents: generateIncidents(g, mulberry32(9)),
   log: [],
 });

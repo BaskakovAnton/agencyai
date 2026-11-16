@@ -1,6 +1,8 @@
 import { HERO_INCIDENT_ID } from "../data/hero.ts";
 import { messageFor } from "../data/messages.ts";
+import { hoursFor } from "../data/sla.ts";
 import type { Graph, Incident, Priority, RoleId } from "../types.ts";
+import { slaPhaseAtEvent, slaPhaseOnDay, type SlaPhase } from "./sla-at.ts";
 import { dayOf, visibleAt } from "./timeline.ts";
 
 export interface GanttSegment {
@@ -12,6 +14,8 @@ export interface GanttSegment {
   readonly fromColumn: number;
   readonly toColumn: number;
   readonly open: boolean;
+  readonly hours: number;
+  readonly slaPhase: SlaPhase;
 }
 
 export interface GanttRow {
@@ -23,6 +27,7 @@ export interface GanttRow {
   readonly nodeId: string;
   readonly startDay: string;
   readonly endDay: string;
+  readonly slaPhase: SlaPhase;
   readonly segments: readonly GanttSegment[];
 }
 
@@ -45,8 +50,8 @@ export const buildGantt = (graph: Graph, incidents: readonly Incident[], day: st
 
   const rows: readonly GanttRow[] = visible.map((incident) => {
     const events = [
-      { nodeId: start, at: incident.createdAt ?? "" },
-      ...incident.history.map((move) => ({ nodeId: move.to, at: move.at ?? "" })),
+      { nodeId: start, at: incident.createdAt ?? "", sla: undefined },
+      ...incident.history.map((move) => ({ nodeId: move.to, at: move.at ?? "", sla: move.sla })),
     ];
     const segments: GanttSegment[] = events.map((event, index) => {
       const next = events[index + 1];
@@ -61,6 +66,8 @@ export const buildGantt = (graph: Graph, incidents: readonly Incident[], day: st
         fromColumn: columnOf.get(fromDay) ?? 0,
         toColumn: columnOf.get(toDay) ?? 0,
         open: next === undefined,
+        hours: hoursFor(event.nodeId),
+        slaPhase: slaPhaseAtEvent(incident, event.at, event.sla),
       };
     });
     return {
@@ -72,6 +79,7 @@ export const buildGantt = (graph: Graph, incidents: readonly Incident[], day: st
       nodeId: incident.nodeId,
       startDay: dayOf(incident.createdAt ?? ""),
       endDay: day,
+      slaPhase: slaPhaseOnDay(incident, day),
       segments,
     };
   });

@@ -8,13 +8,14 @@ test.describe("Мобильный чат заявки", () => {
     await expect(page.locator("[data-phone] input, [data-phone] textarea")).toHaveCount(0);
     await expect(page.locator('[data-phone] button:has-text("Отправить")')).toHaveCount(0);
     await expect(page.locator("[data-phone]")).toContainText("отправка недоступна");
-    await expect(page.locator("[data-msg]")).toHaveCount(2);
+    await expect(page.locator("[data-msg]")).toHaveCount(3); // две реплики + системное сообщение о передаче
   });
 
   test("на 2 января видна только переписка до этой даты", async ({ page }) => {
     await page.goto("/#chat/З-015?at=2026-01-02");
     await expect(page.locator("[data-chat-date]")).toContainText("2 января 2026");
-    await expect(page.locator("[data-messages]")).toContainText("Добрый день, разбита дверь в подъезде");
+    await expect(page.locator("[data-messages]")).toContainText("Во дворе разбита дверь подъезда");
+    await expect(page.locator("[data-messages]")).toContainText("Заявка передана в работу диспетчеру");
     await expect(page.locator("[data-messages]")).toContainText("Назначаю подрядчика");
     await expect(page.locator("[data-messages]")).not.toContainText("Принято, выезжаю");
     const days = await page.locator("[data-msg]").evaluateAll((nodes) =>

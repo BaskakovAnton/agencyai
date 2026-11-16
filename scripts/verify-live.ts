@@ -37,6 +37,21 @@ if (ready) {
   const stats = (await page.locator("[data-stats]").innerText()).trim();
   if (!stats.includes("2 января 2026")) problems.push("подпись даты не переключилась: " + stats);
 
+  if ((await page.locator("[data-ruler]").count()) === 0) problems.push("нет шкалы времени над графом");
+  if ((await page.locator("[data-ruler-hour]").count()) !== 24) problems.push("на шкале не 24 часа");
+  if ((await page.locator("[data-legends]").count()) === 0) problems.push("нет легенд SLA и развилок");
+  if ((await page.locator("[data-legend-sla]").count()) !== 4) problems.push("в легенде SLA не 4 фазы");
+
+  await page.locator('[data-commit][data-incident="З-015"][data-node="U6"]').click();
+  await page.waitForTimeout(400);
+  if ((await page.locator("[data-node-card]").count()) === 0) problems.push("клик по коммиту не открыл карточку узла");
+  else {
+    const card = (await page.locator("[data-node-card]").innerText()).trim();
+    if (!card.includes("ответственный")) problems.push("в карточке узла нет ответственного: " + card.slice(0, 120));
+    if (!card.includes("Депутат-диспетчер")) problems.push("в карточке узла нет роли депутата-диспетчера");
+    if (!card.includes("SLA")) problems.push("в карточке узла нет SLA");
+  }
+
   await page.locator('[data-view="gantt"]').click();
   if ((await page.locator("[data-gantt]").count()) === 0) problems.push("fallback-Гант не отрисовался");
 
@@ -45,12 +60,13 @@ if (ready) {
   const role = ((await page.locator("[data-role-badge]").textContent()) ?? "").trim();
   if (role !== "Депутат-диспетчер") problems.push("на 2 января роль не депутат-диспетчер: " + role);
   const messages = await page.locator("[data-msg]").count();
-  if (messages !== 2) problems.push("на 2 января сообщений не 2: " + messages);
+  if (messages !== 3) problems.push("на 2 января сообщений не 3: " + messages);
   if ((await page.locator("[data-phone] input, [data-phone] textarea").count()) !== 0) {
     problems.push("в чате есть поле ввода — по ТЗ это плеер переписки");
   }
   const text = (await page.locator("[data-messages]").innerText()).trim();
   if (!text.includes("Назначаю подрядчика")) problems.push("нет реплики диспетчера на 2 января");
+  if (!text.includes("Заявка передана в работу диспетчеру")) problems.push("нет системного сообщения о передаче");
   if (text.includes("Принято, выезжаю")) problems.push("на 2 января видна будущая реплика подрядчика");
 }
 

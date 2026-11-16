@@ -4,7 +4,7 @@
 > Файл подхватывается DSH автоматически как workspace instructions (baseline, до первого запроса).
 > Правила: раздел «Журнал» — только дописывать (append-only, ничего не удалять); факты помечать датой; устаревшее — перечёркивать пометкой «устарело», а не стирать.
 >
-> Обновлено: 2026-11-16 (ревизия 20) · Автор записей: агент DSH (deepseek-v4.1-flash)
+> Обновлено: 2026-11-16 (ревизия 21) · Автор записей: агент DSH (deepseek-v4.1-flash)
 
 ---
 
@@ -16,7 +16,7 @@
 - **Репозиторий:** https://github.com/BaskakovAnton/agencyai — **public** (открыт 16.11.2026 ради GitHub Pages), default branch `main`.
 - **Локальный git:** ветка `main`; ключевые коммиты: `974ec3c` (init), `a8ecf13` (память), `5fc754e` (каркас), `680ab33` (перенос страниц), `5c58eef` (публикация); полная история — `git log --oneline`. remote `origin` = `https://github.com/BaskakovAnton/agencyai.git`, `main` следит за `origin/main`.
 - **Статус:** сайт опубликован — https://baskakovanton.github.io/agencyai/ (GitHub Pages: ветка `main`, корень, HTTPS; пересобирается на каждый push).
-- **Режим (с 16.11.2026):** модель **готова** (37 ситуаций, развилки, права ролей, SLA); демо — **хронология заявок Git-графом** (`#timeline`, ползунок времени, fallback-Гант) и **мобильный чат** (`#chat/<заявка>?at=<день>`), синхронные по дате. Тесты: **143 юнит + 20 e2e Playwright**, CI зелёный; демо **опубликовано**: https://baskakovanton.github.io/agencyai/demo/.
+- **Режим (с 16.11.2026):** модель **готова** (37 ситуаций, развилки, права ролей, SLA); демо — **хронология заявок Git-графом** (`#timeline`: шкала времени с часами, легенды SLA/развилок, карточка узла по клику, SLA-цвета, ползунок, fallback-Гант) и **мобильный чат** (`#chat/<заявка>?at=<день>`: шапка в цвет роли, SLA-бейдж, системные сообщения), синхронные по дате. Тесты: **155 юнит + 21 e2e Playwright**, `tsc --noEmit` чистый, CI зелёный; демо **опубликовано**: https://baskakovanton.github.io/agencyai/demo/.
 - **Команда:** владелец репозитория (в записи его зовут «Тох»/Антон) + разработчик **`goshva`** (автор прототипа `deput`). Проект делается вдвоём; `goshva` просил добавить его **коллаборатором** в репозиторий.
 - **Ближайшая цель (спека от `goshva`, 16.11.2026):** **терминальная программа без интерфейса** — генерирует заявки по происшествиям/инцидентам городской инфраструктуры от пользователей, функционально перемещает их пошагово по узлам процесса; оператор тоже может функционально сдвинуть шаг вперёд/назад по соседним узлам; функциональные тесты проделывают то же самое. Затем — HTML-страница с визуалом поверх той же модели.
 - **Стек (спека `goshva`):** `bun` + **локальные файлы**, TypeScript; файлы — **не более 200 строк**; функциональный стиль; **unit- и функциональные тесты**; максимум работы в **оперативной памяти**, на диск — только отчёты и финальное состояние.
@@ -31,6 +31,7 @@
 - Особенность окружения: `Invoke-WebRequest` без `-UseBasicParsing` падает («Windows PowerShell в неинтерактивном режиме») — для проверок URL использовать `-UseBasicParsing` или `curl.exe`.
 - Транскрибация: Python 3.12 (`C:\Users\Pavel\AppData\Local\Programs\Python\Python312`), установлены `faster-whisper`, `torch`, `transformers`, `av`, `ctranslate2`; в кэше HF есть `faster-whisper-medium` и `faster-whisper-small`, а после прогонов — и `large-v3-turbo`; `ffmpeg`/`ffprobe` отсутствуют, декодирование AAC идёт через PyAV. GPU GTX 770 непригоден — считать на CPU (`int8`, 8 потоков).
 - Рантайм проекта: **bun 1.4.4** (`C:\Users\Pavel\.bun\bin\bun.exe`; в PATH процессов, запущенных до установки, его нет — вызывать по абсолютному пути). Запуск: `bun test`, `bun run src/cli/main.ts`.
+- После 16.11.2026 установлены devDependencies `typescript@7.0.2` и `@types/bun@1.4.4`; в `tsconfig.json` включён `allowImportingTsExtensions` (импорты с `.ts`, `noEmit: true`). `bun run typecheck` (`tsc --noEmit`) проходит чисто; `npx tsc` может подхватить чужой пакет — вызывать через `bun run typecheck`.
 - Git Bash: в его PATH `bun` не попадал, поэтому в `C:\Users\Pavel\.bashrc` добавлена строка `export PATH="$HOME/.bun/bin:$PATH"` (помечена комментарием агента DSH). Проверено: `bash -ic 'bun --version'` → 1.4.4.
 - Approvals в DSH отключены; файловая политика — danger-full-access (не запрашивать sandbox escalation).
 - Python/Node для офисных и скриптовых задач — через `load_workspace_dependencies`.
@@ -63,20 +64,21 @@ matrix.html    # из deput — копия байт-в-байт
 src/           # терминальная модель: core (чистые функции), cli, io, data, web
   core/        # граф, генератор, навигация, отчёт, права, ссылки, SLA,
                # timeline.ts — даты и срез по дню, story.ts — демо-история,
-               # gitgraph.ts + gantt.ts — модели графа и Ганта, conversation.ts — переписка, text.ts
+               # gitgraph.ts + gantt.ts — модели графа и Ганта, conversation.ts — переписка, text.ts,
+               # sla-at.ts — фазы SLA на дату (ok/paused/overdue/none)
   data/        # 30 узлов (6 групп), роли, категории, edges.ts — развилки, sla.ts — нормативы,
                # situations/*.ts — 37 ситуаций, situation-nodes.ts, messages.ts — тексты реплик,
                # hero.ts — заявка-герой З-015 (маршрут U1→U6→U7→U19 и даты из ТЗ)
-  web/         # демо: timeline-view + timeline-html (хронология), git-svg + gantt-grid (визуал),
-               # chat-view + chat-html (мобильный чат), theme.ts, router.ts (хэш с параметрами),
-               # session/card/view + model-view (экран модели), main.ts
-e2e/           # Playwright: timeline.spec.ts, chat.spec.ts, model.spec.ts (20 сценариев)
+  web/         # демо: timeline-view + timeline-html (хронология, шкала, легенды), git-svg + gantt-grid (визуал),
+               # node-card.ts — карточка узла по клику, chat-view + chat-html (мобильный чат),
+               # theme.ts, router.ts (хэш с параметрами), session/card/view + model-view, main.ts
+e2e/           # Playwright: timeline.spec.ts, chat.spec.ts, model.spec.ts (21 сценарий)
 scripts/       # build-web.ts, serve-demo.ts (статика :4321), screenshots.ts, verify-live.ts, import-situations.ts
 playwright.config.ts · bunfig.toml (bun test только по tests/)
 .github/       # workflows/e2e.yml — CI: bun install → bun test → сборка → playwright chromium → e2e
 docs/screenshots/  # timeline-git.png, timeline-gantt.png, chat-2-january.png, chat-5-january.png, model.png
 demo/          # прод-сборка для Pages: app.js + index.html + style.css (коммитится)
-tests/         # bun test (143): граф, генератор, навигация, роли, SLA, ситуации, даты и срезы,
+tests/         # bun test (155): граф, генератор, навигация, роли, SLA, ситуации, даты и срезы,
                # история, Git-граф, Гант, SVG и сетка, переписка, веб-сессия, запись отчётов, CLI, сборка
 package.json   # скрипты bun (start, demo, test, e2e, serve:demo)
 tsconfig.json  # strict TypeScript
@@ -113,10 +115,11 @@ SHA256 перенесённых файлов (сверены с источник
 | Ветвления | ✔ Внедрены: U4 → U5/U6, U9 → U6/U16/U10, U12 → U13/U19, U13 → U10/U6/U14 (веса, обратный ход симметричен, цикл переделки конечен) |
 | Роли в переходах | ✔ Внедрены: allow/subset/conditional — можно, deny/na — нельзя; U30 запрещён всем семи ролям → архив на U29 |
 | Демо-модули (снято) | Дашборд когорт (`#dashboard`) и сценарный чат — заменены 16.11.2026 по новому ТЗ: когорты запрещены как основной интерфейс, чат стал мобильным мессенджером. Восстановить можно из истории git |
-| Хронология и чат | ✔ `#timeline` — Git-граф (колонки-узлы, строки-дни, точки-события, ползунок времени, fallback-Гант, компактный чат рядом) и `#chat/<заявка>?at=<день>` — мобильный мессенджер без полей ввода. План: `docs/gitgraph-plan.md` |
+| Хронология и чат | ✔ `#timeline` — Git-граф (колонки-узлы, строки-дни, точки-события), шкала времени (24 часа дня, маркер «сейчас», клик по дню), легенды SLA/развилок, карточка узла по клику (роль, время в узле, SLA), SLA-цвета полос Ганта, ползунок, fallback-Гант и компактный чат рядом; `#chat/<заявка>?at=<день>` — мобильный мессенджер без полей ввода, шапка в цвет роли, SLA-бейдж, системные сообщения. План: `docs/gitgraph-plan.md` |
 | Даты в модели | ✔ `Incident.createdAt` и `Move.at`; история: 30 заявок стартуют с U1 каждые 12 ч с 20 декабря, шаг ≈ сутки, герой З-015 создан 1 января и идёт по маршруту ТЗ (2 января в чате видны первые две реплики) |
 | Данные модулей | Файла «agencyai · модель процессов.txt» в системе нет — модули используют нашу модель (30 заявок на 30 узлах, приоритеты из ситуаций) |
-| E2E и CI | ✔ 20 сценариев Playwright (модель, хронология, чат) + workflow `.github/workflows/e2e.yml` |
+| E2E и CI | ✔ 21 сценарий Playwright (модель, хронология с карточкой и шкалой, чат) + workflow `.github/workflows/e2e.yml` |
+| Типы | ✔ `typescript` + `@types/bun`, `allowImportingTsExtensions`; `bun run typecheck` (`tsc --noEmit`) проходит чисто; тестовые фабрики `Session` обновлены под `role`/`clock` и readonly `log` |
 | Покрытие тестами | ✔ Аудит `bun test --coverage` (после перехода на хронологию): **97.4% функций / 98.9% строк**. Новые модули (`timeline`, `story`, `gitgraph`, `gantt`, `conversation`, `text`) — 100%, у `git-svg`/`gantt-grid`/`timeline` покрыты все строки. Непокрытыми остаются TTY-вход `readline`, защитные ветки и `import.meta.main` сборки (исполняется в подпроцессе) |
 | Ситуации регламента | ✔ Перенесены 37 ситуаций (шаги по ролям, приоритеты, SLA, связь с 30 узлами) скриптом `scripts/import-situations.ts`; заявка получает `situationId` и приоритет из ситуации |
 | SLA как состояние | ✔ Внедрён: нормативы 1/24, 24/72, до 720 ч; пауза U14 и возобновление U15 со сдвигом дедлайна; пересчёт на U2 (24 ч); просрочка и однократная эскалация; часы двигают шаги и `wait` |
@@ -161,6 +164,7 @@ SHA256 перенесённых файлов (сверены с источник
 | 2026-11-16 | **Два демо-модуля внедрены** (план → тесты → реализация → зелёные → деплой): `src/core/analytics.ts` (когорты, тултипы, фильтры), `src/web/dashboard.ts` + `dashboard-render.ts` (Chart.js stacked bars, внешний HTML-тултип, клик-фильтр), `src/web/chat.ts` (стейт-машина З-015: U1→U6→U7→U19) + `chat-view.ts` (3 панели, смена роли, степпер, карточки SLA/подрядчика, авто-плеер), `router.ts` + `model-view.ts`; Playwright-конфиг, `scripts/serve-demo.ts`, 14 e2e-сценариев, CI-workflow, скриншоты; `bunfig.toml` ограничил `bun test` каталогом tests. Итог: **71 юнит + 14 e2e зелёные**. |
 | 2026-11-16 | **Закрыты пробелы покрытия** по итогам аудита: добавлены P0 (запись отчётов и финального состояния, CLI-цикл, разбор аргументов через новый `src/cli/args.ts`), P1 (refs, sweep, render-функции, random, команды, веб-сессия, ветки редьюсера, хелперы ядра, CLI-запуск сборки) и P2 (e2e на экран «Модель» и клик по столбцу диаграммы через Chart.js hit-testing). Покрытие 90.1%→**95.7%** функций и 92.4%→**97.2%** строк; тестов **124 юнит + 21 e2e**. |
 | 2026-11-16 | **Хронология и мобильный чат внедрены** по новому ТЗ: даты в модели (`createdAt`, `Move.at`), `core/timeline.ts` + `core/story.ts` (30 заявок, шаг ≈ сутки, герой З-015 по маршруту U1→U6→U7→U19 с датами 1/2/3/5 января), `core/gitgraph.ts` + `web/git-svg.ts` (Git-граф со слотами коммитов), `core/gantt.ts` + `web/gantt-grid.ts` (fallback-Гант), `core/conversation.ts` + `data/messages.ts` + `web/chat-html.ts` (мобильный мессенджер без полей ввода), роутер с параметрами `#timeline?at=&view=` и `#chat/<заявка>?at=`. Таблица когорт и `analytics.ts` удалены, `pluralize` переехал в `core/text.ts`. Тесты: **143 юнит + 20 e2e**, CI зелёный. |
+| 2026-11-16 | **Доведены демо-экраны и качество сборки:** `core/sla-at.ts` (фазы SLA на дату), `web/node-card.ts` (карточка узла), шкала времени с 24 часами и кликом по дню, легенды четырёх фаз SLA и развилок/слияний, подсветка коммита, SLA-цвета полос Ганта, цвет роли и SLA-бейдж в шапке чата, системные сообщения при смене узла; `style.css` сокращён с 323 до 175 строк (пять копий одних блоков), `main.ts` без дублей экспортов, поставлены `typescript`/`@types/bun` и включён `allowImportingTsExtensions` — `bun run typecheck` чистый; e2e дополнены проверками карточки, шкалы и легенд. Итог: **155 юнит + 21 e2e**, `demo/` пересобран, live-verifier обновлён (3 сообщения на 2 января, карточка и шкала). |
 
 ## 7. Соглашения по работе
 

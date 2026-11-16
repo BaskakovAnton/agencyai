@@ -1,15 +1,27 @@
 import { chatAt } from "../core/conversation.ts";
 import { buildGantt } from "../core/gantt.ts";
-import { buildGitGraph } from "../core/gitgraph.ts";
+import { buildGitGraph, type GitCommit } from "../core/gitgraph.ts";
 import { HERO_INCIDENT_ID } from "../data/hero.ts";
 import type { Story } from "../core/story.ts";
 import type { Graph } from "../types.ts";
 import { formatDay } from "../core/timeline.ts";
-import { hrefChat, hrefTimeline, type Route, type ViewMode } from "./router.ts";
 import { renderInlineChat } from "./chat-html.ts";
-import { renderBody, renderCanvas, renderChips, renderStats, renderTimelineFooter, renderTimelineHeader, type TimelinePageInput } from "./timeline-html.ts";
+import { renderNodeCard } from "./node-card.ts";
+import { hrefChat, hrefTimeline, type Route, type ViewMode } from "./router.ts";
+import {
+  renderBody,
+  renderCanvas,
+  renderChips,
+  renderLegends,
+  renderStats,
+  renderTimeRuler,
+  renderTimelineFooter,
+  renderTimelineHeader,
+  renderTimelinePage,
+  type TimelinePageInput,
+} from "./timeline-html.ts";
 
-/** Экран хронологии: Git-граф (или Гант) с перемоткой времени и переходом в чат заявки. */
+/** Экран хронологии: Git-граф (или Гант) с перемоткой времени, карточкой узла и чатом. */
 export const mountTimeline = (root: HTMLElement, graph: Graph, story: Story, route: Route): void => {
   const days = story.days;
   const fallbackDay = days.at(-1) ?? "";
@@ -17,6 +29,7 @@ export const mountTimeline = (root: HTMLElement, graph: Graph, story: Story, rou
   let view: ViewMode = route.view;
   let filter = "";
   let override: string | null = null;
+  let selectedId: string | null = null;
 
   /** Заявка для панели чата: выбранная в полосе, иначе герой демонстрации. */
   const chatIncident = () =>
@@ -24,36 +37,43 @@ export const mountTimeline = (root: HTMLElement, graph: Graph, story: Story, rou
     story.incidents.find((incident) => incident.id === HERO_INCIDENT_ID) ??
     (story.incidents[0] as (typeof story.incidents)[number]);
 
-  const input = (): TimelinePageInput => {
-    const selected = chatIncident();
+  const model = (): TimelinePageInput => {
+    const chosen = chatIncident();
+    const git = buildGitGraph(graph, story.incidents, day);
+    const commit = git.commits.find((item) => item.id === selectedId) ?? null;
     return {
       day,
       days,
       dayIndex: days.indexOf(day),
       view,
       filter: override ?? filter,
-      git: buildGitGraph(graph, story.incidents, day),
+      git,
       gantt: buildGantt(graph, story.incidents, day),
-      chat: renderInlineChat(selected, chatAt(graph, selected, day), hrefChat(selected.id, day)),
+      chat: renderInlineChat(chosen, chatAt(graph, chosen, day), hrefChat(chosen.id, day)),
+      card: commit ? renderNodeCard(commit, hrefChat(commit.incidentId, day)) : "",
     };
   };
 
   const paintBody = (): void => {
-    const page = input();
-    const stats = root.querySelector("[data-stats]");
-    if (stats) stats.outerHTML = renderStats(page);
-    const chips = root.querySelector("[data-chips]");
-    if (chips) chips.outerHTML = renderChips(page);
-    const canvas = root.querySelector("[data-canvas]");
-    if (canvas) canvas.outerHTML = renderCanvas(page);
-    const chat = root.querySelector("[data-inline-chat]");
-    if (chat) chat.outerHTML = page.chat;
+    const page = model();
+    const parts: readonly (readonly [string, string])[] = [
+      ["[data-stats]", renderStats(page)],
+      ["[data-chips]", renderChips(page)],
+      ["[data-ruler]", renderTimeRuler(page)],
+      ["[data-canvas]", renderCanvas(page)],
+      ["[data-inline-chat]", page.chat],
+      ["[data-node-card-slot]", '<div class="node-card-slot" data-node-card-slot>' + (page.card ?? "") + "</div>"],
+    ];
+    for (const [selector, html] of parts) {
+      const element = root.querySelector(selector);
+      if (element) element.outerHTML = html;
+    }
     wireBody();
+    wireRuler();
   };
 
   const paint = (): void => {
-    root.innerHTML =
-      '<div class="timeline">' + renderTimelineHeader(input()) + renderBody(input()) + renderTimelineFooter() + "</div>";
+    root.innerHTML = '<div class="timeline">' + renderTimelinePage(model()) + "</div>";
     wireAll();
   };
 
@@ -71,11 +91,10 @@ export const mountTimeline = (root: HTMLElement, graph: Graph, story: Story, rou
   const showTooltip = (element: HTMLElement): void => {
     const tip = tooltip();
     const node = element.dataset.node ?? "";
-    const title = graph.byId[node]?.title ?? "";
-    const when = element.dataset.day ?? day;
     tip.innerHTML =
-      "<b>" + (element.dataset.incident ?? "") + "</b> · " + node + " " + title + "<br>" + formatDay(when) + " · " +
-      (element.dataset.role ?? "") + "<br>" + (element.dataset.text ?? "");
+      "<b>" + (element.dataset.incident ?? "") + "</b> · " + node + " " + (element.dataset.nodeTitle ?? "") + "<br>" +
+      formatDay(element.dataset.day ?? day) + " · " + (element.dataset.role ?? "") + " · " +
+      (element.dataset.sla ?? "") + "<br>" + (element.dataset.text ?? "") + " · " + (element.dataset.hours ?? "") + " ч";
     tip.classList.add("on");
     const box = element.getBoundingClientRect();
     tip.style.left = Math.min(Math.max(8, box.left), window.innerWidth - 300) + "px";
@@ -89,38 +108,66 @@ export const mountTimeline = (root: HTMLElement, graph: Graph, story: Story, rou
   const wireBody = (): void => {
     root.querySelectorAll("[data-commit]").forEach((element) => {
       const node = element as HTMLElement;
+      // клик по коммиту открывает карточку узла (роль-ответственный, время в узле, SLA)
       node.addEventListener("click", () => {
-        location.hash = hrefChat(node.dataset.incident ?? "", day);
+        selectedId = node.dataset.commit ?? null;
+        paintBody();
       });
       node.addEventListener("mouseenter", () => showTooltip(node));
       node.addEventListener("focus", () => showTooltip(node));
       node.addEventListener("mouseleave", hideTooltip);
       node.addEventListener("blur", hideTooltip);
     });
+    // клик по сегменту Ганта открывает чат на дату начала сегмента — роль совпадёт с сегментом
+    root.querySelectorAll("[data-bar]").forEach((element) => {
+      element.addEventListener("click", (event) => {
+        event.stopPropagation();
+        const bar = element as HTMLElement;
+        location.hash = hrefChat(bar.dataset.bar ?? "", bar.dataset.from ?? day);
+      });
+    });
     root.querySelectorAll("[data-row]").forEach((element) => {
       element.addEventListener("click", () => {
         location.hash = hrefChat((element as HTMLElement).dataset.row ?? "", day);
       });
     });
+    root.querySelectorAll('[data-card-action="close"]').forEach((element) => {
+      element.addEventListener("click", () => {
+        selectedId = null;
+        paintBody();
+      });
+    });
+  };
+
+  const wireRuler = (): void => {
+    root.querySelectorAll("[data-ruler-day]").forEach((element) => {
+      element.addEventListener("click", () => {
+        jumpTo((element as HTMLElement).dataset.rulerDay ?? day);
+      });
+    });
+  };
+
+  const jumpTo = (target: string): void => {
+    day = target;
+    const slider = root.querySelector("[data-slider]") as HTMLInputElement | null;
+    if (slider) slider.value = String(days.indexOf(day));
+    const label = root.querySelector("[data-day-label]");
+    if (label) label.textContent = formatDay(day);
+    paintBody();
   };
 
   const wireAll = (): void => {
     wireBody();
+    wireRuler();
     const slider = root.querySelector("[data-slider]") as HTMLInputElement | null;
     if (slider) {
-      slider.addEventListener("input", () => {
-        day = days[Number(slider.value)] ?? day;
-        const label = root.querySelector("[data-day-label]");
-        if (label) label.textContent = formatDay(day);
-        paintBody();
-      });
-      slider.addEventListener("change", () => {
-        history.replaceState(null, "", hrefTimeline(day, view));
-      });
+      slider.addEventListener("input", () => jumpTo(days[Number(slider.value)] ?? day));
+      slider.addEventListener("change", () => history.replaceState(null, "", hrefTimeline(day, view)));
     }
     root.querySelectorAll("[data-view]").forEach((element) => {
       element.addEventListener("click", () => {
         view = ((element as HTMLElement).dataset.view ?? "git") as ViewMode;
+        selectedId = null;
         paint();
       });
     });
@@ -139,14 +186,7 @@ export const mountTimeline = (root: HTMLElement, graph: Graph, story: Story, rou
           filter = "";
           paintBody();
         }
-        if (action === "jump") {
-          day = (element as HTMLElement).dataset.day ?? day;
-          const slider2 = root.querySelector("[data-slider]") as HTMLInputElement | null;
-          if (slider2) slider2.value = String(days.indexOf(day));
-          const label = root.querySelector("[data-day-label]");
-          if (label) label.textContent = formatDay(day);
-          paintBody();
-        }
+        if (action === "jump") jumpTo((element as HTMLElement).dataset.day ?? day);
       });
     });
   };

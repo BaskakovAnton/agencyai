@@ -39,6 +39,9 @@ export { renderPhone, renderInlineChat, renderMessages } from "./chat-html.ts";
 export { hrefChat, hrefTimeline, parseRoute } from "./router.ts";
 export { mountChat } from "./chat-view.ts";
 export { mountTimeline } from "./timeline-view.ts";
+export { renderNodeCard } from "./node-card.ts";
+export { renderTimeRuler, renderLegends } from "./timeline-html.ts";
+export { SLA_PHASES, SLA_PHASE_TITLES, SLA_LEGEND_TITLES, slaPhaseAt, slaPhaseOf, slaPhaseOnDay, slaStateAt } from "../core/sla-at.ts";
 export { applyAction, createState } from "./session.ts";
 export { renderPage } from "./view.ts";
 
