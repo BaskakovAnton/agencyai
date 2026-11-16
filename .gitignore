@@ -1,0 +1,19 @@
+# ОС и редакторы
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+.idea/
+
+# Логи и временное
+*.log
+*.tmp
+
+# Секреты и локальные настройки
+.env
+.env.*
+*.local.md
+
+# Node (на будущее)
+node_modules/
+dist/
