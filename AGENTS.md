@@ -4,7 +4,7 @@
 > Файл подхватывается DSH автоматически как workspace instructions (baseline, до первого запроса).
 > Правила: раздел «Журнал» — только дописывать (append-only, ничего не удалять); факты помечать датой; устаревшее — перечёркивать пометкой «устарело», а не стирать.
 >
-> Обновлено: 2026-11-16 (ревизия 4) · Автор записей: агент DSH (deepseek-v4.1-flash)
+> Обновлено: 2026-11-16 (ревизия 5) · Автор записей: агент DSH (deepseek-v4.1-flash)
 
 ---
 
@@ -23,6 +23,7 @@
 - git 2.55.0.windows.2; gh CLI 2.96.0 — авторизован как `BaskakovAnton` (keyring, протокол https, scopes: `repo`, `workflow`, `read:org`, `delete_repo`, `gist`).
 - git identity (global): `BaskakovAnton` / `8Bazz8@mail.ru`.
 - GitHub Pages на бесплатном плане доступен только публичным репозиториям — поэтому `agencyai` публичный.
+- Особенность окружения: `Invoke-WebRequest` без `-UseBasicParsing` падает («Windows PowerShell в неинтерактивном режиме») — для проверок URL использовать `-UseBasicParsing` или `curl.exe`.
 - Approvals в DSH отключены; файловая политика — danger-full-access (не запрашивать sandbox escalation).
 - Python/Node для офисных и скриптовых задач — через `load_workspace_dependencies`.
 - Папка `C:\Users\Pavel\Desktop\Bureau` (пустая, создана 16.11.2026) — признана случайной и удалена 16.11.2026.
@@ -94,6 +95,7 @@ SHA256 перенесённых файлов (сверены с источник
 | 2026-11-16 | Шаг 2: 4 страницы перенесены в корень байт-в-байт (SHA256 сверены), закоммичены и запушены. |
 | 2026-11-16 | GitHub Pages включить не удалось: HTTP 422 (приватный репозиторий на текущем плане не поддерживает Pages). |
 | 2026-11-16 | Репозиторий переведён в **public**, GitHub Pages включён (`main`, корень): https://baskakovanton.github.io/agencyai/ |
+| 2026-11-16 | Сайт проверен: `200 OK` на `/`, `index.html`, `process.html`, `player.html`, `matrix.html`; заголовки страниц совпадают с исходными. Шаг 2 закрыт. |
 
 ## 7. Соглашения по работе
 
