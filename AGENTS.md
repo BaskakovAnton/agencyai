@@ -16,6 +16,7 @@
 - **Репозиторий:** https://github.com/BaskakovAnton/agencyai — **public** (открыт 16.11.2026 ради GitHub Pages), default branch `main`.
 - **Локальный git:** ветка `main`; ключевые коммиты: `974ec3c` (init), `a8ecf13` (память), `5fc754e` (каркас), `680ab33` (перенос страниц), `5c58eef` (публикация); полная история — `git log --oneline`. remote `origin` = `https://github.com/BaskakovAnton/agencyai.git`, `main` следит за `origin/main`.
 - **Статус:** сайт опубликован — https://baskakovanton.github.io/agencyai/ (GitHub Pages: ветка `main`, корень, HTTPS; пересобирается на каждый push).
+- **Режим (с 16.11.2026):** продуктовая разработка на паузе; идёт **анализ** — транскрипция и разбор разговора с разработчиком. Проект делается вдвоём с коллегой-разработчиком.
 - **Назначение (зафиксировано 16.11.2026):** продукт «Приёмная депутата» — рабочая система учёта обращений жителей по циклу «житель → депутат-диспетчер → подрядчик»: роли и права, SLA с паузами и эскалацией, аудит, отчётность.
 
 ## 2. Окружение и доступы
@@ -24,6 +25,7 @@
 - git identity (global): `BaskakovAnton` / `8Bazz8@mail.ru`.
 - GitHub Pages на бесплатном плане доступен только публичным репозиториям — поэтому `agencyai` публичный.
 - Особенность окружения: `Invoke-WebRequest` без `-UseBasicParsing` падает («Windows PowerShell в неинтерактивном режиме») — для проверок URL использовать `-UseBasicParsing` или `curl.exe`.
+- Транскрибация: Python 3.12 (`C:\Users\Pavel\AppData\Local\Programs\Python\Python312`), установлены `faster-whisper`, `torch`, `transformers`, `av`, `ctranslate2`; в кэше HF есть модели `faster-whisper-medium` и `faster-whisper-small` — работают офлайн. `ffmpeg`/`ffprobe` отсутствуют, декодирование AAC идёт через PyAV. GPU GTX 770 непригоден — считать на CPU (`int8`, 8 потоков).
 - Approvals в DSH отключены; файловая политика — danger-full-access (не запрашивать sandbox escalation).
 - Python/Node для офисных и скриптовых задач — через `load_workspace_dependencies`.
 - Папка `C:\Users\Pavel\Desktop\Bureau` (пустая, создана 16.11.2026) — признана случайной и удалена 16.11.2026.
@@ -96,6 +98,7 @@ SHA256 перенесённых файлов (сверены с источник
 | 2026-11-16 | GitHub Pages включить не удалось: HTTP 422 (приватный репозиторий на текущем плане не поддерживает Pages). |
 | 2026-11-16 | Репозиторий переведён в **public**, GitHub Pages включён (`main`, корень): https://baskakovanton.github.io/agencyai/ |
 | 2026-11-16 | Сайт проверен: `200 OK` на `/`, `index.html`, `process.html`, `player.html`, `matrix.html`; заголовки страниц совпадают с исходными. Шаг 2 закрыт. |
+| 2026-11-16 | Продуктовая разработка переведена на паузу. Начато **аналитическое** направление: транскрибация разговора с разработчиком (`C:\Users\Pavel\Desktop\20261116_170847.aac`) моделью faster-whisper medium; результат кладётся в `docs/`. |
 
 ## 7. Соглашения по работе
 
