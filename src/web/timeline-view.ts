@@ -1,6 +1,6 @@
 import { chatAt } from "../core/conversation.ts";
 import { buildGantt } from "../core/gantt.ts";
-import { buildGitGraph, type GitCommit } from "../core/gitgraph.ts";
+import { buildGitGraph } from "../core/gitgraph.ts";
 import { HERO_INCIDENT_ID } from "../data/hero.ts";
 import type { Story } from "../core/story.ts";
 import type { Graph } from "../types.ts";
@@ -9,14 +9,11 @@ import { renderInlineChat } from "./chat-html.ts";
 import { renderNodeCard } from "./node-card.ts";
 import { hrefChat, hrefTimeline, type Route, type ViewMode } from "./router.ts";
 import {
-  renderBody,
   renderCanvas,
   renderChips,
-  renderLegends,
+  renderControls,
   renderStats,
   renderTimeRuler,
-  renderTimelineFooter,
-  renderTimelineHeader,
   renderTimelinePage,
   type TimelinePageInput,
 } from "./timeline-html.ts";
@@ -54,29 +51,6 @@ export const mountTimeline = (root: HTMLElement, graph: Graph, story: Story, rou
     };
   };
 
-  const paintBody = (): void => {
-    const page = model();
-    const parts: readonly (readonly [string, string])[] = [
-      ["[data-stats]", renderStats(page)],
-      ["[data-chips]", renderChips(page)],
-      ["[data-ruler]", renderTimeRuler(page)],
-      ["[data-canvas]", renderCanvas(page)],
-      ["[data-inline-chat]", page.chat],
-      ["[data-node-card-slot]", '<div class="node-card-slot" data-node-card-slot>' + (page.card ?? "") + "</div>"],
-    ];
-    for (const [selector, html] of parts) {
-      const element = root.querySelector(selector);
-      if (element) element.outerHTML = html;
-    }
-    wireBody();
-    wireRuler();
-  };
-
-  const paint = (): void => {
-    root.innerHTML = '<div class="timeline">' + renderTimelinePage(model()) + "</div>";
-    wireAll();
-  };
-
   const tooltip = (): HTMLElement => {
     const existing = document.querySelector("[data-tt]") as HTMLElement | null;
     if (existing) return existing;
@@ -84,8 +58,13 @@ export const mountTimeline = (root: HTMLElement, graph: Graph, story: Story, rou
     tip.className = "tt";
     tip.id = "tt";
     tip.setAttribute("data-tt", "");
+    tip.setAttribute("role", "tooltip");
     document.body.appendChild(tip);
     return tip;
+  };
+
+  const hideTooltip = (): void => {
+    document.querySelector("[data-tt]")?.classList.remove("on");
   };
 
   const showTooltip = (element: HTMLElement): void => {
@@ -101,95 +80,114 @@ export const mountTimeline = (root: HTMLElement, graph: Graph, story: Story, rou
     tip.style.top = Math.max(8, box.top - 62) + "px";
   };
 
-  const hideTooltip = (): void => {
-    document.querySelector("[data-tt]")?.classList.remove("on");
+  const commitNode = (id: string): HTMLElement | null =>
+    Array.from(root.querySelectorAll<HTMLElement>("[data-commit]")).find((node) => node.dataset.commit === id) ?? null;
+
+  const paintBody = (focusCard = false): void => {
+    hideTooltip();
+    const page = model();
+    const parts: readonly (readonly [string, string])[] = [
+      ["[data-stats]", renderStats(page)],
+      ["[data-controls]", renderControls(page)],
+      ["[data-chips]", renderChips(page)],
+      ["[data-ruler]", renderTimeRuler(page)],
+      ["[data-canvas]", renderCanvas(page)],
+      ["[data-inline-chat]", page.chat],
+      ["[data-node-card-slot]", '<div class="node-card-slot" data-node-card-slot>' + (page.card ?? "") + "</div>"],
+    ];
+    for (const [selector, html] of parts) {
+      const element = root.querySelector(selector);
+      if (element) element.outerHTML = html;
+    }
+    if (focusCard) root.querySelector<HTMLElement>("[data-node-card]")?.focus();
   };
 
-  const wireBody = (): void => {
-    root.querySelectorAll("[data-commit]").forEach((element) => {
-      const node = element as HTMLElement;
-      // клик по коммиту открывает карточку узла (роль-ответственный, время в узле, SLA)
-      node.addEventListener("click", () => {
-        selectedId = node.dataset.commit ?? null;
-        paintBody();
-      });
-      node.addEventListener("mouseenter", () => showTooltip(node));
-      node.addEventListener("focus", () => showTooltip(node));
-      node.addEventListener("mouseleave", hideTooltip);
-      node.addEventListener("blur", hideTooltip);
-    });
-    // клик по сегменту Ганта открывает чат на дату начала сегмента — роль совпадёт с сегментом
-    root.querySelectorAll("[data-bar]").forEach((element) => {
-      element.addEventListener("click", (event) => {
-        event.stopPropagation();
-        const bar = element as HTMLElement;
-        location.hash = hrefChat(bar.dataset.bar ?? "", bar.dataset.from ?? day);
-      });
-    });
-    root.querySelectorAll("[data-row]").forEach((element) => {
-      element.addEventListener("click", () => {
-        location.hash = hrefChat((element as HTMLElement).dataset.row ?? "", day);
-      });
-    });
-    root.querySelectorAll('[data-card-action="close"]').forEach((element) => {
-      element.addEventListener("click", () => {
-        selectedId = null;
-        paintBody();
-      });
-    });
-  };
-
-  const wireRuler = (): void => {
-    root.querySelectorAll("[data-ruler-day]").forEach((element) => {
-      element.addEventListener("click", () => {
-        jumpTo((element as HTMLElement).dataset.rulerDay ?? day);
-      });
-    });
+  const paint = (): void => {
+    hideTooltip();
+    root.innerHTML = '<div class="timeline">' + renderTimelinePage(model()) + "</div>";
+    const slider = root.querySelector("[data-slider]") as HTMLInputElement | null;
+    slider?.addEventListener("input", () => jumpTo(days[Number(slider.value)] ?? day));
   };
 
   const jumpTo = (target: string): void => {
     day = target;
+    selectedId = null;
     const slider = root.querySelector("[data-slider]") as HTMLInputElement | null;
-    if (slider) slider.value = String(days.indexOf(day));
+    if (slider) {
+      slider.value = String(days.indexOf(day));
+      slider.setAttribute("aria-valuetext", formatDay(day));
+    }
     const label = root.querySelector("[data-day-label]");
     if (label) label.textContent = formatDay(day);
+    history.replaceState(null, "", hrefTimeline(day, view));
     paintBody();
   };
 
-  const wireAll = (): void => {
-    wireBody();
-    wireRuler();
-    const slider = root.querySelector("[data-slider]") as HTMLInputElement | null;
-    if (slider) {
-      slider.addEventListener("input", () => jumpTo(days[Number(slider.value)] ?? day));
-      slider.addEventListener("change", () => history.replaceState(null, "", hrefTimeline(day, view)));
-    }
-    root.querySelectorAll("[data-view]").forEach((element) => {
-      element.addEventListener("click", () => {
-        view = ((element as HTMLElement).dataset.view ?? "git") as ViewMode;
-        selectedId = null;
-        paint();
-      });
-    });
-    root.querySelectorAll("[data-incident-filter]").forEach((element) => {
-      element.addEventListener("click", () => {
-        const id = (element as HTMLElement).dataset.incidentFilter ?? "";
-        override = override === id ? null : id;
-        paintBody();
-      });
-    });
-    root.querySelectorAll("[data-action]").forEach((element) => {
-      element.addEventListener("click", () => {
-        const action = (element as HTMLElement).dataset.action;
-        if (action === "clear") {
-          override = null;
-          filter = "";
-          paintBody();
-        }
-        if (action === "jump") jumpTo((element as HTMLElement).dataset.day ?? day);
-      });
-    });
+  const select = (id: string): void => {
+    selectedId = id;
+    paintBody(true);
   };
+
+  const closeCard = (): void => {
+    const id = selectedId;
+    selectedId = null;
+    paintBody();
+    if (id) commitNode(id)?.focus();
+  };
+
+  /** Делегирование: обработчики живут на контейнере и переживают перерисовку блоков. */
+  root.addEventListener("click", (event) => {
+    const target = (event.target as Element | null)?.closest<HTMLElement>(
+      "[data-commit],[data-bar],[data-row],[data-view],[data-incident-filter],[data-action],[data-ruler-day],[data-card-action]",
+    );
+    if (!target) return;
+    if (target.dataset.cardAction === "close") { closeCard(); return; }
+    if (target.dataset.commit) { select(target.dataset.commit); return; }
+    if (target.dataset.bar) { location.hash = hrefChat(target.dataset.bar, target.dataset.from ?? day); return; }
+    if (target.dataset.row) { location.hash = hrefChat(target.dataset.row, day); return; }
+    if (target.dataset.view) {
+      view = target.dataset.view as ViewMode;
+      selectedId = null;
+      paint();
+      history.replaceState(null, "", hrefTimeline(day, view));
+      return;
+    }
+    if (target.dataset.incidentFilter) {
+      const id = target.dataset.incidentFilter;
+      override = override === id ? null : id;
+      paintBody();
+      return;
+    }
+    if (target.dataset.rulerDay) { jumpTo(target.dataset.rulerDay); return; }
+    if (target.dataset.action === "clear") { override = null; filter = ""; paintBody(); }
+    else if (target.dataset.action === "jump") jumpTo(target.dataset.day ?? day);
+  });
+
+  root.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      if (selectedId !== null) { event.preventDefault(); closeCard(); }
+      return;
+    }
+    if (event.key !== "Enter" && event.key !== " ") return;
+    const target = (event.target as Element | null)?.closest<HTMLElement>("[data-commit],[data-row]");
+    if (!target) return;
+    event.preventDefault();
+    if (target.dataset.commit) select(target.dataset.commit);
+    else if (target.dataset.row) location.hash = hrefChat(target.dataset.row, day);
+  });
+
+  const hovered = (event: Event): HTMLElement | null =>
+    (event.target as Element | null)?.closest<HTMLElement>("[data-commit]") ?? null;
+  root.addEventListener("mouseover", (event) => { const el = hovered(event); if (el) showTooltip(el); });
+  root.addEventListener("mouseout", (event) => {
+    const el = hovered(event);
+    if (el && !el.contains(event.relatedTarget as Node | null)) hideTooltip();
+  });
+  root.addEventListener("focusin", (event) => { const el = hovered(event); if (el) showTooltip(el); });
+  root.addEventListener("focusout", (event) => {
+    const el = hovered(event);
+    if (el && !el.contains(event.relatedTarget as Node | null)) hideTooltip();
+  });
 
   paint();
 };

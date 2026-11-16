@@ -13,6 +13,10 @@ const esc = (s: string): string =>
 const btn = (label: string, action: string, ref: string, nodeId = ""): string =>
   '<button data-action="' + action + '" data-ref="' + ref + '"' + (nodeId ? ' data-node="' + nodeId + '"' : "") + ">" + label + "</button>";
 
+/** Иконочная кнопка перехода: символ виден, смысл — в aria-label. */
+const act = (symbol: string, action: string, ref: string, title: string): string =>
+  '<button data-action="' + action + '" data-ref="' + ref + '" aria-label="' + title + " " + ref + '">' + symbol + "</button>";
+
 /** Кнопка перехода: недоступные роли варианты показываются выключенными с причиной. */
 const moveBtn = (state: WebState, label: string, ref: string, to: string): string => {
   const access = roleAccess(state.graph, to, state.session.role);
@@ -103,15 +107,17 @@ export const renderSelected = (state: WebState): string => {
 export const renderList = (state: WebState): string => {
   const rows = state.session.incidents
     .map((incident) => {
-      const active = incident.id === state.selected ? " active" : "";
+      const active = incident.id === state.selected ? " on" : "";
       return (
-        '<li class="row' + active + '" data-action="select" data-ref="' + incident.id + '">' +
+        '<li class="row' + active + '">' +
+        '<button class="row-main" data-action="select" data-ref="' + incident.id + '">' +
         '<span class="id">' + incident.id + "</span>" +
-        '<span class="prio p-' + incident.priority + '">' + PRIORITY_TITLES[incident.priority] + "</span>" +
+        '<span class="prio ' + incident.priority + '">' + PRIORITY_TITLES[incident.priority] + "</span>" +
         '<span class="title">' + esc(incident.title) + "</span>" +
         nodeChip(state, incident.nodeId) +
         slaBadge(state, incident) +
-        '<span class="acts">' + btn("‹", "back", incident.id) + btn("›", "forward", incident.id) + "</span>" +
+        "</button>" +
+        '<span class="acts">' + act("‹", "back", incident.id, "Назад:") + act("›", "forward", incident.id, "Вперёд:") + "</span>" +
         "</li>"
       );
     })

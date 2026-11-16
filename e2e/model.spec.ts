@@ -11,6 +11,18 @@ test.describe("Экран «Модель процессов»", () => {
     await expect(page.locator(".side")).toContainText("Выберите заявку");
   });
 
+  test("клавиатура: Enter и Space по строке выбирают заявку", async ({ page }) => {
+    const first = page.locator('[data-action="select"]').first();
+    const ref = await first.getAttribute("data-ref");
+    await first.focus();
+    await page.keyboard.press("Enter");
+    await expect(page.locator(".side")).toContainText(ref as string);
+    await page.locator('[data-action="select"]').nth(1).focus();
+    const second = await page.locator('[data-action="select"]').nth(1).getAttribute("data-ref");
+    await page.keyboard.press(" ");
+    await expect(page.locator(".side")).toContainText(second as string);
+  });
+
   test("выбор заявки раскрывает карточку, «вперёд» и «назад» пишут историю", async ({ page }) => {
     await page.locator('[data-action="select"][data-ref="З-001"]').click();
     await expect(page.locator(".side")).toContainText("З-001");

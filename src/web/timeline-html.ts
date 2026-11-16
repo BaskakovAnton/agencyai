@@ -51,7 +51,9 @@ export const renderChips = (input: TimelinePageInput): string => {
 /** Только картинка (граф или Гант) — её перерисовывают при движении ползунка.
  *  Тултип живёт в body (position: fixed): внутри прокручиваемой области он менял бы раскладку. */
 export const renderCanvas = (input: TimelinePageInput): string =>
-  '<div class="canvas" data-canvas>' +
+  '<div class="canvas" data-canvas tabindex="0" role="region" aria-label="' +
+  (input.view === "gantt" ? "Диаграмма Ганта: заявки по дням" : "Git-граф заявок: узлы по колонкам, дни по строкам") +
+  '">' +
   (input.view === "gantt" ? renderGanttGrid(input.gantt, input.filter) : renderGitSvg(input.git, input.filter)) +
   "</div>";
 
@@ -60,22 +62,26 @@ export const renderBody = (input: TimelinePageInput): string =>
   '<div class="node-card-slot" data-node-card-slot>' + (input.card ?? "") + "</div>" +
   input.chat;
 
+/** Кнопки вида и сброса фильтра: их перерисовывают, когда фильтр меняется. */
+export const renderControls = (input: TimelinePageInput): string =>
+  '<div class="controls" data-controls>' +
+  '<button data-view="git"' + (input.view === "git" ? ' class="on"' : "") + ">Git-граф</button>" +
+  '<button data-view="gantt"' + (input.view === "gantt" ? ' class="on"' : "") + ">Диаграмма Ганта</button>" +
+  (input.filter === "" ? "" : '<button data-action="clear">Показать все заявки</button>') +
+  "</div>";
+
 /** Шапка, ползунок времени и переключатель вида — всё, кроме самой картинки. */
 export const renderTimelineHeader = (input: TimelinePageInput): string =>
   [
     '<header class="top">',
     '<h1 class="brand">Хронология заявок · Git-граф</h1>',
     renderStats(input),
-    '<div class="controls">',
-    '<button data-view="git"' + (input.view === "git" ? ' class="on"' : "") + ">Git-граф</button>",
-    '<button data-view="gantt"' + (input.view === "gantt" ? ' class="on"' : "") + ">Диаграмма Ганта</button>",
-    input.filter === "" ? "" : '<button data-action="clear">Показать все заявки</button>',
-    "</div>",
+    renderControls(input),
     "</header>",
     '<div class="timebar">',
     '<label class="hint" for="slider">Перемотка времени</label>',
     '<input id="slider" data-slider type="range" min="0" max="' + Math.max(input.days.length - 1, 0) +
-      '" value="' + Math.max(input.dayIndex, 0) + '">',
+      '" value="' + Math.max(input.dayIndex, 0) + '" aria-valuetext="' + formatDay(input.day) + '">',
     '<b data-day-label>' + formatDay(input.day) + "</b>",
     '<button class="chip" data-action="jump" data-day="2026-01-02">Сценарий: 2 января</button>',
     "</div>",
@@ -83,7 +89,7 @@ export const renderTimelineHeader = (input: TimelinePageInput): string =>
   ].join("");
 
 export const renderTimelineFooter = (): string =>
-  '<footer class="foot">Клик по точке графа открывает мобильный чат этой заявки на выбранную дату. ' +
+  '<footer class="foot">Клик или Enter по точке графа открывают карточку узла; из неё — чат заявки на эту дату. ' +
   "Точки — события процесса, линии — путь заявки, колонки — узлы U1…U30.</footer>";
 
 /** Горизонтальная шкала времени: тики по суткам и часы выбранного дня. */
@@ -92,7 +98,8 @@ export const renderTimeRuler = (input: TimelinePageInput): string => {
     .map(
       (day, index) =>
         '<button class="ruler-day' + (day === input.day ? " on" : "") + '" data-ruler-day="' + day +
-        '" data-ruler-index="' + index + '" title="' + formatDay(day) + '">' + day.slice(8) + "</button>",
+        '" data-ruler-index="' + index + '" title="' + formatDay(day) + '" aria-label="' + day.slice(8) + " · " + formatDay(day) + '"' +
+        (day === input.day ? ' aria-current="date"' : "") + ">" + day.slice(8) + "</button>",
     )
     .join("");
   const hours = Array.from({ length: 24 }, (_, hour) =>

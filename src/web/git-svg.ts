@@ -1,5 +1,7 @@
 import type { GitCommit, GitModel } from "../core/gitgraph.ts";
+import { SLA_PHASE_TITLES } from "../core/sla-at.ts";
 import { formatDay } from "../core/timeline.ts";
+import { ROLE_NAMES } from "../data/roles.ts";
 import { FORK_MARK, MERGE_MARK, SLA_COLORS } from "./theme.ts";
 
 export interface GitSvgOptions {
@@ -98,11 +100,14 @@ export const renderGitSvg = (model: GitModel, filter = "", options: GitSvgOption
     .map((commit) => {
       const cx = x(commit.nodeIndex);
       const cy = y(commit);
+      const label = commit.incidentId + " · " + commit.nodeId + " " + commit.nodeTitle + " · " +
+        formatDay(commit.day) + " · " + ROLE_NAMES[commit.role] + " · SLA: " + SLA_PHASE_TITLES[commit.slaPhase] +
+        " · " + commit.hoursInNode + " ч";
       const attributes =
         'data-commit="' + commit.id + '" data-incident="' + commit.incidentId + '" data-node="' + commit.nodeId +
         '" data-node-title="' + escapeHtml(commit.nodeTitle) + '" data-day="' + commit.day +
         '" data-role="' + commit.role + '" data-sla="' + commit.slaPhase + '" data-hours="' + commit.hoursInNode +
-        '" data-text="' + escapeHtml(commit.text) + '" tabindex="0"';
+        '" data-text="' + escapeHtml(commit.text) + '" tabindex="0" role="button" aria-label="' + escapeHtml(label) + '"';
       const forkMark = commit.isFork
         ? '<polygon class="fork" points="' + (cx - 5) + "," + (cy - 16) + " " + cx + "," + (cy - 22) + " " +
           (cx + 5) + "," + (cy - 16) + " " + cx + "," + (cy - 10) + '" fill="#4da3ff"></polygon>'
@@ -124,7 +129,8 @@ export const renderGitSvg = (model: GitModel, filter = "", options: GitSvgOption
     .join("");
 
   return (
-    '<svg class="git" data-graph viewBox="0 0 ' + width + " " + height + '" width="' + width + '" height="' + height + '" role="img">' +
+    '<svg class="git" data-graph viewBox="0 0 ' + width + " " + height + '" width="' + width + '" height="' + height +
+    '" role="group" aria-label="Git-граф заявок: узлы процесса по колонкам, дни по строкам">' +
     '<g class="grid">' + grid.join("") + "</g>" +
     '<g class="links">' + links + "</g>" +
     '<g class="dots">' + dots + "</g>" +

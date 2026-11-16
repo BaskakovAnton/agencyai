@@ -21,6 +21,11 @@ test("карточка узла: заявка, узел с названием, �
   expect(html).toContain("data-sla");
 });
 
+test("карточка принимает фокус, чтобы клавиатура не терялась", () => {
+  const html = renderNodeCard(commit, "#");
+  expect(html).toContain('tabindex="-1"');
+});
+
 test("из карточки можно открыть чат этой заявки на эту дату или закрыть её", () => {
   const html = renderNodeCard(commit, "#chat/З-015?at=2026-01-02");
   expect(html).toContain('data-card-action="chat"');

@@ -19,7 +19,7 @@ export const renderPage = (state: WebState, message: string): string => {
   const summary = buildSummary(state.graph, state.session, "");
   return [
     '<header class="top">',
-    '<div class="brand">agencyai · модель процессов</div>',
+    '<h1 class="brand">agencyai · модель процессов</h1>',
     '<div class="stats">узлов ' + state.graph.order.length + " · заявок " + summary.total + " · переходов " + summary.moves + " · дошло до конца " + summary.finished + "</div>",
     '<div class="stats">SLA: в срок ' + summary.slaOnTrack + " · просрочено " + summary.slaOverdue + " · на паузе " + summary.slaPaused + " · эскалировано " + summary.slaEscalated + " · время " + (state.session.clock ?? 0) + " ч</div>",
     '<div class="controls">' +
