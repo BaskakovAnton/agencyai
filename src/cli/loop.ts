@@ -64,10 +64,21 @@ export const runSession = async (options: RunOptions): Promise<Session> => {
     return session;
   }
 
+  if (process.stdin.isTTY !== true) {
+    print('stdin не терминал — интерактивный режим недоступен. Используйте --script "list;forward 5;save"');
+    return session;
+  }
+
   const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
   try {
     for (;;) {
-      const answer = await rl.question("оператор> ");
+      let answer: string;
+      try {
+        answer = await rl.question("оператор> ");
+      } catch {
+        print("ввод закончился (EOF) — выход");
+        break;
+      }
       const res = await applyAndPrint(options, session, answer, print);
       session = res.session;
       if (res.quit) {
