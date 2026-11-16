@@ -14,7 +14,7 @@
 - **Владелец:** Павел. GitHub-аккаунт `BaskakovAnton`, e-mail коммитов `8Bazz8@mail.ru`.
 - **Язык общения:** русский.
 - **Репозиторий:** https://github.com/BaskakovAnton/agencyai — **private**, default branch `main`.
-- **Локальный git:** ветка `main`, единственный коммит `974ec3c` «chore: initialize repository» (пустой корневой коммит), remote `origin` = `https://github.com/BaskakovAnton/agencyai.git`, `main` следит за `origin/main`.
+- **Локальный git:** ветка `main`; коммиты: `974ec3c` (init), `a8ecf13` (память), `5fc754e` (каркас). remote `origin` = `https://github.com/BaskakovAnton/agencyai.git`, `main` следит за `origin/main`.
 - **Статус:** каркас репозитория — README, структура, правила. Страницы прототипа ещё не перенесены.
 - **Назначение (зафиксировано 16.11.2026):** продукт «Приёмная депутата» — рабочая система учёта обращений жителей по циклу «житель → депутат-диспетчер → подрядчик»: роли и права, SLA с паузами и эскалацией, аудит, отчётность.
 
