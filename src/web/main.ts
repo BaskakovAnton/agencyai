@@ -1,7 +1,8 @@
-import { buildGraph, neighborsOf } from "../core/graph.ts";
+import { branchesOf, buildGraph, neighborsOf } from "../core/graph.ts";
 import { generateIncidents } from "../core/generator.ts";
 import { moveBackward, moveForward, moveToNode } from "../core/navigation.ts";
 import { buildFinalState, buildSummary } from "../core/report.ts";
+import { BRANCHES, branchShares, buildProcessGraph } from "../data/edges.ts";
 import { NODES } from "../data/nodes.ts";
 import { mulberry32, pick, randInt, shuffle } from "../random.ts";
 import { applyAction, createState, type Action } from "./session.ts";
@@ -9,7 +10,8 @@ import { renderPage } from "./view.ts";
 
 /** Вся модель, доступная на странице (и в тестах паритета). */
 export { NODES } from "../data/nodes.ts";
-export { buildGraph, neighborsOf } from "../core/graph.ts";
+export { branchesOf, buildGraph, neighborsOf } from "../core/graph.ts";
+export { BRANCHES, branchShares, buildProcessGraph } from "../data/edges.ts";
 export { generateIncidents } from "../core/generator.ts";
 export { moveBackward, moveForward, moveToNode } from "../core/navigation.ts";
 export { buildFinalState, buildSummary } from "../core/report.ts";
@@ -38,7 +40,7 @@ const actionOf = (element: HTMLElement): Action | null => {
 const mount = (): void => {
   const root = document.querySelector("#app");
   if (!root) return;
-  let state = createState(buildGraph(NODES), readSeed());
+  let state = createState(buildProcessGraph(NODES), readSeed());
   let message = "";
   const paint = (): void => {
     root.innerHTML = renderPage(state, message);

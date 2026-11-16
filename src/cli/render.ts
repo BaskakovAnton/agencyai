@@ -1,9 +1,17 @@
 import type { Graph, Incident, Priority } from "../types.ts";
 import { ACCESS_MARKS, GROUP_TITLES, PRIORITY_TITLES, ROLE_IDS, ROLE_NAMES } from "../data/roles.ts";
-import { neighborsOf } from "../core/graph.ts";
+import { branchesOf, neighborsOf } from "../core/graph.ts";
+import { branchShares } from "../data/edges.ts";
 import { sortIncidents } from "../core/incident.ts";
 
 const pad = (s: string, n: number) => (s.length >= n ? s : s + " ".repeat(n - s.length));
+
+/** Строка развилки с процентами (пусто, если узел линейный). */
+export const branchText = (graph: Graph, nodeId: string): string => {
+  const shares = branchShares(branchesOf(graph, nodeId));
+  if (shares.length === 0) return "";
+  return "  развилка: " + shares.map((s) => s.to + " " + s.percent + "% — " + s.note).join("; ");
+};
 
 /** Короткие метки приоритета для табличного списка. */
 const SHORT_PRIORITY: Readonly<Record<Priority, string>> = {
@@ -38,6 +46,8 @@ export const renderIncidentCard = (graph: Graph, incident: Incident): string => 
   lines.push("  приоритет: " + PRIORITY_TITLES[incident.priority] + " · категория: " + incident.category);
   lines.push("  узел: " + incident.nodeId + " — " + (node ? node.title : "?") + " [" + (node ? GROUP_TITLES[node.group] : "?") + "]");
   lines.push("  назад: " + (prev.join(", ") || "— начало процесса") + " · вперёд: " + (next.join(", ") || "— конец процесса"));
+  const branch = branchText(graph, incident.nodeId);
+  if (branch) lines.push(branch);
   if (incident.history.length > 0) {
     lines.push("  история:");
     incident.history.slice(-6).forEach((m) => {
@@ -59,6 +69,8 @@ export const renderNodeCard = (graph: Graph, nodeId: string): string => {
   lines.push(nodeId + " · " + node.title + " [" + GROUP_TITLES[node.group] + "]");
   lines.push("  " + node.desc);
   lines.push("  соседи: назад " + (prev.join(", ") || "—") + " · вперёд " + (next.join(", ") || "—"));
+  const branch = branchText(graph, nodeId);
+  if (branch) lines.push(branch);
   lines.push("  доступ ролей:");
   ROLE_IDS.forEach((role) => {
     lines.push("    " + ACCESS_MARKS[node.access[role]] + " " + pad(ROLE_NAMES[role] + " ", 18) + node.access[role]);
