@@ -5,7 +5,7 @@ import { buildSummary, renderSummary } from "../src/core/report.ts";
 import { NODES } from "../src/data/nodes.ts";
 import { mulberry32 } from "../src/random.ts";
 import { parseCommand } from "../src/cli/commands.ts";
-import { applyCommand } from "../src/cli/reducer.ts";
+import { applyCommand, normalizeRef } from "../src/cli/reducer.ts";
 
 const graph = buildGraph(NODES);
 const makeSession = (seed = 11) => ({ step: 0, incidents: generateIncidents(graph, mulberry32(seed)), log: [] as string[] });
@@ -56,6 +56,18 @@ test("полный прогон доводит все заявки до конц
   expect(summary.finished).toBe(30);
   expect(summary.moves).toBeGreaterThan(0);
   expect(renderSummary(summary)).toContain("Заявок всего: 30");
+});
+
+test("ссылка на заявку понимает 5, З-5, z-5, Z-005", () => {
+  expect(normalizeRef("5")).toBe("З-005");
+  expect(normalizeRef("З-5")).toBe("З-005");
+  expect(normalizeRef("z-7")).toBe("З-007");
+  expect(normalizeRef("Z-030")).toBe("З-030");
+  const session = makeSession(9);
+  const viaLatin = applyCommand(graph, session, parseCommand("show z-5"), mulberry32(1), NOW);
+  expect(viaLatin.output[0]).toContain("З-005");
+  const viaNumber = applyCommand(graph, session, parseCommand("show 5"), mulberry32(1), NOW);
+  expect(viaNumber.output[0]).toContain("З-005");
 });
 
 test("save отдаёт ровно два эффекта: отчёт и финальное состояние", () => {
