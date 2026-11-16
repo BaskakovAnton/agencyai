@@ -16,6 +16,10 @@ bun test                 # ожидаем: 18 pass, 0 fail
 bun run src/cli/main.ts --seed 7 --script "graph;list;show 5;forward 5;forward 5;back 5;move 5 U7;move 5 U20;sweep;report;save;quit"
 ```
 
+> Пайп команд в stdin (`printf 'list\n' | bun run src/cli/main.ts`) **не поддерживается**: интерактивный
+> режим требует настоящий терминал и теперь честно сообщает об этом вместо зависания. Для пакетного
+> прогона используйте `--script`.
+
 ## 2. Интерактивная сессия
 
 ```bash
