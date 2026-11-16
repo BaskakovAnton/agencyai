@@ -38,12 +38,51 @@ test("бандл самодостаточен: ничего не загружа�
   expect(bundle).not.toMatch(/require\(/);
 });
 
-test("в бандл попали оба демо-модуля и роутер", () => {
-  expect(bundle).toContain("Шкала времени и когорты");
-  expect(bundle).toContain("Переписка по ролям");
-  expect(bundle).toContain("Следующий узел");
-  expect(bundle).toContain("#dashboard");
-  expect(bundle).toContain("#chat");
+test("в бандл попали оба экрана: Git-граф и мобильный чат", () => {
+  expect(bundle).toContain("Хронология заявок");
+  expect(bundle).toContain("Диаграмма Ганта");
+  expect(bundle).toContain("Перемотка времени");
+  expect(bundle).toContain("Переписка на");
+  expect(bundle).toContain("#timeline");
+  expect(bundle).toContain("#chat/");
+});
+
+test("когорты и таблица срочности убраны из интерфейса", () => {
+  expect(bundle).not.toContain("Шкала времени и когорты");
+  expect(bundle).not.toContain("Дашборд когорт");
+  expect(bundle).not.toContain("Авария / экстренно");
+});
+
+test("паритет: история с датами и переписка на странице совпадают с ядром", async () => {
+  const mod = (await import(pathToFileURL(join(outDir, "app.js")).href)) as Record<string, any>;
+  const page = mod.demoModel();
+  expect(page.incidents.length).toBe(30);
+  expect(page.story.days.length).toBeGreaterThan(15);
+
+  const graph = mod.buildProcessGraph(mod.NODES);
+  const hero = page.incidents.find((incident: any) => incident.id === "З-015");
+  const snapshot = mod.chatAt(graph, hero, "2026-01-02");
+  expect(snapshot.messages.length).toBe(2);
+  expect(snapshot.activeRole).toBe("deputy");
+  expect(snapshot.messages.map((message: any) => message.nodeId)).toEqual(["U1", "U6"]);
+
+  const git = mod.buildGitGraph(graph, page.incidents, "2026-01-02");
+  expect(git.commits.every((commit: any) => commit.day <= "2026-01-02")).toBe(true);
+  expect(git.incidents.length).toBeLessThan(30);
+
+  const gantt = mod.buildGantt(graph, page.incidents, "2026-01-02");
+  expect(gantt.rows.length).toBe(git.incidents.length);
+  expect(mod.renderGitSvg(git).match(/data-commit=/g)?.length).toBe(git.commits.length);
+  expect(mod.renderPhone({
+    incident: hero,
+    snapshot,
+    activeRole: snapshot.activeRole,
+    interlocutor: snapshot.interlocutor,
+    overridden: false,
+    backHref: mod.hrefTimeline("2026-01-02"),
+    nextDay: "2026-01-03",
+    prevDay: "",
+  })).toContain("data-phone");
 });
 
 test("паритет: логика на странице совпадает с ядром", async () => {

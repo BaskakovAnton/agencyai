@@ -76,6 +76,8 @@ export interface Move {
   readonly to: string;
   readonly actor: "generator" | "operator" | "auto";
   readonly note: string;
+  /** Когда произошёл переход (ISO). Заполняется демо-историей для перемотки времени. */
+  readonly at?: string;
 }
 
 /** Заявка по инциденту городской инфраструктуры. */
@@ -91,6 +93,8 @@ export interface Incident {
   readonly situationId: string;
   readonly sla: SlaState;
   readonly history: readonly Move[];
+  /** Когда заявка создана (ISO). Заполняется демо-историей. */
+  readonly createdAt?: string;
 }
 
 /** Ветка процесса: куда можно уйти и с каким весом (для рандомного решения). */
