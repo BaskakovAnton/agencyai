@@ -9,11 +9,8 @@
     "demo": "bun run src/cli/main.ts --auto 12",
     "test": "bun test",
     "e2e": "playwright test",
-    "serve:demo": "bun run scripts/serve-demo.ts",
-    "screenshots": "bun run scripts/screenshots.ts",
     "build:demo": "bun run scripts/build-web.ts demo",
     "serve:demo": "bun run scripts/serve-demo.ts",
-    "e2e": "playwright test",
     "screenshots": "bun run scripts/screenshots.ts",
     "typecheck": "tsc --noEmit"
   },
