@@ -48,6 +48,27 @@ export interface SlaState {
   readonly escalated: boolean;
 }
 
+/** Раздел регламента, к которому относится ситуация. */
+export type SituationSection = "before" | "during" | "contractors" | "feedback";
+
+/** Шаг ситуации: кто действует и что делает. */
+export interface SituationStep {
+  readonly lane: RoleId;
+  readonly title: string;
+  readonly text: string;
+}
+
+/** Типовая ситуация регламента (С1…С37) со шагами по ролям. */
+export interface Situation {
+  readonly id: string;
+  readonly section: SituationSection;
+  readonly title: string;
+  readonly summary: string;
+  readonly priority: Priority;
+  readonly sla: string;
+  readonly steps: readonly SituationStep[];
+}
+
 /** Запись о перемещении заявки. */
 export interface Move {
   readonly step: number;
@@ -66,6 +87,8 @@ export interface Incident {
   readonly reporter: string;
   readonly priority: Priority;
   readonly nodeId: string;
+  /** Ситуация регламента, которую проигрывает заявка (С1…С37). */
+  readonly situationId: string;
   readonly sla: SlaState;
   readonly history: readonly Move[];
 }

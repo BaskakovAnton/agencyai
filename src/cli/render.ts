@@ -1,8 +1,9 @@
-import type { Graph, Incident, Priority, RoleId } from "../types.ts";
+import type { Graph, Incident, Priority, RoleId, Situation, SituationSection } from "../types.ts";
 import { ACCESS_MARKS, GROUP_TITLES, PRIORITY_TITLES, ROLE_IDS, ROLE_NAMES } from "../data/roles.ts";
 import { branchesOf, neighborsOf } from "../core/graph.ts";
 import { roleAccess } from "../core/roles.ts";
 import { slaStatus } from "../core/sla.ts";
+import { SITUATIONS, SITUATION_SECTIONS, nodesForSituation, situationById } from "../data/situations.ts";
 import { branchShares } from "../data/edges.ts";
 import { sortIncidents } from "../core/incident.ts";
 
@@ -21,6 +22,29 @@ const SHORT_PRIORITY: Readonly<Record<Priority, string>> = {
   normal: "неотложное",
   routine: "сезонное",
   none: "вне SLA",
+};
+
+/** Список всех ситуаций регламента по разделам. */
+export const renderSituationsList = (situations: readonly Situation[] = SITUATIONS): string => {
+  const lines: string[] = ["Ситуации регламента: " + situations.length];
+  (Object.keys(SITUATION_SECTIONS) as SituationSection[]).forEach((section) => {
+    const items = situations.filter((item) => item.section === section);
+    lines.push("", SITUATION_SECTIONS[section] + " — " + items.length);
+    items.forEach((item) => lines.push("  " + item.id + "  " + item.title + "  [" + item.priority + " · " + item.sla + "]"));
+  });
+  return lines.join("\n");
+};
+
+/** Карточка ситуации: шаги по ролям и связанные узлы. */
+export const renderSituationCard = (situation: Situation): string => {
+  const lines: string[] = [];
+  lines.push(situation.id + " · " + situation.title + " [" + SITUATION_SECTIONS[situation.section] + "]");
+  lines.push("  " + situation.summary);
+  lines.push("  приоритет: " + situation.priority + " · SLA: " + situation.sla);
+  lines.push("  узлы: " + (nodesForSituation(situation.id).join(", ") || "—"));
+  lines.push("  шаги:");
+  situation.steps.forEach((step, index) => lines.push("    " + (index + 1) + ". " + ROLE_NAMES[step.lane] + ": " + step.title + " — " + step.text));
+  return lines.join("\n");
 };
 
 /** Строка SLA для карточки заявки. */
@@ -53,6 +77,8 @@ export const renderIncidentCard = (graph: Graph, incident: Incident, role?: Role
   lines.push(incident.id + " · " + incident.title);
   lines.push("  адрес: " + incident.address + " · канал: " + incident.reporter);
   lines.push("  приоритет: " + PRIORITY_TITLES[incident.priority] + " · категория: " + incident.category);
+  const situation = situationById(incident.situationId);
+  if (situation) lines.push("  ситуация: " + situation.id + " «" + situation.title + "» · " + situation.sla);
   lines.push("  узел: " + incident.nodeId + " — " + (node ? node.title : "?") + " [" + (node ? GROUP_TITLES[node.group] : "?") + "]");
   lines.push("  назад: " + (prev.join(", ") || "— начало процесса") + " · вперёд: " + (next.join(", ") || "— конец процесса"));
   const branch = branchText(graph, incident.nodeId);
@@ -113,6 +139,8 @@ export const renderHelp = (): string =>
     "  graph                 — список узлов процесса",
     "  node U7               — карточка узла (права ролей, соседи)",
     "  list                  — список заявок с текущими узлами",
+    "  situations            — все 37 ситуаций регламента",
+    "  situation С9          — карточка ситуации: шаги и узлы",
     "  show З-001            — карточка заявки",
     "  forward З-001         — шаг вперёд по соседнему узлу",
     "  back З-001            — шаг назад по соседнему узлу",

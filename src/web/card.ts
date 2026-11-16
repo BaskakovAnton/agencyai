@@ -4,6 +4,7 @@ import { branchesOf, neighborsOf } from "../core/graph.ts";
 import { roleAccess } from "../core/roles.ts";
 import { slaStatus } from "../core/sla.ts";
 import { branchShares } from "../data/edges.ts";
+import { situationById } from "../data/situations.ts";
 import type { WebState } from "./session.ts";
 
 const esc = (s: string): string =>
@@ -56,6 +57,20 @@ const branchLine = (state: WebState, nodeId: string): string => {
   return '<p class="branch">Развилка (рандомное решение): ' + options + "</p>";
 };
 
+/** Блок ситуации регламента: что за сценарий и как он проходится по ролям. */
+const situationBlock = (incident: Incident): string => {
+  const situation = situationById(incident.situationId);
+  if (!situation) return "";
+  const steps = situation.steps
+    .map((step) => "<li><b>" + esc(ROLE_NAMES[step.lane]) + "</b> " + esc(step.title) + " — " + esc(step.text) + "</li>")
+    .join("");
+  return (
+    '<h3>Ситуация ' + situation.id + " · " + esc(situation.title) + "</h3>" +
+    '<p class="meta">' + esc(situation.sla) + " · " + situation.priority + "</p>" +
+    '<ol class="steps">' + steps + "</ol>"
+  );
+};
+
 const history = (incident: Incident): string =>
   incident.history.length === 0
     ? '<p class="hint">переходов ещё не было</p>'
@@ -79,6 +94,7 @@ export const renderSelected = (state: WebState): string => {
     '<p class="moves">' + btn("‹ назад", "back", incident.id) + " " + btn("вперёд ›", "forward", incident.id) + "</p>",
     links ? "<p>Соседние узлы: " + links + "</p>" : '<p class="hint">граница процесса</p>',
     branchLine(state, incident.nodeId),
+    situationBlock(incident),
     "<h3>История</h3>" + history(incident),
     node ? '<h3>Права ролей на узле</h3><ul class="roles">' + roleList(state, incident.nodeId) + "</ul>" : "",
   ].join("");

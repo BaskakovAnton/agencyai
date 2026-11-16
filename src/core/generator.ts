@@ -1,5 +1,6 @@
-import type { Graph, Incident } from "../types.ts";
+import type { Graph, Incident, Situation } from "../types.ts";
 import { CATEGORIES, type IncidentCategory } from "../data/categories.ts";
+import { SITUATIONS } from "../data/situations.ts";
 import { createIncident } from "./incident.ts";
 
 /**
@@ -10,5 +11,14 @@ export const generateIncidents = (
   graph: Graph,
   rand: () => number,
   categories: readonly IncidentCategory[] = CATEGORIES,
+  situations: readonly Situation[] = SITUATIONS,
 ): readonly Incident[] =>
-  graph.order.map((nodeId, index) => createIncident({ index, nodeId, categories, rand }));
+  graph.order.map((nodeId, index) =>
+    createIncident({
+      index,
+      nodeId,
+      categories,
+      situation: situations.length > 0 ? situations[index % situations.length] : undefined,
+      rand,
+    }),
+  );

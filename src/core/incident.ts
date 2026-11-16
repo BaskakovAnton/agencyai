@@ -1,4 +1,4 @@
-import type { Incident, Move, Priority } from "../types.ts";
+import type { Incident, Move, Priority, Situation } from "../types.ts";
 import { STREETS, type IncidentCategory } from "../data/categories.ts";
 import { pick, randInt } from "../random.ts";
 import { startSla } from "./sla.ts";
@@ -13,12 +13,13 @@ export interface CreateIncidentInput {
   readonly index: number;
   readonly nodeId: string;
   readonly categories: readonly IncidentCategory[];
+  readonly situation?: Situation;
   readonly rand: () => number;
 }
 
 /** Создание заявки: инцидент городской инфраструктуры от жителя. */
 export const createIncident = (input: CreateIncidentInput): Incident => {
-  const { index, nodeId, categories, rand } = input;
+  const { index, nodeId, categories, situation, rand } = input;
   const category = pick(categories, rand);
   const title = pick(category.templates, rand);
   const street = pick(STREETS, rand);
@@ -30,8 +31,9 @@ export const createIncident = (input: CreateIncidentInput): Incident => {
     title,
     address: street + ", д. " + house + ", кв. " + flat,
     reporter: pick(CHANNELS, rand),
-    priority: category.priority,
+    priority: situation?.priority ?? category.priority,
     nodeId,
+    situationId: situation?.id ?? "",
     sla: startSla(category.priority, 0),
     history: [],
   };

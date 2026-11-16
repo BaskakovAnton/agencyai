@@ -3,6 +3,8 @@ export type Command =
   | { readonly kind: "help" }
   | { readonly kind: "graph" }
   | { readonly kind: "list" }
+  | { readonly kind: "situations" }
+  | { readonly kind: "situation"; readonly ref: string }
   | { readonly kind: "node"; readonly nodeId: string }
   | { readonly kind: "show"; readonly ref: string }
   | { readonly kind: "forward"; readonly ref: string }
@@ -30,6 +32,8 @@ export const parseCommand = (raw: string): Command => {
     case "list": case "ls": return { kind: "list" };
     case "node": return a ? { kind: "node", nodeId: a.toUpperCase() } : { kind: "unknown", raw };
     case "show": return a ? { kind: "show", ref: a } : { kind: "unknown", raw };
+    case "situations": case "ситуации": return { kind: "situations" };
+    case "situation": case "ситуация": return a ? { kind: "situation", ref: a } : { kind: "unknown", raw };
     case "forward": case "next": case "fwd": return a ? { kind: "forward", ref: a } : { kind: "unknown", raw };
     case "back": case "prev": return a ? { kind: "back", ref: a } : { kind: "unknown", raw };
     case "move": return a && b ? { kind: "move", ref: a, nodeId: b.toUpperCase() } : { kind: "unknown", raw };
