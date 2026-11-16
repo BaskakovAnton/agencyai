@@ -11,8 +11,9 @@ const NAV: readonly (readonly [Route, string, string])[] = [
   ["chat", "#chat", "Переписка по ролям"],
 ];
 
+/** Значение после # без query-хвоста: #dashboard?x=1 → dashboard. */
 export const routeFromHash = (hash: string): Route => {
-  const value = hash.replace(/^#\/?/, "");
+  const value = hash.replace(/^#\/?/, "").split("?")[0] ?? "";
   if (value === "dashboard") return "dashboard";
   if (value === "chat") return "chat";
   return "model";
