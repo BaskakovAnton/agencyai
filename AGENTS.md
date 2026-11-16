@@ -4,7 +4,7 @@
 > Файл подхватывается DSH автоматически как workspace instructions (baseline, до первого запроса).
 > Правила: раздел «Журнал» — только дописывать (append-only, ничего не удалять); факты помечать датой; устаревшее — перечёркивать пометкой «устарело», а не стирать.
 >
-> Обновлено: 2026-11-16 (ревизия 17) · Автор записей: агент DSH (deepseek-v4.1-flash)
+> Обновлено: 2026-11-16 (ревизия 18) · Автор записей: агент DSH (deepseek-v4.1-flash)
 
 ---
 
@@ -16,7 +16,7 @@
 - **Репозиторий:** https://github.com/BaskakovAnton/agencyai — **public** (открыт 16.11.2026 ради GitHub Pages), default branch `main`.
 - **Локальный git:** ветка `main`; ключевые коммиты: `974ec3c` (init), `a8ecf13` (память), `5fc754e` (каркас), `680ab33` (перенос страниц), `5c58eef` (публикация); полная история — `git log --oneline`. remote `origin` = `https://github.com/BaskakovAnton/agencyai.git`, `main` следит за `origin/main`.
 - **Статус:** сайт опубликован — https://baskakovanton.github.io/agencyai/ (GitHub Pages: ветка `main`, корень, HTTPS; пересобирается на каждый push).
-- **Режим (с 16.11.2026):** модель **готова** (37 ситуаций, развилки, права ролей, SLA) и добавлены **два демо-модуля**: дашборд когорт и чат по ролям. Тесты: **71 юнит + 14 e2e Playwright**; демо **опубликовано**: https://baskakovanton.github.io/agencyai/demo/ (`#dashboard`, `#chat`).
+- **Режим (с 16.11.2026):** модель **готова** (37 ситуаций, развилки, права ролей, SLA); работают **два демо-модуля**: дашборд когорт (`#dashboard`) и чат по ролям (`#chat`). Тесты: **71 юнит + 14 e2e Playwright**, CI — `.github/workflows/e2e.yml`; демо **опубликовано**: https://baskakovanton.github.io/agencyai/demo/.
 - **Команда:** владелец репозитория (в записи его зовут «Тох»/Антон) + разработчик **`goshva`** (автор прототипа `deput`). Проект делается вдвоём; `goshva` просил добавить его **коллаборатором** в репозиторий.
 - **Ближайшая цель (спека от `goshva`, 16.11.2026):** **терминальная программа без интерфейса** — генерирует заявки по происшествиям/инцидентам городской инфраструктуры от пользователей, функционально перемещает их пошагово по узлам процесса; оператор тоже может функционально сдвинуть шаг вперёд/назад по соседним узлам; функциональные тесты проделывают то же самое. Затем — HTML-страница с визуалом поверх той же модели.
 - **Стек (спека `goshva`):** `bun` + **локальные файлы**, TypeScript; файлы — **не более 200 строк**; функциональный стиль; **unit- и функциональные тесты**; максимум работы в **оперативной памяти**, на диск — только отчёты и финальное состояние.
@@ -65,8 +65,13 @@ src/           # терминальная модель: core (чистые фу�
                # sla.ts — SLA, analytics.ts — когорты/тултипы/фильтры дашборда
   data/        # 30 узлов (6 групп), роли, категории инцидентов, edges.ts — развилки,
                # sla.ts — нормативы, situations/*.ts — 37 ситуаций, situation-nodes.ts — связь с узлами
-  web/         # страница демо: session/card/view (модель), dashboard(+render), chat(+view), router, model-view, main
-scripts/       # build-web.ts — сборка demo/, serve-demo.ts — статика, screenshots.ts, import-situations.ts
+  web/         # демо: session/card/view (модель), dashboard(+render) — дашборд, chat(+view) — переписка,
+               # router.ts — навигация по хэшу, model-view.ts, main.ts
+  e2e/         # Playwright: dashboard.spec.ts, chat.spec.ts (14 сценариев)
+scripts/       # build-web.ts, serve-demo.ts (статика :4321), screenshots.ts, verify-live.ts, import-situations.ts
+playwright.config.ts · bunfig.toml (bun test только по tests/)
+.github/       # workflows/e2e.yml — CI: bun install → bun test → сборка → playwright chromium → e2e
+docs/screenshots/  # dashboard.png, chat.png, chat-contractor.png, model.png
 e2e/           # Playwright: dashboard.spec.ts, chat.spec.ts
 playwright.config.ts · bunfig.toml (bun test только по tests/)
 docs/screenshots/  # dashboard.png, chat.png, model.png
@@ -107,7 +112,8 @@ SHA256 перенесённых файлов (сверены с источник
 | «тиммэлька» | Уточнено владельцем: это **HTML** |
 | Ветвления | ✔ Внедрены: U4 → U5/U6, U9 → U6/U16/U10, U12 → U13/U19, U13 → U10/U6/U14 (веса, обратный ход симметричен, цикл переделки конечен) |
 | Роли в переходах | ✔ Внедрены: allow/subset/conditional — можно, deny/na — нельзя; U30 запрещён всем семи ролям → архив на U29 |
-| Демо-модули | ✔ «Шкала времени и когорты» (Chart.js stacked bars, тултипы, фильтры по роли/когорте и клику) и «Переписка по ролям» (З-015: U1→U6→U7→U19, роль по узлу, степпер, SLA- и подрядчик-карточки, авто-плеер). Зависимости: `chart.js`, `@playwright/test` |
+| Демо-модули | ✔ Дашборд когорт (`#dashboard`: Chart.js + внешний тултип + фильтры по когорте/узлу/роли) и чат по ролям (`#chat`: З-015 U1→U6→U7→U19, смена роли, степпер, SLA/подрядчик-карточки, авто-плеер). План: `docs/demo-modules-plan.md` |
+| Данные модулей | Файла «agencyai · модель процессов.txt» в системе нет — модули используют нашу модель (30 заявок на 30 узлах, приоритеты из ситуаций) |
 | E2E и CI | ✔ 14 сценариев Playwright (chromium) + workflow `.github/workflows/e2e.yml` |
 | Ситуации регламента | ✔ Перенесены 37 ситуаций (шаги по ролям, приоритеты, SLA, связь с 30 узлами) скриптом `scripts/import-situations.ts`; заявка получает `situationId` и приоритет из ситуации |
 | SLA как состояние | ✔ Внедрён: нормативы 1/24, 24/72, до 720 ч; пауза U14 и возобновление U15 со сдвигом дедлайна; пересчёт на U2 (24 ч); просрочка и однократная эскалация; часы двигают шаги и `wait` |
@@ -149,6 +155,7 @@ SHA256 перенесённых файлов (сверены с источник
 | 2026-11-16 | **SLA внедрён** по плану «план → тесты → внедрение»: `src/data/sla.ts` (профили, часы узлов, причины паузы), `src/core/sla.ts` (startSla/withClock/pauseSlaAt/resumeSlaAt/afterMove/slaStatus), `clock` в сессии, команда `wait`, SLA в карточке и отчёте, значки и кнопка времени на странице. 11 новых тестов (итого **50 зелёные**). План: `docs/sla-plan.md`. |
 | 2026-11-16 | **Два демо-модуля готовы** по плану `docs/demo-modules-plan.md`: ядро аналитики (`src/core/analytics.ts` — когорты, тултипы с формами числительных, фильтры по когорте/узлу/роли), Chart.js stacked bars с внешним HTML-тултипом и клик-фильтром, чат-сстейт-машина (`src/web/chat.ts`) и трёхпанельный плеер З-015, роутер по хэшу, стили тёмной темы; e2e в Playwright (14 сценариев) и CI-workflow; `bunfig.toml` ограничил `bun test` каталогом tests. Итог: **71 юнит + 14 e2e зелёные**. |
 | 2026-11-16 | **37 ситуаций перенесены** по плану «план → тесты → внедрение»: скрипт `scripts/import-situations.ts` (структура из `index.html`, шаги из `player.html`, связи узлов из `matrix.html`) → `src/data/situations/*.ts` (8/20/5/4, файлы ≤128 строк), `src/data/situation-nodes.ts` (30 узлов), агрегат `src/data/situations.ts`; заявка получает `situationId` и приоритет из ситуации; команды `situations`/`situation С9`, блок ситуации на странице. 10 новых тестов (итого **60 зелёные**). План: `docs/situations-plan.md`. |
+| 2026-11-16 | **Два демо-модуля внедрены** (план → тесты → реализация → зелёные → деплой): `src/core/analytics.ts` (когорты, тултипы, фильтры), `src/web/dashboard.ts` + `dashboard-render.ts` (Chart.js stacked bars, внешний HTML-тултип, клик-фильтр), `src/web/chat.ts` (стейт-машина З-015: U1→U6→U7→U19) + `chat-view.ts` (3 панели, смена роли, степпер, карточки SLA/подрядчика, авто-плеер), `router.ts` + `model-view.ts`; Playwright-конфиг, `scripts/serve-demo.ts`, 14 e2e-сценариев, CI-workflow, скриншоты; `bunfig.toml` ограничил `bun test` каталогом tests. Итог: **71 юнит + 14 e2e зелёные**. |
 
 ## 7. Соглашения по работе
 

@@ -6,23 +6,19 @@ const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 1440, height: 950 } });
 const problems: string[] = [];
 
-const waitFor = async (selector: string, timeout = 180_000): Promise<boolean> => {
+/** Ждём, пока Pages пересоберётся и отдаст новый бандл: опрашиваем с обходом кэша. */
+const waitFor = async (selector: string, timeoutMs = 240_000): Promise<boolean> => {
   const started = Date.now();
-  for (;;) {
+  while (Date.now() - started < timeoutMs) {
     try {
-      await page.goto(base + "#" + Math.random().toString(36).slice(2), { waitUntil: "domcontentloaded" });
-      break;
+      await page.goto(base + "#dashboard?v=" + Date.now(), { waitUntil: "domcontentloaded" });
+      await page.waitForSelector(selector, { timeout: 10_000 });
+      return true;
     } catch {
-      if (Date.now() - started > timeout) return false;
-      await page.waitForTimeout(3000);
+      await page.waitForTimeout(8000);
     }
   }
-  try {
-    await page.waitForSelector(selector, { timeout: 15_000 });
-    return true;
-  } catch {
-    return false;
-  }
+  return false;
 };
 
 // ждём, пока на Pages появится новый бандл с дашбордом
