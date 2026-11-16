@@ -65,7 +65,7 @@ src/           # терминальная модель: core (чистые фу�
   web/         # страница демо: session (состояние/действия), card + view (рендер), main (бутстрап)
 scripts/       # build-web.ts — сборка demo/ через Bun.build
 demo/          # прод-сборка для Pages: app.js + index.html + style.css (коммитится)
-tests/         # bun test: граф, генератор, навигация, оператор, веб-сборка (24 теста)
+tests/         # bun test: граф, генератор, навигация, оператор, развилки, веб-сборка (32 теста)
 package.json   # скрипты bun (start, demo, test)
 tsconfig.json  # strict TypeScript
 assets/        # общие ресурсы (CSS/JS), когда понадобятся
