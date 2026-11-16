@@ -1,0 +1,13 @@
+{
+  "name": "bureau-terminal-model",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Терминальная модель процессов: генерация инцидентов городской инфраструктуры и пошаговое перемещение по узлам",
+  "scripts": {
+    "start": "bun run src/cli/main.ts",
+    "demo": "bun run src/cli/main.ts --auto 12",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit"
+  }
+}
