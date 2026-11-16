@@ -11,7 +11,7 @@ const waitFor = async (selector: string, timeoutMs = 240_000): Promise<boolean> 
   const started = Date.now();
   while (Date.now() - started < timeoutMs) {
     try {
-      await page.goto(base + "#dashboard?v=" + Date.now(), { waitUntil: "domcontentloaded" });
+      await page.goto(base + "?v=" + Date.now() + "#dashboard", { waitUntil: "domcontentloaded" });
       await page.waitForSelector(selector, { timeout: 10_000 });
       return true;
     } catch {
