@@ -2,6 +2,7 @@ import type { Graph, Incident, Priority, Session } from "../types.ts";
 import { GROUP_TITLES, PRIORITY_TITLES } from "../data/roles.ts";
 import { isFinished, priorityRank } from "./incident.ts";
 import { isArchived } from "./navigation.ts";
+import { slaStatus } from "./sla.ts";
 
 export interface Summary {
   readonly generatedAt: string;
@@ -10,6 +11,10 @@ export interface Summary {
   readonly finished: number;
   readonly byPriority: Readonly<Record<Priority, number>>;
   readonly byGroup: Readonly<Record<string, number>>;
+  readonly slaOnTrack: number;
+  readonly slaOverdue: number;
+  readonly slaPaused: number;
+  readonly slaEscalated: number;
   readonly byNode: readonly { readonly nodeId: string; readonly title: string; readonly count: number }[];
 }
 
@@ -20,6 +25,11 @@ export const buildSummary = (graph: Graph, session: Session, generatedAt: string
   const byNodeCount = new Map<string, number>();
   let moves = 0;
   let finished = 0;
+  let slaOnTrack = 0;
+  let slaOverdue = 0;
+  let slaPaused = 0;
+  let slaEscalated = 0;
+  const clock = session.clock ?? 0;
 
   for (const incident of session.incidents) {
     byPriority[incident.priority] += 1;
@@ -28,6 +38,11 @@ export const buildSummary = (graph: Graph, session: Session, generatedAt: string
       byGroup[node.group] = (byGroup[node.group] ?? 0) + 1;
       byNodeCount.set(incident.nodeId, (byNodeCount.get(incident.nodeId) ?? 0) + 1);
     }
+    const sla = slaStatus(incident, clock);
+    if (sla.phase === "overdue") slaOverdue += 1;
+    else if (sla.phase === "paused") slaPaused += 1;
+    else slaOnTrack += 1;
+    if (sla.escalated) slaEscalated += 1;
     moves += incident.history.length;
     // «дошло до конца» = край процесса либо архив: дальше не пускают права ни одной роли
     if (isFinished(incident, graph) || isArchived(graph, incident, "system")) finished += 1;
@@ -45,6 +60,10 @@ export const buildSummary = (graph: Graph, session: Session, generatedAt: string
     byPriority,
     byGroup,
     byNode,
+    slaOnTrack,
+    slaOverdue,
+    slaPaused,
+    slaEscalated,
   };
 };
 
@@ -60,6 +79,8 @@ export const renderSummary = (summary: Summary): string => {
   (Object.keys(summary.byPriority) as Priority[])
     .sort((a, b) => priorityRank[a] - priorityRank[b])
     .forEach((p) => lines.push("  " + PRIORITY_TITLES[p] + ": " + summary.byPriority[p]));
+  lines.push("");
+  lines.push("SLA: в срок " + summary.slaOnTrack + " · просрочено " + summary.slaOverdue + " · на паузе " + summary.slaPaused + " · эскалировано " + summary.slaEscalated);
   lines.push("");
   lines.push("По группам узлов:");
   Object.entries(summary.byGroup).forEach(([group, count]) =>

@@ -100,6 +100,19 @@ test("страница показывает роль оператора и бл�
   expect(html).toContain("Подрядчик");
 });
 
+test("страница показывает SLA и кнопку времени", async () => {
+  const mod = (await import(pathToFileURL(join(outDir, "app.js")).href)) as Record<string, any>;
+  const graph = mod.buildProcessGraph(mod.NODES);
+  const waited = mod.applyAction(mod.createState(graph, 5), { kind: "wait", hours: 30 });
+  expect(waited.state.session.clock).toBe(30);
+  expect(String(waited.message)).toContain("просрочено");
+  const html = mod.renderPage(waited.state, waited.message);
+  expect(html).toContain("SLA:");
+  expect(html).toContain("+4 ч");
+  const incidents = waited.state.session.incidents as any[];
+  expect(incidents.some((i) => mod.slaStatus(i, 30).phase === "overdue")).toBe(true);
+});
+
 test("html самодостаточен: локальные ресурсы, viewport, русская локаль", () => {
   expect(page).toContain('lang="ru"');
   expect(page).toContain("viewport");

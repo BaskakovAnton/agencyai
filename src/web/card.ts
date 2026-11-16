@@ -2,6 +2,7 @@ import type { Incident } from "../types.ts";
 import { ACCESS_MARKS, GROUP_TITLES, PRIORITY_TITLES, ROLE_IDS, ROLE_NAMES } from "../data/roles.ts";
 import { branchesOf, neighborsOf } from "../core/graph.ts";
 import { roleAccess } from "../core/roles.ts";
+import { slaStatus } from "../core/sla.ts";
 import { branchShares } from "../data/edges.ts";
 import type { WebState } from "./session.ts";
 
@@ -16,6 +17,20 @@ const moveBtn = (state: WebState, label: string, ref: string, to: string): strin
   const access = roleAccess(state.graph, to, state.session.role);
   const attrs = access.allowed ? "" : ' disabled title="' + access.level + ": " + access.caveat + '"';
   return '<button data-action="move" data-ref="' + ref + '" data-node="' + to + '"' + attrs + ">" + label + "</button>";
+};
+
+/** Значок SLA заявки: остаток часов, пауза, просрочка. */
+const slaBadge = (state: WebState, incident: Incident): string => {
+  const status = slaStatus(incident, state.session.clock ?? 0);
+  const label =
+    status.phase === "overdue"
+      ? "просрочено"
+      : status.phase === "paused"
+        ? "пауза"
+        : status.phase === "none"
+          ? "вне SLA"
+          : Math.round(status.hoursLeft) + " ч";
+  return '<span class="sla s-' + status.phase + '" title="' + status.note + '">' + label + "</span>";
 };
 
 const nodeChip = (state: WebState, nodeId: string): string => {
@@ -60,6 +75,7 @@ export const renderSelected = (state: WebState): string => {
     '<p class="meta">' + esc(incident.address) + " · " + esc(incident.reporter) + " · " + PRIORITY_TITLES[incident.priority] + "</p>",
     "<p>Узел: " + nodeChip(state, incident.nodeId) + groupLine + "</p>",
     '<p class="meta">Права роли на этом узле: ' + access.level + " (" + access.caveat + ")</p>",
+    '<p class="meta">' + slaBadge(state, incident) + " " + slaStatus(incident, state.session.clock ?? 0).note + "</p>",
     '<p class="moves">' + btn("‹ назад", "back", incident.id) + " " + btn("вперёд ›", "forward", incident.id) + "</p>",
     links ? "<p>Соседние узлы: " + links + "</p>" : '<p class="hint">граница процесса</p>',
     branchLine(state, incident.nodeId),
@@ -78,6 +94,7 @@ export const renderList = (state: WebState): string => {
         '<span class="prio p-' + incident.priority + '">' + PRIORITY_TITLES[incident.priority] + "</span>" +
         '<span class="title">' + esc(incident.title) + "</span>" +
         nodeChip(state, incident.nodeId) +
+        slaBadge(state, incident) +
         '<span class="acts">' + btn("‹", "back", incident.id) + btn("›", "forward", incident.id) + "</span>" +
         "</li>"
       );

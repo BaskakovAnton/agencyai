@@ -16,6 +16,8 @@ export { generateIncidents } from "../core/generator.ts";
 export { moveBackward, moveForward, moveToNode } from "../core/navigation.ts";
 export { buildFinalState, buildSummary } from "../core/report.ts";
 export { mulberry32, pick, randInt, shuffle } from "../random.ts";
+export { afterMove, pauseSlaAt, resumeSlaAt, slaStatus, startSla, withClock } from "../core/sla.ts";
+export { PAUSE_REASONS, SLA_PROFILES, hoursFor } from "../data/sla.ts";
 export { applyAction, createState } from "./session.ts";
 export { renderPage } from "./view.ts";
 
