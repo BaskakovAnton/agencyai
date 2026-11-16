@@ -1,19 +1,27 @@
-import type { Graph, Incident } from "../types.ts";
+import type { Graph, Incident, Priority } from "../types.ts";
 import { ACCESS_MARKS, GROUP_TITLES, PRIORITY_TITLES, ROLE_IDS, ROLE_NAMES } from "../data/roles.ts";
 import { neighborsOf } from "../core/graph.ts";
 import { sortIncidents } from "../core/incident.ts";
 
 const pad = (s: string, n: number) => (s.length >= n ? s : s + " ".repeat(n - s.length));
 
+/** Короткие метки приоритета для табличного списка. */
+const SHORT_PRIORITY: Readonly<Record<Priority, string>> = {
+  urgent: "авария",
+  normal: "неотложное",
+  routine: "сезонное",
+  none: "вне SLA",
+};
+
 /** Строка списка заявок. */
 export const renderIncidentList = (graph: Graph, incidents: readonly Incident[]): string => {
-  const head = pad("№", 7) + pad("узел", 6) + pad("приоритет", 13) + pad("шагов", 6) + "инцидент";
+  const head = pad("№", 8) + pad("узел", 6) + pad("приоритет", 12) + pad("шагов", 7) + "инцидент";
   const rows = sortIncidents(incidents).map((i) => {
     return (
-      pad(i.id, 7) +
+      pad(i.id, 8) +
       pad(i.nodeId, 6) +
-      pad(PRIORITY_TITLES[i.priority], 13) +
-      pad(String(i.history.length), 6) +
+      pad(SHORT_PRIORITY[i.priority], 12) +
+      pad(String(i.history.length), 7) +
       i.title + " · " + i.address
     );
   });
