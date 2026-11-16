@@ -61,18 +61,19 @@ process.html   # из deput — копия байт-в-байт
 player.html    # из deput — копия байт-в-байт
 matrix.html    # из deput — копия байт-в-байт
 src/           # терминальная модель: core (чистые функции), cli, io, data, web
-  core/        # граф, генератор, навигация, отчёт, roles.ts — права ролей, refs.ts — ссылки
+  core/        # граф, генератор, навигация, отчёт, roles.ts — права, refs.ts — ссылки,
+               # sla.ts — SLA, analytics.ts — когорты/тултипы/фильтры дашборда
   data/        # 30 узлов (6 групп), роли, категории инцидентов, edges.ts — развилки,
                # sla.ts — нормативы, situations/*.ts — 37 ситуаций, situation-nodes.ts — связь с узлами
-  web/         # страница демо: session/card/view (модель), dashboard(+render), chat(+view), router, main
-  core/        # + analytics.ts — когорты, тултипы, фильтры дашборда
+  web/         # страница демо: session/card/view (модель), dashboard(+render), chat(+view), router, model-view, main
 scripts/       # build-web.ts — сборка demo/, serve-demo.ts — статика, screenshots.ts, import-situations.ts
 e2e/           # Playwright: dashboard.spec.ts, chat.spec.ts
 playwright.config.ts · bunfig.toml (bun test только по tests/)
 docs/screenshots/  # dashboard.png, chat.png, model.png
 demo/          # прод-сборка для Pages: app.js + index.html + style.css (коммитится)
-tests/         # bun test: граф, генератор, навигация, оператор, развилки, роли, SLA, ситуации, веб-сборка (60 тестов)
-package.json   # скрипты bun (start, demo, test)
+tests/         # bun test: граф, генератор, навигация, оператор, развилки, роли, SLA, ситуации,
+               # аналитика дашборда, чат-стейт-машина, веб-сборка (71 тест)
+package.json   # скрипты bun (start, demo, test, e2e, serve:demo)
 tsconfig.json  # strict TypeScript
 assets/        # общие ресурсы (CSS/JS), когда понадобятся
 docs/          # ТЗ, регламент, принятые решения
@@ -145,8 +146,8 @@ SHA256 перенесённых файлов (сверены с источник
 | 2026-11-16 | Введено **правило тестов**: тесты пишутся на всё, что внедряется; внедрение — только при полностью зелёном `bun test` (§7). |
 | 2026-11-16 | **Ветвления внедрены** по плану «план → тесты → внедрение»: `src/data/edges.ts` (веса и пояснения), `Graph.branches`, `prev` как обратная связь, взвешенный `pickWeighted`, развилки в карточках CLI и страницы. 8 новых тестов (итого **32 зелёные**), проверены связность всех 30 узлов и конечность цикла переделки. План: `docs/branch-plan.md`. |
 | 2026-11-16 | **Роли внедрены** по плану «план → тесты → внедрение»: `src/core/roles.ts` (roleAccess/allowedRoles/denyReason), `allowedNext`/`isArchived`/`moveToNodeAs`/`moveForwardAs`, роль оператора в `Session`, команда `role` в CLI, переключатель ролей на странице, права на кнопках. U30 «Удаление» запрещён всем → архив на U29. 8 новых тестов (итого **40 зелёные**). План: `docs/roles-plan.md`. |
-| 2026-11-16 | **Два демо-модуля готовы** по плану `docs/demo-modules-plan.md`: ядро аналитики (`src/core/analytics.ts` — когорты, тултипы с формами числительных, фильтры по когорте/узлу/роли), Chart.js stacked bars с внешним HTML-тултипом и клик-фильтром, чат-сстейт-машина (`src/web/chat.ts`) и трёхпанельный плеер З-015, роутер по хэшу, стили тёмной темы; e2e в Playwright (14 сценариев) и CI-workflow; `bunfig.toml` ограничил `bun test` каталогом tests. Итог: **71 юнит + 14 e2e зелёные**. |
 | 2026-11-16 | **SLA внедрён** по плану «план → тесты → внедрение»: `src/data/sla.ts` (профили, часы узлов, причины паузы), `src/core/sla.ts` (startSla/withClock/pauseSlaAt/resumeSlaAt/afterMove/slaStatus), `clock` в сессии, команда `wait`, SLA в карточке и отчёте, значки и кнопка времени на странице. 11 новых тестов (итого **50 зелёные**). План: `docs/sla-plan.md`. |
+| 2026-11-16 | **Два демо-модуля готовы** по плану `docs/demo-modules-plan.md`: ядро аналитики (`src/core/analytics.ts` — когорты, тултипы с формами числительных, фильтры по когорте/узлу/роли), Chart.js stacked bars с внешним HTML-тултипом и клик-фильтром, чат-сстейт-машина (`src/web/chat.ts`) и трёхпанельный плеер З-015, роутер по хэшу, стили тёмной темы; e2e в Playwright (14 сценариев) и CI-workflow; `bunfig.toml` ограничил `bun test` каталогом tests. Итог: **71 юнит + 14 e2e зелёные**. |
 | 2026-11-16 | **37 ситуаций перенесены** по плану «план → тесты → внедрение»: скрипт `scripts/import-situations.ts` (структура из `index.html`, шаги из `player.html`, связи узлов из `matrix.html`) → `src/data/situations/*.ts` (8/20/5/4, файлы ≤128 строк), `src/data/situation-nodes.ts` (30 узлов), агрегат `src/data/situations.ts`; заявка получает `situationId` и приоритет из ситуации; команды `situations`/`situation С9`, блок ситуации на странице. 10 новых тестов (итого **60 зелёные**). План: `docs/situations-plan.md`. |
 
 ## 7. Соглашения по работе
