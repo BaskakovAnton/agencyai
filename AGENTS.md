@@ -67,7 +67,7 @@ src/           # терминальная модель: core (чистые фу�
                # sla.ts — нормативы, situations/*.ts — 37 ситуаций, situation-nodes.ts — связь с узлами
   web/         # демо: session/card/view (модель), dashboard(+render) — график когорт,
                # chat(+view) — переписка по ролям, router.ts — хэш-навигация, model-view.ts, main.ts
-e2e/           # Playwright: dashboard.spec.ts, chat.spec.ts (14 сценариев)
+e2e/           # Playwright: dashboard.spec.ts, chat.spec.ts, model.spec.ts (21 сценарий)
 scripts/       # build-web.ts, serve-demo.ts (статика :4321), screenshots.ts, verify-live.ts, import-situations.ts
 playwright.config.ts · bunfig.toml (bun test только по tests/)
 .github/       # workflows/e2e.yml — CI: bun install → bun test → сборка → playwright chromium → e2e
