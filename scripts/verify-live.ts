@@ -43,6 +43,14 @@ if (ready) {
   if ((await page.locator("[data-legends]").count()) === 0) problems.push("нет легенд SLA и развилок");
   if ((await page.locator("[data-legend-sla]").count()) !== 4) problems.push("в легенде SLA не 4 фазы");
 
+  const day5 = page.locator('[data-ruler-day="2026-01-05"]');
+  if ((await day5.count()) === 0) problems.push("на шкале нет дня 5 января");
+  else {
+    await day5.first().click();
+    await page.waitForTimeout(300);
+    if (!decodeURIComponent(page.url()).includes("at=2026-01-05")) problems.push("перемотка дня не обновила адрес: " + page.url());
+  }
+
   const commit = page.locator('[data-commit][data-incident="З-015"][data-node="U6"]');
   if ((await commit.count()) > 0) {
     await commit.click();
