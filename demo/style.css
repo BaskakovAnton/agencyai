@@ -49,3 +49,51 @@ button:hover { border-color: var(--accent); }
 .roles i { color: var(--muted); font-style: normal; }
 .mark { color: var(--accent); }
 .foot { margin-top: 24px; color: var(--muted); font-size: 12px; }
+/* --- навигация демо --- */
+.nav { display: flex; gap: 8px; flex-wrap: wrap; padding: 12px 16px 0; max-width: 1200px; margin: 0 auto; }
+.nav-link { color: var(--muted); text-decoration: none; border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; }
+.nav-link.on { color: var(--text); border-color: var(--accent); background: var(--surface-2); }
+
+/* --- дашборд когорт --- */
+.dash { display: grid; grid-template-columns: 220px 1fr; gap: 16px; margin-top: 12px; }
+@media (max-width: 800px) { .dash { grid-template-columns: 1fr; } }
+.filters { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
+.filters h3 { margin: 8px 0; font-size: 13px; color: var(--muted); }
+.filters label { display: flex; gap: 6px; align-items: center; font-size: 13px; margin: 4px 0; cursor: pointer; }
+.filters select, .filters button { width: 100%; margin-top: 6px; }
+.chart-box { position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px; height: 340px; }
+.tooltip { position: absolute; pointer-events: none; background: #0b0e13; border: 1px solid var(--accent); color: var(--text); border-radius: 8px; padding: 6px 10px; font-size: 12px; max-width: 360px; opacity: 0; transition: opacity .12s; z-index: 5; }
+.tooltip.on { opacity: 1; }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px; margin: 10px 0; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; }
+.node-strip { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 10px; }
+.node-cell { border: 1px solid var(--line); border-radius: 8px; padding: 4px 8px; font-size: 12px; cursor: pointer; background: var(--surface-2); }
+.node-cell.on { border-color: var(--accent); }
+.node-cell.empty { opacity: .45; }
+.dash-list { margin-top: 12px; }
+
+/* --- чат по ролям --- */
+.chat { display: grid; grid-template-columns: 260px 1fr 320px; gap: 16px; margin-top: 12px; align-items: start; }
+@media (max-width: 1000px) { .chat { grid-template-columns: 1fr; } }
+.pane { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
+.inc-row { display: flex; justify-content: space-between; gap: 8px; padding: 6px 8px; border-radius: 8px; cursor: pointer; font-size: 13px; }
+.inc-row.on { background: var(--surface-2); border: 1px solid var(--accent); }
+.chat-head { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+.role-badge { font-weight: 600; }
+.role-resident { color: #0d9e9e; }
+.role-deputy { color: var(--accent); }
+.role-contractor { color: var(--normal); }
+.role-system { color: var(--muted); }
+.msg { margin: 10px 0; display: flex; flex-direction: column; gap: 4px; }
+.msg .who { font-size: 12px; color: var(--muted); }
+.msg .body { background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; max-width: 90%; }
+.msg.right { align-items: flex-end; }
+.msg.system .body { background: #101820; border-style: dashed; color: var(--muted); }
+.stepper { display: flex; gap: 6px; flex-wrap: wrap; margin: 10px 0; }
+.step { border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; font-size: 12px; color: var(--muted); }
+.step.done { background: var(--surface-2); color: var(--text); }
+.step.current { border-color: var(--accent); color: var(--text); box-shadow: 0 0 0 2px rgba(76,141,255,.25); }
+.step.todo { opacity: .55; }
+.card-sla, .card-contractor { border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; margin-top: 8px; font-size: 13px; }
+.card-sla b, .card-contractor b { display: block; color: var(--muted); font-weight: 400; font-size: 12px; }
+.chat-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
