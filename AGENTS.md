@@ -65,10 +65,9 @@ src/           # терминальная модель: core (чистые фу�
                # sla.ts — SLA, analytics.ts — когорты/тултипы/фильтры дашборда
   data/        # 30 узлов (6 групп), роли, категории инцидентов, edges.ts — развилки,
                # sla.ts — нормативы, situations/*.ts — 37 ситуаций, situation-nodes.ts — связь с узлами
-  web/         # демо: session/card/view (модель), dashboard(+render) — дашборд, chat(+view) — переписка,
-               # router.ts — навигация по хэшу, model-view.ts, main.ts
-  web/         # dashboard.ts + dashboard-render.ts — график когорт; chat.ts + chat-view.ts — переписка
-e2e/         # Playwright: dashboard.spec.ts, chat.spec.ts (14 сценариев)
+  web/         # демо: session/card/view (модель), dashboard(+render) — график когорт,
+               # chat(+view) — переписка по ролям, router.ts — хэш-навигация, model-view.ts, main.ts
+e2e/           # Playwright: dashboard.spec.ts, chat.spec.ts (14 сценариев)
 scripts/       # build-web.ts, serve-demo.ts (статика :4321), screenshots.ts, verify-live.ts, import-situations.ts
 playwright.config.ts · bunfig.toml (bun test только по tests/)
 .github/       # workflows/e2e.yml — CI: bun install → bun test → сборка → playwright chromium → e2e
