@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Модель процессов «Приёмная депутата»: терминальный оператор, ситуационный дашборд и чат по ролям",
+  "description": "Модель процессов «Приёмная депутата»: терминальный оператор, хронология заявок Git-графом и мобильный чат по ролям",
   "scripts": {
     "start": "bun run src/cli/main.ts",
     "demo": "bun run src/cli/main.ts --auto 12",
@@ -14,10 +14,9 @@
     "screenshots": "bun run scripts/screenshots.ts",
     "typecheck": "tsc --noEmit"
   },
-  "dependencies": {
-    "chart.js": "^4.6.1"
-  },
   "devDependencies": {
-    "@playwright/test": "^1.65.1"
+    "@playwright/test": "^1.65.1",
+    "@types/bun": "^1.4.4",
+    "typescript": "^7.0.2"
   }
 }

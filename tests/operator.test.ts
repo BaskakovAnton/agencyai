@@ -6,9 +6,16 @@ import { NODES } from "../src/data/nodes.ts";
 import { mulberry32 } from "../src/random.ts";
 import { parseCommand } from "../src/cli/commands.ts";
 import { applyCommand, normalizeRef } from "../src/cli/reducer.ts";
+import type { Session } from "../src/types.ts";
 
 const graph = buildGraph(NODES);
-const makeSession = (seed = 11) => ({ step: 0, incidents: generateIncidents(graph, mulberry32(seed)), log: [] as string[] });
+const makeSession = (seed = 11): Session => ({
+  step: 0,
+  role: "deputy",
+  clock: 0,
+  incidents: generateIncidents(graph, mulberry32(seed)),
+  log: [],
+});
 const NOW = "2026-11-16T12:00:00.000Z";
 
 test("оператор и тест проходят один и тот же маршрут", () => {

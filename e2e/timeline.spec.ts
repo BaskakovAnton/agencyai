@@ -55,12 +55,33 @@ test.describe("Хронология: Git-граф и перемотка врем
     await expect(page.locator('[data-row="З-015"]')).toContainText("Разбита дверь подъезда");
   });
 
-  test("клик по точке графа открывает чат именно этой заявки на выбранную дату", async ({ page }) => {
+  test("клик по коммиту открывает карточку узла с ролью, временем и SLA", async ({ page }) => {
     await page.locator('[data-action="jump"][data-day="2026-01-02"]').click();
-    await page.locator('[data-commit][data-incident="З-015"]').first().click();
+    await page.locator('[data-commit][data-incident="З-015"][data-node="U6"]').click();
+    const card = page.locator("[data-node-card]");
+    await expect(card).toBeVisible();
+    await expect(card).toContainText("З-015");
+    await expect(card).toContainText("U6");
+    await expect(card).toContainText("ответственный");
+    await expect(card).toContainText("Депутат-диспетчер");
+    await expect(card).toContainText("время в узле");
+    await expect(card).toContainText("SLA");
+    await card.locator('[data-card-action="chat"]').click();
     await expect.poll(() => decodeURIComponent(page.url())).toContain("#chat/З-015?at=2026-01-02");
     await expect(page.locator("[data-phone]")).toContainText("З-015");
     await expect(page.locator("[data-chat-date]")).toContainText("2 января 2026");
+  });
+
+  test("над графом есть шкала времени и легенды SLA и развилок", async ({ page }) => {
+    await expect(page.locator("[data-ruler]")).toBeVisible();
+    await expect(page.locator("[data-ruler-hour]")).toHaveCount(24);
+    await expect(page.locator("[data-ruler-marker]")).toHaveCount(1);
+    await expect(page.locator("[data-legends]")).toBeVisible();
+    await expect(page.locator("[data-legend-sla]")).toHaveCount(4);
+    await expect(page.locator('[data-legend-graph="fork"]')).toContainText("развилка");
+    await expect(page.locator('[data-legend-graph="merge"]')).toContainText("слияние");
+    await page.locator('[data-ruler-day="2026-01-02"]').click();
+    await expect(page.locator("[data-day-label]")).toHaveText("2 января 2026");
   });
 
   test("на широком экране чат стоит рядом с графом и синхронен по дате", async ({ page }) => {
@@ -69,7 +90,7 @@ test.describe("Хронология: Git-граф и перемотка врем
     await expect(inline).toHaveCount(1); // панель не должна дублироваться при перерисовке
     await expect(inline).toBeVisible();
     await expect(inline).toContainText("З-015");
-    await expect(inline.locator("[data-msg]")).toHaveCount(2);
+    await expect(inline.locator("[data-msg]")).toHaveCount(3);
     await expect(inline).toContainText("Назначаю подрядчика");
     await expect(inline).not.toContainText("Принято, выезжаю");
   });

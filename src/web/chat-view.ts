@@ -1,4 +1,5 @@
 import { chatAt, conversationFor } from "../core/conversation.ts";
+import { slaPhaseOnDay } from "../core/sla-at.ts";
 import { HERO_INCIDENT_ID } from "../data/hero.ts";
 import { ROLE_IDS } from "../data/roles.ts";
 import type { Story } from "../core/story.ts";
@@ -18,7 +19,9 @@ export const mountChat = (root: HTMLElement, graph: Graph, story: Story, route: 
   let day = route.at !== "" && days.includes(route.at) ? route.at : fallbackDay;
   let override: RoleId | null = null;
 
-  const messageDays = conversationFor(graph, incident).map((message) => message.day);
+  const messageDays = conversationFor(graph, incident)
+    .filter((message) => message.kind === "message")
+    .map((message) => message.day);
   const prevDay = (): string => [...messageDays].reverse().find((value) => value < day) ?? "";
   const nextDay = (): string => messageDays.find((value) => value > day) ?? "";
 
@@ -38,6 +41,8 @@ export const mountChat = (root: HTMLElement, graph: Graph, story: Story, route: 
         backHref: hrefTimeline(day, "git"),
         nextDay: nextDay(),
         prevDay: prevDay(),
+        nodeTitle: graph.byId[snapshot.nodeId]?.title ?? "",
+        slaPhase: slaPhaseOnDay(incident, day),
       }) +
       '<div class="chat-side">' +
       '<h2>Что происходит</h2>' +

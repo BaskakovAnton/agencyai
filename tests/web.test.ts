@@ -62,9 +62,11 @@ test("паритет: история с датами и переписка на 
   const graph = mod.buildProcessGraph(mod.NODES);
   const hero = page.incidents.find((incident: any) => incident.id === "З-015");
   const snapshot = mod.chatAt(graph, hero, "2026-01-02");
-  expect(snapshot.messages.length).toBe(2);
+  const replies = snapshot.messages.filter((message: any) => message.kind === "message");
+  expect(replies.length).toBe(2);
+  expect(snapshot.messages.length).toBe(3); // две реплики + системное сообщение о передаче
   expect(snapshot.activeRole).toBe("deputy");
-  expect(snapshot.messages.map((message: any) => message.nodeId)).toEqual(["U1", "U6"]);
+  expect(replies.map((message: any) => message.nodeId)).toEqual(["U1", "U6"]);
 
   const git = mod.buildGitGraph(graph, page.incidents, "2026-01-02");
   expect(git.commits.every((commit: any) => commit.day <= "2026-01-02")).toBe(true);
@@ -82,6 +84,8 @@ test("паритет: история с датами и переписка на 
     backHref: mod.hrefTimeline("2026-01-02"),
     nextDay: "2026-01-03",
     prevDay: "",
+    nodeTitle: "Назначение подрядчика",
+    slaPhase: "overdue",
   })).toContain("data-phone");
 });
 

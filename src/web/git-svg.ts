@@ -1,6 +1,6 @@
 import type { GitCommit, GitModel } from "../core/gitgraph.ts";
 import { formatDay } from "../core/timeline.ts";
-import { ROLE_COLORS } from "./theme.ts";
+import { FORK_MARK, MERGE_MARK, SLA_COLORS } from "./theme.ts";
 
 export interface GitSvgOptions {
   readonly columnWidth?: number;
@@ -59,6 +59,10 @@ export const renderGitSvg = (model: GitModel, filter = "", options: GitSvgOption
   model.columns.forEach((column) => {
     grid.push('<line class="grid-v" x1="' + x(column.index) + '" y1="' + top + '" x2="' + x(column.index) + '" y2="' + (height - 12) + '"></line>');
     grid.push('<text class="col-label" x="' + x(column.index) + '" y="' + (top - 12) + '">' + column.nodeId + "</text>");
+    const mark = column.isFork ? FORK_MARK : column.isMerge ? MERGE_MARK : "";
+    if (mark !== "") {
+      grid.push('<text class="col-mark" x="' + x(column.index) + '" y="' + (top - 24) + '">' + mark + "</text>");
+    }
   });
   model.days.forEach((day, index) => {
     const rowTop = rowTops[index] as number;
@@ -81,9 +85,9 @@ export const renderGitSvg = (model: GitModel, filter = "", options: GitSvgOption
       const y1 = y(from);
       const y2 = y(to);
       return (
-        '<polyline class="link' + (to.isHero ? " hero" : "") + '" points="' +
-        x1 + "," + y1 + " " + x2 + "," + y1 + " " + x2 + "," + y2 +
-        '" stroke="' + ROLE_COLORS[to.role] + '"></polyline>'
+        '<polyline class="link' + (to.isHero ? " hero" : "") + '" data-sla="' + to.slaPhase +
+        '" points="' + x1 + "," + y1 + " " + x2 + "," + y1 + " " + x2 + "," + y2 +
+        '" stroke="' + SLA_COLORS[to.slaPhase] + '"></polyline>'
       );
     })
     .join("");
@@ -96,12 +100,22 @@ export const renderGitSvg = (model: GitModel, filter = "", options: GitSvgOption
       const cy = y(commit);
       const attributes =
         'data-commit="' + commit.id + '" data-incident="' + commit.incidentId + '" data-node="' + commit.nodeId +
-        '" data-day="' + commit.day + '" data-role="' + commit.role + '" data-text="' + escapeHtml(commit.text) +
-        '" tabindex="0"';
+        '" data-node-title="' + escapeHtml(commit.nodeTitle) + '" data-day="' + commit.day +
+        '" data-role="' + commit.role + '" data-sla="' + commit.slaPhase + '" data-hours="' + commit.hoursInNode +
+        '" data-text="' + escapeHtml(commit.text) + '" tabindex="0"';
+      const forkMark = commit.isFork
+        ? '<polygon class="fork" points="' + (cx - 5) + "," + (cy - 16) + " " + cx + "," + (cy - 22) + " " +
+          (cx + 5) + "," + (cy - 16) + " " + cx + "," + (cy - 10) + '" fill="#4da3ff"></polygon>'
+        : "";
+      const mergeMark = commit.isMerge
+        ? '<polygon class="merge" points="' + (cx - 5) + "," + (cy + 16) + " " + cx + "," + (cy + 22) + " " +
+          (cx + 5) + "," + (cy + 16) + " " + cx + "," + (cy + 10) + '" fill="#f472b6"></polygon>'
+        : "";
       return (
         '<g class="commit' + (commit.isHero ? " hero" : "") + '" ' + attributes + ">" +
         '<rect class="hit" x="' + (cx - 9) + '" y="' + (cy - 8) + '" width="18" height="16" fill="transparent"></rect>' +
-        '<circle cx="' + cx + '" cy="' + cy + '" r="6" fill="' + ROLE_COLORS[commit.role] + '"></circle>' +
+        '<circle cx="' + cx + '" cy="' + cy + '" r="6" fill="' + SLA_COLORS[commit.slaPhase] + '"></circle>' +
+        forkMark + mergeMark +
         "</g>" +
         '<text class="dot-label' + (commit.isHero ? " hero" : "") + '" x="' + (cx + 9) + '" y="' + (cy + 4) + '">' +
         commit.incidentId + "</text>"

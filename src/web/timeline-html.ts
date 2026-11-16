@@ -1,10 +1,12 @@
 import type { GitModel } from "../core/gitgraph.ts";
 import type { GanttModel } from "../core/gantt.ts";
+import { SLA_LEGEND_TITLES, SLA_PHASES } from "../core/sla-at.ts";
 import { pluralize } from "../core/text.ts";
 import { formatDay } from "../core/timeline.ts";
 import { renderGanttGrid } from "./gantt-grid.ts";
 import { renderGitSvg } from "./git-svg.ts";
 import type { ViewMode } from "./router.ts";
+import { FORK_MARK, MERGE_MARK, SLA_COLORS } from "./theme.ts";
 
 export interface TimelinePageInput {
   readonly day: string;
@@ -16,6 +18,8 @@ export interface TimelinePageInput {
   readonly gantt: GanttModel;
   /** Готовая разметка компактного чата рядом с графом (на широком экране). */
   readonly chat: string;
+  /** Карточка выбранного узла (появляется по клику на коммит). */
+  readonly card?: string;
 }
 
 const escapeHtml = (value: string): string =>
@@ -51,7 +55,10 @@ export const renderCanvas = (input: TimelinePageInput): string =>
   (input.view === "gantt" ? renderGanttGrid(input.gantt, input.filter) : renderGitSvg(input.git, input.filter)) +
   "</div>";
 
-export const renderBody = (input: TimelinePageInput): string => renderCanvas(input) + input.chat;
+export const renderBody = (input: TimelinePageInput): string =>
+  renderCanvas(input) +
+  '<div class="node-card-slot" data-node-card-slot>' + (input.card ?? "") + "</div>" +
+  input.chat;
 
 /** Шапка, ползунок времени и переключатель вида — всё, кроме самой картинки. */
 export const renderTimelineHeader = (input: TimelinePageInput): string =>
@@ -79,8 +86,47 @@ export const renderTimelineFooter = (): string =>
   '<footer class="foot">Клик по точке графа открывает мобильный чат этой заявки на выбранную дату. ' +
   "Точки — события процесса, линии — путь заявки, колонки — узлы U1…U30.</footer>";
 
+/** Горизонтальная шкала времени: тики по суткам и часы выбранного дня. */
+export const renderTimeRuler = (input: TimelinePageInput): string => {
+  const ticks = input.days
+    .map(
+      (day, index) =>
+        '<button class="ruler-day' + (day === input.day ? " on" : "") + '" data-ruler-day="' + day +
+        '" data-ruler-index="' + index + '" title="' + formatDay(day) + '">' + day.slice(8) + "</button>",
+    )
+    .join("");
+  const hours = Array.from({ length: 24 }, (_, hour) =>
+    '<span class="ruler-hour" data-ruler-hour="' + hour + '" title="' + String(hour).padStart(2, "0") + ':00"></span>',
+  ).join("");
+  const share = input.days.length > 1 ? Math.round((Math.max(input.dayIndex, 0) / (input.days.length - 1)) * 100) : 0;
+  return (
+    '<div class="ruler" data-ruler>' +
+    '<div class="ruler-head"><span class="hint">Шкала времени: сутки и часы выбранного дня</span>' +
+    '<b data-ruler-label>' + formatDay(input.day) + "</b></div>" +
+    '<div class="ruler-days">' + ticks + "</div>" +
+    '<div class="ruler-hours">' + hours + "</div>" +
+    '<div class="ruler-marker" data-ruler-marker style="left:' + share + '%"></div>' +
+    "</div>"
+  );
+};
+
+/** Легенды: что означают цвета SLA и значки развилок и слияний. */
+export const renderLegends = (input: TimelinePageInput): string => {
+  const sla = SLA_PHASES.map(
+    (phase) =>
+      '<span class="legend-item" data-legend-sla="' + phase + '"><i style="background:' + SLA_COLORS[phase] + '"></i>' +
+      SLA_LEGEND_TITLES[phase] + "</span>",
+  ).join("");
+  const graph =
+    '<span class="legend-item" data-legend-graph="fork">' + FORK_MARK + " развилка</span>" +
+    '<span class="legend-item" data-legend-graph="merge">' + MERGE_MARK + " слияние</span>" +
+    '<span class="legend-item" data-legend-graph="counts">коммитов ' + input.git.commits.length +
+    " · заявок " + input.git.incidents.length + " · узлов " + input.git.columns.length + "</span>";
+  return '<div class="legends" data-legends>' + sla + graph + "</div>";
+};
+
 export const renderTimelinePage = (input: TimelinePageInput): string =>
-  renderTimelineHeader(input) + renderBody(input) + renderTimelineFooter();
+  renderTimelineHeader(input) + renderTimeRuler(input) + renderLegends(input) + renderBody(input) + renderTimelineFooter();
 
 export const tooltipText = (commit: { incidentId: string; nodeId: string; title?: string; day: string; role: string; text: string }, nodeTitle: string): string =>
   commit.incidentId + " · " + commit.nodeId + " " + escapeHtml(nodeTitle) + " · " + formatDay(commit.day) + " · " + commit.role + ": " + commit.text;
