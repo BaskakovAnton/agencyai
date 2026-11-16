@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { COHORTS, cohortsByNode, defaultFilters, emptyCohorts } from "../src/core/analytics.ts";
+import { pluralize } from "../src/core/text.ts";
 import { branchesOf, firstNodeId, lastNodeId, nodeIndex } from "../src/core/graph.ts";
 import { allowedNext, isArchived, moveBackward, moveToNode } from "../src/core/navigation.ts";
 import { generateIncidents } from "../src/core/generator.ts";
@@ -30,11 +30,10 @@ test("navigation: доступные переходы, архив и обрат�
   if (back.ok) expect(back.incident.nodeId).toBe("U1");
 });
 
-test("analytics: пустые когорты, фильтры по умолчанию и пустой дашборд", () => {
-  expect(emptyCohorts()).toEqual({ urgent: 0, normal: 0, routine: 0, none: 0 });
-  expect(defaultFilters()).toEqual({ cohort: "all", nodeId: "", role: "any" });
-  const buckets = cohortsByNode(graph, []);
-  expect(buckets.length).toBe(30);
-  expect(buckets.every((bucket) => bucket.total === 0 && bucket.incidentIds.length === 0)).toBe(true);
-  expect(COHORTS.length).toBe(4);
+test("русские формы числительных для подписей интерфейса", () => {
+  expect(pluralize(1, "заявка", "заявки", "заявок")).toBe("заявка");
+  expect(pluralize(3, "заявка", "заявки", "заявок")).toBe("заявки");
+  expect(pluralize(5, "заявка", "заявки", "заявок")).toBe("заявок");
+  expect(pluralize(11, "заявка", "заявки", "заявок")).toBe("заявок");
+  expect(pluralize(22, "заявка", "заявки", "заявок")).toBe("заявки");
 });

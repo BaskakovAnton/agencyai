@@ -1,71 +1,73 @@
 import { expect, test } from "@playwright/test";
 
-test.describe("Модуль 2 · Переписка по ролям", () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto("/#chat");
-    await expect(page.locator("[data-role-badge]")).toBeVisible();
+test.describe("Мобильный чат заявки", () => {
+  test("выглядит как мессенджер и не содержит поля ввода", async ({ page }) => {
+    await page.goto("/#chat/З-015?at=2026-01-02");
+    await expect(page.locator("[data-phone]")).toBeVisible();
+    await expect(page.locator("[data-phone] .bubble").first()).toBeVisible();
+    await expect(page.locator("[data-phone] input, [data-phone] textarea")).toHaveCount(0);
+    await expect(page.locator('[data-phone] button:has-text("Отправить")')).toHaveCount(0);
+    await expect(page.locator("[data-phone]")).toContainText("отправка недоступна");
+    await expect(page.locator("[data-msg]")).toHaveCount(2);
   });
 
-  test("стартовый шаг: узел U1, роль Житель, сообщение жителя", async ({ page }) => {
-    await expect(page.locator("[data-role-badge]")).toHaveText("Житель");
-    await expect(page.locator('[data-step="U1"]')).toHaveClass(/current/);
-    await expect(page.locator('[data-step="U6"]')).toHaveClass(/todo/);
-    await expect(page.locator("[data-messages]")).toContainText("разбита дверь подъезда");
-    await expect(page.locator("[data-passport]")).toContainText("З-015");
+  test("на 2 января видна только переписка до этой даты", async ({ page }) => {
+    await page.goto("/#chat/З-015?at=2026-01-02");
+    await expect(page.locator("[data-chat-date]")).toContainText("2 января 2026");
+    await expect(page.locator("[data-messages]")).toContainText("Добрый день, разбита дверь в подъезде");
+    await expect(page.locator("[data-messages]")).toContainText("Назначаю подрядчика");
+    await expect(page.locator("[data-messages]")).not.toContainText("Принято, выезжаю");
+    const days = await page.locator("[data-msg]").evaluateAll((nodes) =>
+      nodes.map((node) => (node as HTMLElement).dataset.day ?? ""),
+    );
+    expect(days.every((day) => day <= "2026-01-02")).toBe(true);
   });
 
-  test("список заявок: 30 строк, выбрана З-015", async ({ page }) => {
-    await expect(page.locator("[data-pane=list] .inc-row")).toHaveCount(30);
-    await expect(page.locator("[data-pane=list] .inc-row.on")).toContainText("З-015");
+  test("при смене узла чат сам меняет роль и собеседника", async ({ page }) => {
+    const cases: readonly (readonly [string, string, string])[] = [
+      ["2026-01-01", "Житель", "Депутат-диспетчер"],
+      ["2026-01-02", "Депутат-диспетчер", "Житель"],
+      ["2026-01-03", "Подрядчик", "Депутат-диспетчер"],
+      ["2026-01-05", "Житель", "Подрядчик"],
+    ];
+    for (const [day, role, interlocutor] of cases) {
+      await page.goto("/#chat/З-015?at=" + day);
+      await expect(page.locator("[data-role-badge]")).toHaveText(role);
+      await expect(page.locator("[data-interlocutor]")).toHaveText(interlocutor);
+    }
   });
 
-  test("следующий узел переключает роль на диспетчера и добавляет системное сообщение", async ({ page }) => {
-    await page.locator('[data-action="next"]').click();
-    await expect(page.locator("[data-role-badge]")).toHaveText("Депутат-диспетчер");
-    await expect(page.locator('[data-step="U1"]')).toHaveClass(/done/);
-    await expect(page.locator('[data-step="U6"]')).toHaveClass(/current/);
-    await expect(page.locator("[data-messages]")).toContainText("передана в работу");
-    await expect(page.locator("[data-messages]")).toContainText("Кто может выехать на З-015?");
-  });
-
-  test("узел U7: роль подрядчика, карточки SLA и подрядчика, ответ бригады", async ({ page }) => {
-    await page.locator('[data-action="next"]').click();
-    await page.locator('[data-action="next"]').click();
+  test("«Сменить роль» показывает диалог с другой стороны", async ({ page }) => {
+    await page.goto("/#chat/З-015?at=2026-01-03");
     await expect(page.locator("[data-role-badge]")).toHaveText("Подрядчик");
-    await expect(page.locator('[data-step="U7"]')).toHaveClass(/current/);
-    await expect(page.locator('[data-card="sla"]')).toContainText("SLA заявки З-015");
-    await expect(page.locator('[data-card="contractor"]')).toContainText("Дом-Сервис");
-    await expect(page.locator("[data-messages]")).toContainText("Бригада выехала");
-    await expect(page.locator("[data-messages]")).toContainText("40 минут");
-  });
-
-  test("узел U19 возвращает роль жителя и просит подтвердить результат", async ({ page }) => {
-    for (let i = 0; i < 3; i += 1) await page.locator('[data-action="next"]').click();
-    await expect(page.locator("[data-role-badge]")).toHaveText("Житель");
-    await expect(page.locator('[data-step="U19"]')).toHaveClass(/current/);
-    await expect(page.locator("[data-messages]")).toContainText("Подтвердите");
-  });
-
-  test("шаг назад и «Сменить роль» работают", async ({ page }) => {
-    await page.locator('[data-action="next"]').click();
-    await expect(page.locator("[data-role-badge]")).toHaveText("Депутат-диспетчер");
-    await page.locator('[data-action="prev"]').click();
-    await expect(page.locator('[data-step="U1"]')).toHaveClass(/current/);
+    await expect(page.locator("[data-msg].own")).toHaveCount(1); // реплика подрядчика справа
     await page.locator('[data-action="cycle-role"]').click();
+    await expect(page.locator("[data-role-badge]")).toHaveText("Система");
+    await expect(page.locator("[data-sim]")).toBeVisible();
+  });
+
+  test("«Следующая реплика» перематывает дату и обновляет адрес", async ({ page }) => {
+    await page.goto("/#chat/З-015?at=2026-01-02");
+    await page.locator('[data-action="next-msg"]').click();
+    await expect(page).toHaveURL(/at=2026-01-03/);
+    await expect(page.locator("[data-role-badge]")).toHaveText("Подрядчик");
+    await page.locator('[data-action="prev-msg"]').click();
+    await expect(page).toHaveURL(/at=2026-01-02/);
     await expect(page.locator("[data-role-badge]")).toHaveText("Депутат-диспетчер");
   });
 
-  test("авто-плеер доводит сценарий до U19", async ({ page }) => {
-    await page.locator('[data-action="play"]').click();
-    await expect(page.locator('[data-step="U19"]')).toHaveClass(/current/, { timeout: 12_000 });
+  test("переписка есть у любой заявки, а не только у героя", async ({ page }) => {
+    await page.goto("/#chat/З-020?at=2026-01-02");
+    await expect(page.locator("[data-phone]")).toContainText("З-020");
+    const messages = await page.locator("[data-msg]").count();
+    expect(messages).toBeGreaterThan(0);
   });
 
-  test("навигация между тремя модулями работает", async ({ page }) => {
-    await page.locator('.nav-link[data-route="dashboard"]').click();
-    await expect(page.locator("canvas#chart")).toBeVisible();
-    await page.locator('.nav-link[data-route="model"]').click();
-    await expect(page.locator('.nav-link[data-route="model"]')).toHaveClass(/on/);
-    await page.locator('.nav-link[data-route="chat"]').click();
-    await expect(page.locator("[data-role-badge]")).toBeVisible();
+  test("ссылка назад возвращает в хронологию на ту же дату", async ({ page }) => {
+    await page.goto("/#chat/З-015?at=2026-01-02");
+    await page.locator("[data-back]").click();
+    await expect(page).toHaveURL(/at=2026-01-02/);
+    await expect(page.locator("svg[data-graph]")).toBeVisible();
+    await expect(page.locator("[data-day-label]")).toHaveText("2 января 2026");
   });
 });

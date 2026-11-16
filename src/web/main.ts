@@ -1,10 +1,18 @@
-import { generateIncidents } from "../core/generator.ts";
+import { chatAt, conversationFor, messagesUpTo } from "../core/conversation.ts";
+import { buildGantt } from "../core/gantt.ts";
+import { buildGitGraph } from "../core/gitgraph.ts";
+import { buildStory } from "../core/story.ts";
+import { daysRange, formatDay, formatStamp, visibleAt, withTimeline } from "../core/timeline.ts";
 import { buildProcessGraph } from "../data/edges.ts";
 import { NODES } from "../data/nodes.ts";
-import { mulberry32 } from "../random.ts";
-import { mountRouter } from "./router.ts";
+import { mountChat } from "./chat-view.ts";
+import { renderPhone } from "./chat-html.ts";
+import { renderGanttGrid } from "./gantt-grid.ts";
+import { renderGitSvg } from "./git-svg.ts";
+import { hrefChat, hrefTimeline, mountRouter, parseRoute } from "./router.ts";
+import { mountTimeline } from "./timeline-view.ts";
 
-/** Вся модель доступна из бандла: её используют тесты паритета и оба демо-модуля. */
+/** Вся модель доступна из бандла: её используют тесты паритета и экраны демо. */
 export { NODES } from "../data/nodes.ts";
 export { branchesOf, buildGraph, neighborsOf } from "../core/graph.ts";
 export { BRANCHES, branchShares, buildProcessGraph } from "../data/edges.ts";
@@ -16,43 +24,35 @@ export { allowedRoles, roleAccess } from "../core/roles.ts";
 export { mulberry32, pick, randInt, shuffle } from "../random.ts";
 export { afterMove, pauseSlaAt, resumeSlaAt, slaStatus, startSla, withClock } from "../core/sla.ts";
 export { PAUSE_REASONS, SLA_PROFILES, hoursFor } from "../data/sla.ts";
-export {
-  SITUATIONS,
-  SITUATION_SECTIONS,
-  nodesForSituation,
-  normalizeSituationId,
-  situationById,
-  situationsForNode,
-} from "../data/situations.ts";
-export { COHORTS, COHORT_COLORS, COHORT_TITLES, applyFilters, cohortsByNode, defaultFilters, tooltipFor } from "../core/analytics.ts";
-export {
-  CHAT_INCIDENT_ID,
-  CHAT_INCIDENT_TITLE,
-  CHAT_SCENARIO,
-  activeRole,
-  chatStart,
-  currentStep,
-  nextStep,
-  prevStep,
-  setRoleOverride,
-  visibleMessages,
-} from "./chat.ts";
+export { NODE_MESSAGES, messageFor } from "../data/messages.ts";
+export { HERO_GAPS, HERO_INCIDENT_ID, HERO_ROUTE, HERO_START, HERO_TITLE } from "../data/hero.ts";
+export { SITUATIONS, SITUATION_SECTIONS, nodesForSituation, normalizeSituationId, situationById, situationsForNode } from "../data/situations.ts";
+export { chatAt, conversationFor, messagesUpTo } from "../core/conversation.ts";
+export { buildGantt } from "../core/gantt.ts";
+export { buildGitGraph } from "../core/gitgraph.ts";
+export { buildStory, STORY_HOURS_FACTOR, STORY_SWEEPS } from "../core/story.ts";
+export { dayOf, daysRange, formatDay, formatStamp, incidentAt, visibleAt, withTimeline } from "../core/timeline.ts";
+export { pluralize } from "../core/text.ts";
+export { renderGanttGrid } from "./gantt-grid.ts";
+export { renderGitSvg } from "./git-svg.ts";
+export { renderPhone, renderInlineChat, renderMessages } from "./chat-html.ts";
+export { hrefChat, hrefTimeline, parseRoute } from "./router.ts";
 export { mountChat } from "./chat-view.ts";
-export { mountDashboard } from "./dashboard.ts";
+export { mountTimeline } from "./timeline-view.ts";
 export { applyAction, createState } from "./session.ts";
 export { renderPage } from "./view.ts";
 
-/** Модель сессии для обоих демо-модулей: 30 заявок на 30 узлах процесса. */
+/** Модель демонстрации: граф процесса и 30 заявок с датами (герой — З-015). */
 export const demoModel = (seed = 7) => {
   const graph = buildProcessGraph(NODES);
-  const incidents = generateIncidents(graph, mulberry32(seed));
-  return { graph, incidents };
+  const story = buildStory(graph, seed);
+  return { graph, story, incidents: story.incidents };
 };
 
 if (typeof document !== "undefined") {
   const start = (): void => {
-    const { graph, incidents } = demoModel();
-    mountRouter(graph, incidents);
+    const { graph, story } = demoModel();
+    mountRouter(graph, story);
   };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);
   else start();
