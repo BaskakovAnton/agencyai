@@ -34,6 +34,14 @@ test("герой отмечен классом hero, а в подписи дня
   expect(svg).toContain('class="link');
 });
 
+test("граф называет себя, а коммиты — кнопки с подписью для скринридера", () => {
+  const svg = renderGitSvg(model);
+  expect(svg).toContain('role="group"');
+  expect(svg).toContain("aria-label=");
+  expect((svg.match(/role="button"/g) ?? []).length).toBe(model.commits.length);
+  expect(svg).toContain('aria-label="З-015 · U6');
+});
+
 test("день и узел каждого коммита попадают в data-атрибуты для клика и тултипа", () => {
   const svg = renderGitSvg(model, "З-015");
   expect(svg).toContain('data-incident="З-015"');

@@ -50,7 +50,10 @@ const auditPage = async (page: Page, name: string, viewport: string): Promise<Fi
       return label + " " + Math.round(r.width) + "x" + Math.round(r.height);
     }).join(" | ") });
     const unnamed = interactive.filter((el) => {
-      const label = (el.getAttribute("aria-label") ?? "").trim() || ((el as HTMLElement).innerText ?? "").trim() || (el.getAttribute("title") ?? "").trim();
+      const id = el.getAttribute("id") ?? "";
+      const labelled = id !== "" && document.querySelector('label[for="' + id + '"]') !== null;
+      const label = (el.getAttribute("aria-label") ?? "").trim() || ((el as HTMLElement).innerText ?? "").trim() ||
+        (el.getAttribute("title") ?? "").trim() || (labelled ? "label" : "");
       return label === "";
     });
     if (unnamed.length > 0) out.push({ page: name, viewport, kind: "unlabeled", count: unnamed.length, detail: unnamed.slice(0, 5).map((el) => el.tagName + "." + (el.getAttribute("class") ?? "")).join(" | ") });

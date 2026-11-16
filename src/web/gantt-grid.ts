@@ -37,7 +37,7 @@ export const renderGanttGrid = (model: GanttModel, filter = ""): string => {
         .join("");
       return (
         '<div class="gantt-row' + (row.isHero ? " hero" : "") + '" data-row="' + row.incidentId +
-        '" style="grid-template-columns:' + columns + '">' +
+        '" tabindex="0" role="button" style="grid-template-columns:' + columns + '">' +
         '<div class="gantt-cell name"><b>' + row.incidentId + "</b> " + escapeHtml(row.title) +
         '<i class="prio ' + row.priority + '">' + row.priority + "</i></div>" +
         bars +

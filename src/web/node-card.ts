@@ -10,7 +10,8 @@ const escapeHtml = (value: string): string =>
 /** Карточка узла: кто отвечает, сколько заявка здесь стоит, какой у неё SLA. */
 export const renderNodeCard = (commit: GitCommit, chatHref: string): string =>
   [
-    '<aside class="node-card" data-node-card data-sla="' + commit.slaPhase + '" data-node="' + commit.nodeId + '">',
+    '<aside class="node-card" data-node-card tabindex="-1" data-sla="' + commit.slaPhase + '" data-node="' +
+      commit.nodeId + '">',
     '<div class="node-card-head"><b>' + commit.incidentId + "</b> · " + commit.nodeId + " " +
       escapeHtml(commit.nodeTitle) + "</div>",
     '<div class="node-card-row"><span>группа</span><b>' + GROUP_TITLES[commit.group] + "</b></div>",

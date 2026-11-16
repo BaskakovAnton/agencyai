@@ -118,8 +118,11 @@ test("страница рендерит 30 заявок с кнопками пе
   const state = mod.createState(mod.buildGraph(mod.NODES), 7);
   const html = mod.renderPage(state, "");
   expect(html).toContain("Заявки");
-  expect(html.match(/class="row/g)?.length).toBe(30);
+  expect(html.match(/class="row(?:"| on)/g)?.length).toBe(30);
   expect(html).toContain('data-action="forward"');
+  expect(html).toContain('<h1 class="brand">');
+  expect(html.match(/data-action="select"/g)?.length).toBe(30);
+  expect(html.match(/class="row-main"/g)?.length).toBe(30);
   expect(html).toContain("Массовый шаг вперёд");
   const moved = mod.applyAction(state, { kind: "forward", ref: "5" });
   expect(moved.state.session.step).toBe(1);

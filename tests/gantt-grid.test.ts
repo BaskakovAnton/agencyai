@@ -26,6 +26,13 @@ test("полосы несут узел, даты и цвет роли", () => {
   expect(html).toContain("#4da3ff"); // цвет роли депутата на полосе U6
 });
 
+test("строки Ганта — кнопки с клавиатурным фокусом и подписью", () => {
+  const html = renderGanttGrid(model);
+  expect((html.match(/role="button"/g) ?? []).length).toBe(model.rows.length);
+  expect((html.match(/tabindex="0"/g) ?? []).length).toBe(model.rows.length);
+  expect(html.match(/class="gantt-row/g)?.length).toBe(model.rows.length + 1); // + шапка
+});
+
 test("фильтр оставляет одну строку и герой помечен", () => {
   const html = renderGanttGrid(model, "З-015");
   expect((html.match(/data-row="/g) ?? []).length).toBe(1);

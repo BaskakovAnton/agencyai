@@ -72,6 +72,48 @@ test.describe("Хронология: Git-граф и перемотка врем
     await expect(page.locator("[data-chat-date]")).toContainText("2 января 2026");
   });
 
+  test("Enter по коммиту открывает карточку, Esc закрывает и возвращает фокус", async ({ page }) => {
+    await page.locator('[data-action="jump"][data-day="2026-01-02"]').click();
+    const commit = page.locator('[data-commit][data-incident="З-015"][data-node="U6"]');
+    await commit.focus();
+    await page.keyboard.press("Enter");
+    const card = page.locator("[data-node-card]");
+    await expect(card).toBeVisible();
+    await expect.poll(() => page.evaluate(() => (document.activeElement as HTMLElement | null)?.hasAttribute("data-node-card") ?? false)).toBe(true);
+    await page.keyboard.press("Escape");
+    await expect(page.locator("[data-node-card]")).toHaveCount(0);
+    await expect.poll(() => page.evaluate(() => (document.activeElement as HTMLElement | null)?.getAttribute("data-node") ?? "")).toBe("U6");
+  });
+
+  test("перемотка дня пишет дату в адрес, смена вида — параметр view", async ({ page }) => {
+    await page.locator('[data-ruler-day="2026-01-05"]').click();
+    await expect(page.locator("[data-day-label]")).toHaveText("5 января 2026");
+    await expect.poll(() => decodeURIComponent(page.url())).toContain("at=2026-01-05");
+    await page.locator('[data-view="gantt"]').click();
+    await expect.poll(() => decodeURIComponent(page.url())).toContain("view=gantt");
+  });
+
+  test("сброс фильтра появляется после выбора заявки", async ({ page }) => {
+    await page.locator("[data-incident-filter]").first().click();
+    const clear = page.locator('[data-action="clear"]');
+    await expect(clear).toBeVisible();
+    await clear.click();
+    await expect(page.locator("[data-incident-filter].on")).toHaveCount(0);
+  });
+
+  test("канвас, ползунок и строки Ганта доступны с клавиатуры", async ({ page }) => {
+    await page.locator('[data-action="jump"][data-day="2026-01-02"]').click();
+    await expect(page.locator("[data-canvas]")).toHaveAttribute("tabindex", "0");
+    await expect(page.locator("[data-canvas]")).toHaveAttribute("role", "region");
+    await expect(page.locator("[data-slider]")).toHaveAttribute("aria-valuetext", "2 января 2026");
+    await page.locator('[data-view="gantt"]').click();
+    const row = page.locator("[data-row]").first();
+    const id = await row.getAttribute("data-row");
+    await row.focus();
+    await page.keyboard.press("Enter");
+    await expect.poll(() => decodeURIComponent(page.url())).toContain("#chat/" + (id as string));
+  });
+
   test("над графом есть шкала времени и легенды SLA и развилок", async ({ page }) => {
     await expect(page.locator("[data-ruler]")).toBeVisible();
     await expect(page.locator("[data-ruler-hour]")).toHaveCount(24);
