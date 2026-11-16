@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="auto">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f4f5f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1116" media="(prefers-color-scheme: dark)">
+<title>Приёмная депутата — процессы взаимодействия</title>
+<style>
+/* ══════════════════════════════════════════════════════════════════════
+   ДИЗАЙН-ТОКЕНЫ · индустриальный дизайн 2026
+   ──────────────────────────────────────────────────────────────────────
+   Идея: интерфейс как «панель управления прибором». Никакого стекла и
+   градиентов ради красоты — только слои, которые объясняют иерархию.
+   1. Одна система токенов (цвет/радиус/тень/ритм) → предсказуемость.
+   2. Модульная сетка 4pt и compact-first типографика: плотность важнее воздуха.
+   3. Тактильность: элементы выглядят нажимаемыми (2px «кант» + глубина).
+   4. Семантика цвета = статус, а не украшение.
+   5. Тема переключается сменой значений токенов, разметка не меняется.
+   ══════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Ритм и форма (не зависят от темы) ───────────────────────────── */
+  --u: 4px;                       /* базовая единица модульной сетки 4pt */
+  --r-sm: 6px; --r-md: 10px; --r-lg: 16px; --r-pill: 999px;
+  --bw: 1px;                      /* тонкая граница слоя                  */
+  --bw-strong: 2px;               /* «кант» интерактивного элемента       */
+  --tap: 44px;                    /* минимальная зона касания (mobile-first) */
+  --dur: .18s; --ease: cubic-bezier(.2,.7,.3,1);
+  --maxw: 1240px;
+
+  --font-ui: system-ui, "Segoe UI Variable", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Mono", Consolas, "JetBrains Mono", monospace;
+
+  /* ── Светлая палитра: «техкарта на матовом металле» ───────────────── */
+  --bg: #eceef1;
+  --bg-2: #f4f5f7;
+  --surface: #ffffff;
+  --surface-2: #f6f7f9;
+  --surface-hi: #ffffff;
+  --inset: #e7eaee;
+
+  --text: #16181d;
+  --text-2: #4b5563;
+  --muted: #6b7280;
+  --border: #d7dce3;
+  --border-2: #c3cad4;
+
+  --accent: #1f5eff;
+  --accent-on: #ffffff;
+  --accent-soft: #e8efff;
+  --accent-line: #b9ccff;
+
+  /* семантика статусов */
+  --ok: #0f7a4f;      --ok-soft: #e2f5ea;   --ok-line: #a7dcc0;
+  --warn: #8a5a00;    --warn-soft: #fdf1d8; --warn-line: #e8cd8a;
+  --danger: #b3261e;  --danger-soft: #fdeceb; --danger-line: #f0b6b1;
+  --info: #14539a;    --info-soft: #e5effb;  --info-line: #aac9ea;
+
+  /* роли (окраска дорожек/бейджей) */
+  --role-resident: #0d6e6e;  --role-resident-soft: #e0f4f4;
+  --role-deputy: #1f5eff;    --role-deputy-soft: #e8efff;
+  --role-assistant: #5b3fd6; --role-assistant-soft: #efeaff;
+  --role-contractor: #8a5a00;--role-contractor-soft: #fdf1d8;
+  --role-system: #4b5563;    --role-system-soft: #eceef1;
+  --role-observer: #374151;  --role-observer-soft: #e7eaee;
+
+  --shadow-1: 0 1px 2px rgba(16,20,28,.06), 0 2px 6px rgba(16,20,28,.05);
+  --shadow-2: 0 2px 4px rgba(16,20,28,.06), 0 10px 26px rgba(16,20,28,.10);
+  --shadow-pop: 0 24px 60px rgba(10,14,22,.28);
+  --ring: 0 0 0 3px rgba(31,94,255,.28);
+}
+
+/* ── Тёмная палитра: «приборная панель ночью». Тот же ритм, другие значения.
+      Поверхности поднимаются светом, а не цветом — стандарт индустриальных HMI. ── */
+[data-theme="dark"] {
+  --bg: #0b0e13;
+  --bg-2: #0e1116;
+  --surface: #151a21;
+  --surface-2: #1a2028;
+  --surface-hi: #1f262f;
+  --inset: #0f1319;
+
+  --text: #e9edf3;
+  --text-2: #b3bcc9;
+  --muted: #8b95a3;
+  --border: #262e39;
+  --border-2: #38424f;
+
+  --accent: #5b8cff;
+  --accent-on: #05070b;
+  --accent-soft: #16213a;
+  --accent-line: #2c4372;
+
+  --ok: #4ad295;      --ok-soft: #10281f;   --ok-line: #1d4c38;
+  --warn: #e8b552;    --warn-soft: #2a2113; --warn-line: #4d3c19;
+  --danger: #ff7a70;  --danger-soft: #2c1614; --danger-line: #5a2a26;
+  --info: #7ab8ff;    --info-soft: #12203a;  --info-line: #24456e;
+
+  --role-resident: #4fd6c8;  --role-resident-soft: #0f2a2a;
+  --role-deputy: #7ba4ff;    --role-deputy-soft: #14203a;
+  --role-assistant: #b39dff; --role-assistant-soft: #1d1836;
+  --role-contractor: #e8b552;--role-contractor-soft: #2a2113;
+  --role-system: #a3adbb;    --role-system-soft: #1a2028;
+  --role-observer: #cbd3de;  --role-observer-soft: #1f262f;
+
+  --shadow-1: 0 1px 2px rgba(0,0,0,.5);
+  --shadow-2: 0 2px 6px rgba(0,0,0,.5), 0 14px 34px rgba(0,0,0,.45);
+  --shadow-pop: 0 28px 70px rgba(0,0,0,.7);
+  --ring: 0 0 0 3px rgba(91,140,255,.35);
+}
+
+/* Режим «авто»: доверяем системе пользователя */
+@media (prefers-color-scheme: dark) {
+  [data-theme="auto"] {
+    --bg:#0b0e13; --bg-2:#0e1116; --surface:#151a21; --surface-2:#1a2028;
+    --surface-hi:#1f262f; --inset:#0f1319;
+    --text:#e9edf3; --text-2:#b3bcc9; --muted:#8b95a3;
+    --border:#262e39; --border-2:#38424f;
+    --accent:#5b8cff; --accent-on:#05070b; --accent-soft:#16213a; --accent-line:#2c4372;
+    --ok:#4ad295; --ok-soft:#10281f; --ok-line:#1d4c38;
+    --warn:#e8b552; --warn-soft:#2a2113; --warn-line:#4d3c19;
+    --danger:#ff7a70; --danger-soft:#2c1614; --danger-line:#5a2a26;
+    --info:#7ab8ff; --info-soft:#12203a; --info-line:#24456e;
+    --role-resident:#4fd6c8; --role-resident-soft:#0f2a2a;
+    --role-deputy:#7ba4ff; --role-deputy-soft:#14203a;
+    --role-assistant:#b39dff; --role-assistant-soft:#1d1836;
+    --role-contractor:#e8b552; --role-contractor-soft:#2a2113;
+    --role-system:#a3adbb; --role-system-soft:#1a2028;
+    --role-observer:#cbd3de; --role-observer-soft:#1f262f;
+    --shadow-1:0 1px 2px rgba(0,0,0,.5);
+    --shadow-2:0 2px 6px rgba(0,0,0,.5), 0 14px 34px rgba(0,0,0,.45);
+    --shadow-pop:0 28px 70px rgba(0,0,0,.7);
+    --ring:0 0 0 3px rgba(91,140,255,.35);
+  }
+}
+
+/* ══ RESET / BASE ═══════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 15px;                 /* mobile-first: читаемо без зума */
+  line-height: 1.5;
+  padding-bottom: calc(84px + env(safe-area-inset-bottom)); /* под нижним доком */
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+h1,h2,h3,h4,p { margin: 0; }
+a { color: var(--accent); text-decoration: none; }
+code, .mono { font-family: var(--font-mono); font-size: .87em; }
+:focus-visible { outline: none; box-shadow: var(--ring); border-radius: var(--r-sm); }
+.wrap { width: 100%; max-width: var(--maxw); margin-inline: auto; padding-inline: 12px; }
+
+/* ══ ТИПОГРАФИКА: компактная шкала, плотность > воздух ═════════════ */
+.t-eyebrow {
+  font-size: 11px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase;
+  color: var(--muted);
+}
+.t-title { font-size: 20px; font-weight: 700; letter-spacing: -.015em; line-height: 1.25; }
+.t-sub   { font-size: 16px; font-weight: 650; letter-spacing: -.01em; }
+.t-body  { font-size: 15px; }
+.t-small { font-size: 13px; color: var(--text-2); }
+.t-micro { font-size: 11.5px; color: var(--muted); }
+.t-num   { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: 700; }
+
+/* ══ ШАПКА ══════════════════════════════════════════════════════════ */
+.appbar {
+  position: sticky; top: 0; z-index: 60;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: var(--bw) solid var(--border);
+}
+.appbar-inner {
+  display: flex; align-items: center; gap: 10px;
+  min-height: 56px; padding-block: 8px;
+}
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.logo {
+  width: 34px; height: 34px; flex: none; border-radius: 9px;
+  background: var(--accent); color: var(--accent-on);
+  display: grid; place-items: center; font-weight: 800; font-size: 15px;
+  box-shadow: inset 0 0 0 var(--bw-strong) rgba(255,255,255,.22), var(--shadow-1);
+}
+.brand-txt { min-width: 0; }
+.brand-txt .t-title { font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.brand-txt .t-micro { display: none; }
+
+/* Сегментированный контрол — «переключатель режимов прибора» */
+.seg {
+  display: inline-flex; padding: 3px; gap: 2px;
+  background: var(--inset); border: var(--bw) solid var(--border);
+  border-radius: var(--r-pill);
+}
+.seg button {
+  appearance: none; border: 0; background: transparent; cursor: pointer;
+  font: inherit; font-size: 12.5px; font-weight: 600; color: var(--text-2);
+  padding: 7px 12px; min-height: 34px; border-radius: var(--r-pill);
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+  white-space: nowrap;
+}
+.seg button:hover { color: var(--text); }
+.seg button[aria-selected="true"] {
+  background: var(--surface-hi); color: var(--text);
+  box-shadow: var(--shadow-1), inset 0 0 0 var(--bw) var(--border);
+}
+
+/* ══ КНОПКИ: тактильные — кант + тень + «утопли» при нажатии ════════ */
+.btn {
+  appearance: none; display: inline-flex; align-items: center; justify-content: center;
+  gap: 7px; cursor: pointer; font: inherit; font-size: 13.5px; font-weight: 600;
+  min-height: var(--tap); padding: 0 14px;
+  color: var(--text); background: var(--surface);
+  border: var(--bw) solid var(--border-2); border-radius: var(--r-md);
+  box-shadow: var(--shadow-1), inset 0 1px 0 rgba(255,255,255,.5);
+  transition: transform .1s var(--ease), background var(--dur), border-color var(--dur), box-shadow var(--dur);
+  text-decoration: none;
+}
+[data-theme="dark"] .btn, [data-theme="auto"] .btn { box-shadow: var(--shadow-1), inset 0 1px 0 rgba(255,255,255,.05); }
+.btn:hover { background: var(--surface-2); border-color: var(--accent-line); }
+.btn:active { transform: translateY(1px); box-shadow: inset 0 2px 5px rgba(0,0,0,.14); }
+.btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+.btn-primary {
+  background: var(--accent); color: var(--accent-on);
+  border-color: color-mix(in srgb, var(--accent) 70%, #000);
+}
+.btn-primary:hover { background: color-mix(in srgb, var(--accent) 88%, #000); }
+.btn-ghost { background: transparent; border-color: transparent; box-shadow: none; }
+.btn-ghost:hover { background: var(--surface-2); border-color: var(--border); }
+.btn-icon { width: var(--tap); padding: 0; font-size: 17px; }
+.btn-sm { min-height: 34px; font-size: 12.5px; padding: 0 10px; }
+
+/* ══ ПОЛЕ ПОИСКА ═══════════════════════════════════════════════════ */
+.field {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--inset); border: var(--bw) solid var(--border);
+  border-radius: var(--r-md); padding: 0 12px; min-height: var(--tap);
+  transition: border-color var(--dur), box-shadow var(--dur);
+}
+.field:focus-within { border-color: var(--accent); box-shadow: var(--ring); }
+.field svg { flex: none; color: var(--muted); }
+.field input {
+  flex: 1 1 auto; min-width: 0; border: 0; background: transparent; color: var(--text);
+  font: inherit; font-size: 15px; padding: 0; height: 100%;
+}
+.field input::placeholder { color: var(--muted); }
+select {
+  font: inherit; font-size: 14px; color: var(--text);
+  background: var(--inset); border: var(--bw) solid var(--border);
+  border-radius: var(--r-md); padding: 0 32px 0 12px; min-height: var(--tap);
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position: calc(100% - 17px) 20px, calc(100% - 12px) 20px;
+  background-size: 5px 5px, 5px 5px; background-repeat: no-repeat;
+}
+
+/* ══ ПОВЕРХНОСТИ / КАРТОЧКИ ════════════════════════════════════════ */
+.panel {
+  background: var(--surface); border: var(--bw) solid var(--border);
+  border-radius: var(--r-lg); box-shadow: var(--shadow-1);
+}
+.card {
+  display: block; width: 100%; text-align: left; cursor: pointer;
+  background: var(--surface); color: inherit; font: inherit;
+  border: var(--bw) solid var(--border); border-radius: var(--r-md);
+  padding: 12px;
+  box-shadow: inset 0 0 0 0 transparent, var(--shadow-1);
+  transition: transform .12s var(--ease), border-color var(--dur), box-shadow var(--dur);
+}
+.card:hover { transform: translateY(-2px); border-color: var(--accent-line); box-shadow: var(--shadow-2); }
+.card:active { transform: translateY(0); }
+.card__top { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.card__id { font-family: var(--font-mono); font-size: 11px; font-weight: 700; color: var(--muted); }
+.card__title { font-size: 15px; font-weight: 650; line-height: 1.35; }
+.card__sum { font-size: 13px; color: var(--text-2); margin-top: 4px; line-height: 1.45; }
+.card__meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+
+/* ══ БЕЙДЖИ / СТАТУСЫ ══════════════════════════════════════════════ */
+.tag {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11.5px; font-weight: 600; line-height: 1;
+  padding: 5px 8px; border-radius: var(--r-sm);
+  background: var(--surface-2); color: var(--text-2);
+  border: var(--bw) solid var(--border); white-space: nowrap;
+}
+.tag .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex: none; }
+.tag-ok       { background: var(--ok-soft);     color: var(--ok);     border-color: var(--ok-line); }
+.tag-warn     { background: var(--warn-soft);   color: var(--warn);   border-color: var(--warn-line); }
+.tag-danger   { background: var(--danger-soft); color: var(--danger); border-color: var(--danger-line); }
+.tag-info     { background: var(--info-soft);   color: var(--info);   border-color: var(--info-line); }
+.tag-accent   { background: var(--accent-soft); color: var(--accent); border-color: var(--accent-line); }
+.tag-mono     { font-family: var(--font-mono); }
+
+/* ══ МЕТРИКИ ═══════════════════════════════════════════════════════ */
+.metrics {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;
+  margin: 12px 0;
+}
+.metric {
+  background: var(--surface); border: var(--bw) solid var(--border);
+  border-radius: var(--r-md); padding: 10px 12px;
+  position: relative; overflow: hidden;
+}
+.metric::after {                        /* технический штрих: рискер угла */
+  content: ""; position: absolute; right: -1px; top: -1px;
+  width: 14px; height: 14px;
+  background: linear-gradient(225deg, var(--border) 50%, transparent 50%);
+}
+.metric b { display: block; font-family: var(--font-mono); font-size: 22px; font-weight: 700; line-height: 1.1; }
+.metric span { font-size: 11.5px; color: var(--muted); }
+
+/* ══ СЕКЦИИ ════════════════════════════════════════════════════════ */
+.section { margin-top: 22px; }
+.section__head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.section__rule { flex: 1 1 auto; height: var(--bw); background: var(--border); }
+.grid-cards { display: grid; grid-template-columns: 1fr; gap: 8px; }
+
+/* ══ НИЖНЯЯ ПАНЕЛЬ НАВИГАЦИИ (mobile-first primary nav) ════════════ */
+.dock {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 70;
+  display: flex; justify-content: space-around; gap: 4px;
+  padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
+  backdrop-filter: blur(12px);
+  border-top: var(--bw) solid var(--border);
+}
+.dock a {
+  flex: 1 1 0; min-height: var(--tap);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  font-size: 10.5px; font-weight: 600; color: var(--muted); border-radius: var(--r-md);
+  transition: color var(--dur), background var(--dur);
+}
+.dock a svg { width: 21px; height: 21px; }
+.dock a:hover { color: var(--text); background: var(--surface-2); }
+.dock a[aria-current="page"] { color: var(--accent); background: var(--accent-soft); }
+
+/* ══ МОДАЛЬНОЕ ОКНО → bottom sheet на мобильном ════════════════════ */
+.overlay {
+  position: fixed; inset: 0; z-index: 90;
+  background: rgba(6,10,18,.55);
+  display: flex; align-items: flex-end; justify-content: center;
+  animation: fade var(--dur) var(--ease);
+}
+.overlay[hidden] { display: none; }
+@keyframes fade { from { opacity: 0 } to { opacity: 1 } }
+.sheet {
+  width: 100%; max-width: 940px; max-height: 92vh; overflow: auto;
+  background: var(--surface); border-radius: var(--r-lg) var(--r-lg) 0 0;
+  border-top: var(--bw-strong) solid var(--border-2);
+  box-shadow: var(--shadow-pop);
+  padding: 8px 14px calc(20px + env(safe-area-inset-bottom));
+  animation: slideUp .24s var(--ease);
+  overscroll-behavior: contain;
+}
+@keyframes slideUp { from { transform: translateY(24px); opacity: .6 } to { transform: none; opacity: 1 } }
+.grip { width: 40px; height: 4px; border-radius: var(--r-pill); background: var(--border-2); margin: 4px auto 12px; }
+.sheet__head { display: flex; align-items: flex-start; gap: 12px; }
+.sheet__head .t-title { font-size: 17px; flex: 1 1 auto; }
+
+/* Шаги процесса */
+.steps { display: flex; flex-direction: column; gap: 8px; margin: 14px 0; }
+.step {
+  display: grid; grid-template-columns: 1fr; gap: 6px;
+  padding: 11px 12px; border-radius: var(--r-md);
+  background: var(--surface-2); border: var(--bw) solid var(--border);
+  border-left: 3px solid var(--border-2);
+  transition: opacity var(--dur), background var(--dur), border-color var(--dur);
+}
+.step.is-active { background: var(--accent-soft); border-color: var(--accent-line); border-left-color: var(--accent); }
+.step.is-dim { opacity: .42; }
+.step__who { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.step__n { font-family: var(--font-mono); font-size: 11px; color: var(--muted); margin-right: 6px; }
+.step p { font-size: 14px; line-height: 1.5; }
+.progress { height: 5px; background: var(--inset); border-radius: var(--r-pill); overflow: hidden; }
+.progress i { display: block; height: 100%; background: var(--accent); border-radius: var(--r-pill); transition: width .3s var(--ease); }
+.nav-row { display: flex; gap: 8px; align-items: center; margin-top: 12px; }
+.nav-row .spacer { flex: 1 1 auto; }
+
+details.more { margin-top: 14px; border-top: var(--bw) dashed var(--border); padding-top: 12px; }
+details.more summary { cursor: pointer; font-size: 13px; font-weight: 600; color: var(--muted); }
+details.more ul { margin: 8px 0 0; padding-left: 20px; }
+details.more li { font-size: 13px; margin-bottom: 4px; color: var(--text-2); }
+
+/* ══ ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ: auto / light / dark ═══════════════════════ */
+.theme-switch { display: inline-flex; align-items: center; gap: 2px; padding: 3px;
+  background: var(--inset); border: var(--bw) solid var(--border); border-radius: var(--r-pill); }
+.theme-switch button {
+  appearance: none; border: 0; background: transparent; cursor: pointer;
+  width: 34px; height: 30px; border-radius: var(--r-pill);
+  display: grid; place-items: center; color: var(--muted);
+  transition: background var(--dur), color var(--dur), box-shadow var(--dur);
+}
+.theme-switch button svg { width: 16px; height: 16px; }
+.theme-switch button:hover { color: var(--text); }
+.theme-switch button[aria-checked="true"] {
+  background: var(--surface-hi); color: var(--accent);
+  box-shadow: var(--shadow-1), inset 0 0 0 var(--bw) var(--border);
+}
+.theme-auto .ic-a, .theme-light .ic-l, .theme-dark .ic-d { display: block; }
+
+/* Поясняющий блок «логика интерфейса» */
+.logic { margin-top: 18px; padding: 14px; border-radius: var(--r-md);
+  background: var(--surface-2); border: var(--bw) solid var(--border); }
+.logic h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-bottom: 10px; }
+.logic dl { display: grid; gap: 10px; margin: 0; }
+.logic dt { font-size: 13.5px; font-weight: 650; color: var(--text); }
+.logic dd { margin: 2px 0 0; font-size: 13px; color: var(--text-2); line-height: 1.5; }
+
+/* ══════════════════════════════════════════════════════════════════
+   BREAKPOINTS: mobile-first, дальше только добавляем
+   ══════════════════════════════════════════════════════════════════ */
+@media (min-width: 600px) {
+  body { font-size: 14px; }
+  .wrap { padding-inline: 20px; }
+  .metrics { grid-template-columns: repeat(3, 1fr); }
+  .grid-cards { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
+  .brand-txt .t-micro { display: block; }
+  .overlay { align-items: center; padding: 24px; }
+  .sheet { border-radius: var(--r-lg); padding: 18px 20px 20px; }
+  .grip { display: none; }
+  .step { grid-template-columns: 150px 1fr; align-items: start; }
+}
+
+@media (min-width: 900px) {
+  .appbar-inner { min-height: 64px; }
+  .brand-txt .t-title { font-size: 17px; }
+  .dock { position: static; flex-direction: row; justify-content: flex-start; gap: 4px;
+    border-top: 0; border-bottom: var(--bw) solid var(--border); padding: 6px 0; }
+  .dock a { flex: 0 0 auto; flex-direction: row; gap: 7px; font-size: 13px; padding: 0 14px; min-height: 38px; }
+  body { padding-bottom: 40px; }
+  .metrics { grid-template-columns: repeat(6, 1fr); }
+  .logic dl { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px 24px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  html { scroll-behavior: auto; }
+}
+@media print { .dock, .appbar, .theme-switch { display: none !important; } }
+</style>
+</head>
+<body>
+
+<!-- Шапка: бренд + тема -->
+<header class="appbar">
+  <div class="wrap appbar-inner">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">Д</div>
+      <div class="brand-txt">
+        <h1 class="t-title">Приёмная депутата</h1>
+        <div class="t-micro">Процессы взаимодействия · 37 ситуаций</div>
+      </div>
+    </div>
+    <div style="flex:1 1 auto"></div>
+    <div class="theme-switch" role="radiogroup" aria-label="Тема оформления" id="themeSwitch">
+      <button type="button" data-theme-value="auto" role="radio" aria-checked="false" title="Как в системе" aria-label="Авто (как в системе)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      </button>
+      <button type="button" data-theme-value="light" role="radio" aria-checked="false" title="Светлая" aria-label="Светлая тема">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"/></svg>
+      </button>
+      <button type="button" data-theme-value="dark" role="radio" aria-checked="false" title="Тёмная" aria-label="Тёмная тема">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Нижняя навигация = основная на мобильном -->
+<nav class="dock" aria-label="Разделы">
+  <a href="index.html" aria-current="page">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+    Ситуации
+  </a>
+  <a href="matrix.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 5h18M3 12h18M3 19h18M9 3v18M15 3v18"/></svg>
+    Матрица
+  </a>
+  <a href="player.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l6 3.5-6 3.5z" fill="currentColor" stroke="none"/></svg>
+    Плеер
+  </a>
+  <a href="process.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h6v5H4zM14 6h6v5h-6zM9 11l3 4M4 16h16"/></svg>
+    Процесс
+  </a>
+</nav>
+
+<main class="wrap" id="app">
+
+  <!-- Герой: цель + логика чтения -->
+  <section class="panel" style="padding:16px; margin-top:12px;">
+    <p class="t-eyebrow">Регламент · раздел 8</p>
+    <h2 class="t-title" style="margin-top:6px; font-size:22px;">Житель → депутат-диспетчер → подрядчик</h2>
+    <p class="t-small" style="margin-top:8px;">
+      Модель обработки типовых случаев: что делает человек, что автоматически берёт на себя система, где SLA
+      останавливается и кто эскалирует. Откройте карточку — шаги проигрываются по порядку.
+    </p>
+    <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:12px;">
+      <span class="tag tag-ok"><span class="dot"></span>человек решает</span>
+      <span class="tag tag-info"><span class="dot"></span>система считает</span>
+      <span class="tag tag-danger"><span class="dot"></span>авария — вне очереди</span>
+    </div>
+  </section>
+
+  <div class="metrics" id="metrics"></div>
+
+  <!-- Фильтры: сегменты + поиск -->
+  <section class="panel" style="padding:12px; margin-top:4px;">
+    <div style="display:flex; flex-wrap:wrap; gap:10px; align-items:center;">
+      <div class="seg" id="sectionSeg" role="tablist" aria-label="Группа ситуаций"></div>
+      <label class="field" style="flex:1 1 220px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.3-4.3"/></svg>
+        <input type="search" id="searchInput" placeholder="С9, авария, подрядчик…" aria-label="Поиск по ситуациям" autocomplete="off">
+      </label>
+    </div>
+    <p class="t-micro" id="listHint" style="margin-top:8px;"></p>
+  </section>
+
+  <div id="scenarioList"></div>
+
+  <!-- Раскрытие логики дизайна и процесса -->
+  <section class="logic">
+    <h3>Логика интерфейса и процесса</h3>
+    <dl>
+      <div><dt>Одна роль — один цвет</dt><dd>Цвет несёт смысл, а не декор: бирюзовый — житель, синий — депутат, янтарный — подрядчик, серый — автоматика. Бейдж роли повторяется в карточке, шаге и матрице.</dd></div>
+      <div><dt>SLA как состояние, а не текст</dt><dd>Пауза таймера показывается отдельным статусом: «согласование», «погода», «нет доступа». Так просрочка не путается с законным ожиданием.</dd></div>
+      <div><dt>Авария обходит очередь</dt><dd>Для С9–С10 порядок действий начинается со звонка, регистрация — параллельно. Интерфейс это отражает: шаг «Система» идёт после шага «Депутат».</dd></div>
+      <div><dt>Compact-first</dt><dd>Мобильный экран — основной: нижняя навигация зоны большого пальца, лист-модалка снизу, крупные поля ввода. Десктоп только добавляет колонки.</dd></div>
+      <div><dt>Тема = набор токенов</dt><dd>Переключение светлой/тёмной меняет только значения переменных, структура и контраст сохранены. «Авто» слушает систему, выбор запоминается.</dd></div>
+      <div><dt>Клавиатура и доступность</dt><dd>← → листают шаги, Esc закрывает, зона касания ≥ 44 px, фокус виден, анимации уважают prefers-reduced-motion.</dd></div>
+    </dl>
+  </section>
+</main>
+
+<div class="overlay" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+  <div class="sheet" id="sheet"></div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ══ ТЕМА: auto | light | dark ═══════════════════════════════════════ */
+  var Theme = (function () {
+    var KEY = 'deput.theme';
+    var root = document.documentElement;
+    function apply(v) {
+      root.setAttribute('data-theme', v);
+      var dark = v === 'dark' || (v === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
+      var meta = document.querySelector('meta[name="theme-color"]:not([media])') ||
+                 (function () { var m = document.createElement('meta'); m.name = 'theme-color'; document.head.appendChild(m); return m; })();
+      meta.setAttribute('content', dark ? '#0e1116' : '#f4f5f7');
+      document.querySelectorAll('#themeSwitch button').forEach(function (b) {
+        b.setAttribute('aria-checked', String(b.dataset.themeValue === v));
+      });
+    }
+    function set(v) { try { localStorage.setItem(KEY, v); } catch (e) {} apply(v); }
+    function init() {
+      var saved = 'auto';
+      try { saved = localStorage.getItem(KEY) || 'auto'; } catch (e) {}
+      if (['auto','light','dark'].indexOf(saved) === -1) saved = 'auto';
+      apply(saved);
+      matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () {
+        var cur; try { cur = localStorage.getItem(KEY) || 'auto'; } catch (e) { cur = 'auto'; }
+        if (cur === 'auto') apply('auto');
+      });
+      var sw = document.getElementById('themeSwitch');
+      if (sw) sw.addEventListener('click', function (e) {
+        var b = e.target.closest('button[data-theme-value]'); if (!b) return;
+        set(b.dataset.themeValue);
+      });
+    }
+    return { init: init, set: set };
+  }());
+  Theme.init();
+
+  /* ══ ДАННЫЕ: 37 ситуаций ═════════════════════════════════════════════ */
+  var SECTIONS = {
+    before:      { title: 'До принятия', short: '8.1 Приём', icon: '📥' },
+    during:      { title: 'В работе', short: '8.2 Исполнение', icon: '⚙️' },
+    contractors: { title: 'Особые случаи', short: '8.3 Подрядчики', icon: '🔧' },
+    feedback:    { title: 'Отчётность', short: '8.4 Обратная связь', icon: '📊' }
+  };
+  var PRIORITY = {
+    urgent:  { title: 'Авария / экстренно', cls: 'tag-danger' },
+    normal:  { title: 'Неотложное',         cls: 'tag-warn' },
+    routine: { title: 'Обычное',            cls: 'tag-info' },
+    none:    { title: 'Вне SLA',            cls: '' }
+  };
+  var ROLES = {
+    resident:   { name: 'Житель',      tone: '--role-resident',  soft: '--role-resident-soft' },
+    deputy:     { name: 'Депутат',     tone: '--role-deputy',    soft: '--role-deputy-soft' },
+    assistant:  { name: 'Помощник',    tone: '--role-assistant', soft: '--role-assistant-soft' },
+    contractor: { name: 'Подрядчик',   tone: '--role-contractor',soft: '--role-contractor-soft' },
+    system:     { name: 'Система',     tone: '--role-system',    soft: '--role-system-soft' },
+    observer:   { name: 'Наблюдатель', tone: '--role-observer',  soft: '--role-observer-soft' }
+  };
+
+  var SCENARIOS = [
+    { id:'С1', section:'before', title:'Житель подал неполно', summary:'Нет адреса, фото, конкретики.', sla:'1 рабочий день на уточнение', priority:'normal',
+      steps:[
+        { lane:'deputy', text:'Уточняет по контакту в течение 1 рабочего дня.' },
+        { lane:'system', text:'Житель молчит 3 дня — статус «Уточнение», SLA пересчитывается с момента ответа жителя.' },
+        { lane:'deputy', text:'Житель недоступен 10 дней — «Закрыто без ответа» с пометкой.' } ]},
+    { id:'С2', section:'before', title:'Дубликат', summary:'Тот же житель, та же проблема.', priority:'normal',
+      steps:[
+        { lane:'system', text:'Проверяет совпадение: житель + адрес + категория за последние 30 дней.' },
+        { lane:'deputy', text:'Решает: объединить с существующим или создать новое.' },
+        { lane:'deputy', text:'Житель получает ответ по старому номеру.' },
+        { lane:'deputy', text:'Если проблема повторная (снова прорвало) — новое обращение с пометкой «повторное».' } ]},
+    { id:'С3', section:'before', title:'Коллективное обращение', summary:'Подписи 10+ жителей или ТСЖ.', priority:'normal',
+      steps:[
+        { lane:'deputy', text:'Регистрирует как одно, атрибут «коллективное», приоритет +1.' },
+        { lane:'deputy', text:'Требует публичного ответа — на доске в подъезде или на сайте.' } ]},
+    { id:'С4', section:'before', title:'Не по адресу / не в зоне', summary:'Федеральная или региональная проблема.', priority:'none',
+      steps:[
+        { lane:'deputy', text:'Переадресует в администрацию или профильный орган.' },
+        { lane:'deputy', text:'Уведомляет жителя с контактом.' },
+        { lane:'deputy', text:'При возможности — ходатайствует. Не закрывает без ответа жителю.' } ]},
+    { id:'С5', section:'before', title:'Жалоба на депутата или помощника', summary:'Конфликт интересов — рассматривает третье лицо.', priority:'none',
+      steps:[
+        { lane:'deputy', text:'Передаёт председателю комиссии или руководству депутатского объединения.' },
+        { lane:'deputy', text:'Депутат не рассматривает жалобу на себя — это правило.' } ]},
+    { id:'С6', section:'before', title:'Личная просьба (не про территорию)', summary:'«Помогите устроить ребёнка в сад».', priority:'none',
+      steps:[
+        { lane:'deputy', text:'Регистрирует как «Иное», без SLA.' },
+        { lane:'deputy', text:'Часто — переадресация в соцзащиту.' } ]},
+    { id:'С7', section:'before', title:'Анонимное обращение', summary:'Без ФИО. Ответ публичный.', priority:'normal',
+      steps:[
+        { lane:'deputy', text:'Регистрирует.' },
+        { lane:'deputy', text:'Ответ публикует на сайте или в соцсетях, если есть общественный интерес.' },
+        { lane:'deputy', text:'Срочность — по содержанию, но без уточнений.' } ]},
+    { id:'С8', section:'before', title:'Обращение от юрлица', summary:'ТСЖ, УК. Часто сигнал, что УК сама не выполняет обязательства.', priority:'normal',
+      steps:[
+        { lane:'deputy', text:'Отдельная категория.' },
+        { lane:'deputy', text:'SLA — по договору с юрлицом.' },
+        { lane:'deputy', text:'Проверяет, не является ли обращение признаком неисполнения самой УК.' } ]},
+
+    { id:'С9', section:'during', title:'Срочная авария', summary:'Прорыв трубы, нет тепла зимой, обрыв провода, обрушение.', sla:'Реакция 1 час, устранение 24 часа', priority:'urgent',
+      steps:[
+        { lane:'deputy', text:'Немедленный звонок в аварийную службу — не ждёт электронного приёма.' },
+        { lane:'deputy', text:'Параллельно регистрирует в системе с пометкой «экстренно».' },
+        { lane:'system', text:'SLA — 1 час на реакцию.' },
+        { lane:'deputy', text:'Не берут трубку — звонит руководителю аварийки и в администрацию.' } ]},
+    { id:'С10', section:'during', title:'Угроза жизни и здоровью', summary:'Обрушение, газ, оголённый провод.', sla:'Немедленно', priority:'urgent',
+      steps:[
+        { lane:'deputy', text:'Порядок: 112 → аварийная → администрация → житель.' },
+        { lane:'deputy', text:'В системе регистрирует после звонков, с пометкой «экстренно».' },
+        { lane:'system', text:'Приоритет — наивысший.' } ]},
+    { id:'С11', section:'during', title:'Подрядчик не отвечает', summary:'Молчание на заявку.', priority:'normal',
+      steps:[
+        { lane:'deputy', text:'День 1 молчания — звонок диспетчеру подрядчика.' },
+        { lane:'deputy', text:'День 2 — звонок руководителю подрядчика.' },
+        { lane:'deputy', text:'День 3 — письменный запрос + эскалация в администрацию.' },
+        { lane:'deputy', text:'Системно — обращение в жилищную инспекцию или прокуратуру.' } ]},
+    { id:'С12', section:'during', title:'Подрядчик отказался', summary:'«Не наша зона», «нет денег», «нет техники».', priority:'normal',
+      steps:[
+        { lane:'contractor', text:'Формулирует отказ.' },
+        { lane:'deputy', text:'Фиксирует отказ письменно (email).' },
+        { lane:'deputy', text:'Ищет альтернативу — другой подрядчик, администрация. Переадресует жителю с объяснением.' },
+        { lane:'deputy', text:'Если отказ незаконен — жалоба в надзорный орган.' } ]},
+    { id:'С13', section:'during', title:'Подрядчик не выполнил в срок', summary:'Срок истёк, работы не завершены.', priority:'normal',
+      steps:[
+        { lane:'system', text:'Автоматическая эскалация руководителю подрядчика.' },
+        { lane:'deputy', text:'Звонит лично, фиксирует попытку.' },
+        { lane:'deputy', text:'Просрочка > 3 дней — обращение в администрацию или жилищную инспекцию.' },
+        { lane:'deputy', text:'Житель уведомляется о задержке с новой датой и причиной.' } ]},
+    { id:'С14', section:'during', title:'Подрядчик выполнил плохо', summary:'Результат не соответствует задаче.', sla:'3 рабочих дня на переделку', priority:'normal',
+      steps:[
+        { lane:'deputy', text:'Фиксирует фото до и после.' },
+        { lane:'deputy', text:'Возврат в статус «Переделка», срок — 3 рабочих дня.' },
+        { lane:'deputy', text:'При повторной переделке — смена подрядчика через администрацию.' } ]},
+    { id:'С15', section:'during', title:'Житель не даёт доступ', summary:'Нет доступа в квартиру, к стояку.', priority:'normal',
+      steps:[
+        { lane:'contractor', text:'Фиксирует отказ в доступе.' },
+        { lane:'system', text:'SLA приостанавливается.' },
+        { lane:'deputy', text:'Связывается с жителем, объясняет необходимость.' },
+        { lane:'deputy', text:'Житель упорствует — письменное уведомление о переносе. Проблема может требовать суда.' } ]},
+    { id:'С16', section:'during', title:'Нужны согласования', summary:'Смежники, сети, Роспотребнадзор.', priority:'normal',
+      steps:[
+        { lane:'deputy', text:'Указывает, с кем именно идёт согласование.' },
+        { lane:'system', text:'Статус «Приостановлено», SLA на паузе.' },
+        { lane:'deputy', text:'При превышении 10 дней — эскалация.' },
+        { lane:'deputy', text:'Житель уведомляется о причине и ожидаемом сроке.' } ]},
+    { id:'С17', section:'during', title:'Погодные условия', summary:'Нельзя асфальтировать зимой, красить в дождь.', priority:'none',
+      steps:[
+        { lane:'system', text:'Статус «Приостановлено» с указанием причины.' },
+        { lane:'deputy', text:'Планирует работы на сезон, уведомляет жителя конкретной датой («май 2027»).' },
+        { lane:'system', text:'Не считается просрочкой.' } ]},
+    { id:'С18', section:'during', title:'Нужно финансирование', summary:'Сверх бюджета.', priority:'none',
+      steps:[
+        { lane:'deputy', text:'Оценивает: заявка в администрацию, депутатский фонд или спонсоры.' },
+        { lane:'system', text:'Статус «Приостановлено».' },
+        { lane:'deputy', text:'Житель уведомляется о процессе. Денег нет — переадресация в администрацию.' } ]},
+    { id:'С19', section:'during', title:'За пределами полномочий', summary:'Например, ремонт дороги регионального значения.', priority:'none',
+      steps:[
+        { lane:'deputy', text:'Переадресация в администрацию региона.' },
+        { lane:'deputy', text:'Житель получает контакт и объяснение. Депутат может ходатайствовать, но не отвечает за срок.' } ]},
+    { id:'С20', section:'during', title:'Житель отозвал обращение', summary:'Передумал или решил сам.', priority:'none',
+      steps:[
+        { lane:'resident', text:'Отзывает обращение.' },
+        { lane:'system', text:'Статус «Отозвано».' },
+        { lane:'deputy', text:'Подрядчик уже начал работу — сообщить жителю, что отзыв возможен после завершения.' },
+        { lane:'system', text:'Не считается нарушением SLA.' } ]},
+    { id:'С21', section:'during', title:'Житель недоволен ответом', summary:'Не согласен с решением.', priority:'normal',
+      steps:[
+        { lane:'deputy', text:'Первая жалоба — пересмотр депутатом лично.' },
+        { lane:'deputy', text:'Вторая — эскалация руководителю депутатского объединения.' },
+        { lane:'deputy', text:'Третья — приглашение на личный приём, фиксация в протоколе.' },
+        { lane:'deputy', text:'Системная неудовлетворённость — обращение в комиссию по работе с обращениями.' } ]},
+    { id:'С22', section:'during', title:'Массовое обращение', summary:'Одна проблема — 50 заявок.', priority:'normal',
+      steps:[
+        { lane:'system', text:'Объединяет в одну проблему (issue).' },
+        { lane:'deputy', text:'Все жители получают ответ по одной ветке.' },
+        { lane:'deputy', text:'Ведёт отдельную коммуникацию с администрацией.' },
+        { lane:'system', text:'В отчёте — одна проблема, не 50 заявок.' } ]},
+    { id:'С23', section:'during', title:'Повторное обращение', summary:'Житель пишет снова.', priority:'normal',
+      steps:[
+        { lane:'deputy', text:'Проверяет: проблема вернулась или не была решена?' },
+        { lane:'deputy', text:'Вернулась — новое с пометкой «рецидив».' },
+        { lane:'deputy', text:'Не решена — эскалация + жалоба на подрядчика.' } ]},
+    { id:'С24', section:'during', title:'Вандализм, порча имущества', summary:'Кто-то сломал лавочку, разбил окно.', priority:'normal',
+      steps:[
+        { lane:'deputy', text:'Полиция (заявление), страховая (если застраховано), подрядчик — на восстановление.' },
+        { lane:'deputy', text:'Координирует, но не расследует.' } ]},
+    { id:'С25', section:'during', title:'Жалоба на другого подрядчика', summary:'Не в зоне ответственности депутата.', priority:'none',
+      steps:[
+        { lane:'deputy', text:'Переадресация с контактом.' },
+        { lane:'deputy', text:'Системно — ходатайство в администрацию.' } ]},
+    { id:'С26', section:'during', title:'Житель другого округа', summary:'Обратился не к своему депутату.', priority:'none',
+      steps:[
+        { lane:'deputy', text:'Передаёт депутату того округа с согласия жителя.' },
+        { lane:'deputy', text:'Или переадресация с контактом.' } ]},
+    { id:'С27', section:'during', title:'Обращение в нерабочее время', summary:'Вечер, выходной.', priority:'normal',
+      steps:[
+        { lane:'system', text:'Приёмная фиксирует в первый рабочий день.' },
+        { lane:'deputy', text:'Исключение — аварии: депутат (или дежурный) принимает немедленно.' },
+        { lane:'system', text:'Регистрация с пометкой «после факта».' } ]},
+    { id:'С28', section:'during', title:'Двойное обращение в каналы', summary:'Звонок + email + соцсети по одному поводу.', priority:'normal',
+      steps:[
+        { lane:'system', text:'Дедупликация по телефону + тексту + адресу.' },
+        { lane:'deputy', text:'Объединение, житель получает один номер.' } ]},
+
+    { id:'С29', section:'contractors', title:'Подрядчик не в системе', summary:'Нет API, только телефон.', priority:'normal',
+      steps:[
+        { lane:'deputy', text:'Ведёт заявку у себя, подрядчику отправляет email или звонит.' },
+        { lane:'contractor', text:'Отвечает по телефону или email.' },
+        { lane:'deputy', text:'Ответ фиксирует в системе вручную.' },
+        { lane:'system', text:'Допустимо, но требует дисциплины.' } ]},
+    { id:'С30', section:'contractors', title:'Аварийная служба 24/7', summary:'Всегда телефон + дежурный.', priority:'urgent',
+      steps:[
+        { lane:'deputy', text:'Звонит лично в диспетчерскую, не отправляет заявку.' },
+        { lane:'deputy', text:'Параллельно регистрирует в системе.' } ]},
+    { id:'С31', section:'contractors', title:'Подрядчик — сам депутат', summary:'Конфликт интересов: ИП депутата или его бюджет.', priority:'none',
+      steps:[
+        { lane:'deputy', text:'Заявка проверяется помощником или комиссией.' },
+        { lane:'assistant', text:'Принимает результат вместо депутата.' },
+        { lane:'deputy', text:'Депутат не закрывает заявку сам.' } ]},
+    { id:'С32', section:'contractors', title:'Сезонные работы', summary:'Уборка снега, ямочный ремонт, озеленение.', sla:'В течение сезона', priority:'routine',
+      steps:[
+        { lane:'deputy', text:'Плановые заявки на сезон.' },
+        { lane:'system', text:'SLA — «в течение сезона».' },
+        { lane:'deputy', text:'Отдельная отчётность: сколько запланировано и выполнено.' } ]},
+    { id:'С33', section:'contractors', title:'Ведомственная подчинённость', summary:'МЧС, МВД, скорая.', priority:'urgent',
+      steps:[
+        { lane:'deputy', text:'Только 112 и координация с дежурным.' },
+        { lane:'deputy', text:'Не диспетчеризует эти службы сам.' },
+        { lane:'system', text:'Регистрация в системе с пометкой «внешняя служба».' } ]},
+
+    { id:'С34', section:'feedback', title:'Житель хочет знать статус', summary:'Спрашивает, что происходит с обращением.', priority:'none',
+      steps:[
+        { lane:'system', text:'Показывает в личном кабинете, по SMS или через звонок в приёмную.' },
+        { lane:'system', text:'Статусы жителю: «Принято», «Назначено», «В работе», «Выполнено, проверьте», «Закрыто», «Отклонено», «Переадресовано».' } ]},
+    { id:'С35', section:'feedback', title:'Жалоба на депутата', summary:'Отдельный контур.', priority:'none',
+      steps:[
+        { lane:'deputy', text:'Жалоба регистрируется отдельно, передаётся руководству.' },
+        { lane:'deputy', text:'Депутат не рассматривает жалобу на себя.' } ]},
+    { id:'С36', section:'feedback', title:'Ежемесячный отчёт депутата', summary:'Автоматический свод.', priority:'none',
+      steps:[
+        { lane:'system', text:'Считает: сколько обращений, категории, среднее время ответа, % в срок, топ подрядчиков по просрочкам, карта обращений.' },
+        { lane:'deputy', text:'Публикует на сайте и в соцсетях.' } ]},
+    { id:'С37', section:'feedback', title:'Запрос прокуратуры', summary:'Выгрузка с аудитом.', priority:'none',
+      steps:[
+        { lane:'system', text:'Выгрузка по запросу с полным журналом действий.' },
+        { lane:'observer', text:'Только для наблюдателей. Остальные роли не видят.' } ]}
+  ];
+
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function role(lane){ return ROLES[lane] || { name: lane, tone:'--role-system', soft:'--role-system-soft' }; }
+
+  /* ══ МЕТРИКИ ═════════════════════════════════════════════════════════ */
+  (function renderMetrics(){
+    var by = { before:0, during:0, contractors:0, feedback:0 }, urgent = 0, steps = 0;
+    SCENARIOS.forEach(function(s){ by[s.section]++; if (s.priority==='urgent') urgent++; steps += s.steps.length; });
+    document.getElementById('metrics').innerHTML =
+      '<div class="metric"><b>'+SCENARIOS.length+'</b><span>всего ситуаций</span></div>'+
+      '<div class="metric"><b>'+by.before+'</b><span>до принятия</span></div>'+
+      '<div class="metric"><b>'+by.during+'</b><span>в работе</span></div>'+
+      '<div class="metric"><b>'+by.contractors+'</b><span>особые</span></div>'+
+      '<div class="metric"><b>'+by.feedback+'</b><span>отчётность</span></div>'+
+      '<div class="metric"><b style="color:var(--danger)">'+urgent+'</b><span>аварийных · '+steps+' шагов</span></div>';
+  }());
+
+  /* ══ СЕГМЕНТЫ ФИЛЬТРА ════════════════════════════════════════════════ */
+  var state = { section:'all', search:'' };
+  (function buildSeg(){
+    var html = '<button role="tab" data-section="all" aria-selected="true">Все</button>';
+    Object.keys(SECTIONS).forEach(function(k){
+      html += '<button role="tab" data-section="'+k+'" aria-selected="false">'+esc(SECTIONS[k].title)+'</button>';
+    });
+    document.getElementById('sectionSeg').innerHTML = html;
+  }());
+
+  /* ══ СПИСОК ══════════════════════════════════════════════════════════ */
+  function visible(){
+    return SCENARIOS.filter(function(s){
+      if (state.section !== 'all' && s.section !== state.section) return false;
+      if (!state.search) return true;
+      var q = state.search.toLowerCase();
+      var hay = (s.id+' '+s.title+' '+s.summary+' '+s.steps.map(function(x){return x.text;}).join(' ')).toLowerCase();
+      return hay.indexOf(q) !== -1;
+    });
+  }
+
+  function renderList(){
+    var list = visible(), hint = document.getElementById('listHint'), wrap = document.getElementById('scenarioList');
+    hint.textContent = 'Показано ' + list.length + ' из ' + SCENARIOS.length + ' · стрелки ← → листают шаги, Esc закрывает';
+    if (!list.length) { wrap.innerHTML = '<p class="t-small" style="padding:28px 0; text-align:center">Ничего не найдено по фильтру</p>'; return; }
+
+    var groups = {};
+    list.forEach(function(s){ (groups[s.section] = groups[s.section] || []).push(s); });
+
+    wrap.innerHTML = Object.keys(SECTIONS).filter(function(k){ return groups[k]; }).map(function(k){
+      var cards = groups[k].map(function(s){
+        var p = PRIORITY[s.priority] || PRIORITY.none;
+        return '<button class="card" data-id="'+esc(s.id)+'">' +
+          '<div class="card__top"><span class="card__id">'+esc(s.id)+'</span>' +
+            '<span style="flex:1 1 auto"></span>' +
+            '<span class="tag tag-mono">'+s.steps.length+' шаг'+(s.steps.length>1?'а':'')+'</span></div>' +
+          '<div class="card__title">'+esc(s.title)+'</div>' +
+          '<div class="card__sum">'+esc(s.summary)+'</div>' +
+          '<div class="card__meta">' +
+            '<span class="tag '+p.cls+'">'+(p.cls?'<span class="dot"></span>':'')+esc(p.title)+'</span>' +
+            (s.sla ? '<span class="tag">⏱ '+esc(s.sla)+'</span>' : '') +
+          '</div></button>';
+      }).join('');
+      return '<section class="section">' +
+        '<div class="section__head">' +
+          '<span class="t-eyebrow">'+SECTIONS[k].icon+' '+esc(SECTIONS[k].short)+'</span>' +
+          '<span class="t-sub">'+esc(SECTIONS[k].title)+'</span>' +
+          '<span class="section__rule"></span>' +
+          '<span class="tag">'+groups[k].length+'</span>' +
+        '</div>' +
+        '<div class="grid-cards">'+cards+'</div>' +
+      '</section>';
+    }).join('');
+  }
+
+  /* ══ ЛИСТ-МОДАЛКА С ШАГАМИ ═══════════════════════════════════════════ */
+  var pl = { s:null, i:0 };
+
+  function renderSheet(){
+    var s = pl.s; if (!s) return;
+    var p = PRIORITY[s.priority] || PRIORITY.none;
+    var pct = Math.round((pl.i + 1) / s.steps.length * 100);
+
+    var stepsHtml = s.steps.map(function(st, idx){
+      var r = role(st.lane);
+      var cls = 'step' + (idx===pl.i ? ' is-active' : (idx>pl.i ? ' is-dim' : ''));
+      return '<div class="'+cls+'" style="border-left-color:var('+r.tone+')">' +
+        '<div class="step__who" style="color:var('+r.tone+')"><span class="step__n">'+(idx+1)+'/'+s.steps.length+'</span>'+esc(r.name)+'</div>' +
+        '<p>'+esc(st.text)+'</p></div>';
+    }).join('');
+
+    document.getElementById('sheet').innerHTML =
+      '<div class="grip" aria-hidden="true"></div>' +
+      '<div class="sheet__head">' +
+        '<div style="flex:1 1 auto; min-width:0">' +
+          '<p class="t-eyebrow">'+esc(SECTIONS[s.section].short)+'</p>' +
+          '<h2 class="t-title" id="sheetTitle" style="margin-top:4px">'+esc(s.id)+' · '+esc(s.title)+'</h2>' +
+        '</div>' +
+        '<button class="btn btn-icon btn-ghost" id="btnClose" aria-label="Закрыть">✕</button>' +
+      '</div>' +
+      '<div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:10px">' +
+        '<span class="tag '+p.cls+'">'+(p.cls?'<span class="dot"></span>':'')+esc(p.title)+'</span>' +
+        (s.sla ? '<span class="tag tag-accent">⏱ '+esc(s.sla)+'</span>' : '') +
+      '</div>' +
+      '<p class="t-small" style="margin-top:10px">'+esc(s.summary)+'</p>' +
+      '<div class="progress" style="margin-top:14px"><i style="width:'+pct+'%"></i></div>' +
+      '<div class="steps">'+stepsHtml+'</div>' +
+      '<div class="nav-row">' +
+        '<button class="btn" id="btnPrev"'+(pl.i===0?' disabled':'')+'>‹ Назад</button>' +
+        '<button class="btn btn-primary" id="btnNext"'+(pl.i>=s.steps.length-1?' disabled':'')+'>Вперёд ›</button>' +
+        '<span class="spacer"></span>' +
+        '<span class="tag tag-mono">'+(pl.i+1)+' / '+s.steps.length+'</span>' +
+      '</div>' +
+      '<details class="more"><summary>Роли и кому принадлежит шаг</summary><ul>' +
+        s.steps.map(function(st, idx){
+          var r = role(st.lane);
+          return '<li><b style="color:var('+r.tone+')">'+(idx+1)+'. '+esc(r.name)+'</b> — '+esc(st.text)+'</li>';
+        }).join('') +
+      '</ul></details>';
+
+    document.getElementById('btnClose').onclick = close;
+    document.getElementById('btnPrev').onclick = function(){ step(-1); };
+    document.getElementById('btnNext').onclick = function(){ step(1); };
+  }
+
+  function step(d){
+    var n = pl.i + d;
+    if (n < 0 || n >= pl.s.steps.length) return;
+    pl.i = n; renderSheet();
+  }
+  function open(id){
+    var s = SCENARIOS.find(function(x){ return x.id === id; }); if (!s) return;
+    pl.s = s; pl.i = 0;
+    document.getElementById('modal').hidden = false;
+    document.body.style.overflow = 'hidden';
+    renderSheet();
+    var c = document.getElementById('btnClose'); if (c) c.focus();
+  }
+  function close(){
+    document.getElementById('modal').hidden = true;
+    document.body.style.overflow = '';
+    pl.s = null;
+  }
+
+  /* ══ СОБЫТИЯ ═════════════════════════════════════════════════════════ */
+  document.getElementById('sectionSeg').addEventListener('click', function(e){
+    var b = e.target.closest('button[data-section]'); if (!b) return;
+    state.section = b.dataset.section;
+    this.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-selected', String(x===b)); });
+    renderList();
+  });
+  document.getElementById('searchInput').addEventListener('input', function(e){
+    state.search = e.target.value.trim(); renderList();
+  });
+  document.getElementById('scenarioList').addEventListener('click', function(e){
+    var c = e.target.closest('.card'); if (!c) return; open(c.dataset.id);
+  });
+  document.getElementById('modal').addEventListener('click', function(e){ if (e.target === this) close(); });
+  document.addEventListener('keydown', function(e){
+    if (document.getElementById('modal').hidden) return;
+    if (e.key === 'Escape') close();
+    else if (e.key === 'ArrowLeft') step(-1);
+    else if (e.key === 'ArrowRight') step(1);
+  });
+
+  renderList();
+}());
+</script>
+</body>
+</html>
