@@ -1,7 +1,7 @@
 import type { Graph, Incident, MoveResult } from "../types.ts";
-import { isNeighbor, neighborsOf } from "./graph.ts";
+import { branchesOf, isNeighbor, neighborsOf } from "./graph.ts";
 import { withMove } from "./incident.ts";
-import { pick } from "../random.ts";
+import { pick, pickWeighted } from "../random.ts";
 
 export type Actor = "operator" | "auto" | "generator";
 
@@ -38,7 +38,10 @@ export const moveForward = (
   if (next.length === 0) {
     return { ok: false, error: incident.id + ": узел " + incident.nodeId + " — конец процесса" };
   }
-  return { ok: true, incident: withMove(incident, pick(next, rand), actor, step, "шаг вперёд") };
+  const branch = branchesOf(graph, incident.nodeId);
+  const target = branch.length > 0 ? pickWeighted(branch, (b) => b.weight, rand).to : pick(next, rand);
+  const viaBranch = branch.length > 0 ? " (ветка)" : "";
+  return { ok: true, incident: withMove(incident, target, actor, step, "шаг вперёд" + viaBranch) };
 };
 
 /** Шаг назад — на один из предыдущих узлов. */

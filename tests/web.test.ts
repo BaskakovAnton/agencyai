@@ -72,6 +72,17 @@ test("страница рендерит 30 заявок с кнопками пе
   expect(moved.message).toContain("З-005");
 });
 
+test("карточка на узле с развилкой показывает варианты с процентами", async () => {
+  const mod = (await import(pathToFileURL(join(outDir, "app.js")).href)) as Record<string, any>;
+  const graph = mod.buildProcessGraph(mod.NODES);
+  const state = mod.createState(graph, 7);
+  const atU12 = { ...state, selected: state.session.incidents.find((i: any) => i.nodeId === "U12").id };
+  const html = mod.renderPage(atU12, "");
+  expect(html).toContain("Развилка");
+  expect(html).toContain("40%");
+  expect(html).toContain("60%");
+});
+
 test("html самодостаточен: локальные ресурсы, viewport, русская локаль", () => {
   expect(page).toContain('lang="ru"');
   expect(page).toContain("viewport");

@@ -1,6 +1,7 @@
 import type { Incident } from "../types.ts";
 import { ACCESS_MARKS, GROUP_TITLES, PRIORITY_TITLES, ROLE_IDS, ROLE_NAMES } from "../data/roles.ts";
-import { neighborsOf } from "../core/graph.ts";
+import { branchesOf, neighborsOf } from "../core/graph.ts";
+import { branchShares } from "../data/edges.ts";
 import type { WebState } from "./session.ts";
 
 const esc = (s: string): string =>
@@ -23,6 +24,15 @@ const roleList = (state: WebState, nodeId: string): string => {
   }).join("");
 };
 
+const branchLine = (state: WebState, nodeId: string): string => {
+  const branches = branchesOf(state.graph, nodeId);
+  if (branches.length === 0) return "";
+  const options = branchShares(branches)
+    .map((share) => btn(share.to + " " + share.percent + "%", "move", state.selected, share.to))
+    .join(" ");
+  return '<p class="branch">Развилка (рандомное решение): ' + options + "</p>";
+};
+
 const history = (incident: Incident): string =>
   incident.history.length === 0
     ? '<p class="hint">переходов ещё не было</p>'
@@ -42,6 +52,7 @@ export const renderSelected = (state: WebState): string => {
     "<p>Узел: " + nodeChip(state, incident.nodeId) + groupLine + "</p>",
     '<p class="moves">' + btn("‹ назад", "back", incident.id) + " " + btn("вперёд ›", "forward", incident.id) + "</p>",
     links ? "<p>Соседние узлы: " + links + "</p>" : '<p class="hint">граница процесса</p>',
+    branchLine(state, incident.nodeId),
     "<h3>История</h3>" + history(incident),
     node ? '<h3>Права ролей на узле</h3><ul class="roles">' + roleList(state, incident.nodeId) + "</ul>" : "",
   ].join("");

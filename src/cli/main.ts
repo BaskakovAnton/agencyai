@@ -1,6 +1,5 @@
-import { buildGraph } from "../core/graph.ts";
 import { generateIncidents } from "../core/generator.ts";
-import { NODES } from "../data/nodes.ts";
+import { buildProcessGraph } from "../data/edges.ts";
 import { mulberry32 } from "../random.ts";
 import { REPORTS_DIR } from "../io/writers.ts";
 import { runSession } from "./loop.ts";
@@ -27,7 +26,7 @@ const parseArgs = (argv: readonly string[]): Args => {
 
 const main = async (): Promise<void> => {
   const args = parseArgs(process.argv.slice(2));
-  const graph = buildGraph(NODES);
+  const graph = buildProcessGraph();
   const rand = mulberry32(args.seed);
   const incidents = generateIncidents(graph, rand);
   const session = { step: 0, incidents, log: [] as string[] };

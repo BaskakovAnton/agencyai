@@ -25,6 +25,22 @@ export const pick = <T>(items: readonly T[], rand: () => number): T => {
   return items[Math.floor(rand() * items.length)] as T;
 };
 
+/** Взвешенный выбор: чем больше вес, тем чаще выпадает вариант. */
+export const pickWeighted = <T>(
+  items: readonly T[],
+  weightOf: (item: T) => number,
+  rand: () => number,
+): T => {
+  const total = items.reduce((sum, item) => sum + Math.max(0, weightOf(item)), 0);
+  if (total <= 0) return pick(items, rand);
+  let threshold = rand() * total;
+  for (const item of items) {
+    threshold -= Math.max(0, weightOf(item));
+    if (threshold <= 0) return item;
+  }
+  return items[items.length - 1] as T;
+};
+
 /** Перемешивание копии массива (Фишер—Йетс). */
 export const shuffle = <T>(items: readonly T[], rand: () => number): T[] => {
   const out = [...items];

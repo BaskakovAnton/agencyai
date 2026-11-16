@@ -59,12 +59,20 @@ export interface Incident {
   readonly history: readonly Move[];
 }
 
-/** Граф процесса: порядок узлов и соседи каждого узла. */
+/** Ветка процесса: куда можно уйти и с каким весом (для рандомного решения). */
+export interface Branch {
+  readonly to: string;
+  readonly weight: number;
+  readonly note: string;
+}
+
+/** Граф процесса: порядок узлов, соседи и развилки каждого узла. */
 export interface Graph {
   readonly order: readonly string[];
   readonly byId: Readonly<Record<string, ProcessNode>>;
   readonly next: Readonly<Record<string, readonly string[]>>;
   readonly prev: Readonly<Record<string, readonly string[]>>;
+  readonly branches: Readonly<Record<string, readonly Branch[]>>;
 }
 
 /** Состояние сессии целиком в оперативной памяти. */
