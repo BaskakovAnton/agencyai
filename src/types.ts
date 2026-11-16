@@ -38,6 +38,16 @@ export interface ProcessNode {
   readonly access: Readonly<Record<RoleId, AccessLevel>>;
 }
 
+/** Состояние SLA заявки: дедлайн, пауза, просрочка, эскалация. */
+export interface SlaState {
+  readonly dueAt: number;
+  readonly paused: boolean;
+  readonly pauseReason: string;
+  readonly pausedAt: number;
+  readonly breached: boolean;
+  readonly escalated: boolean;
+}
+
 /** Запись о перемещении заявки. */
 export interface Move {
   readonly step: number;
@@ -56,6 +66,7 @@ export interface Incident {
   readonly reporter: string;
   readonly priority: Priority;
   readonly nodeId: string;
+  readonly sla: SlaState;
   readonly history: readonly Move[];
 }
 
@@ -80,6 +91,8 @@ export interface Session {
   readonly step: number;
   /** Роль оператора: её права проверяются при переходах. */
   readonly role: RoleId;
+  /** Часы с начала прогона: время двигают шаги процесса и команда wait. */
+  readonly clock: number;
   readonly incidents: readonly Incident[];
   readonly log: readonly string[];
 }

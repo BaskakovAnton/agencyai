@@ -2,6 +2,7 @@ import type { Graph, Incident, Priority, RoleId } from "../types.ts";
 import { ACCESS_MARKS, GROUP_TITLES, PRIORITY_TITLES, ROLE_IDS, ROLE_NAMES } from "../data/roles.ts";
 import { branchesOf, neighborsOf } from "../core/graph.ts";
 import { roleAccess } from "../core/roles.ts";
+import { slaStatus } from "../core/sla.ts";
 import { branchShares } from "../data/edges.ts";
 import { sortIncidents } from "../core/incident.ts";
 
@@ -20,6 +21,13 @@ const SHORT_PRIORITY: Readonly<Record<Priority, string>> = {
   normal: "неотложное",
   routine: "сезонное",
   none: "вне SLA",
+};
+
+/** Строка SLA для карточки заявки. */
+export const renderSlaLine = (incident: Incident, clock: number): string => {
+  const status = slaStatus(incident, clock);
+  const mark = status.phase === "overdue" ? "✕" : status.phase === "paused" ? "⏸" : status.phase === "none" ? "—" : "✓";
+  return "  SLA: " + mark + " " + status.note + (status.escalated ? " · эскалировано в U16" : "");
 };
 
 /** Строка списка заявок. */
@@ -99,6 +107,7 @@ export const renderGraphTable = (graph: Graph): string => {
 export const renderHelp = (): string =>
   [
     "Команды оператора:",
+    "  wait 24               — промотать время на N часов (проверка SLA)",
     "  role contractor       — роль оператора (deputy, assistant, contractor, system, resident, observer, auditor)",
     "  role                  — показать текущую роль",
     "  graph                 — список узлов процесса",

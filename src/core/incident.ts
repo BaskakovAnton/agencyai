@@ -1,6 +1,7 @@
 import type { Incident, Move, Priority } from "../types.ts";
 import { STREETS, type IncidentCategory } from "../data/categories.ts";
 import { pick, randInt } from "../random.ts";
+import { startSla } from "./sla.ts";
 
 /** Каналы, по которым житель сообщает об инциденте. */
 export const CHANNELS: readonly string[] = ["телефон", "сайт", "мессенджер", "почта", "личный приём"];
@@ -31,6 +32,7 @@ export const createIncident = (input: CreateIncidentInput): Incident => {
     reporter: pick(CHANNELS, rand),
     priority: category.priority,
     nodeId,
+    sla: startSla(category.priority, 0),
     history: [],
   };
 };

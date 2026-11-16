@@ -21,7 +21,9 @@ export const renderPage = (state: WebState, message: string): string => {
     '<header class="top">',
     '<div class="brand">agencyai · модель процессов</div>',
     '<div class="stats">узлов ' + state.graph.order.length + " · заявок " + summary.total + " · переходов " + summary.moves + " · дошло до конца " + summary.finished + "</div>",
+    '<div class="stats">SLA: в срок ' + summary.slaOnTrack + " · просрочено " + summary.slaOverdue + " · на паузе " + summary.slaPaused + " · эскалировано " + summary.slaEscalated + " · время " + (state.session.clock ?? 0) + " ч</div>",
     '<div class="controls">' +
+      '<button data-action="wait">+4 ч</button>' +
       '<button data-action="sweep">Массовый шаг вперёд</button>' +
       '<button data-action="reset">Сбросить (seed ' + state.seed + ")</button>" +
       "</div>",

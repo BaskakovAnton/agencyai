@@ -29,7 +29,7 @@ const main = async (): Promise<void> => {
   const graph = buildProcessGraph();
   const rand = mulberry32(args.seed);
   const incidents = generateIncidents(graph, rand);
-  const session = { step: 0, role: "deputy" as const, incidents, log: [] as string[] };
+  const session = { step: 0, role: "deputy" as const, clock: 0, incidents, log: [] as string[] };
 
   console.log("seed=" + args.seed + " · узлов=" + graph.order.length + " · заявок=" + incidents.length);
   await runSession({
