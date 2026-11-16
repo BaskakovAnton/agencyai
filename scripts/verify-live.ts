@@ -1,17 +1,17 @@
 import { chromium } from "@playwright/test";
 
-/** Проверка опубликованного демо на GitHub Pages: ждём пересборку и проверяем оба модуля. */
+/** Проверка опубликованного демо на GitHub Pages: ждём пересборку и проверяем оба экрана. */
 const base = process.env.LIVE_BASE ?? "https://baskakovanton.github.io/agencyai/demo/";
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 1440, height: 950 } });
 const problems: string[] = [];
 
 /** Ждём, пока Pages пересоберётся и отдаст новый бандл: опрашиваем с обходом кэша. */
-const waitFor = async (selector: string, timeoutMs = 240_000): Promise<boolean> => {
+const waitFor = async (hash: string, selector: string, timeoutMs = 240_000): Promise<boolean> => {
   const started = Date.now();
   while (Date.now() - started < timeoutMs) {
     try {
-      await page.goto(base + "?v=" + Date.now() + "#dashboard", { waitUntil: "domcontentloaded" });
+      await page.goto(base + "?v=" + Date.now() + hash, { waitUntil: "domcontentloaded" });
       await page.waitForSelector(selector, { timeout: 10_000 });
       return true;
     } catch {
@@ -21,28 +21,37 @@ const waitFor = async (selector: string, timeoutMs = 240_000): Promise<boolean> 
   return false;
 };
 
-// ждём, пока на Pages появится новый бандл с дашбордом
-const ready = await waitFor(".legend");
-if (!ready) problems.push("дашборд не появился на Pages за отведённое время");
+const ready = await waitFor("#timeline", "svg[data-graph]");
+if (!ready) problems.push("Git-граф не появился на Pages за отведённое время");
 
 if (ready) {
-  await page.goto(base + "#dashboard");
-  await page.waitForSelector("canvas#chart");
-  const cells = await page.locator("[data-strip] .node-cell").count();
-  if (cells !== 30) problems.push("на дашборде не 30 узлов: " + cells);
-  await page.locator('[data-node="U1"]').hover();
-  const tip = (await page.locator("#tt").textContent()) ?? "";
-  if (!tip.includes("Узел U1")) problems.push("тултип не сработал: " + tip);
+  const allDots = await page.locator("[data-commit]").count();
+  await page.locator('[data-action="jump"][data-day="2026-01-02"]').click();
+  await page.waitForTimeout(400);
+  const days = await page.locator("[data-commit]").evaluateAll((nodes) =>
+    nodes.map((node) => (node as HTMLElement).dataset.day ?? ""),
+  );
+  const afterDots = days.length;
+  if (afterDots === 0 || afterDots >= allDots) problems.push("перемотка на 2 января не скрыла будущие события: " + afterDots + " из " + allDots);
+  if (!days.every((day) => day <= "2026-01-02")) problems.push("в графе остались события после 2 января");
+  const stats = (await page.locator("[data-stats]").innerText()).trim();
+  if (!stats.includes("2 января 2026")) problems.push("подпись даты не переключилась: " + stats);
 
-  await page.goto(base + "#chat");
-  await page.waitForSelector('[data-role-badge]');
-  const role = (await page.locator("[data-role-badge]").textContent()) ?? "";
-  if (role.trim() !== "Житель") problems.push("чат стартует не с роли Жителя: " + role);
-  await page.locator('[data-action="next"]').click();
-  await page.locator('[data-action="next"]').click();
-  const badge = (await page.locator("[data-role-badge]").textContent()) ?? "";
-  if (!badge.includes("Подрядчик")) problems.push("на U7 роль не Подрядчик: " + badge);
-  if ((await page.locator('[data-card="sla"]').count()) === 0) problems.push("нет SLA-карточки на U7");
+  await page.locator('[data-view="gantt"]').click();
+  if ((await page.locator("[data-gantt]").count()) === 0) problems.push("fallback-Гант не отрисовался");
+
+  await page.goto(base + "?v=" + Date.now() + "#chat/З-015?at=2026-01-02");
+  await page.waitForSelector("[data-phone]");
+  const role = ((await page.locator("[data-role-badge]").textContent()) ?? "").trim();
+  if (role !== "Депутат-диспетчер") problems.push("на 2 января роль не депутат-диспетчер: " + role);
+  const messages = await page.locator("[data-msg]").count();
+  if (messages !== 2) problems.push("на 2 января сообщений не 2: " + messages);
+  if ((await page.locator("[data-phone] input, [data-phone] textarea").count()) !== 0) {
+    problems.push("в чате есть поле ввода — по ТЗ это плеер переписки");
+  }
+  const text = (await page.locator("[data-messages]").innerText()).trim();
+  if (!text.includes("Назначаю подрядчика")) problems.push("нет реплики диспетчера на 2 января");
+  if (text.includes("Принято, выезжаю")) problems.push("на 2 января видна будущая реплика подрядчика");
 }
 
 await browser.close();
