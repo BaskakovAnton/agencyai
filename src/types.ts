@@ -78,6 +78,8 @@ export interface Graph {
 /** Состояние сессии целиком в оперативной памяти. */
 export interface Session {
   readonly step: number;
+  /** Роль оператора: её права проверяются при переходах. */
+  readonly role: RoleId;
   readonly incidents: readonly Incident[];
   readonly log: readonly string[];
 }

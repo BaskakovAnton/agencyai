@@ -1,6 +1,7 @@
 import type { Incident } from "../types.ts";
 import { ACCESS_MARKS, GROUP_TITLES, PRIORITY_TITLES, ROLE_IDS, ROLE_NAMES } from "../data/roles.ts";
 import { branchesOf, neighborsOf } from "../core/graph.ts";
+import { roleAccess } from "../core/roles.ts";
 import { branchShares } from "../data/edges.ts";
 import type { WebState } from "./session.ts";
 
@@ -9,6 +10,13 @@ const esc = (s: string): string =>
 
 const btn = (label: string, action: string, ref: string, nodeId = ""): string =>
   '<button data-action="' + action + '" data-ref="' + ref + '"' + (nodeId ? ' data-node="' + nodeId + '"' : "") + ">" + label + "</button>";
+
+/** Кнопка перехода: недоступные роли варианты показываются выключенными с причиной. */
+const moveBtn = (state: WebState, label: string, ref: string, to: string): string => {
+  const access = roleAccess(state.graph, to, state.session.role);
+  const attrs = access.allowed ? "" : ' disabled title="' + access.level + ": " + access.caveat + '"';
+  return '<button data-action="move" data-ref="' + ref + '" data-node="' + to + '"' + attrs + ">" + label + "</button>";
+};
 
 const nodeChip = (state: WebState, nodeId: string): string => {
   const node = state.graph.byId[nodeId];
@@ -28,7 +36,7 @@ const branchLine = (state: WebState, nodeId: string): string => {
   const branches = branchesOf(state.graph, nodeId);
   if (branches.length === 0) return "";
   const options = branchShares(branches)
-    .map((share) => btn(share.to + " " + share.percent + "%", "move", state.selected, share.to))
+    .map((share) => moveBtn(state, share.to + " " + share.percent + "%", state.selected, share.to))
     .join(" ");
   return '<p class="branch">Развилка (рандомное решение): ' + options + "</p>";
 };
@@ -44,12 +52,14 @@ export const renderSelected = (state: WebState): string => {
   if (!incident) return '<p class="hint">Выберите заявку в списке.</p>';
   const node = state.graph.byId[incident.nodeId];
   const { prev, next } = neighborsOf(state.graph, incident.nodeId);
-  const links = [...prev, ...next].map((id) => btn(id, "move", incident.id, id)).join(" ");
+  const links = [...prev, ...next].map((id) => moveBtn(state, id, incident.id, id)).join(" ");
+  const access = roleAccess(state.graph, incident.nodeId, state.session.role);
   const groupLine = node ? " " + '<span class="group">' + GROUP_TITLES[node.group] + "</span>" : "";
   return [
     "<h2>" + incident.id + " · " + esc(incident.title) + "</h2>",
     '<p class="meta">' + esc(incident.address) + " · " + esc(incident.reporter) + " · " + PRIORITY_TITLES[incident.priority] + "</p>",
     "<p>Узел: " + nodeChip(state, incident.nodeId) + groupLine + "</p>",
+    '<p class="meta">Права роли на этом узле: ' + access.level + " (" + access.caveat + ")</p>",
     '<p class="moves">' + btn("‹ назад", "back", incident.id) + " " + btn("вперёд ›", "forward", incident.id) + "</p>",
     links ? "<p>Соседние узлы: " + links + "</p>" : '<p class="hint">граница процесса</p>',
     branchLine(state, incident.nodeId),

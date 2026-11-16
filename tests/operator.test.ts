@@ -50,7 +50,8 @@ test("полный прогон доводит все заявки до конц
     if (result.session.step === session.step) break;
     session = result.session;
   }
-  expect(session.incidents.every((i) => i.nodeId === "U30")).toBe(true);
+  // роль system никого не пускает на U30 («Удаление» запрещено всем) — заявки архивируются на U29
+  expect(session.incidents.every((i) => i.nodeId === "U29" || i.nodeId === "U30")).toBe(true);
   const summary = buildSummary(graph, session, NOW);
   expect(summary.total).toBe(30);
   expect(summary.finished).toBe(30);

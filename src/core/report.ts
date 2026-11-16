@@ -1,6 +1,7 @@
 import type { Graph, Incident, Priority, Session } from "../types.ts";
 import { GROUP_TITLES, PRIORITY_TITLES } from "../data/roles.ts";
 import { isFinished, priorityRank } from "./incident.ts";
+import { isArchived } from "./navigation.ts";
 
 export interface Summary {
   readonly generatedAt: string;
@@ -28,7 +29,8 @@ export const buildSummary = (graph: Graph, session: Session, generatedAt: string
       byNodeCount.set(incident.nodeId, (byNodeCount.get(incident.nodeId) ?? 0) + 1);
     }
     moves += incident.history.length;
-    if (isFinished(incident, graph)) finished += 1;
+    // «дошло до конца» = край процесса либо архив: дальше не пускают права ни одной роли
+    if (isFinished(incident, graph) || isArchived(graph, incident, "system")) finished += 1;
   }
 
   const byNode = graph.order
