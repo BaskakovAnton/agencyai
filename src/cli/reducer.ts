@@ -4,7 +4,8 @@ import { ROLE_IDS, ROLE_NAMES } from "../data/roles.ts";
 import { hoursFor } from "../data/sla.ts";
 import { slaStatus, withClock } from "../core/sla.ts";
 import { buildFinalState, buildSummary, renderSummary } from "../core/report.ts";
-import { renderGraphTable, renderHelp, renderIncidentCard, renderIncidentList, renderNodeCard, renderSlaLine } from "./render.ts";
+import { renderGraphTable, renderHelp, renderIncidentCard, renderIncidentList, renderNodeCard, renderSituationCard, renderSituationsList, renderSlaLine } from "./render.ts";
+import { situationById } from "../data/situations.ts";
 import type { Command } from "./commands.ts";
 
 /** Что нужно сделать во внешнем мире (диск) — единственные побочные эффекты. */
@@ -72,6 +73,13 @@ export const applyCommand = (
       return { ...base, output: [renderGraphTable(graph)] };
     case "list":
       return { ...base, output: [renderIncidentList(graph, session.incidents)] };
+    case "situations":
+      return { ...base, output: [renderSituationsList()] };
+    case "situation": {
+      const situation = situationById(command.ref);
+      if (!situation) return { ...base, output: ["ситуация не найдена: " + command.ref] };
+      return { ...base, output: [renderSituationCard(situation)] };
+    }
     case "node": {
       if (!graph.byId[command.nodeId]) return { ...base, output: ["неизвестный узел: " + command.nodeId] };
       return { ...base, output: [renderNodeCard(graph, command.nodeId)] };

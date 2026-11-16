@@ -113,6 +113,16 @@ test("страница показывает SLA и кнопку времени",
   expect(incidents.some((i) => mod.slaStatus(i, 30).phase === "overdue")).toBe(true);
 });
 
+test("карточка заявки показывает ситуацию регламента и её шаги", async () => {
+  const mod = (await import(pathToFileURL(join(outDir, "app.js")).href)) as Record<string, any>;
+  const graph = mod.buildProcessGraph(mod.NODES);
+  const state = mod.createState(graph, 7);
+  const incident = state.session.incidents[8];
+  const html = mod.renderPage({ ...state, selected: incident.id }, "");
+  expect(html).toContain("Ситуация " + incident.situationId);
+  expect(html).toContain("class=\"steps\"");
+});
+
 test("html самодостаточен: локальные ресурсы, viewport, русская локаль", () => {
   expect(page).toContain('lang="ru"');
   expect(page).toContain("viewport");
