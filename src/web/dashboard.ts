@@ -77,6 +77,8 @@ export const mountDashboard = (root: HTMLElement, graph: Graph, incidents: reado
         },
       },
     });
+    // тест-хук: e2e вычисляет координаты столбца через Chart.js hit-testing
+    (canvas as unknown as { __chart?: Chart }).__chart = chart;
   };
 
   const showTooltip = (nodeId: string): void => {

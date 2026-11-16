@@ -103,8 +103,8 @@ bun test                            # 24 теста, включая парите
 | Переписка по ролям | `demo/#chat` | заявка З-015 «Разбита дверь подъезда»: маршрут U1 → U6 → U7 → U19, чат меняет роль по узлу, степпер, карточки SLA и подрядчика, «Следующий узел» и авто-плеер |
 
 ```bash
-bun test                 # 71 юнит- и функциональный тест
-bun run e2e              # 14 сценариев Playwright (chromium)
+bun test                 # 124 юнит- и функциональных теста (покрытие 95.7% функций / 97.2% строк)
+bun run e2e              # 21 сценарий Playwright (chromium): модель, дашборд, чат
 bun run serve:demo       # локальная раздача demo/ на http://127.0.0.1:4321
 bun run scripts/screenshots.ts   # скриншоты в docs/screenshots/
 ```
@@ -130,10 +130,10 @@ CI: `.github/workflows/e2e.yml` (bun install → bun test → сборка де�
 CI — `.github/workflows/e2e.yml`. План модулей: [docs/demo-modules-plan.md](docs/demo-modules-plan.md).
 
 ```bash
-bun test                 # 71 юнит- и функциональный тест
+bun test                 # 124 юнит- и функциональных теста (покрытие 95.7% функций / 97.2% строк)
 bun run build:demo       # пересборка demo/app.js (~265 КБ со графиком)
 bun run serve:demo       # статика на http://127.0.0.1:4321
-bun run e2e              # 14 сценариев Playwright (chromium)
+bun run e2e              # 21 сценарий Playwright (chromium): модель, дашборд, чат
 bun run screenshots      # свежие скриншоты модулей в docs/screenshots/
 ```
 

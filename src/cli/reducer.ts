@@ -148,7 +148,7 @@ export const applyCommand = (
         current = tickAll({ ...current, step, incidents: moved, log: [...current.log, "шаг " + step + ": массовый прогон, сдвинуто " + changed + " заявок"] }, clockOf(current) + advanced);
         output = [renderIncidentList(graph, current.incidents)];
       }
-      return { ...base, session: current, output: steps ? output : ["все заявки уже в конце процесса"] };
+      return { ...base, session: current, output: steps ? output : ["все заявки уже в архиве или в конце процесса"] };
     }
     case "report":
       return { ...base, output: [renderSummary(buildSummary(graph, session, now))], effects: [effectReport()] };
