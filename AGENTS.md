@@ -67,14 +67,12 @@ src/           # терминальная модель: core (чистые фу�
                # sla.ts — нормативы, situations/*.ts — 37 ситуаций, situation-nodes.ts — связь с узлами
   web/         # демо: session/card/view (модель), dashboard(+render) — дашборд, chat(+view) — переписка,
                # router.ts — навигация по хэшу, model-view.ts, main.ts
-  e2e/         # Playwright: dashboard.spec.ts, chat.spec.ts (14 сценариев)
+  web/         # dashboard.ts + dashboard-render.ts — график когорт; chat.ts + chat-view.ts — переписка
+e2e/         # Playwright: dashboard.spec.ts, chat.spec.ts (14 сценариев)
 scripts/       # build-web.ts, serve-demo.ts (статика :4321), screenshots.ts, verify-live.ts, import-situations.ts
 playwright.config.ts · bunfig.toml (bun test только по tests/)
 .github/       # workflows/e2e.yml — CI: bun install → bun test → сборка → playwright chromium → e2e
 docs/screenshots/  # dashboard.png, chat.png, chat-contractor.png, model.png
-e2e/           # Playwright: dashboard.spec.ts, chat.spec.ts
-playwright.config.ts · bunfig.toml (bun test только по tests/)
-docs/screenshots/  # dashboard.png, chat.png, model.png
 demo/          # прод-сборка для Pages: app.js + index.html + style.css (коммитится)
 tests/         # bun test: граф, генератор, навигация, оператор, развилки, роли, SLA, ситуации,
                # аналитика дашборда, чат-стейт-машина, веб-сборка (71 тест)
