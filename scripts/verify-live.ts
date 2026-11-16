@@ -21,8 +21,9 @@ const waitFor = async (hash: string, selector: string, timeoutMs = 240_000): Pro
   return false;
 };
 
-const ready = await waitFor("#timeline", "svg[data-graph]");
-if (!ready) problems.push("Git-граф не появился на Pages за отведённое время");
+// Новый бандл узнаём по шкале времени: старый граф тоже есть, поэтому ждём именно новый маркер.
+const ready = await waitFor("#timeline", "[data-ruler]");
+if (!ready) problems.push("новый бандл (шкала времени) не появился на Pages за отведённое время");
 
 if (ready) {
   const allDots = await page.locator("[data-commit]").count();
@@ -42,8 +43,13 @@ if (ready) {
   if ((await page.locator("[data-legends]").count()) === 0) problems.push("нет легенд SLA и развилок");
   if ((await page.locator("[data-legend-sla]").count()) !== 4) problems.push("в легенде SLA не 4 фазы");
 
-  await page.locator('[data-commit][data-incident="З-015"][data-node="U6"]').click();
-  await page.waitForTimeout(400);
+  const commit = page.locator('[data-commit][data-incident="З-015"][data-node="U6"]');
+  if ((await commit.count()) > 0) {
+    await commit.click();
+    await page.waitForTimeout(400);
+  } else {
+    problems.push("на графе нет коммита З-015/U6");
+  }
   if ((await page.locator("[data-node-card]").count()) === 0) problems.push("клик по коммиту не открыл карточку узла");
   else {
     const card = (await page.locator("[data-node-card]").innerText()).trim();
@@ -52,8 +58,13 @@ if (ready) {
     if (!card.includes("SLA")) problems.push("в карточке узла нет SLA");
   }
 
-  await page.locator('[data-view="gantt"]').click();
-  if ((await page.locator("[data-gantt]").count()) === 0) problems.push("fallback-Гант не отрисовался");
+  const ganttBtn = page.locator('[data-view="gantt"]');
+  if ((await ganttBtn.count()) > 0) {
+    await ganttBtn.click();
+    if ((await page.locator("[data-gantt]").count()) === 0) problems.push("fallback-Гант не отрисовался");
+  } else {
+    problems.push("нет переключателя на Гант");
+  }
 
   await page.goto(base + "?v=" + Date.now() + "#chat/З-015?at=2026-01-02");
   await page.waitForSelector("[data-phone]");
