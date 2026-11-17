@@ -2,6 +2,8 @@ import { HERO_INCIDENT_ID } from "../data/hero.ts";
 import type { Story } from "../core/story.ts";
 import type { Graph } from "../types.ts";
 import { mountChat } from "./chat-view.ts";
+import { mountDashboard } from "./dashboard-view.ts";
+import { mountIncidents } from "./incidents-view.ts";
 import { mountModel } from "./model-view.ts";
 import { renderPlaceholder } from "./placeholder.ts";
 import { bindShell, initTheme, renderShell } from "./shell.ts";
@@ -37,7 +39,7 @@ export const parseRoute = (hash: string): Route => {
 };
 
 export const hrefDashboard = (): string => "#dashboard";
-export const hrefIncidents = (): string => "#incidents";
+export const hrefIncidents = (at = ""): string => (at === "" ? "#incidents" : "#incidents?at=" + encodeURIComponent(at));
 export const hrefIncident = (id: string, at: string): string =>
   "#incident/" + encodeURIComponent(id) + "?at=" + encodeURIComponent(at);
 export const hrefTimeline = (at: string, view: ViewMode = "git"): string =>
@@ -69,6 +71,8 @@ export const mountRouter = (graph: Graph, story: Story): void => {
     if (route.name === "timeline") mountTimeline(view, graph, story, route);
     else if (route.name === "chat") mountChat(view, graph, story, route);
     else if (route.name === "model") mountModel(view, graph);
+    else if (route.name === "dashboard") mountDashboard(view, graph, story, route);
+    else if (route.name === "incidents") mountIncidents(view, graph, story, route);
     else view.innerHTML = renderPlaceholder(route);
   };
   window.addEventListener("hashchange", apply);

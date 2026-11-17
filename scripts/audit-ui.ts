@@ -139,6 +139,8 @@ const run = async (): Promise<void> => {
       await page.screenshot({ path, fullPage: true });
       shots.push(path);
     };
+    await go("#dashboard?at=2026-01-02", "dashboard", 600);
+    await go("#incidents?at=2026-01-02", "incidents", 600);
     await go("#timeline?at=2026-01-02", "timeline", 900);
     const commit = page.locator('[data-commit][data-incident="З-015"][data-node="U6"]');
     if ((await commit.count()) > 0) {

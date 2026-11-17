@@ -1,6 +1,55 @@
 {
   "report": [
     {
+      "page": "dashboard",
+      "viewport": "desktop",
+      "kind": "tap-targets",
+      "count": 18,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
+    },
+    {
+      "page": "dashboard",
+      "viewport": "desktop",
+      "kind": "fonts-small",
+      "count": 2,
+      "detail": "текста мельче 12px: 2"
+    },
+    {
+      "page": "dashboard",
+      "viewport": "desktop",
+      "kind": "headings",
+      "count": 3,
+      "detail": "H1: Обзор | H2: Требуют внимания | H2: Последние события"
+    },
+    {
+      "page": "incidents",
+      "viewport": "desktop",
+      "kind": "tap-targets",
+      "count": 42,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
+    },
+    {
+      "page": "incidents",
+      "viewport": "desktop",
+      "kind": "unlabeled",
+      "count": 1,
+      "detail": "INPUT."
+    },
+    {
+      "page": "incidents",
+      "viewport": "desktop",
+      "kind": "fonts-small",
+      "count": 58,
+      "detail": "текста мельче 12px: 58"
+    },
+    {
+      "page": "incidents",
+      "viewport": "desktop",
+      "kind": "headings",
+      "count": 1,
+      "detail": "H1: Обращения"
+    },
+    {
       "page": "timeline",
       "viewport": "desktop",
       "kind": "tap-targets",
@@ -178,6 +227,55 @@
       "detail": "карточка открылась"
     },
     {
+      "page": "dashboard",
+      "viewport": "tablet",
+      "kind": "tap-targets",
+      "count": 18,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
+    },
+    {
+      "page": "dashboard",
+      "viewport": "tablet",
+      "kind": "fonts-small",
+      "count": 2,
+      "detail": "текста мельче 12px: 2"
+    },
+    {
+      "page": "dashboard",
+      "viewport": "tablet",
+      "kind": "headings",
+      "count": 3,
+      "detail": "H1: Обзор | H2: Требуют внимания | H2: Последние события"
+    },
+    {
+      "page": "incidents",
+      "viewport": "tablet",
+      "kind": "tap-targets",
+      "count": 42,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
+    },
+    {
+      "page": "incidents",
+      "viewport": "tablet",
+      "kind": "unlabeled",
+      "count": 1,
+      "detail": "INPUT."
+    },
+    {
+      "page": "incidents",
+      "viewport": "tablet",
+      "kind": "fonts-small",
+      "count": 58,
+      "detail": "текста мельче 12px: 58"
+    },
+    {
+      "page": "incidents",
+      "viewport": "tablet",
+      "kind": "headings",
+      "count": 1,
+      "detail": "H1: Обращения"
+    },
+    {
       "page": "timeline",
       "viewport": "tablet",
       "kind": "tap-targets",
@@ -353,6 +451,55 @@
       "viewport": "tablet",
       "kind": "enter-on-commit",
       "detail": "карточка открылась"
+    },
+    {
+      "page": "dashboard",
+      "viewport": "mobile",
+      "kind": "tap-targets",
+      "count": 14,
+      "detail": "К содержанию 95x21 | ☰ 36x34 | Тёмная тема 99x34 | 20 декабря 2025\n21 дек 125x19 | Все обращения → 107x20"
+    },
+    {
+      "page": "dashboard",
+      "viewport": "mobile",
+      "kind": "fonts-small",
+      "count": 2,
+      "detail": "текста мельче 12px: 2"
+    },
+    {
+      "page": "dashboard",
+      "viewport": "mobile",
+      "kind": "headings",
+      "count": 3,
+      "detail": "H1: Обзор | H2: Требуют внимания | H2: Последние события"
+    },
+    {
+      "page": "incidents",
+      "viewport": "mobile",
+      "kind": "tap-targets",
+      "count": 38,
+      "detail": "К содержанию 95x21 | ☰ 36x34 | Тёмная тема 99x34 | INPUT 336x34 | любой\nавария / экстрен 160x34"
+    },
+    {
+      "page": "incidents",
+      "viewport": "mobile",
+      "kind": "unlabeled",
+      "count": 1,
+      "detail": "INPUT."
+    },
+    {
+      "page": "incidents",
+      "viewport": "mobile",
+      "kind": "fonts-small",
+      "count": 58,
+      "detail": "текста мельче 12px: 58"
+    },
+    {
+      "page": "incidents",
+      "viewport": "mobile",
+      "kind": "headings",
+      "count": 1,
+      "detail": "H1: Обращения"
     },
     {
       "page": "timeline",
@@ -539,16 +686,22 @@
     }
   ],
   "shots": [
+    "docs/screenshots/audit/desktop-dashboard.png",
+    "docs/screenshots/audit/desktop-incidents.png",
     "docs/screenshots/audit/desktop-timeline.png",
     "docs/screenshots/audit/desktop-timeline-card.png",
     "docs/screenshots/audit/desktop-gantt.png",
     "docs/screenshots/audit/desktop-chat.png",
     "docs/screenshots/audit/desktop-model.png",
+    "docs/screenshots/audit/tablet-dashboard.png",
+    "docs/screenshots/audit/tablet-incidents.png",
     "docs/screenshots/audit/tablet-timeline.png",
     "docs/screenshots/audit/tablet-timeline-card.png",
     "docs/screenshots/audit/tablet-gantt.png",
     "docs/screenshots/audit/tablet-chat.png",
     "docs/screenshots/audit/tablet-model.png",
+    "docs/screenshots/audit/mobile-dashboard.png",
+    "docs/screenshots/audit/mobile-incidents.png",
     "docs/screenshots/audit/mobile-timeline.png",
     "docs/screenshots/audit/mobile-timeline-card.png",
     "docs/screenshots/audit/mobile-gantt.png",
