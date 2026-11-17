@@ -53,6 +53,23 @@ test("нулевой срез: пустой день не даёт NaN и лож
   expect(overview.events).toHaveLength(0);
 });
 
+test("обзор собирает блоки в стиле эталона из модели", () => {
+  const overview = buildOverview(graph, story.incidents, later);
+  expect(overview.days).toHaveLength(6);
+  expect(overview.days.at(-1)!.day).toBe(later);
+  expect(overview.groups).toHaveLength(6);
+  expect(overview.daily).toHaveLength(6);
+  expect(overview.matrix).toHaveLength(4);
+  for (const row of overview.matrix) {
+    expect(row.values).toHaveLength(6);
+    expect(row.values.every((v) => v >= 0 && v <= 100)).toBe(true);
+  }
+  expect(overview.summary.length).toBeGreaterThan(0);
+  expect(overview.workflow.length).toBeGreaterThan(0);
+  const nodesInGroups = overview.groups.reduce((sum, g) => sum + g.nodes, 0);
+  expect(nodesInGroups).toBe(graph.order.length);
+});
+
 test("последние события идут от свежих к старым", () => {
   const overview = buildOverview(graph, story.incidents, later);
   expect(overview.events.length).toBeGreaterThan(0);

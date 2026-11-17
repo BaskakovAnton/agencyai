@@ -1,35 +1,41 @@
-/* Оболочка приложения: сайдбар на desktop, верхнее меню на mobile. */
-.app { display: grid; grid-template-columns: 250px minmax(0, 1fr); min-height: 100vh; }
-.sidebar { background: var(--color-surface); border-right: 1px solid var(--color-border); padding: 22px 15px 16px; display: flex; flex-direction: column; gap: 16px; }
-.brand { display: flex; gap: 10px; align-items: center; }
-.brand-mark { width: 37px; height: 37px; border-radius: 11px; background: linear-gradient(145deg, #3478f6, #1748bb); box-shadow: 0 5px 12px rgba(37, 99, 235, .22); color: #fff; display: grid; place-items: center; font-size: 17px; font-weight: 800; }
-.brand b { display: block; font-size: 17px; font-weight: 780; letter-spacing: -.45px; }
-.brand i { font-style: normal; font-size: 11px; color: var(--color-text-muted); }
-.nav { display: flex; flex-direction: column; gap: 2px; }
-.nav-item { min-height: 43px; display: flex; align-items: center; padding: 0 11px; border-radius: 9px; color: var(--color-text-muted); font-size: 13px; font-weight: 580; }
-.nav-item:hover { background: var(--color-surface-muted); color: var(--color-text); }
-.nav-item.on { background: var(--color-primary-soft); color: var(--color-primary-strong); font-weight: 750; }
-.sidebar-note { margin: auto 0 0; font-size: 11px; color: var(--color-text-muted); }
+/* Оболочка: тёмный сайдбар (как в эталоне), топбар 76 px, контент карточками. */
+.app { display: grid; grid-template-columns: var(--sidebar-w) minmax(0, 1fr); min-height: 100vh; }
+.sidebar { background: linear-gradient(180deg, var(--nav-bg), var(--nav-2)); color: var(--nav-text); padding: 22px 14px 16px; display: flex; flex-direction: column; gap: 4px; }
+.brand { display: flex; align-items: center; gap: 12px; padding: 0 8px 26px; }
+.brand-mark { width: 36px; height: 36px; border-radius: 11px; background: #16301f; border: 1px solid #1f5a34; color: #3ecf74; display: grid; place-items: center; font-size: 17px; font-weight: 800; }
+.brand b { display: block; color: #fff; font-size: 19px; font-weight: 800; letter-spacing: -.5px; }
+.brand i { font-style: normal; display: block; margin-top: 1px; color: var(--nav-muted); font-size: 12px; }
+.nav-label { padding: 16px 10px 6px; color: var(--nav-subtle); font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+.nav { display: grid; gap: 5px; }
+.nav-item { min-height: 43px; display: flex; align-items: center; padding: 11px 12px; border-radius: 10px; color: #c8d2cc; font-size: 13px; font-weight: 560; transition: background .18s, color .18s; }
+.nav-item:hover { background: var(--nav-hover); color: #fff; }
+.nav-item.on { background: var(--nav-active); color: #fff; font-weight: 700; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08); }
+.sidebar-status { margin-top: auto; border-top: 1px solid var(--nav-line); padding: 12px 10px 0; color: var(--nav-muted); font-size: 12px; display: flex; flex-direction: column; gap: 4px; }
+.live-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #25c35d; margin-right: 6px; }
 .main { min-width: 0; display: flex; flex-direction: column; }
-.topbar { height: 68px; display: flex; align-items: center; gap: 10px; padding: 0 34px; border-bottom: 1px solid var(--color-border); background: var(--color-surface); position: sticky; top: 0; z-index: 5; }
-.topbar-title { font-weight: 650; font-size: 14px; }
-.demo-chip { margin-left: auto; padding: 3px 9px; border-radius: 999px; background: var(--color-surface-muted); border: 1px solid var(--color-border); color: var(--color-text-muted); font-size: 11px; }
+.topbar { height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 0 30px; border-bottom: 1px solid var(--color-border); background: var(--topbar-bg); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 10; }
+.topbar-main { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.page-title { margin: 0; font-size: 22px; font-weight: 780; letter-spacing: -.6px; line-height: 1.2; }
+.page-sub { margin: 2px 0 0; color: var(--color-text-muted); font-size: 12px; }
+.topbar-actions { display: flex; align-items: center; gap: 12px; }
 .menu-btn { display: none; }
-.content { width: min(1560px, 100%); margin: 0 auto; padding: 29px 34px 52px; }
-.page-header { margin-bottom: 14px; }
-.page-title { margin: 0 0 4px; font-size: 28px; font-weight: 790; line-height: 1.2; letter-spacing: -.8px; }
-.page-sub { margin: 0; color: var(--color-text-muted); font-size: 13px; }
-.placeholder { background: var(--color-surface); border: 1px dashed var(--color-border); border-radius: var(--radius-lg); padding: 22px; max-width: 640px; box-shadow: var(--shadow); }
+.content { width: min(1560px, 100%); margin: 0 auto; padding: 22px 30px 44px; }
+.placeholder { background: var(--color-surface); border: 1px dashed var(--color-border-strong); border-radius: var(--radius-lg); padding: 22px; max-width: 640px; box-shadow: var(--shadow); }
 .skip-link { position: absolute; left: -9999px; }
 .skip-link:focus { left: 8px; top: 8px; z-index: 50; background: var(--color-surface); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--color-border); }
-button:focus-visible, a:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.demo-chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: var(--radius-pill); background: var(--color-primary-soft); color: var(--color-primary-strong); font-size: 12px; font-weight: 650; }
+.theme-btn { min-height: 34px; }
 
+@media (max-width: 1180px) {
+  :root { --sidebar-w: 218px; }
+}
 @media (max-width: 900px) {
   .app { grid-template-columns: minmax(0, 1fr); }
-  .sidebar { display: none; position: fixed; inset: 0 auto 0 0; width: 260px; background: var(--color-surface); box-shadow: var(--shadow); z-index: 30; }
+  .sidebar { display: none; position: fixed; inset: 0 auto 0 0; width: 264px; z-index: 30; box-shadow: var(--shadow); }
   .app.menu-open .sidebar { display: flex; }
   .menu-btn { display: inline-block; }
-  .topbar { height: 56px; padding: 0 14px; }
-  .content { padding: 18px 14px 40px; }
-  .page-title { font-size: 22px; letter-spacing: -.4px; }
+  .topbar { height: 64px; padding: 0 14px; }
+  .page-title { font-size: 18px; letter-spacing: -.3px; }
+  .content { padding: 16px 14px 40px; }
 }

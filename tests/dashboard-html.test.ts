@@ -31,6 +31,20 @@ test("быстрые переходы ведут в обращения и хро
   expect(html).toContain('href="#timeline');
 });
 
+test("композиция в стиле эталона: полоса дней, группы, график, матрица, сводка, процесс", () => {
+  expect(html).toContain("data-day-strip");
+  expect((html.match(/data-day-chip=/g) ?? []).length).toBe(6);
+  expect(html).toContain("data-group-tiles");
+  expect((html.match(/data-group-tile=/g) ?? []).length).toBe(6);
+  expect(html).toContain("data-daily-chart");
+  expect(html).toContain("data-sla-matrix");
+  expect((html.match(/data-matrix-row=/g) ?? []).length).toBe(4);
+  expect(html).toContain('scope="col"');
+  expect(html).toContain("data-summary");
+  expect(html).toContain("data-workflow");
+  expect(html).not.toContain('style="color');
+});
+
 test("нулевой срез объясняется текстом, а не пустотой", () => {
   const empty = renderDashboard({ overview: buildOverview(graph, story.incidents, "2020-01-01"), days, day: "2020-01-01" });
   expect(empty).toContain("нет заявок");
