@@ -27,6 +27,7 @@ export const mountTimeline = (root: HTMLElement, graph: Graph, story: Story, rou
   let filter = "";
   let override: string | null = null;
   let selectedId: string | null = null;
+  let density: "normal" | "compact" = "normal";
 
   /** Заявка для панели чата: выбранная в полосе, иначе герой демонстрации. */
   const chatIncident = () =>
@@ -43,6 +44,7 @@ export const mountTimeline = (root: HTMLElement, graph: Graph, story: Story, rou
       days,
       dayIndex: days.indexOf(day),
       view,
+      density,
       filter: override ?? filter,
       git,
       gantt: buildGantt(graph, story.incidents, day),
@@ -99,12 +101,15 @@ export const mountTimeline = (root: HTMLElement, graph: Graph, story: Story, rou
       const element = root.querySelector(selector);
       if (element) element.outerHTML = html;
     }
+    root.querySelector(".timeline")?.classList.toggle("density-compact", density === "compact");
     if (focusCard) root.querySelector<HTMLElement>("[data-node-card]")?.focus();
   };
 
   const paint = (): void => {
     hideTooltip();
-    root.innerHTML = '<div class="timeline">' + renderTimelinePage(model()) + "</div>";
+    root.innerHTML =
+      '<div class="timeline' + (density === "compact" ? " density-compact" : "") + '" data-timeline>' +
+      renderTimelinePage(model()) + "</div>";
     const slider = root.querySelector("[data-slider]") as HTMLInputElement | null;
     slider?.addEventListener("input", () => jumpTo(days[Number(slider.value)] ?? day));
   };
@@ -138,7 +143,7 @@ export const mountTimeline = (root: HTMLElement, graph: Graph, story: Story, rou
   /** Делегирование: обработчики живут на контейнере и переживают перерисовку блоков. */
   root.addEventListener("click", (event) => {
     const target = (event.target as Element | null)?.closest<HTMLElement>(
-      "[data-commit],[data-bar],[data-row],[data-view],[data-incident-filter],[data-action],[data-ruler-day],[data-card-action]",
+      "[data-commit],[data-bar],[data-row],[data-view],[data-density],[data-incident-filter],[data-action],[data-ruler-day],[data-card-action]",
     );
     if (!target) return;
     if (target.dataset.cardAction === "close") { closeCard(); return; }
@@ -155,6 +160,11 @@ export const mountTimeline = (root: HTMLElement, graph: Graph, story: Story, rou
     if (target.dataset.incidentFilter) {
       const id = target.dataset.incidentFilter;
       override = override === id ? null : id;
+      paintBody();
+      return;
+    }
+    if (target.dataset.density) {
+      density = target.dataset.density === "compact" ? "compact" : "normal";
       paintBody();
       return;
     }
