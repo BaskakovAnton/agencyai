@@ -140,6 +140,18 @@ test("страница рендерит 30 заявок с кнопками пе
   expect(moved.message).toContain("З-005");
 });
 
+test("экран модели: матрица прав из 7 ролей и легенда групп узлов", async () => {
+  const mod = (await import(pathToFileURL(join(outDir, "app.js")).href)) as Record<string, any>;
+  const graph = mod.buildProcessGraph(mod.NODES);
+  const state = mod.createState(graph, 7);
+  const selected = { ...state, selected: state.session.incidents[0].id };
+  const html = mod.renderPage(selected, "");
+  expect(html).toContain("data-roles-matrix");
+  expect((html.match(/data-role-row=/g) ?? []).length).toBe(7);
+  expect(html).toContain("data-group-legend");
+  expect((html.match(/data-group=/g) ?? []).length).toBe(6);
+});
+
 test("карточка на узле с развилкой показывает варианты с процентами", async () => {
   const mod = (await import(pathToFileURL(join(outDir, "app.js")).href)) as Record<string, any>;
   const graph = mod.buildProcessGraph(mod.NODES);

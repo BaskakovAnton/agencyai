@@ -161,3 +161,18 @@ span.chip { border: 1px solid var(--color-border); color: var(--color-text-muted
   .row-main .prio, .row-main span.chip { display: none; }
   .phone { max-width: 100%; }
 }
+/* ── этап 4: панель, матрица прав, читаемость ───────────────── */
+.segmented { display: inline-flex; border: 1px solid var(--color-border); border-radius: 8px; overflow: hidden; }
+.segmented button { border: 0; border-radius: 0; }
+.segmented button.on { background: var(--color-primary-soft); color: var(--color-primary-strong); }
+.scroll-hint { margin: 0; color: var(--color-text-muted); font-size: 12px; }
+.gantt-row.head { position: sticky; top: 0; z-index: 2; background: var(--color-surface); }
+.density-compact .gantt-row { min-height: 18px; }
+.density-compact .bar { height: 16px; font-size: 10px; }
+.density-compact .git { transform: scale(.86); transform-origin: top left; }
+.roles-matrix { width: 100%; border-collapse: collapse; font-size: 12px; }
+.roles-matrix th { text-align: left; color: var(--color-text-muted); font-weight: 500; padding: 4px 6px; border-bottom: 1px solid var(--color-border); }
+.roles-matrix td { padding: 4px 6px; border-bottom: 1px solid var(--color-border); }
+.roles-matrix .mark { color: var(--color-primary); }
+.group-legend { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.phone-readonly { margin: 0; padding: 6px 14px; font-size: 11px; color: var(--color-text-muted); background: var(--color-surface-muted); border-bottom: 1px solid var(--color-border); border-left: 3px solid var(--color-warning); }

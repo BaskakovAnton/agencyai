@@ -42,7 +42,8 @@ export const renderMessages = (snapshot: ChatSnapshot, activeRole: RoleId): stri
       previousDay = message.day;
       if (message.kind === "system") {
         return separator + '<div class="msg system" data-msg data-role="system" data-day="' + message.day + '">' +
-          '<div class="bubble">' + escapeHtml(message.text) + "</div></div>";
+          '<div class="bubble">' + escapeHtml(message.text) +
+          '<span class="time">' + formatStamp(message.at) + "</span></div></div>";
       }
       const own = message.role === activeRole;
       return (
@@ -50,7 +51,8 @@ export const renderMessages = (snapshot: ChatSnapshot, activeRole: RoleId): stri
         '<div class="msg ' + (own ? "own" : "other") + '" data-msg data-role="' + message.role +
         '" data-day="' + message.day + '" data-node="' + message.nodeId + '">' +
         '<span class="avatar" style="background:' + ROLE_COLORS[message.role] + '">' + ROLE_SHORT[message.role] + "</span>" +
-        '<div class="bubble"><span class="author">' + escapeHtml(message.author) + "</span>" +
+        '<div class="bubble"><span class="author">' + escapeHtml(message.author) +
+        ' · <span data-role-label>' + ROLE_NAMES[message.role] + "</span></span>" +
         '<span class="text">' + escapeHtml(message.text) + "</span>" +
         '<span class="time">' + formatStamp(message.at) + "</span></div></div>"
       );
@@ -77,6 +79,7 @@ export const renderPhone = (input: PhoneInput): string => {
       '">SLA: ' + SLA_PHASE_TITLES[input.slaPhase] + "</span>",
     input.overridden ? '<span class="hint" data-sim>режим симуляции: роль выбрана вручную</span>' : "",
     "</div>",
+    '<p class="phone-readonly" data-readonly>Только чтение: отправка сообщений недоступна.</p>',
     '<div class="phone-body" data-messages>' + renderMessages(snapshot, input.activeRole) + "</div>",
     '<div class="phone-actions">',
     '<button data-action="prev-msg"' + (input.prevDay === "" ? " disabled" : "") + ">‹ Реплика назад</button>",
