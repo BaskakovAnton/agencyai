@@ -7,7 +7,7 @@
   --color-text-muted: #475569;
   --color-border: #dce3ec;
   --color-primary: #2563eb;
-  --color-primary-soft: #e8effd;
+  --color-primary-soft: #eaf1ff;
   --color-primary-strong: #1d4ed8;
   --avatar-text: #ffffff;
   --bar-text: #ffffff;
@@ -27,9 +27,16 @@
   --color-danger: #c63838;
   --color-info: #2563a6;
   --radius: 10px;
-  --radius-lg: 14px;
-  --shadow: 0 1px 2px rgba(16, 24, 40, .06), 0 1px 3px rgba(16, 24, 40, .08);
-  --font: 14px/1.5 "Segoe UI", system-ui, -apple-system, sans-serif;
+  --radius-lg: 13px;
+  --shadow: 0 1px 2px rgba(16, 24, 40, .035), 0 8px 24px rgba(16, 24, 40, .035);
+  --font: 14px/1.48 Inter, "Segoe UI", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --color-subtle: #78869a;
+  --color-surface-blue: #eff5ff;
+  --color-line-2: #e9eef4;
+  --color-neutral-bg: #eef2f7;
+  --color-success-bg: #e9f7f0;
+  --color-warning-bg: #fff5df;
+  --color-danger-bg: #fff0ef;
 
   /* совместимые имена: ими пользуются компонентные стили */
   --bg: var(--color-bg);
