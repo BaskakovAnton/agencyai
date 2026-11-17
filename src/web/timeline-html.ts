@@ -74,7 +74,6 @@ export const renderControls = (input: TimelinePageInput): string =>
 export const renderTimelineHeader = (input: TimelinePageInput): string =>
   [
     '<header class="top">',
-    '<h1 class="brand">Хронология заявок · Git-граф</h1>',
     renderStats(input),
     renderControls(input),
     "</header>",

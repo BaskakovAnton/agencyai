@@ -11,10 +11,13 @@ const vps = [
   { name: "390", width: 390, height: 844 },
 ] as const;
 const appPages = [
-  { name: "model", hash: "#" },
+  { name: "dashboard", hash: "#dashboard" },
+  { name: "incidents", hash: "#incidents" },
+  { name: "incident", hash: "#incident/" + encodeURIComponent("З-015") + "?at=2026-01-02" },
   { name: "timeline-git", hash: "#timeline?at=2026-01-02&view=git" },
   { name: "timeline-gantt", hash: "#timeline?at=2026-01-02&view=gantt" },
   { name: "chat", hash: "#chat/" + encodeURIComponent("З-015") + "?at=2026-01-02" },
+  { name: "model", hash: "#model" },
 ];
 const refPages = ["index", "overview", "incidents", "incident-detail", "timeline-git", "timeline-gantt", "chat", "model"];
 
@@ -32,8 +35,9 @@ for (const vp of vps) {
   }
   await page.close();
 }
+const withRefs = process.argv.includes("refs");
 const refViewports = [{ name: "1440", width: 1440, height: 1000 }, { name: "390", width: 390, height: 844 }] as const;
-for (const vp of refViewports) {
+for (const vp of withRefs ? refViewports : []) {
   const page = await browser.newPage({ viewport: { width: vp.width, height: vp.height } });
   for (const name of refPages) {
     await page.goto(refs + name + ".html", { waitUntil: "load" });

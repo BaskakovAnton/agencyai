@@ -151,7 +151,7 @@ const run = async (): Promise<void> => {
     }
     await go("#timeline?at=2026-01-02&view=gantt", "gantt");
     await go("#chat/З-015?at=2026-01-02", "chat", 600);
-    await go("#", "model", 600);
+    await go("#model", "model", 600);
     await page.goto(base + "#timeline?at=2026-01-02", { waitUntil: "domcontentloaded" });
     await page.waitForTimeout(800);
     await page.locator("[data-commit]").first().focus();
