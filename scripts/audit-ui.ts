@@ -99,11 +99,15 @@ const auditPage = async (page: Page, name: string, viewport: string): Promise<Fi
       if (s.display === "none" || s.visibility === "hidden" || s.opacity === "0") continue;
       let bg = "rgba(0, 0, 0, 0)";
       let node: Element | null = el;
+      let gradient = false;
       while (node) {
         const cs = getComputedStyle(node);
+        if (cs.backgroundImage !== "none") { gradient = true; break; }
         if (cs.backgroundColor !== "rgba(0, 0, 0, 0)") { bg = cs.backgroundColor; break; }
         node = node.parentElement;
       }
+      // градиентный фон эвристикой не считается — контраст на нём проверяет axe
+      if (gradient) continue;
       const size = Number.parseFloat(s.fontSize);
       const large = size >= 18.66 || (size >= 14 && Number(s.fontWeight) >= 700);
       const r = ratio(rgba(s.color), rgba(bg));
