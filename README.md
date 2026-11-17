@@ -10,7 +10,7 @@
 
 **Редизайн (17.11.2026):** пройдены этапы 0–4 по [docs/redesign-plan.md](docs/redesign-plan.md) —
 светлая тема, App Shell, «Обзор», «Обращения», карточка обращения, обновлённые хронология, Гант,
-переписка и модель. Итог: [docs/redesign-final-report.md](docs/redesign-final-report.md); приёмка макетов — [docs/visual-acceptance.md](docs/visual-acceptance.md).
+переписка и модель. Итог: [docs/redesign-final-report.md](docs/redesign-final-report.md); приёмка макетов — [docs/visual-acceptance.md](docs/visual-acceptance.md). Стиль **DarkStore** (тёмный сайдбар, зелёный акцент, состав «Обзора» по эталону) — [docs/forest-style-report.md](docs/forest-style-report.md).
 
 ## Структура
 
