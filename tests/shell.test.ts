@@ -1,6 +1,5 @@
 import { expect, test } from "bun:test";
 import { NAV_ITEMS, renderNav } from "../src/web/nav.ts";
-import { renderPlaceholder } from "../src/web/placeholder.ts";
 import { parseRoute } from "../src/web/router.ts";
 import { renderShell } from "../src/web/shell.ts";
 
@@ -30,12 +29,4 @@ test("навигация: пять разделов и активный пунк
   expect(html).toContain('href="#model"');
   expect(html).toContain('data-nav="timeline"');
   expect(html).toContain('aria-current="page"');
-});
-
-test("заглушка честно сообщает, что экран ещё не готов", () => {
-  const html = renderPlaceholder(parseRoute("#incidents"));
-  expect(html).toContain("data-placeholder");
-  expect(html).toContain("Этап");
-  expect(html).toContain("#timeline");
-  expect(html).toContain("#model");
 });

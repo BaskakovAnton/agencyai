@@ -50,6 +50,27 @@
       "detail": "H1: Обращения"
     },
     {
+      "page": "incident",
+      "viewport": "desktop",
+      "kind": "tap-targets",
+      "count": 12,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
+    },
+    {
+      "page": "incident",
+      "viewport": "desktop",
+      "kind": "fonts-small",
+      "count": 3,
+      "detail": "текста мельче 12px: 3"
+    },
+    {
+      "page": "incident",
+      "viewport": "desktop",
+      "kind": "headings",
+      "count": 6,
+      "detail": "H1: Обращение З-015 | H2: Текущий этап | H2: SLA | H2: История переходов | H2: Следующий шаг | H2: Связанные представления"
+    },
+    {
       "page": "timeline",
       "viewport": "desktop",
       "kind": "tap-targets",
@@ -274,6 +295,27 @@
       "kind": "headings",
       "count": 1,
       "detail": "H1: Обращения"
+    },
+    {
+      "page": "incident",
+      "viewport": "tablet",
+      "kind": "tap-targets",
+      "count": 12,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
+    },
+    {
+      "page": "incident",
+      "viewport": "tablet",
+      "kind": "fonts-small",
+      "count": 3,
+      "detail": "текста мельче 12px: 3"
+    },
+    {
+      "page": "incident",
+      "viewport": "tablet",
+      "kind": "headings",
+      "count": 6,
+      "detail": "H1: Обращение З-015 | H2: Текущий этап | H2: SLA | H2: История переходов | H2: Следующий шаг | H2: Связанные представления"
     },
     {
       "page": "timeline",
@@ -502,6 +544,27 @@
       "detail": "H1: Обращения"
     },
     {
+      "page": "incident",
+      "viewport": "mobile",
+      "kind": "tap-targets",
+      "count": 8,
+      "detail": "К содержанию 95x21 | ☰ 36x34 | Тёмная тема 99x34 | 20 декабря 2025\n21 дек 125x19 | Хронология на эту дату 150x19"
+    },
+    {
+      "page": "incident",
+      "viewport": "mobile",
+      "kind": "fonts-small",
+      "count": 3,
+      "detail": "текста мельче 12px: 3"
+    },
+    {
+      "page": "incident",
+      "viewport": "mobile",
+      "kind": "headings",
+      "count": 6,
+      "detail": "H1: Обращение З-015 | H2: Текущий этап | H2: SLA | H2: История переходов | H2: Следующий шаг | H2: Связанные представления"
+    },
+    {
       "page": "timeline",
       "viewport": "mobile",
       "kind": "tap-targets",
@@ -688,6 +751,7 @@
   "shots": [
     "docs/screenshots/audit/desktop-dashboard.png",
     "docs/screenshots/audit/desktop-incidents.png",
+    "docs/screenshots/audit/desktop-incident.png",
     "docs/screenshots/audit/desktop-timeline.png",
     "docs/screenshots/audit/desktop-timeline-card.png",
     "docs/screenshots/audit/desktop-gantt.png",
@@ -695,6 +759,7 @@
     "docs/screenshots/audit/desktop-model.png",
     "docs/screenshots/audit/tablet-dashboard.png",
     "docs/screenshots/audit/tablet-incidents.png",
+    "docs/screenshots/audit/tablet-incident.png",
     "docs/screenshots/audit/tablet-timeline.png",
     "docs/screenshots/audit/tablet-timeline-card.png",
     "docs/screenshots/audit/tablet-gantt.png",
@@ -702,6 +767,7 @@
     "docs/screenshots/audit/tablet-model.png",
     "docs/screenshots/audit/mobile-dashboard.png",
     "docs/screenshots/audit/mobile-incidents.png",
+    "docs/screenshots/audit/mobile-incident.png",
     "docs/screenshots/audit/mobile-timeline.png",
     "docs/screenshots/audit/mobile-timeline-card.png",
     "docs/screenshots/audit/mobile-gantt.png",

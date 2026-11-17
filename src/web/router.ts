@@ -3,9 +3,9 @@ import type { Story } from "../core/story.ts";
 import type { Graph } from "../types.ts";
 import { mountChat } from "./chat-view.ts";
 import { mountDashboard } from "./dashboard-view.ts";
+import { mountIncident } from "./incident-view.ts";
 import { mountIncidents } from "./incidents-view.ts";
 import { mountModel } from "./model-view.ts";
-import { renderPlaceholder } from "./placeholder.ts";
 import { bindShell, initTheme, renderShell } from "./shell.ts";
 import { mountTimeline } from "./timeline-view.ts";
 
@@ -73,7 +73,7 @@ export const mountRouter = (graph: Graph, story: Story): void => {
     else if (route.name === "model") mountModel(view, graph);
     else if (route.name === "dashboard") mountDashboard(view, graph, story, route);
     else if (route.name === "incidents") mountIncidents(view, graph, story, route);
-    else view.innerHTML = renderPlaceholder(route);
+    else mountIncident(view, graph, story, route);
   };
   window.addEventListener("hashchange", apply);
   apply();
