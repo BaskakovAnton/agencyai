@@ -23,7 +23,7 @@ test("полосы несут узел, даты и цвет роли", () => {
   expect(html).toContain('data-node="U6"');
   expect(html).toContain('data-from="2026-01-01"');
   expect(html).toContain('data-to="2026-01-02"');
-  expect(html).toContain("#4da3ff"); // цвет роли депутата на полосе U6
+  expect(html).toContain("var(--role-deputy)"); // цвет роли депутата на полосе U6
 });
 
 test("строки Ганта — кнопки с клавиатурным фокусом и подписью", () => {

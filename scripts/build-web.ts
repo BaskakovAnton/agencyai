@@ -38,12 +38,21 @@ export const buildWeb = async (options: BuildOptions): Promise<readonly string[]
   const bundlePath = join(outDir, "app.js");
   await writeFile(bundlePath, await artifact.text(), "utf8");
 
-  const pagePath = join(outDir, "index.html");
-  const stylePath = join(outDir, "style.css");
-  await copyFile("src/web/index.html", pagePath);
-  await copyFile("src/web/style.css", stylePath);
+  const assets: readonly (readonly [string, string])[] = [
+    ["src/web/index.html", "index.html"],
+    ["src/web/tokens.css", "tokens.css"],
+    ["src/web/shell.css", "shell.css"],
+    ["src/web/screens.css", "screens.css"],
+    ["src/web/style.css", "style.css"],
+  ];
+  const copied = [bundlePath];
+  for (const [from, to] of assets) {
+    const target = join(outDir, to);
+    await copyFile(from, target);
+    copied.push(target);
+  }
 
-  return [bundlePath, pagePath, stylePath];
+  return copied;
 };
 
 if (import.meta.main) {

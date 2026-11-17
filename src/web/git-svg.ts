@@ -89,7 +89,7 @@ export const renderGitSvg = (model: GitModel, filter = "", options: GitSvgOption
       return (
         '<polyline class="link' + (to.isHero ? " hero" : "") + '" data-sla="' + to.slaPhase +
         '" points="' + x1 + "," + y1 + " " + x2 + "," + y1 + " " + x2 + "," + y2 +
-        '" stroke="' + SLA_COLORS[to.slaPhase] + '"></polyline>'
+        '" style="stroke:' + SLA_COLORS[to.slaPhase] + '"></polyline>'
       );
     })
     .join("");
@@ -110,16 +110,16 @@ export const renderGitSvg = (model: GitModel, filter = "", options: GitSvgOption
         '" data-text="' + escapeHtml(commit.text) + '" tabindex="0" role="button" aria-label="' + escapeHtml(label) + '"';
       const forkMark = commit.isFork
         ? '<polygon class="fork" points="' + (cx - 5) + "," + (cy - 16) + " " + cx + "," + (cy - 22) + " " +
-          (cx + 5) + "," + (cy - 16) + " " + cx + "," + (cy - 10) + '" fill="#4da3ff"></polygon>'
+          (cx + 5) + "," + (cy - 16) + " " + cx + "," + (cy - 10) + '" style="fill:var(--color-primary)"></polygon>'
         : "";
       const mergeMark = commit.isMerge
         ? '<polygon class="merge" points="' + (cx - 5) + "," + (cy + 16) + " " + cx + "," + (cy + 22) + " " +
-          (cx + 5) + "," + (cy + 16) + " " + cx + "," + (cy + 10) + '" fill="#f472b6"></polygon>'
+          (cx + 5) + "," + (cy + 16) + " " + cx + "," + (cy + 10) + '" style="fill:var(--role-observer)"></polygon>'
         : "";
       return (
         '<g class="commit' + (commit.isHero ? " hero" : "") + '" ' + attributes + ">" +
         '<rect class="hit" x="' + (cx - 9) + '" y="' + (cy - 8) + '" width="18" height="16" fill="transparent"></rect>' +
-        '<circle cx="' + cx + '" cy="' + cy + '" r="6" fill="' + SLA_COLORS[commit.slaPhase] + '"></circle>' +
+        '<circle cx="' + cx + '" cy="' + cy + '" r="6" style="fill:' + SLA_COLORS[commit.slaPhase] + '"></circle>' +
         forkMark + mergeMark +
         "</g>" +
         '<text class="dot-label' + (commit.isHero ? " hero" : "") + '" x="' + (cx + 9) + '" y="' + (cy + 4) + '">' +

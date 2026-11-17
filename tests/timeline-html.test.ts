@@ -5,10 +5,12 @@ import { buildStory } from "../src/core/story.ts";
 import { buildProcessGraph } from "../src/data/edges.ts";
 import {
   renderCanvas,
+  renderControls,
   renderLegends,
   renderTimeRuler,
   renderTimelineFooter,
   renderTimelineHeader,
+  renderTimelinePage,
   type TimelinePageInput,
 } from "../src/web/timeline-html.ts";
 
@@ -54,6 +56,23 @@ test("канвас, ползунок и футер доступны и объя�
   const footer = renderTimelineFooter();
   expect(footer).toContain("карточк");
   expect(footer).not.toContain("открывает мобильный чат");
+});
+
+test("панель управления: переключатель вида, плотность и всегда видимый сброс", () => {
+  const controls = renderControls(input);
+  expect(controls).toContain("data-view-switch");
+  expect(controls).toContain("data-density-switch");
+  expect(controls).toContain('data-density="compact"');
+  expect(controls).toContain('data-action="clear"');
+  expect(controls).toContain("disabled");
+  const filtered = renderControls({ ...input, filter: "З-015" });
+  expect(filtered).not.toContain("disabled");
+});
+
+test("страница подсказывает про горизонтальную прокрутку и клавиатуру", () => {
+  const page = renderTimelinePage(input);
+  expect(page).toContain("data-scroll-hint");
+  expect(page).toContain("клавиатур");
 });
 
 test("легенды объясняют цвета SLA и значки развилок и слияний", () => {

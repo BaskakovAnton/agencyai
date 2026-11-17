@@ -1,5 +1,5 @@
 import { buildSummary } from "../core/report.ts";
-import { ROLE_IDS, ROLE_NAMES } from "../data/roles.ts";
+import { GROUP_TITLES, ROLE_IDS, ROLE_NAMES } from "../data/roles.ts";
 import { renderList, renderSelected } from "./card.ts";
 import type { WebState } from "./session.ts";
 
@@ -19,7 +19,6 @@ export const renderPage = (state: WebState, message: string): string => {
   const summary = buildSummary(state.graph, state.session, "");
   return [
     '<header class="top">',
-    '<h1 class="brand">agencyai · модель процессов</h1>',
     '<div class="stats">узлов ' + state.graph.order.length + " · заявок " + summary.total + " · переходов " + summary.moves + " · дошло до конца " + summary.finished + "</div>",
     '<div class="stats">SLA: в срок ' + summary.slaOnTrack + " · просрочено " + summary.slaOverdue + " · на паузе " + summary.slaPaused + " · эскалировано " + summary.slaEscalated + " · время " + (state.session.clock ?? 0) + " ч</div>",
     '<div class="controls">' +
@@ -29,7 +28,10 @@ export const renderPage = (state: WebState, message: string): string => {
       "</div>",
     "</header>",
     '<div class="rolebar"><span class="hint">Оператор:</span> <b>' + esc(ROLE_NAMES[state.session.role]) + "</b> " + roleSwitch(state) + "</div>",
-    message ? '<p class="msg">' + esc(message) + "</p>" : "",
+    '<div class="group-legend" data-group-legend>' +
+      Object.entries(GROUP_TITLES).map(([id, title]) => '<span class="chip" data-group="' + id + '">' + title + "</span>").join("") +
+    "</div>",
+    message ? '<p class="notice">' + esc(message) + "</p>" : "",
     '<main class="cols"><section class="list">' + renderList(state) + '</section><aside class="side">' + renderSelected(state) + "</aside></main>",
     '<footer class="foot">Вся логика — в этом бандле: ядро модели, данные узлов, права ролей и переходы. Без сети и сервера.</footer>',
   ].join("");

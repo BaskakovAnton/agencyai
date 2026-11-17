@@ -23,9 +23,18 @@ beforeAll(async () => {
 
 test("сборка создаёт страницу, стили и бандл", async () => {
   const css = await readFile(join(outDir, "style.css"), "utf8");
+  const tokens = await readFile(join(outDir, "tokens.css"), "utf8");
+  const shell = await readFile(join(outDir, "shell.css"), "utf8");
+  const screens = await readFile(join(outDir, "screens.css"), "utf8");
   expect(bundle.length).toBeGreaterThan(5000);
   expect(css.length).toBeGreaterThan(100);
+  expect(tokens.length).toBeGreaterThan(100);
+  expect(shell.length).toBeGreaterThan(100);
+  expect(screens.length).toBeGreaterThan(100);
   expect(page).toContain("./app.js");
+  expect(page).toContain("./tokens.css");
+  expect(page).toContain("./shell.css");
+  expect(page).toContain("./screens.css");
   expect(page).toContain("./style.css");
 });
 
@@ -39,7 +48,9 @@ test("бандл самодостаточен: ничего не загружа�
 });
 
 test("в бандл попали оба экрана: Git-граф и мобильный чат", () => {
-  expect(bundle).toContain("Хронология заявок");
+  expect(bundle).toContain("Хронология");
+  expect(bundle).toContain("Обзор");
+  expect(bundle).toContain("Обращения");
   expect(bundle).toContain("Диаграмма Ганта");
   expect(bundle).toContain("Перемотка времени");
   expect(bundle).toContain("Переписка на");
@@ -120,13 +131,25 @@ test("страница рендерит 30 заявок с кнопками пе
   expect(html).toContain("Заявки");
   expect(html.match(/class="row(?:"| on)/g)?.length).toBe(30);
   expect(html).toContain('data-action="forward"');
-  expect(html).toContain('<h1 class="brand">');
+  expect(html).not.toContain('class="brand"'); // заголовок и бренд теперь в оболочке
   expect(html.match(/data-action="select"/g)?.length).toBe(30);
   expect(html.match(/class="row-main"/g)?.length).toBe(30);
   expect(html).toContain("Массовый шаг вперёд");
   const moved = mod.applyAction(state, { kind: "forward", ref: "5" });
   expect(moved.state.session.step).toBe(1);
   expect(moved.message).toContain("З-005");
+});
+
+test("экран модели: матрица прав из 7 ролей и легенда групп узлов", async () => {
+  const mod = (await import(pathToFileURL(join(outDir, "app.js")).href)) as Record<string, any>;
+  const graph = mod.buildProcessGraph(mod.NODES);
+  const state = mod.createState(graph, 7);
+  const selected = { ...state, selected: state.session.incidents[0].id };
+  const html = mod.renderPage(selected, "");
+  expect(html).toContain("data-roles-matrix");
+  expect((html.match(/data-role-row=/g) ?? []).length).toBe(7);
+  expect(html).toContain("data-group-legend");
+  expect((html.match(/data-group=/g) ?? []).length).toBe(6);
 });
 
 test("карточка на узле с развилкой показывает варианты с процентами", async () => {

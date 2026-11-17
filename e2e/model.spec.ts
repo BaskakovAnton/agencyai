@@ -2,8 +2,8 @@ import { expect, test } from "@playwright/test";
 
 test.describe("Экран «Модель процессов»", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/#");
-    await expect(page.locator(".brand")).toContainText("модель процессов");
+    await page.goto("/#model");
+    await expect(page.locator(".page-title")).toContainText("Модель процесса");
   });
 
   test("список 30 заявок и приглашение выбрать", async ({ page }) => {
@@ -74,6 +74,6 @@ test.describe("Экран «Модель процессов»", () => {
     await page.locator('[data-action="select"][data-ref="З-030"]').click();
     await expect(page.locator(".side")).toContainText("U30");
     await page.locator('.side [data-action="forward"]').first().click();
-    await expect(page.locator(".msg")).toContainText("нет доступных переходов");
+    await expect(page.locator(".notice")).toContainText("нет доступных переходов");
   });
 });
