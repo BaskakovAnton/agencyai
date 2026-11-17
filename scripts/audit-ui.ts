@@ -8,8 +8,10 @@ const outDir = "docs/screenshots/audit";
 const require = createRequire(import.meta.url);
 const axePath = require.resolve("axe-core/axe.min.js");
 const viewports = [
+  { name: "wide", width: 1920, height: 1080 },
   { name: "desktop", width: 1440, height: 950 },
   { name: "tablet", width: 1024, height: 768 },
+  { name: "portrait", width: 768, height: 1024 },
   { name: "mobile", width: 390, height: 844 },
 ] as const;
 

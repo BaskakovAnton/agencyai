@@ -42,6 +42,9 @@ if (ready) {
   if ((await page.locator("[data-ruler-hour]").count()) !== 24) problems.push("на шкале не 24 часа");
   if ((await page.locator("[data-legends]").count()) === 0) problems.push("нет легенд SLA и развилок");
   if ((await page.locator("[data-legend-sla]").count()) !== 4) problems.push("в легенде SLA не 4 фазы");
+  if ((await page.locator("[data-scroll-hint]").count()) === 0) problems.push("нет подсказки про прокрутку");
+  if ((await page.locator('[data-action="clear"]').count()) !== 1) problems.push("нет всегда видимого сброса фильтра");
+  if ((await page.locator("[data-density-switch]").count()) === 0) problems.push("нет переключателя плотности");
 
   const day5 = page.locator('[data-ruler-day="2026-01-05"]');
   if ((await day5.count()) === 0) problems.push("на шкале нет дня 5 января");
@@ -87,6 +90,29 @@ if (ready) {
   if (!text.includes("Назначаю подрядчика")) problems.push("нет реплики диспетчера на 2 января");
   if (!text.includes("Заявка передана в работу диспетчеру")) problems.push("нет системного сообщения о передаче");
   if (text.includes("Принято, выезжаю")) problems.push("на 2 января видна будущая реплика подрядчика");
+  if ((await page.locator("[data-readonly]").count()) === 0) problems.push("в чате нет плашки «только чтение»");
+
+  await page.goto(base + "?v=" + Date.now() + "#dashboard?at=2026-01-02");
+  await page.waitForSelector("[data-dashboard]");
+  if ((await page.locator("[data-kpi]").count()) !== 4) problems.push("на обзоре не 4 KPI");
+  const total = Number(((await page.locator('[data-kpi="total"] b').innerText()) ?? "0").trim());
+  if (!(total > 0)) problems.push("на обзоре нет заявок в срезе");
+
+  await page.goto(base + "?v=" + Date.now() + "#incidents");
+  await page.waitForSelector("[data-incidents-table]");
+  const rows = await page.locator("[data-incident-row]").count();
+  if (rows !== 30) problems.push("в реестре обращений не 30 строк: " + rows);
+
+  await page.goto(base + "?v=" + Date.now() + "#incident/" + encodeURIComponent("З-015") + "?at=2026-01-02");
+  await page.waitForSelector("[data-incident-detail]");
+  if ((await page.locator("[data-history-row]").count()) === 0) problems.push("в карточке обращения нет истории");
+
+  await page.goto(base + "?v=" + Date.now() + "#model");
+  await page.waitForSelector('[data-action="select"]');
+  await page.locator('[data-action="select"]').first().click();
+  await page.waitForTimeout(200);
+  if ((await page.locator("[data-role-row]").count()) !== 7) problems.push("в матрице прав не 7 ролей");
+  if ((await page.locator("[data-group]").count()) !== 6) problems.push("в легенде не 6 групп узлов");
 }
 
 await browser.close();
