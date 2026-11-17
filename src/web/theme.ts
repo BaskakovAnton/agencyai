@@ -3,13 +3,13 @@ import type { RoleId } from "../types.ts";
 
 /** Цвет роли — им окрашены полосы Ганта и пузыри чата. */
 export const ROLE_COLORS: Readonly<Record<RoleId, string>> = {
-  resident: "#6fd28a",
-  deputy: "#4da3ff",
-  assistant: "#a78bfa",
-  contractor: "#ffc14d",
-  system: "#7c8794",
-  observer: "#f472b6",
-  auditor: "#2dd4bf",
+  resident: "var(--role-resident)",
+  deputy: "var(--role-deputy)",
+  assistant: "var(--role-assistant)",
+  contractor: "var(--role-contractor)",
+  system: "var(--role-system)",
+  observer: "var(--role-observer)",
+  auditor: "var(--role-auditor)",
 };
 
 /** Инициалы роли для аватара в чате. */
@@ -25,10 +25,10 @@ export const ROLE_SHORT: Readonly<Record<RoleId, string>> = {
 
 /** Цвет статуса SLA — им окрашены ветки Git-графа: 🟢 в срок, 🔴 вне SLA, 🟡 на паузе. */
 export const SLA_COLORS: Readonly<Record<SlaPhase, string>> = {
-  ok: "#6fd28a",
-  overdue: "#ff5c5c",
-  paused: "#ffc14d",
-  none: "#7c8794",
+  ok: "var(--sla-ok)",
+  overdue: "var(--sla-overdue)",
+  paused: "var(--sla-paused)",
+  none: "var(--sla-none)",
 };
 
 /** Значки развилки и слияния на графе. */

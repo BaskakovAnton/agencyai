@@ -1,0 +1,74 @@
+/* Токены дизайн-системы: светлая тема — основная, тёмная — опция. */
+:root {
+  --color-bg: #f4f6fa;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f8fafc;
+  --color-text: #172033;
+  --color-text-muted: #475569;
+  --color-border: #dce3ec;
+  --color-primary: #2563eb;
+  --color-primary-soft: #e8effd;
+  --color-primary-strong: #1d4ed8;
+  --avatar-text: #ffffff;
+  --bar-text: #ffffff;
+  --role-resident: #15803d;
+  --role-deputy: #1d4ed8;
+  --role-assistant: #6d28d9;
+  --role-contractor: #b45309;
+  --role-system: #475569;
+  --role-observer: #be185d;
+  --role-auditor: #0f766e;
+  --sla-ok: #0f7a4a;
+  --sla-paused: #b45309;
+  --sla-overdue: #b91c1c;
+  --sla-none: #5b6675;
+  --color-success: #0f7a4a;
+  --color-warning: #a96508;
+  --color-danger: #c63838;
+  --color-info: #2563a6;
+  --radius: 10px;
+  --radius-lg: 14px;
+  --shadow: 0 1px 2px rgba(16, 24, 40, .06), 0 1px 3px rgba(16, 24, 40, .08);
+  --font: 14px/1.5 "Segoe UI", system-ui, -apple-system, sans-serif;
+
+  /* совместимые имена: ими пользуются компонентные стили */
+  --bg: var(--color-bg);
+  --panel: var(--color-surface);
+  --panel-2: var(--color-surface-muted);
+  --line: var(--color-border);
+  --text: var(--color-text);
+  --dim: var(--color-text-muted);
+  --accent: var(--color-primary);
+  --hero: #a96508;
+}
+
+[data-theme="dark"] {
+  --color-bg: #0f1115;
+  --color-surface: #171a21;
+  --color-surface-muted: #1d2129;
+  --color-text: #e7ebf2;
+  --color-text-muted: #98a2b3;
+  --color-border: #2a2f3a;
+  --color-primary: #4da3ff;
+  --color-primary-soft: #17293f;
+  --color-primary-strong: #7cc0ff;
+  --avatar-text: #0f1115;
+  --bar-text: #0f1115;
+  --role-resident: #6fd28a;
+  --role-deputy: #4da3ff;
+  --role-assistant: #a78bfa;
+  --role-contractor: #ffc14d;
+  --role-system: #7c8794;
+  --role-observer: #f472b6;
+  --role-auditor: #2dd4bf;
+  --sla-ok: #6fd28a;
+  --sla-paused: #ffc14d;
+  --sla-overdue: #ff5c5c;
+  --sla-none: #7c8794;
+  --color-success: #6fd28a;
+  --color-warning: #ffc14d;
+  --color-danger: #ff5c5c;
+  --color-info: #4da3ff;
+  --hero: #ffd166;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .4);
+}

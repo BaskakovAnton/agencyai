@@ -1,5 +1,5 @@
 import type { Incident } from "../types.ts";
-import { ACCESS_MARKS, GROUP_TITLES, PRIORITY_TITLES, ROLE_IDS, ROLE_NAMES } from "../data/roles.ts";
+import { ACCESS_MARKS, ACCESS_TITLES, GROUP_TITLES, PRIORITY_TITLES, ROLE_IDS, ROLE_NAMES } from "../data/roles.ts";
 import { branchesOf, neighborsOf } from "../core/graph.ts";
 import { roleAccess } from "../core/roles.ts";
 import { slaStatus } from "../core/sla.ts";
@@ -43,13 +43,17 @@ const nodeChip = (state: WebState, nodeId: string): string => {
   return '<span class="chip">' + nodeId + " " + esc(node ? node.title : "?") + "</span>";
 };
 
-const roleList = (state: WebState, nodeId: string): string => {
+const roleMatrix = (state: WebState, nodeId: string): string => {
   const node = state.graph.byId[nodeId];
   if (!node) return "";
-  return ROLE_IDS.map((role) => {
+  const rows = ROLE_IDS.map((role) => {
     const level = node.access[role];
-    return '<li><b class="mark">' + ACCESS_MARKS[level] + "</b> " + esc(ROLE_NAMES[role]) + " <i>" + level + "</i></li>";
+    return '<tr data-role-row="' + role + '"><td>' + esc(ROLE_NAMES[role]) + "</td>" +
+      '<td><b class="mark">' + ACCESS_MARKS[level] + "</b></td>" +
+      "<td>" + esc(ACCESS_TITLES[level]) + "</td></tr>";
   }).join("");
+  return '<table class="roles-matrix" data-roles-matrix><thead><tr><th>Роль</th><th>Доступ</th><th>Уровень</th></tr></thead><tbody>' +
+    rows + "</tbody></table>";
 };
 
 const branchLine = (state: WebState, nodeId: string): string => {
@@ -100,7 +104,7 @@ export const renderSelected = (state: WebState): string => {
     branchLine(state, incident.nodeId),
     situationBlock(incident),
     "<h3>История</h3>" + history(incident),
-    node ? '<h3>Права ролей на узле</h3><ul class="roles">' + roleList(state, incident.nodeId) + "</ul>" : "",
+    node ? "<h3>Права ролей на узле</h3>" + roleMatrix(state, incident.nodeId) : "",
   ].join("");
 };
 

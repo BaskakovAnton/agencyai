@@ -1,30 +1,347 @@
 {
   "report": [
     {
+      "page": "dashboard",
+      "viewport": "wide",
+      "kind": "tap-targets",
+      "count": 18,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
+    },
+    {
+      "page": "dashboard",
+      "viewport": "wide",
+      "kind": "fonts-small",
+      "count": 2,
+      "detail": "текста мельче 12px: 2"
+    },
+    {
+      "page": "dashboard",
+      "viewport": "wide",
+      "kind": "headings",
+      "count": 3,
+      "detail": "H1: Обзор | H2: Требуют внимания | H2: Последние события"
+    },
+    {
+      "page": "incidents",
+      "viewport": "wide",
+      "kind": "tap-targets",
+      "count": 42,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
+    },
+    {
+      "page": "incidents",
+      "viewport": "wide",
+      "kind": "unlabeled",
+      "count": 1,
+      "detail": "INPUT."
+    },
+    {
+      "page": "incidents",
+      "viewport": "wide",
+      "kind": "fonts-small",
+      "count": 58,
+      "detail": "текста мельче 12px: 58"
+    },
+    {
+      "page": "incidents",
+      "viewport": "wide",
+      "kind": "headings",
+      "count": 1,
+      "detail": "H1: Обращения"
+    },
+    {
+      "page": "incident",
+      "viewport": "wide",
+      "kind": "tap-targets",
+      "count": 12,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
+    },
+    {
+      "page": "incident",
+      "viewport": "wide",
+      "kind": "fonts-small",
+      "count": 3,
+      "detail": "текста мельче 12px: 3"
+    },
+    {
+      "page": "incident",
+      "viewport": "wide",
+      "kind": "headings",
+      "count": 6,
+      "detail": "H1: Обращение З-015 | H2: Текущий этап | H2: SLA | H2: История переходов | H2: Следующий шаг | H2: Связанные представления"
+    },
+    {
+      "page": "timeline",
+      "viewport": "wide",
+      "kind": "tap-targets",
+      "count": 159,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
+    },
+    {
+      "page": "timeline",
+      "viewport": "wide",
+      "kind": "fonts-small",
+      "count": 169,
+      "detail": "текста мельче 12px: 169"
+    },
+    {
+      "page": "timeline",
+      "viewport": "wide",
+      "kind": "canvas-scroll",
+      "detail": "canvas 1022/1438 (auto)"
+    },
+    {
+      "page": "timeline",
+      "viewport": "wide",
+      "kind": "chips-scroll",
+      "detail": "1364/1471"
+    },
+    {
+      "page": "timeline",
+      "viewport": "wide",
+      "kind": "slider-a11y",
+      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
+    },
+    {
+      "page": "timeline",
+      "viewport": "wide",
+      "kind": "commit-a11y",
+      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0"
+    },
+    {
+      "page": "timeline",
+      "viewport": "wide",
+      "kind": "headings",
+      "count": 1,
+      "detail": "H1: Хронология"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "wide",
+      "kind": "tap-targets",
+      "count": 161,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "wide",
+      "kind": "fonts-small",
+      "count": 169,
+      "detail": "текста мельче 12px: 169"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "wide",
+      "kind": "canvas-scroll",
+      "detail": "canvas 1022/1438 (auto)"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "wide",
+      "kind": "chips-scroll",
+      "detail": "1364/1471"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "wide",
+      "kind": "slider-a11y",
+      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "wide",
+      "kind": "commit-a11y",
+      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "wide",
+      "kind": "card-position",
+      "detail": "top=831px, в окне: true"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "wide",
+      "kind": "headings",
+      "count": 1,
+      "detail": "H1: Хронология"
+    },
+    {
+      "page": "gantt",
+      "viewport": "wide",
+      "kind": "tap-targets",
+      "count": 80,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
+    },
+    {
+      "page": "gantt",
+      "viewport": "wide",
+      "kind": "fonts-small",
+      "count": 139,
+      "detail": "текста мельче 12px: 139"
+    },
+    {
+      "page": "gantt",
+      "viewport": "wide",
+      "kind": "chips-scroll",
+      "detail": "1364/1471"
+    },
+    {
+      "page": "gantt",
+      "viewport": "wide",
+      "kind": "slider-a11y",
+      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
+    },
+    {
+      "page": "gantt",
+      "viewport": "wide",
+      "kind": "headings",
+      "count": 1,
+      "detail": "H1: Хронология"
+    },
+    {
+      "page": "chat",
+      "viewport": "wide",
+      "kind": "tap-targets",
+      "count": 12,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
+    },
+    {
+      "page": "chat",
+      "viewport": "wide",
+      "kind": "fonts-small",
+      "count": 14,
+      "detail": "текста мельче 12px: 14"
+    },
+    {
+      "page": "chat",
+      "viewport": "wide",
+      "kind": "headings",
+      "count": 2,
+      "detail": "H1: Переписка | H2: Что происходит"
+    },
+    {
+      "page": "model",
+      "viewport": "wide",
+      "kind": "tap-targets",
+      "count": 107,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
+    },
+    {
+      "page": "model",
+      "viewport": "wide",
+      "kind": "fonts-small",
+      "count": 62,
+      "detail": "текста мельче 12px: 62"
+    },
+    {
+      "page": "model",
+      "viewport": "wide",
+      "kind": "headings",
+      "count": 2,
+      "detail": "H1: Модель процесса | H2: Заявки (30)"
+    },
+    {
+      "page": "keyboard",
+      "viewport": "wide",
+      "kind": "enter-on-commit",
+      "detail": "карточка открылась"
+    },
+    {
+      "page": "dashboard",
+      "viewport": "desktop",
+      "kind": "tap-targets",
+      "count": 18,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
+    },
+    {
+      "page": "dashboard",
+      "viewport": "desktop",
+      "kind": "fonts-small",
+      "count": 2,
+      "detail": "текста мельче 12px: 2"
+    },
+    {
+      "page": "dashboard",
+      "viewport": "desktop",
+      "kind": "headings",
+      "count": 3,
+      "detail": "H1: Обзор | H2: Требуют внимания | H2: Последние события"
+    },
+    {
+      "page": "incidents",
+      "viewport": "desktop",
+      "kind": "tap-targets",
+      "count": 42,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
+    },
+    {
+      "page": "incidents",
+      "viewport": "desktop",
+      "kind": "unlabeled",
+      "count": 1,
+      "detail": "INPUT."
+    },
+    {
+      "page": "incidents",
+      "viewport": "desktop",
+      "kind": "fonts-small",
+      "count": 58,
+      "detail": "текста мельче 12px: 58"
+    },
+    {
+      "page": "incidents",
+      "viewport": "desktop",
+      "kind": "headings",
+      "count": 1,
+      "detail": "H1: Обращения"
+    },
+    {
+      "page": "incident",
+      "viewport": "desktop",
+      "kind": "tap-targets",
+      "count": 12,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
+    },
+    {
+      "page": "incident",
+      "viewport": "desktop",
+      "kind": "fonts-small",
+      "count": 3,
+      "detail": "текста мельче 12px: 3"
+    },
+    {
+      "page": "incident",
+      "viewport": "desktop",
+      "kind": "headings",
+      "count": 6,
+      "detail": "H1: Обращение З-015 | H2: Текущий этап | H2: SLA | H2: История переходов | H2: Следующий шаг | H2: Связанные представления"
+    },
+    {
       "page": "timeline",
       "viewport": "desktop",
       "kind": "tap-targets",
-      "count": 152,
-      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | Git-граф 74x33 | Диаграмма Ганта 127x33"
+      "count": 159,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
     },
     {
       "page": "timeline",
       "viewport": "desktop",
       "kind": "fonts-small",
-      "count": 167,
-      "detail": "текста мельче 12px: 167"
+      "count": 169,
+      "detail": "текста мельче 12px: 169"
     },
     {
       "page": "timeline",
       "viewport": "desktop",
       "kind": "canvas-scroll",
-      "detail": "canvas 1082/1438 (auto)"
+      "detail": "canvas 812/1438 (auto)"
     },
     {
       "page": "timeline",
       "viewport": "desktop",
       "kind": "chips-scroll",
-      "detail": "1440/1503"
+      "detail": "1154/1471"
     },
     {
       "page": "timeline",
@@ -43,342 +360,729 @@
       "viewport": "desktop",
       "kind": "headings",
       "count": 1,
-      "detail": "H1: Хронология заявок · Git-граф"
+      "detail": "H1: Хронология"
     },
     {
       "page": "timeline-card",
       "viewport": "desktop",
+      "kind": "tap-targets",
+      "count": 161,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "desktop",
+      "kind": "fonts-small",
+      "count": 169,
+      "detail": "текста мельче 12px: 169"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "desktop",
+      "kind": "canvas-scroll",
+      "detail": "canvas 812/1438 (auto)"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "desktop",
+      "kind": "chips-scroll",
+      "detail": "1154/1471"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "desktop",
+      "kind": "slider-a11y",
+      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "desktop",
+      "kind": "commit-a11y",
+      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "desktop",
+      "kind": "card-position",
+      "detail": "top=701px, в окне: true"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "desktop",
+      "kind": "headings",
+      "count": 1,
+      "detail": "H1: Хронология"
+    },
+    {
+      "page": "gantt",
+      "viewport": "desktop",
+      "kind": "tap-targets",
+      "count": 80,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
+    },
+    {
+      "page": "gantt",
+      "viewport": "desktop",
+      "kind": "fonts-small",
+      "count": 139,
+      "detail": "текста мельче 12px: 139"
+    },
+    {
+      "page": "gantt",
+      "viewport": "desktop",
+      "kind": "chips-scroll",
+      "detail": "1154/1471"
+    },
+    {
+      "page": "gantt",
+      "viewport": "desktop",
+      "kind": "slider-a11y",
+      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
+    },
+    {
+      "page": "gantt",
+      "viewport": "desktop",
+      "kind": "headings",
+      "count": 1,
+      "detail": "H1: Хронология"
+    },
+    {
+      "page": "chat",
+      "viewport": "desktop",
+      "kind": "tap-targets",
+      "count": 12,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
+    },
+    {
+      "page": "chat",
+      "viewport": "desktop",
+      "kind": "fonts-small",
+      "count": 14,
+      "detail": "текста мельче 12px: 14"
+    },
+    {
+      "page": "chat",
+      "viewport": "desktop",
+      "kind": "headings",
+      "count": 2,
+      "detail": "H1: Переписка | H2: Что происходит"
+    },
+    {
+      "page": "model",
+      "viewport": "desktop",
+      "kind": "tap-targets",
+      "count": 107,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
+    },
+    {
+      "page": "model",
+      "viewport": "desktop",
+      "kind": "fonts-small",
+      "count": 62,
+      "detail": "текста мельче 12px: 62"
+    },
+    {
+      "page": "model",
+      "viewport": "desktop",
+      "kind": "headings",
+      "count": 2,
+      "detail": "H1: Модель процесса | H2: Заявки (30)"
+    },
+    {
+      "page": "keyboard",
+      "viewport": "desktop",
+      "kind": "enter-on-commit",
+      "detail": "карточка открылась"
+    },
+    {
+      "page": "dashboard",
+      "viewport": "tablet",
+      "kind": "tap-targets",
+      "count": 18,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
+    },
+    {
+      "page": "dashboard",
+      "viewport": "tablet",
+      "kind": "fonts-small",
+      "count": 2,
+      "detail": "текста мельче 12px: 2"
+    },
+    {
+      "page": "dashboard",
+      "viewport": "tablet",
+      "kind": "headings",
+      "count": 3,
+      "detail": "H1: Обзор | H2: Требуют внимания | H2: Последние события"
+    },
+    {
+      "page": "incidents",
+      "viewport": "tablet",
+      "kind": "tap-targets",
+      "count": 42,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
+    },
+    {
+      "page": "incidents",
+      "viewport": "tablet",
+      "kind": "unlabeled",
+      "count": 1,
+      "detail": "INPUT."
+    },
+    {
+      "page": "incidents",
+      "viewport": "tablet",
+      "kind": "fonts-small",
+      "count": 58,
+      "detail": "текста мельче 12px: 58"
+    },
+    {
+      "page": "incidents",
+      "viewport": "tablet",
+      "kind": "headings",
+      "count": 1,
+      "detail": "H1: Обращения"
+    },
+    {
+      "page": "incident",
+      "viewport": "tablet",
+      "kind": "tap-targets",
+      "count": 12,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
+    },
+    {
+      "page": "incident",
+      "viewport": "tablet",
+      "kind": "fonts-small",
+      "count": 3,
+      "detail": "текста мельче 12px: 3"
+    },
+    {
+      "page": "incident",
+      "viewport": "tablet",
+      "kind": "headings",
+      "count": 6,
+      "detail": "H1: Обращение З-015 | H2: Текущий этап | H2: SLA | H2: История переходов | H2: Следующий шаг | H2: Связанные представления"
+    },
+    {
+      "page": "timeline",
+      "viewport": "tablet",
+      "kind": "tap-targets",
+      "count": 158,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
+    },
+    {
+      "page": "timeline",
+      "viewport": "tablet",
+      "kind": "fonts-small",
+      "count": 169,
+      "detail": "текста мельче 12px: 169"
+    },
+    {
+      "page": "timeline",
+      "viewport": "tablet",
+      "kind": "canvas-scroll",
+      "detail": "canvas 736/1438 (auto)"
+    },
+    {
+      "page": "timeline",
+      "viewport": "tablet",
+      "kind": "chips-scroll",
+      "detail": "738/1471"
+    },
+    {
+      "page": "timeline",
+      "viewport": "tablet",
+      "kind": "slider-a11y",
+      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
+    },
+    {
+      "page": "timeline",
+      "viewport": "tablet",
+      "kind": "commit-a11y",
+      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0"
+    },
+    {
+      "page": "timeline",
+      "viewport": "tablet",
+      "kind": "headings",
+      "count": 1,
+      "detail": "H1: Хронология"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "tablet",
+      "kind": "tap-targets",
+      "count": 160,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "tablet",
+      "kind": "fonts-small",
+      "count": 169,
+      "detail": "текста мельче 12px: 169"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "tablet",
+      "kind": "canvas-scroll",
+      "detail": "canvas 736/1438 (auto)"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "tablet",
+      "kind": "chips-scroll",
+      "detail": "738/1471"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "tablet",
+      "kind": "slider-a11y",
+      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "tablet",
+      "kind": "commit-a11y",
+      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "tablet",
+      "kind": "card-position",
+      "detail": "top=427px, в окне: true"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "tablet",
+      "kind": "headings",
+      "count": 1,
+      "detail": "H1: Хронология"
+    },
+    {
+      "page": "gantt",
+      "viewport": "tablet",
+      "kind": "tap-targets",
+      "count": 79,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
+    },
+    {
+      "page": "gantt",
+      "viewport": "tablet",
+      "kind": "fonts-small",
+      "count": 139,
+      "detail": "текста мельче 12px: 139"
+    },
+    {
+      "page": "gantt",
+      "viewport": "tablet",
+      "kind": "chips-scroll",
+      "detail": "738/1471"
+    },
+    {
+      "page": "gantt",
+      "viewport": "tablet",
+      "kind": "slider-a11y",
+      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
+    },
+    {
+      "page": "gantt",
+      "viewport": "tablet",
+      "kind": "headings",
+      "count": 1,
+      "detail": "H1: Хронология"
+    },
+    {
+      "page": "chat",
+      "viewport": "tablet",
+      "kind": "tap-targets",
+      "count": 12,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
+    },
+    {
+      "page": "chat",
+      "viewport": "tablet",
+      "kind": "fonts-small",
+      "count": 14,
+      "detail": "текста мельче 12px: 14"
+    },
+    {
+      "page": "chat",
+      "viewport": "tablet",
+      "kind": "headings",
+      "count": 2,
+      "detail": "H1: Переписка | H2: Что происходит"
+    },
+    {
+      "page": "model",
+      "viewport": "tablet",
+      "kind": "tap-targets",
+      "count": 107,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
+    },
+    {
+      "page": "model",
+      "viewport": "tablet",
+      "kind": "fonts-small",
+      "count": 62,
+      "detail": "текста мельче 12px: 62"
+    },
+    {
+      "page": "model",
+      "viewport": "tablet",
+      "kind": "headings",
+      "count": 2,
+      "detail": "H1: Модель процесса | H2: Заявки (30)"
+    },
+    {
+      "page": "keyboard",
+      "viewport": "tablet",
+      "kind": "enter-on-commit",
+      "detail": "карточка открылась"
+    },
+    {
+      "page": "dashboard",
+      "viewport": "portrait",
+      "kind": "tap-targets",
+      "count": 14,
+      "detail": "К содержанию 95x21 | ☰ 36x34 | Тёмная тема 99x34 | 20 декабря 2025\n21 дек 125x19 | Все обращения → 107x20"
+    },
+    {
+      "page": "dashboard",
+      "viewport": "portrait",
+      "kind": "fonts-small",
+      "count": 2,
+      "detail": "текста мельче 12px: 2"
+    },
+    {
+      "page": "dashboard",
+      "viewport": "portrait",
+      "kind": "headings",
+      "count": 3,
+      "detail": "H1: Обзор | H2: Требуют внимания | H2: Последние события"
+    },
+    {
+      "page": "incidents",
+      "viewport": "portrait",
+      "kind": "tap-targets",
+      "count": 38,
+      "detail": "К содержанию 95x21 | ☰ 36x34 | Тёмная тема 99x34 | INPUT 278x34 | любой\nавария / экстрен 160x34"
+    },
+    {
+      "page": "incidents",
+      "viewport": "portrait",
+      "kind": "unlabeled",
+      "count": 1,
+      "detail": "INPUT."
+    },
+    {
+      "page": "incidents",
+      "viewport": "portrait",
+      "kind": "fonts-small",
+      "count": 58,
+      "detail": "текста мельче 12px: 58"
+    },
+    {
+      "page": "incidents",
+      "viewport": "portrait",
+      "kind": "headings",
+      "count": 1,
+      "detail": "H1: Обращения"
+    },
+    {
+      "page": "incident",
+      "viewport": "portrait",
+      "kind": "tap-targets",
+      "count": 8,
+      "detail": "К содержанию 95x21 | ☰ 36x34 | Тёмная тема 99x34 | 20 декабря 2025\n21 дек 125x19 | Хронология на эту дату 150x19"
+    },
+    {
+      "page": "incident",
+      "viewport": "portrait",
+      "kind": "fonts-small",
+      "count": 3,
+      "detail": "текста мельче 12px: 3"
+    },
+    {
+      "page": "incident",
+      "viewport": "portrait",
+      "kind": "headings",
+      "count": 6,
+      "detail": "H1: Обращение З-015 | H2: Текущий этап | H2: SLA | H2: История переходов | H2: Следующий шаг | H2: Связанные представления"
+    },
+    {
+      "page": "timeline",
+      "viewport": "portrait",
       "kind": "tap-targets",
       "count": 154,
-      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | Git-граф 74x33 | Диаграмма Ганта 127x33"
+      "detail": "К содержанию 95x21 | ☰ 36x34 | Тёмная тема 99x34 | Git-граф 72x32 | Диаграмма Ганта 125x32"
     },
     {
-      "page": "timeline-card",
-      "viewport": "desktop",
+      "page": "timeline",
+      "viewport": "portrait",
       "kind": "fonts-small",
-      "count": 167,
-      "detail": "текста мельче 12px: 167"
+      "count": 169,
+      "detail": "текста мельче 12px: 169"
     },
     {
-      "page": "timeline-card",
-      "viewport": "desktop",
+      "page": "timeline",
+      "viewport": "portrait",
       "kind": "canvas-scroll",
-      "detail": "canvas 1082/1438 (auto)"
+      "detail": "canvas 738/1438 (auto)"
     },
     {
-      "page": "timeline-card",
-      "viewport": "desktop",
+      "page": "timeline",
+      "viewport": "portrait",
       "kind": "chips-scroll",
-      "detail": "1440/1503"
+      "detail": "740/1471"
+    },
+    {
+      "page": "timeline",
+      "viewport": "portrait",
+      "kind": "slider-a11y",
+      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
+    },
+    {
+      "page": "timeline",
+      "viewport": "portrait",
+      "kind": "commit-a11y",
+      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0"
+    },
+    {
+      "page": "timeline",
+      "viewport": "portrait",
+      "kind": "headings",
+      "count": 1,
+      "detail": "H1: Хронология"
     },
     {
       "page": "timeline-card",
-      "viewport": "desktop",
+      "viewport": "portrait",
+      "kind": "tap-targets",
+      "count": 156,
+      "detail": "К содержанию 95x21 | ☰ 36x34 | Тёмная тема 99x34 | Git-граф 72x32 | Диаграмма Ганта 125x32"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "portrait",
+      "kind": "fonts-small",
+      "count": 169,
+      "detail": "текста мельче 12px: 169"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "portrait",
+      "kind": "canvas-scroll",
+      "detail": "canvas 738/1438 (auto)"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "portrait",
+      "kind": "chips-scroll",
+      "detail": "740/1471"
+    },
+    {
+      "page": "timeline-card",
+      "viewport": "portrait",
       "kind": "slider-a11y",
       "detail": "aria-label=нет; aria-valuetext=2 января 2026"
     },
     {
       "page": "timeline-card",
-      "viewport": "desktop",
+      "viewport": "portrait",
       "kind": "commit-a11y",
       "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0"
     },
     {
       "page": "timeline-card",
-      "viewport": "desktop",
+      "viewport": "portrait",
       "kind": "card-position",
-      "detail": "top=710px, в окне: true"
+      "detail": "top=775px, в окне: true"
     },
     {
       "page": "timeline-card",
-      "viewport": "desktop",
+      "viewport": "portrait",
       "kind": "headings",
       "count": 1,
-      "detail": "H1: Хронология заявок · Git-граф"
+      "detail": "H1: Хронология"
     },
     {
       "page": "gantt",
-      "viewport": "desktop",
+      "viewport": "portrait",
       "kind": "tap-targets",
-      "count": 73,
-      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | Git-граф 74x33 | Диаграмма Ганта 127x33"
+      "count": 75,
+      "detail": "К содержанию 95x21 | ☰ 36x34 | Тёмная тема 99x34 | Git-граф 72x32 | Диаграмма Ганта 125x32"
     },
     {
       "page": "gantt",
-      "viewport": "desktop",
+      "viewport": "portrait",
       "kind": "fonts-small",
-      "count": 137,
-      "detail": "текста мельче 12px: 137"
+      "count": 139,
+      "detail": "текста мельче 12px: 139"
     },
     {
       "page": "gantt",
-      "viewport": "desktop",
+      "viewport": "portrait",
       "kind": "chips-scroll",
-      "detail": "1440/1503"
+      "detail": "740/1471"
     },
     {
       "page": "gantt",
-      "viewport": "desktop",
+      "viewport": "portrait",
       "kind": "slider-a11y",
       "detail": "aria-label=нет; aria-valuetext=2 января 2026"
     },
     {
       "page": "gantt",
-      "viewport": "desktop",
+      "viewport": "portrait",
       "kind": "headings",
       "count": 1,
-      "detail": "H1: Хронология заявок · Git-граф"
+      "detail": "H1: Хронология"
     },
     {
       "page": "chat",
-      "viewport": "desktop",
+      "viewport": "portrait",
       "kind": "tap-targets",
       "count": 8,
-      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | ‹ Хронология 73x24 | ‹ Реплика назад 107x32"
+      "detail": "К содержанию 95x21 | ☰ 36x34 | Тёмная тема 99x34 | ‹ Хронология 73x24 | ‹ Реплика назад 107x32"
     },
     {
       "page": "chat",
-      "viewport": "desktop",
+      "viewport": "portrait",
       "kind": "fonts-small",
-      "count": 11,
-      "detail": "текста мельче 12px: 11"
+      "count": 14,
+      "detail": "текста мельче 12px: 14"
     },
     {
       "page": "chat",
-      "viewport": "desktop",
+      "viewport": "portrait",
       "kind": "headings",
       "count": 2,
-      "detail": "H1: Переписка по заявке З-015 | H2: Что происходит"
+      "detail": "H1: Переписка | H2: Что происходит"
     },
     {
       "page": "model",
-      "viewport": "desktop",
+      "viewport": "portrait",
       "kind": "tap-targets",
       "count": 103,
-      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | +4 ч 51x33 | Массовый шаг вперёд 157x33"
+      "detail": "К содержанию 95x21 | ☰ 36x34 | Тёмная тема 99x34 | +4 ч 51x34 | Массовый шаг вперёд 157x34"
     },
     {
       "page": "model",
-      "viewport": "desktop",
+      "viewport": "portrait",
       "kind": "fonts-small",
-      "count": 60,
-      "detail": "текста мельче 12px: 60"
+      "count": 62,
+      "detail": "текста мельче 12px: 62"
     },
     {
       "page": "model",
-      "viewport": "desktop",
+      "viewport": "portrait",
       "kind": "headings",
       "count": 2,
-      "detail": "H1: agencyai · модель процессов | H2: Заявки (30)"
+      "detail": "H1: Модель процесса | H2: Заявки (30)"
     },
     {
       "page": "keyboard",
-      "viewport": "desktop",
+      "viewport": "portrait",
       "kind": "enter-on-commit",
       "detail": "карточка открылась"
     },
     {
-      "page": "timeline",
-      "viewport": "tablet",
+      "page": "dashboard",
+      "viewport": "mobile",
       "kind": "tap-targets",
-      "count": 151,
-      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | Git-граф 74x33 | Диаграмма Ганта 127x33"
+      "count": 14,
+      "detail": "К содержанию 95x21 | ☰ 36x34 | Тёмная тема 99x34 | 20 декабря 2025\n21 дек 125x19 | Все обращения → 107x20"
     },
     {
-      "page": "timeline",
-      "viewport": "tablet",
+      "page": "dashboard",
+      "viewport": "mobile",
       "kind": "fonts-small",
-      "count": 167,
-      "detail": "текста мельче 12px: 167"
+      "count": 2,
+      "detail": "текста мельче 12px: 2"
     },
     {
-      "page": "timeline",
-      "viewport": "tablet",
-      "kind": "canvas-scroll",
-      "detail": "canvas 990/1438 (auto)"
+      "page": "dashboard",
+      "viewport": "mobile",
+      "kind": "headings",
+      "count": 3,
+      "detail": "H1: Обзор | H2: Требуют внимания | H2: Последние события"
     },
     {
-      "page": "timeline",
-      "viewport": "tablet",
-      "kind": "chips-scroll",
-      "detail": "1024/1503"
+      "page": "incidents",
+      "viewport": "mobile",
+      "kind": "tap-targets",
+      "count": 38,
+      "detail": "К содержанию 95x21 | ☰ 36x34 | Тёмная тема 99x34 | INPUT 336x34 | любой\nавария / экстрен 160x34"
     },
     {
-      "page": "timeline",
-      "viewport": "tablet",
-      "kind": "slider-a11y",
-      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
+      "page": "incidents",
+      "viewport": "mobile",
+      "kind": "unlabeled",
+      "count": 1,
+      "detail": "INPUT."
     },
     {
-      "page": "timeline",
-      "viewport": "tablet",
-      "kind": "commit-a11y",
-      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0"
+      "page": "incidents",
+      "viewport": "mobile",
+      "kind": "fonts-small",
+      "count": 58,
+      "detail": "текста мельче 12px: 58"
     },
     {
-      "page": "timeline",
-      "viewport": "tablet",
+      "page": "incidents",
+      "viewport": "mobile",
       "kind": "headings",
       "count": 1,
-      "detail": "H1: Хронология заявок · Git-граф"
+      "detail": "H1: Обращения"
     },
     {
-      "page": "timeline-card",
-      "viewport": "tablet",
-      "kind": "tap-targets",
-      "count": 153,
-      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | Git-граф 74x33 | Диаграмма Ганта 127x33"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "tablet",
-      "kind": "fonts-small",
-      "count": 167,
-      "detail": "текста мельче 12px: 167"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "tablet",
-      "kind": "canvas-scroll",
-      "detail": "canvas 990/1438 (auto)"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "tablet",
-      "kind": "chips-scroll",
-      "detail": "1024/1503"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "tablet",
-      "kind": "slider-a11y",
-      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "tablet",
-      "kind": "commit-a11y",
-      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "tablet",
-      "kind": "card-position",
-      "detail": "top=528px, в окне: true"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "tablet",
-      "kind": "headings",
-      "count": 1,
-      "detail": "H1: Хронология заявок · Git-граф"
-    },
-    {
-      "page": "gantt",
-      "viewport": "tablet",
-      "kind": "tap-targets",
-      "count": 72,
-      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | Git-граф 74x33 | Диаграмма Ганта 127x33"
-    },
-    {
-      "page": "gantt",
-      "viewport": "tablet",
-      "kind": "fonts-small",
-      "count": 137,
-      "detail": "текста мельче 12px: 137"
-    },
-    {
-      "page": "gantt",
-      "viewport": "tablet",
-      "kind": "chips-scroll",
-      "detail": "1024/1503"
-    },
-    {
-      "page": "gantt",
-      "viewport": "tablet",
-      "kind": "slider-a11y",
-      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
-    },
-    {
-      "page": "gantt",
-      "viewport": "tablet",
-      "kind": "headings",
-      "count": 1,
-      "detail": "H1: Хронология заявок · Git-граф"
-    },
-    {
-      "page": "chat",
-      "viewport": "tablet",
+      "page": "incident",
+      "viewport": "mobile",
       "kind": "tap-targets",
       "count": 8,
-      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | ‹ Хронология 73x24 | ‹ Реплика назад 107x32"
+      "detail": "К содержанию 95x21 | ☰ 36x34 | Тёмная тема 99x34 | 20 декабря 2025\n21 дек 125x19 | Хронология на эту дату 150x19"
     },
     {
-      "page": "chat",
-      "viewport": "tablet",
+      "page": "incident",
+      "viewport": "mobile",
       "kind": "fonts-small",
-      "count": 11,
-      "detail": "текста мельче 12px: 11"
+      "count": 3,
+      "detail": "текста мельче 12px: 3"
     },
     {
-      "page": "chat",
-      "viewport": "tablet",
+      "page": "incident",
+      "viewport": "mobile",
       "kind": "headings",
-      "count": 2,
-      "detail": "H1: Переписка по заявке З-015 | H2: Что происходит"
-    },
-    {
-      "page": "model",
-      "viewport": "tablet",
-      "kind": "tap-targets",
-      "count": 103,
-      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | +4 ч 51x33 | Массовый шаг вперёд 157x33"
-    },
-    {
-      "page": "model",
-      "viewport": "tablet",
-      "kind": "fonts-small",
-      "count": 60,
-      "detail": "текста мельче 12px: 60"
-    },
-    {
-      "page": "model",
-      "viewport": "tablet",
-      "kind": "headings",
-      "count": 2,
-      "detail": "H1: agencyai · модель процессов | H2: Заявки (30)"
-    },
-    {
-      "page": "keyboard",
-      "viewport": "tablet",
-      "kind": "enter-on-commit",
-      "detail": "карточка открылась"
+      "count": 6,
+      "detail": "H1: Обращение З-015 | H2: Текущий этап | H2: SLA | H2: История переходов | H2: Следующий шаг | H2: Связанные представления"
     },
     {
       "page": "timeline",
       "viewport": "mobile",
       "kind": "tap-targets",
-      "count": 151,
-      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | Git-граф 74x33 | Диаграмма Ганта 127x33"
+      "count": 154,
+      "detail": "К содержанию 95x21 | ☰ 36x34 | Тёмная тема 99x34 | Git-граф 72x32 | Диаграмма Ганта 125x32"
     },
     {
       "page": "timeline",
       "viewport": "mobile",
       "kind": "fonts-small",
-      "count": 167,
-      "detail": "текста мельче 12px: 167"
+      "count": 169,
+      "detail": "текста мельче 12px: 169"
     },
     {
       "page": "timeline",
       "viewport": "mobile",
       "kind": "canvas-scroll",
-      "detail": "canvas 356/1438 (auto)"
+      "detail": "canvas 360/1438 (auto)"
     },
     {
       "page": "timeline",
       "viewport": "mobile",
       "kind": "chips-scroll",
-      "detail": "390/1503"
+      "detail": "362/1471"
     },
     {
       "page": "timeline",
@@ -397,33 +1101,33 @@
       "viewport": "mobile",
       "kind": "headings",
       "count": 1,
-      "detail": "H1: Хронология заявок · Git-граф"
+      "detail": "H1: Хронология"
     },
     {
       "page": "timeline-card",
       "viewport": "mobile",
       "kind": "tap-targets",
-      "count": 153,
-      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | Git-граф 74x33 | Диаграмма Ганта 127x33"
+      "count": 156,
+      "detail": "К содержанию 95x21 | ☰ 36x34 | Тёмная тема 99x34 | Git-граф 72x32 | Диаграмма Ганта 125x32"
     },
     {
       "page": "timeline-card",
       "viewport": "mobile",
       "kind": "fonts-small",
-      "count": 167,
-      "detail": "текста мельче 12px: 167"
+      "count": 169,
+      "detail": "текста мельче 12px: 169"
     },
     {
       "page": "timeline-card",
       "viewport": "mobile",
       "kind": "canvas-scroll",
-      "detail": "canvas 356/1438 (auto)"
+      "detail": "canvas 360/1438 (auto)"
     },
     {
       "page": "timeline-card",
       "viewport": "mobile",
       "kind": "chips-scroll",
-      "detail": "390/1503"
+      "detail": "362/1471"
     },
     {
       "page": "timeline-card",
@@ -441,40 +1145,40 @@
       "page": "timeline-card",
       "viewport": "mobile",
       "kind": "card-position",
-      "detail": "top=605px, в окне: true"
+      "detail": "top=595px, в окне: true"
     },
     {
       "page": "timeline-card",
       "viewport": "mobile",
       "kind": "headings",
       "count": 1,
-      "detail": "H1: Хронология заявок · Git-граф"
+      "detail": "H1: Хронология"
     },
     {
       "page": "gantt",
       "viewport": "mobile",
       "kind": "tap-targets",
-      "count": 72,
-      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | Git-граф 74x33 | Диаграмма Ганта 127x33"
+      "count": 75,
+      "detail": "К содержанию 95x21 | ☰ 36x34 | Тёмная тема 99x34 | Git-граф 72x32 | Диаграмма Ганта 125x32"
     },
     {
       "page": "gantt",
       "viewport": "mobile",
       "kind": "fonts-small",
-      "count": 137,
-      "detail": "текста мельче 12px: 137"
+      "count": 139,
+      "detail": "текста мельче 12px: 139"
     },
     {
       "page": "gantt",
       "viewport": "mobile",
       "kind": "canvas-scroll",
-      "detail": "canvas 356/656 (auto)"
+      "detail": "canvas 360/656 (auto)"
     },
     {
       "page": "gantt",
       "viewport": "mobile",
       "kind": "chips-scroll",
-      "detail": "390/1503"
+      "detail": "362/1471"
     },
     {
       "page": "gantt",
@@ -487,49 +1191,49 @@
       "viewport": "mobile",
       "kind": "headings",
       "count": 1,
-      "detail": "H1: Хронология заявок · Git-граф"
+      "detail": "H1: Хронология"
     },
     {
       "page": "chat",
       "viewport": "mobile",
       "kind": "tap-targets",
       "count": 8,
-      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | ‹ Хронология 73x24 | ‹ Реплика назад 107x32"
+      "detail": "К содержанию 95x21 | ☰ 36x34 | Тёмная тема 99x34 | ‹ Хронология 73x24 | ‹ Реплика назад 107x32"
     },
     {
       "page": "chat",
       "viewport": "mobile",
       "kind": "fonts-small",
-      "count": 11,
-      "detail": "текста мельче 12px: 11"
+      "count": 14,
+      "detail": "текста мельче 12px: 14"
     },
     {
       "page": "chat",
       "viewport": "mobile",
       "kind": "headings",
       "count": 2,
-      "detail": "H1: Переписка по заявке З-015 | H2: Что происходит"
+      "detail": "H1: Переписка | H2: Что происходит"
     },
     {
       "page": "model",
       "viewport": "mobile",
       "kind": "tap-targets",
       "count": 103,
-      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | +4 ч 51x33 | Массовый шаг вперёд 157x33"
+      "detail": "К содержанию 95x21 | ☰ 36x34 | Тёмная тема 99x34 | +4 ч 51x34 | Массовый шаг вперёд 157x34"
     },
     {
       "page": "model",
       "viewport": "mobile",
       "kind": "fonts-small",
-      "count": 30,
-      "detail": "текста мельче 12px: 30"
+      "count": 32,
+      "detail": "текста мельче 12px: 32"
     },
     {
       "page": "model",
       "viewport": "mobile",
       "kind": "headings",
       "count": 2,
-      "detail": "H1: agencyai · модель процессов | H2: Заявки (30)"
+      "detail": "H1: Модель процесса | H2: Заявки (30)"
     },
     {
       "page": "keyboard",
@@ -539,16 +1243,41 @@
     }
   ],
   "shots": [
+    "docs/screenshots/audit/wide-dashboard.png",
+    "docs/screenshots/audit/wide-incidents.png",
+    "docs/screenshots/audit/wide-incident.png",
+    "docs/screenshots/audit/wide-timeline.png",
+    "docs/screenshots/audit/wide-timeline-card.png",
+    "docs/screenshots/audit/wide-gantt.png",
+    "docs/screenshots/audit/wide-chat.png",
+    "docs/screenshots/audit/wide-model.png",
+    "docs/screenshots/audit/desktop-dashboard.png",
+    "docs/screenshots/audit/desktop-incidents.png",
+    "docs/screenshots/audit/desktop-incident.png",
     "docs/screenshots/audit/desktop-timeline.png",
     "docs/screenshots/audit/desktop-timeline-card.png",
     "docs/screenshots/audit/desktop-gantt.png",
     "docs/screenshots/audit/desktop-chat.png",
     "docs/screenshots/audit/desktop-model.png",
+    "docs/screenshots/audit/tablet-dashboard.png",
+    "docs/screenshots/audit/tablet-incidents.png",
+    "docs/screenshots/audit/tablet-incident.png",
     "docs/screenshots/audit/tablet-timeline.png",
     "docs/screenshots/audit/tablet-timeline-card.png",
     "docs/screenshots/audit/tablet-gantt.png",
     "docs/screenshots/audit/tablet-chat.png",
     "docs/screenshots/audit/tablet-model.png",
+    "docs/screenshots/audit/portrait-dashboard.png",
+    "docs/screenshots/audit/portrait-incidents.png",
+    "docs/screenshots/audit/portrait-incident.png",
+    "docs/screenshots/audit/portrait-timeline.png",
+    "docs/screenshots/audit/portrait-timeline-card.png",
+    "docs/screenshots/audit/portrait-gantt.png",
+    "docs/screenshots/audit/portrait-chat.png",
+    "docs/screenshots/audit/portrait-model.png",
+    "docs/screenshots/audit/mobile-dashboard.png",
+    "docs/screenshots/audit/mobile-incidents.png",
+    "docs/screenshots/audit/mobile-incident.png",
     "docs/screenshots/audit/mobile-timeline.png",
     "docs/screenshots/audit/mobile-timeline-card.png",
     "docs/screenshots/audit/mobile-gantt.png",

@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 test.describe("Хронология: Git-граф и перемотка времени", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/#timeline");
-    await expect(page.locator("h1.brand")).toContainText("Хронология заявок");
+    await expect(page.locator(".page-title")).toContainText("Хронология");
   });
 
   test("вместо таблицы когорт — Git-граф с колонками узлов и коммитами", async ({ page }) => {

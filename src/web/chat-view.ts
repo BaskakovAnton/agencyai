@@ -31,7 +31,6 @@ export const mountChat = (root: HTMLElement, graph: Graph, story: Story, route: 
     const interlocutor: RoleId =
       override === null ? snapshot.interlocutor : activeRole === "resident" ? "deputy" : "resident";
     root.innerHTML =
-      '<h1 class="sr-only">Переписка по заявке ' + incident.id + "</h1>" +
       '<div class="chat-screen">' +
       renderPhone({
         incident,

@@ -20,6 +20,8 @@ export interface TimelinePageInput {
   readonly chat: string;
   /** Карточка выбранного узла (появляется по клику на коммит). */
   readonly card?: string;
+  /** Плотность отображения графа и Ганта. */
+  readonly density?: "normal" | "compact";
 }
 
 const escapeHtml = (value: string): string =>
@@ -65,16 +67,25 @@ export const renderBody = (input: TimelinePageInput): string =>
 /** Кнопки вида и сброса фильтра: их перерисовывают, когда фильтр меняется. */
 export const renderControls = (input: TimelinePageInput): string =>
   '<div class="controls" data-controls>' +
-  '<button data-view="git"' + (input.view === "git" ? ' class="on"' : "") + ">Git-граф</button>" +
-  '<button data-view="gantt"' + (input.view === "gantt" ? ' class="on"' : "") + ">Диаграмма Ганта</button>" +
-  (input.filter === "" ? "" : '<button data-action="clear">Показать все заявки</button>') +
+  '<div class="segmented" data-view-switch role="group" aria-label="Вид">' +
+  '<button data-view="git"' + (input.view === "git" ? ' class="on"' : "") + ' aria-pressed="' + String(input.view === "git") + '">Git-граф</button>' +
+  '<button data-view="gantt"' + (input.view === "gantt" ? ' class="on"' : "") + ' aria-pressed="' + String(input.view === "gantt") + '">Диаграмма Ганта</button>' +
+  "</div>" +
+  '<div class="segmented" data-density-switch role="group" aria-label="Плотность">' +
+  '<button data-density="normal"' + (input.density !== "compact" ? ' class="on"' : "") + ">Обычная</button>" +
+  '<button data-density="compact"' + (input.density === "compact" ? ' class="on"' : "") + ">Компактная</button>" +
+  "</div>" +
+  '<button data-action="clear"' + (input.filter === "" ? " disabled" : "") + ">Показать все заявки</button>" +
   "</div>";
+
+/** Подсказка про горизонтальную прокрутку и клавиатуру. */
+export const renderScrollHint = (): string =>
+  '<p class="scroll-hint" data-scroll-hint>Граф шире экрана — прокручивайте по горизонтали. Канвас доступен с клавиатуры: Tab и стрелки.</p>';
 
 /** Шапка, ползунок времени и переключатель вида — всё, кроме самой картинки. */
 export const renderTimelineHeader = (input: TimelinePageInput): string =>
   [
     '<header class="top">',
-    '<h1 class="brand">Хронология заявок · Git-граф</h1>',
     renderStats(input),
     renderControls(input),
     "</header>",
@@ -133,7 +144,8 @@ export const renderLegends = (input: TimelinePageInput): string => {
 };
 
 export const renderTimelinePage = (input: TimelinePageInput): string =>
-  renderTimelineHeader(input) + renderTimeRuler(input) + renderLegends(input) + renderBody(input) + renderTimelineFooter();
+  renderTimelineHeader(input) + renderTimeRuler(input) + renderLegends(input) + renderScrollHint() +
+  renderBody(input) + renderTimelineFooter();
 
 export const tooltipText = (commit: { incidentId: string; nodeId: string; title?: string; day: string; role: string; text: string }, nodeTitle: string): string =>
   commit.incidentId + " · " + commit.nodeId + " " + escapeHtml(nodeTitle) + " · " + formatDay(commit.day) + " · " + commit.role + ": " + commit.text;

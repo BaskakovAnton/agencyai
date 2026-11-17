@@ -8,8 +8,10 @@ const outDir = "docs/screenshots/audit";
 const require = createRequire(import.meta.url);
 const axePath = require.resolve("axe-core/axe.min.js");
 const viewports = [
+  { name: "wide", width: 1920, height: 1080 },
   { name: "desktop", width: 1440, height: 950 },
   { name: "tablet", width: 1024, height: 768 },
+  { name: "portrait", width: 768, height: 1024 },
   { name: "mobile", width: 390, height: 844 },
 ] as const;
 
@@ -139,6 +141,9 @@ const run = async (): Promise<void> => {
       await page.screenshot({ path, fullPage: true });
       shots.push(path);
     };
+    await go("#dashboard?at=2026-01-02", "dashboard", 600);
+    await go("#incidents?at=2026-01-02", "incidents", 600);
+    await go("#incident/" + encodeURIComponent("З-015") + "?at=2026-01-02", "incident", 600);
     await go("#timeline?at=2026-01-02", "timeline", 900);
     const commit = page.locator('[data-commit][data-incident="З-015"][data-node="U6"]');
     if ((await commit.count()) > 0) {
@@ -151,7 +156,7 @@ const run = async (): Promise<void> => {
     }
     await go("#timeline?at=2026-01-02&view=gantt", "gantt");
     await go("#chat/З-015?at=2026-01-02", "chat", 600);
-    await go("#", "model", 600);
+    await go("#model", "model", 600);
     await page.goto(base + "#timeline?at=2026-01-02", { waitUntil: "domcontentloaded" });
     await page.waitForTimeout(800);
     await page.locator("[data-commit]").first().focus();
