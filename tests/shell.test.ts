@@ -1,0 +1,41 @@
+import { expect, test } from "bun:test";
+import { NAV_ITEMS, renderNav } from "../src/web/nav.ts";
+import { renderPlaceholder } from "../src/web/placeholder.ts";
+import { parseRoute } from "../src/web/router.ts";
+import { renderShell } from "../src/web/shell.ts";
+
+const timeline = parseRoute("#timeline?at=2026-01-02&view=git");
+const dashboard = parseRoute("#dashboard");
+
+test("оболочка: сайдбар, топбар, контент и переключатель темы", () => {
+  const html = renderShell({ route: timeline, title: "Хронология", subtitle: "Git-граф и Гант", content: "<p>тело</p>" });
+  expect(html).toContain("data-sidebar");
+  expect(html).toContain("data-topbar");
+  expect(html).toContain("data-theme-toggle");
+  expect(html).toContain("data-menu");
+  expect(html).toContain('id="view"');
+  expect(html).toContain("Хронология");
+  expect(html).toContain("Git-граф и Гант");
+  expect(html).toContain("<p>тело</p>");
+  expect((html.match(/data-nav=/g) ?? []).length).toBe(NAV_ITEMS.length);
+});
+
+test("навигация: пять разделов и активный пункт", () => {
+  expect(NAV_ITEMS.length).toBe(5);
+  const html = renderNav(timeline);
+  expect(html).toContain('href="#dashboard"');
+  expect(html).toContain('href="#incidents"');
+  expect(html).toContain('href="#timeline"');
+  expect(html).toContain('href="#chat/');
+  expect(html).toContain('href="#model"');
+  expect(html).toContain('data-nav="timeline"');
+  expect(html).toContain('aria-current="page"');
+});
+
+test("заглушка честно сообщает, что экран ещё не готов", () => {
+  const html = renderPlaceholder(parseRoute("#incidents"));
+  expect(html).toContain("data-placeholder");
+  expect(html).toContain("Этап");
+  expect(html).toContain("#timeline");
+  expect(html).toContain("#model");
+});

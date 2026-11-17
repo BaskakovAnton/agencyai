@@ -23,9 +23,15 @@ beforeAll(async () => {
 
 test("сборка создаёт страницу, стили и бандл", async () => {
   const css = await readFile(join(outDir, "style.css"), "utf8");
+  const tokens = await readFile(join(outDir, "tokens.css"), "utf8");
+  const shell = await readFile(join(outDir, "shell.css"), "utf8");
   expect(bundle.length).toBeGreaterThan(5000);
   expect(css.length).toBeGreaterThan(100);
+  expect(tokens.length).toBeGreaterThan(100);
+  expect(shell.length).toBeGreaterThan(100);
   expect(page).toContain("./app.js");
+  expect(page).toContain("./tokens.css");
+  expect(page).toContain("./shell.css");
   expect(page).toContain("./style.css");
 });
 
@@ -39,7 +45,9 @@ test("бандл самодостаточен: ничего не загружа�
 });
 
 test("в бандл попали оба экрана: Git-граф и мобильный чат", () => {
-  expect(bundle).toContain("Хронология заявок");
+  expect(bundle).toContain("Хронология");
+  expect(bundle).toContain("Обзор");
+  expect(bundle).toContain("Обращения");
   expect(bundle).toContain("Диаграмма Ганта");
   expect(bundle).toContain("Перемотка времени");
   expect(bundle).toContain("Переписка на");
@@ -120,7 +128,7 @@ test("страница рендерит 30 заявок с кнопками пе
   expect(html).toContain("Заявки");
   expect(html.match(/class="row(?:"| on)/g)?.length).toBe(30);
   expect(html).toContain('data-action="forward"');
-  expect(html).toContain('<h1 class="brand">');
+  expect(html).not.toContain('class="brand"'); // заголовок и бренд теперь в оболочке
   expect(html.match(/data-action="select"/g)?.length).toBe(30);
   expect(html.match(/class="row-main"/g)?.length).toBe(30);
   expect(html).toContain("Массовый шаг вперёд");

@@ -4,27 +4,27 @@
       "page": "timeline",
       "viewport": "desktop",
       "kind": "tap-targets",
-      "count": 152,
-      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | Git-граф 74x33 | Диаграмма Ганта 127x33"
+      "count": 156,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
     },
     {
       "page": "timeline",
       "viewport": "desktop",
       "kind": "fonts-small",
-      "count": 167,
-      "detail": "текста мельче 12px: 167"
+      "count": 169,
+      "detail": "текста мельче 12px: 169"
     },
     {
       "page": "timeline",
       "viewport": "desktop",
       "kind": "canvas-scroll",
-      "detail": "canvas 1082/1438 (auto)"
+      "detail": "canvas 812/1438 (auto)"
     },
     {
       "page": "timeline",
       "viewport": "desktop",
       "kind": "chips-scroll",
-      "detail": "1440/1503"
+      "detail": "1154/1471"
     },
     {
       "page": "timeline",
@@ -43,33 +43,33 @@
       "viewport": "desktop",
       "kind": "headings",
       "count": 1,
-      "detail": "H1: Хронология заявок · Git-граф"
+      "detail": "H1: Хронология"
     },
     {
       "page": "timeline-card",
       "viewport": "desktop",
       "kind": "tap-targets",
-      "count": 154,
-      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | Git-граф 74x33 | Диаграмма Ганта 127x33"
+      "count": 158,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
     },
     {
       "page": "timeline-card",
       "viewport": "desktop",
       "kind": "fonts-small",
-      "count": 167,
-      "detail": "текста мельче 12px: 167"
+      "count": 169,
+      "detail": "текста мельче 12px: 169"
     },
     {
       "page": "timeline-card",
       "viewport": "desktop",
       "kind": "canvas-scroll",
-      "detail": "canvas 1082/1438 (auto)"
+      "detail": "canvas 812/1438 (auto)"
     },
     {
       "page": "timeline-card",
       "viewport": "desktop",
       "kind": "chips-scroll",
-      "detail": "1440/1503"
+      "detail": "1154/1471"
     },
     {
       "page": "timeline-card",
@@ -87,34 +87,34 @@
       "page": "timeline-card",
       "viewport": "desktop",
       "kind": "card-position",
-      "detail": "top=710px, в окне: true"
+      "detail": "top=701px, в окне: true"
     },
     {
       "page": "timeline-card",
       "viewport": "desktop",
       "kind": "headings",
       "count": 1,
-      "detail": "H1: Хронология заявок · Git-граф"
+      "detail": "H1: Хронология"
     },
     {
       "page": "gantt",
       "viewport": "desktop",
       "kind": "tap-targets",
-      "count": 73,
-      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | Git-граф 74x33 | Диаграмма Ганта 127x33"
+      "count": 77,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
     },
     {
       "page": "gantt",
       "viewport": "desktop",
       "kind": "fonts-small",
-      "count": 137,
-      "detail": "текста мельче 12px: 137"
+      "count": 139,
+      "detail": "текста мельче 12px: 139"
     },
     {
       "page": "gantt",
       "viewport": "desktop",
       "kind": "chips-scroll",
-      "detail": "1440/1503"
+      "detail": "1154/1471"
     },
     {
       "page": "gantt",
@@ -127,49 +127,49 @@
       "viewport": "desktop",
       "kind": "headings",
       "count": 1,
-      "detail": "H1: Хронология заявок · Git-граф"
+      "detail": "H1: Хронология"
     },
     {
       "page": "chat",
       "viewport": "desktop",
       "kind": "tap-targets",
-      "count": 8,
-      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | ‹ Хронология 73x24 | ‹ Реплика назад 107x32"
+      "count": 12,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
     },
     {
       "page": "chat",
       "viewport": "desktop",
       "kind": "fonts-small",
-      "count": 11,
-      "detail": "текста мельче 12px: 11"
+      "count": 13,
+      "detail": "текста мельче 12px: 13"
     },
     {
       "page": "chat",
       "viewport": "desktop",
       "kind": "headings",
       "count": 2,
-      "detail": "H1: Переписка по заявке З-015 | H2: Что происходит"
+      "detail": "H1: Переписка | H2: Что происходит"
     },
     {
       "page": "model",
       "viewport": "desktop",
       "kind": "tap-targets",
-      "count": 103,
-      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | +4 ч 51x33 | Массовый шаг вперёд 157x33"
+      "count": 107,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
     },
     {
       "page": "model",
       "viewport": "desktop",
       "kind": "fonts-small",
-      "count": 60,
-      "detail": "текста мельче 12px: 60"
+      "count": 62,
+      "detail": "текста мельче 12px: 62"
     },
     {
       "page": "model",
       "viewport": "desktop",
       "kind": "headings",
       "count": 2,
-      "detail": "H1: agencyai · модель процессов | H2: Заявки (30)"
+      "detail": "H1: Модель процесса | H2: Заявки (30)"
     },
     {
       "page": "keyboard",
@@ -181,27 +181,27 @@
       "page": "timeline",
       "viewport": "tablet",
       "kind": "tap-targets",
-      "count": 151,
-      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | Git-граф 74x33 | Диаграмма Ганта 127x33"
+      "count": 155,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
     },
     {
       "page": "timeline",
       "viewport": "tablet",
       "kind": "fonts-small",
-      "count": 167,
-      "detail": "текста мельче 12px: 167"
+      "count": 169,
+      "detail": "текста мельче 12px: 169"
     },
     {
       "page": "timeline",
       "viewport": "tablet",
       "kind": "canvas-scroll",
-      "detail": "canvas 990/1438 (auto)"
+      "detail": "canvas 736/1438 (auto)"
     },
     {
       "page": "timeline",
       "viewport": "tablet",
       "kind": "chips-scroll",
-      "detail": "1024/1503"
+      "detail": "738/1471"
     },
     {
       "page": "timeline",
@@ -220,33 +220,33 @@
       "viewport": "tablet",
       "kind": "headings",
       "count": 1,
-      "detail": "H1: Хронология заявок · Git-граф"
+      "detail": "H1: Хронология"
     },
     {
       "page": "timeline-card",
       "viewport": "tablet",
       "kind": "tap-targets",
-      "count": 153,
-      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | Git-граф 74x33 | Диаграмма Ганта 127x33"
+      "count": 157,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
     },
     {
       "page": "timeline-card",
       "viewport": "tablet",
       "kind": "fonts-small",
-      "count": 167,
-      "detail": "текста мельче 12px: 167"
+      "count": 169,
+      "detail": "текста мельче 12px: 169"
     },
     {
       "page": "timeline-card",
       "viewport": "tablet",
       "kind": "canvas-scroll",
-      "detail": "canvas 990/1438 (auto)"
+      "detail": "canvas 736/1438 (auto)"
     },
     {
       "page": "timeline-card",
       "viewport": "tablet",
       "kind": "chips-scroll",
-      "detail": "1024/1503"
+      "detail": "738/1471"
     },
     {
       "page": "timeline-card",
@@ -264,34 +264,34 @@
       "page": "timeline-card",
       "viewport": "tablet",
       "kind": "card-position",
-      "detail": "top=528px, в окне: true"
+      "detail": "top=455px, в окне: true"
     },
     {
       "page": "timeline-card",
       "viewport": "tablet",
       "kind": "headings",
       "count": 1,
-      "detail": "H1: Хронология заявок · Git-граф"
+      "detail": "H1: Хронология"
     },
     {
       "page": "gantt",
       "viewport": "tablet",
       "kind": "tap-targets",
-      "count": 72,
-      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | Git-граф 74x33 | Диаграмма Ганта 127x33"
+      "count": 76,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
     },
     {
       "page": "gantt",
       "viewport": "tablet",
       "kind": "fonts-small",
-      "count": 137,
-      "detail": "текста мельче 12px: 137"
+      "count": 139,
+      "detail": "текста мельче 12px: 139"
     },
     {
       "page": "gantt",
       "viewport": "tablet",
       "kind": "chips-scroll",
-      "detail": "1024/1503"
+      "detail": "738/1471"
     },
     {
       "page": "gantt",
@@ -304,49 +304,49 @@
       "viewport": "tablet",
       "kind": "headings",
       "count": 1,
-      "detail": "H1: Хронология заявок · Git-граф"
+      "detail": "H1: Хронология"
     },
     {
       "page": "chat",
       "viewport": "tablet",
       "kind": "tap-targets",
-      "count": 8,
-      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | ‹ Хронология 73x24 | ‹ Реплика назад 107x32"
+      "count": 12,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
     },
     {
       "page": "chat",
       "viewport": "tablet",
       "kind": "fonts-small",
-      "count": 11,
-      "detail": "текста мельче 12px: 11"
+      "count": 13,
+      "detail": "текста мельче 12px: 13"
     },
     {
       "page": "chat",
       "viewport": "tablet",
       "kind": "headings",
       "count": 2,
-      "detail": "H1: Переписка по заявке З-015 | H2: Что происходит"
+      "detail": "H1: Переписка | H2: Что происходит"
     },
     {
       "page": "model",
       "viewport": "tablet",
       "kind": "tap-targets",
-      "count": 103,
-      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | +4 ч 51x33 | Массовый шаг вперёд 157x33"
+      "count": 107,
+      "detail": "К содержанию 95x21 | Обзор 221x38 | Обращения 221x38 | Хронология 221x38 | Переписка 221x38"
     },
     {
       "page": "model",
       "viewport": "tablet",
       "kind": "fonts-small",
-      "count": 60,
-      "detail": "текста мельче 12px: 60"
+      "count": 62,
+      "detail": "текста мельче 12px: 62"
     },
     {
       "page": "model",
       "viewport": "tablet",
       "kind": "headings",
       "count": 2,
-      "detail": "H1: agencyai · модель процессов | H2: Заявки (30)"
+      "detail": "H1: Модель процесса | H2: Заявки (30)"
     },
     {
       "page": "keyboard",
@@ -359,26 +359,26 @@
       "viewport": "mobile",
       "kind": "tap-targets",
       "count": 151,
-      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | Git-граф 74x33 | Диаграмма Ганта 127x33"
+      "detail": "К содержанию 95x21 | ☰ 36x34 | Тёмная тема 99x34 | Git-граф 74x34 | Диаграмма Ганта 127x34"
     },
     {
       "page": "timeline",
       "viewport": "mobile",
       "kind": "fonts-small",
-      "count": 167,
-      "detail": "текста мельче 12px: 167"
+      "count": 169,
+      "detail": "текста мельче 12px: 169"
     },
     {
       "page": "timeline",
       "viewport": "mobile",
       "kind": "canvas-scroll",
-      "detail": "canvas 356/1438 (auto)"
+      "detail": "canvas 360/1438 (auto)"
     },
     {
       "page": "timeline",
       "viewport": "mobile",
       "kind": "chips-scroll",
-      "detail": "390/1503"
+      "detail": "362/1471"
     },
     {
       "page": "timeline",
@@ -397,33 +397,33 @@
       "viewport": "mobile",
       "kind": "headings",
       "count": 1,
-      "detail": "H1: Хронология заявок · Git-граф"
+      "detail": "H1: Хронология"
     },
     {
       "page": "timeline-card",
       "viewport": "mobile",
       "kind": "tap-targets",
       "count": 153,
-      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | Git-граф 74x33 | Диаграмма Ганта 127x33"
+      "detail": "К содержанию 95x21 | ☰ 36x34 | Тёмная тема 99x34 | Git-граф 74x34 | Диаграмма Ганта 127x34"
     },
     {
       "page": "timeline-card",
       "viewport": "mobile",
       "kind": "fonts-small",
-      "count": 167,
-      "detail": "текста мельче 12px: 167"
+      "count": 169,
+      "detail": "текста мельче 12px: 169"
     },
     {
       "page": "timeline-card",
       "viewport": "mobile",
       "kind": "canvas-scroll",
-      "detail": "canvas 356/1438 (auto)"
+      "detail": "canvas 360/1438 (auto)"
     },
     {
       "page": "timeline-card",
       "viewport": "mobile",
       "kind": "chips-scroll",
-      "detail": "390/1503"
+      "detail": "362/1471"
     },
     {
       "page": "timeline-card",
@@ -441,40 +441,40 @@
       "page": "timeline-card",
       "viewport": "mobile",
       "kind": "card-position",
-      "detail": "top=605px, в окне: true"
+      "detail": "top=595px, в окне: true"
     },
     {
       "page": "timeline-card",
       "viewport": "mobile",
       "kind": "headings",
       "count": 1,
-      "detail": "H1: Хронология заявок · Git-граф"
+      "detail": "H1: Хронология"
     },
     {
       "page": "gantt",
       "viewport": "mobile",
       "kind": "tap-targets",
       "count": 72,
-      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | Git-граф 74x33 | Диаграмма Ганта 127x33"
+      "detail": "К содержанию 95x21 | ☰ 36x34 | Тёмная тема 99x34 | Git-граф 74x34 | Диаграмма Ганта 127x34"
     },
     {
       "page": "gantt",
       "viewport": "mobile",
       "kind": "fonts-small",
-      "count": 137,
-      "detail": "текста мельче 12px: 137"
+      "count": 139,
+      "detail": "текста мельче 12px: 139"
     },
     {
       "page": "gantt",
       "viewport": "mobile",
       "kind": "canvas-scroll",
-      "detail": "canvas 356/656 (auto)"
+      "detail": "canvas 360/656 (auto)"
     },
     {
       "page": "gantt",
       "viewport": "mobile",
       "kind": "chips-scroll",
-      "detail": "390/1503"
+      "detail": "362/1471"
     },
     {
       "page": "gantt",
@@ -487,49 +487,49 @@
       "viewport": "mobile",
       "kind": "headings",
       "count": 1,
-      "detail": "H1: Хронология заявок · Git-граф"
+      "detail": "H1: Хронология"
     },
     {
       "page": "chat",
       "viewport": "mobile",
       "kind": "tap-targets",
       "count": 8,
-      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | ‹ Хронология 73x24 | ‹ Реплика назад 107x32"
+      "detail": "К содержанию 95x21 | ☰ 36x34 | Тёмная тема 99x34 | ‹ Хронология 73x24 | ‹ Реплика назад 107x32"
     },
     {
       "page": "chat",
       "viewport": "mobile",
       "kind": "fonts-small",
-      "count": 11,
-      "detail": "текста мельче 12px: 11"
+      "count": 13,
+      "detail": "текста мельче 12px: 13"
     },
     {
       "page": "chat",
       "viewport": "mobile",
       "kind": "headings",
       "count": 2,
-      "detail": "H1: Переписка по заявке З-015 | H2: Что происходит"
+      "detail": "H1: Переписка | H2: Что происходит"
     },
     {
       "page": "model",
       "viewport": "mobile",
       "kind": "tap-targets",
       "count": 103,
-      "detail": "Модель процессов 140x33 | Хронология · Git-граф 157x33 | Мобильный чат 121x33 | +4 ч 51x33 | Массовый шаг вперёд 157x33"
+      "detail": "К содержанию 95x21 | ☰ 36x34 | Тёмная тема 99x34 | +4 ч 51x34 | Массовый шаг вперёд 157x34"
     },
     {
       "page": "model",
       "viewport": "mobile",
       "kind": "fonts-small",
-      "count": 30,
-      "detail": "текста мельче 12px: 30"
+      "count": 32,
+      "detail": "текста мельче 12px: 32"
     },
     {
       "page": "model",
       "viewport": "mobile",
       "kind": "headings",
       "count": 2,
-      "detail": "H1: agencyai · модель процессов | H2: Заявки (30)"
+      "detail": "H1: Модель процесса | H2: Заявки (30)"
     },
     {
       "page": "keyboard",
