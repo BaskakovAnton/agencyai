@@ -25,13 +25,16 @@ test("сборка создаёт страницу, стили и бандл", a
   const css = await readFile(join(outDir, "style.css"), "utf8");
   const tokens = await readFile(join(outDir, "tokens.css"), "utf8");
   const shell = await readFile(join(outDir, "shell.css"), "utf8");
+  const screens = await readFile(join(outDir, "screens.css"), "utf8");
   expect(bundle.length).toBeGreaterThan(5000);
   expect(css.length).toBeGreaterThan(100);
   expect(tokens.length).toBeGreaterThan(100);
   expect(shell.length).toBeGreaterThan(100);
+  expect(screens.length).toBeGreaterThan(100);
   expect(page).toContain("./app.js");
   expect(page).toContain("./tokens.css");
   expect(page).toContain("./shell.css");
+  expect(page).toContain("./screens.css");
   expect(page).toContain("./style.css");
 });
 

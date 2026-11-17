@@ -25,12 +25,12 @@ test.describe("Оболочка редизайна", () => {
     await expect(page.locator('[data-nav="model"]')).toHaveAttribute("aria-current", "page");
   });
 
-  test("новые маршруты: стартовый обзор, обращения и карточка — заглушки", async ({ page }) => {
+  test("новые маршруты: обзор и обращения работают, карточка пока заглушка", async ({ page }) => {
     await page.goto("/");
     await expect(page.locator('[data-nav="dashboard"]')).toHaveAttribute("aria-current", "page");
-    await expect(page.locator("[data-placeholder]")).toBeVisible();
+    await expect(page.locator("[data-dashboard]")).toBeVisible();
     await page.goto("/#incidents");
-    await expect(page.locator("[data-placeholder]")).toBeVisible();
+    await expect(page.locator("[data-incidents-table]")).toBeVisible();
     await page.goto("/#incident/" + encodeURIComponent("З-015") + "?at=2026-01-02");
     await expect(page.locator("[data-placeholder]")).toContainText("Этап");
   });
