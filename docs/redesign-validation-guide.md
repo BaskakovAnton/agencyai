@@ -1,5 +1,7 @@
 # AgencyAI — инструкция проверки редизайна по этапам
 
+> ⚠️ Уборка 24.11.2026: промежуточные каталоги скриншотов удалены из HEAD (доступны в истории git до коммита `8cb6217`). Актуальные снимки: `docs/screenshots/redesign-stage-5-kit/`, `docs/screenshots/ux4/`, `docs/screenshots/audit/` — см. `docs/screenshots/README.md`.
+
 **Версия:** 1.2  
 **Дата:** 17.11.2026  
 **HTML-каталог:** [`redesign-reference/index.html`](./redesign-reference/index.html)  

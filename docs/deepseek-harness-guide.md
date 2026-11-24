@@ -1,5 +1,7 @@
 # AgencyAI — инструкция по редизайну через DeepSeek Harness (`dsh`)
 
+> ⚠️ Уборка 24.11.2026: промежуточные каталоги скриншотов удалены из HEAD (доступны в истории git до коммита `8cb6217`). Актуальные снимки: `docs/screenshots/redesign-stage-5-kit/`, `docs/screenshots/ux4/`, `docs/screenshots/audit/` — см. `docs/screenshots/README.md`.
+
 **Версия документа:** 1.0  
 **Дата:** 17.11.2026  
 **Назначение:** запуск и контроль поэтапной реализации редизайна AgencyAI с помощью официального DeepSeek Harness (`dsh`)  

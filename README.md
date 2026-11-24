@@ -204,3 +204,13 @@ Cloudflare Pages / Amvera) либо возврат в приватный реж�
 
 Модель процессов и интерфейсные решения взяты из публичного прототипа
 [goshva/deput](https://github.com/goshva/deput); файлы перенесены как есть с согласия автора (коллега).
+
+Корневые pages прототипа (`index.html`, `process.html`, `player.html`, `matrix.html`) — это **исходный
+прототип как есть**, а не наш продукт: они оставлены как источник регламента. Наше приложение — SPA
+в [`demo/`](https://baskakovanton.github.io/agencyai/demo/), утверждённые макеты — в `docs/redesign-reference/`.
+
+## Уборка
+
+24.11.2026: удалены промежуточные каталоги скриншотов (≈63 МБ), ветка `redesign/deepseek-harness`
+(влита в `main`) и скрипт съёмки стиля DarkStore; журнал проекта вынесен в `docs/journal.md`.
+Актуальные снимки и способы пересъёмки — в [docs/screenshots/README.md](docs/screenshots/README.md).

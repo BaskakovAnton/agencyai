@@ -25,15 +25,11 @@ reports/
 test-results/
 playwright-report/
 
-# Артефакты Playwright
-test-results/
-playwright-report/
-
 # Приватные материалы анализа: расшифровки разговоров и разборы (репозиторий публичный)
 docs/transcript-*.md
 docs/transcript-*.json
 docs/analysis-*.md
 docs/spec-*.md
 
-# локальный комплект дизайн-кита (копия уже лежит в docs/redesign-reference)
+# Локальный комплект дизайн-кита (копия уже лежит в docs/redesign-reference)
 agencyai-redesign-kit/

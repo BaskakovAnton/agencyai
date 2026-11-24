@@ -1,5 +1,7 @@
 # Пиксельная и токенная приёмка макетов дизайн-кита
 
+> ⚠️ Уборка 24.11.2026: промежуточные каталоги скриншотов удалены из HEAD (доступны в истории git до коммита `8cb6217`). Актуальные снимки: `docs/screenshots/redesign-stage-5-kit/`, `docs/screenshots/ux4/`, `docs/screenshots/audit/` — см. `docs/screenshots/README.md`.
+
 **Дата:** 17.11.2026 · **Ветка:** `main` (редизайн влит, коммит `1ea5c68`)
 **Эталоны:** `docs/redesign-reference/*.html` + `assets/reference.css` (те же файлы в `agencyai-redesign-kit/`).
 **Что сравнивалось:** 7 экранов × 2 ширины (1440, 390): эталонные снимки `docs/screenshots/redesign-baseline/ref-*.png`, реализация `docs/screenshots/redesign-stage-5/app-*.png`.
@@ -99,4 +101,3 @@ MAE 8.8–10.0 на широких экранах — уровень «совп�
 Поле `input` действует только на свою модель; у прямого DeepSeek-адаптера поле называется `inputModalities`, лимиты — `imagePixelBudget` и `imageMaxBytes`. Отмечать Image у текстовой модели бессмысленно: нужна модель, которая действительно принимает изображения.
 
 После включения я смогу открывать макеты и снимки через `read_image` и давать глазное заключение поверх этих цифр.
-

@@ -1,5 +1,7 @@
 # Отчёт: этап 4 — хронология, Гант, переписка и модель
 
+> ⚠️ Уборка 24.11.2026: промежуточные каталоги скриншотов удалены из HEAD (доступны в истории git до коммита `8cb6217`). Актуальные снимки: `docs/screenshots/redesign-stage-5-kit/`, `docs/screenshots/ux4/`, `docs/screenshots/audit/` — см. `docs/screenshots/README.md`.
+
 **Статус:** PASS локально, ждёт приёмки · **push не делался**
 **Эталоны:** `timeline-git.html`, `timeline-gantt.html`, `chat.html`, `model.html`.
 
@@ -77,4 +79,3 @@
 ## 9. Следующий безопасный шаг
 
 Этап 5 — полная регрессия и выпуск: все семь экранов в четырёх контрольных размерах, axe/WCAG-проход, клавиатура, deep links и Back/Forward, сборка `demo/`, проверка GitHub Pages, before/after-скриншоты и финальный отчёт.
-
