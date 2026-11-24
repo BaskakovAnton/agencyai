@@ -13,7 +13,7 @@ test("сетка Ганта содержит строку на каждую ви
   expect((html.match(/data-row="/g) ?? []).length).toBe(model.rows.length);
   expect(html).toContain("gantt-row head");
   expect(html).toContain("grid-template-columns");
-  expect((html.match(/class="gantt-cell day"/g) ?? []).length).toBe(model.days.length);
+  expect((html.match(/class="gantt-cell day/g) ?? []).length).toBe(model.days.length);
 });
 
 test("полосы несут узел, даты и цвет роли", () => {

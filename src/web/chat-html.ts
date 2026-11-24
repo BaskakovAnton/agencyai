@@ -14,9 +14,7 @@ export interface PhoneInput {
   readonly backHref: string;
   readonly nextDay: string;
   readonly prevDay: string;
-  /** Название текущего узла — по спеке в шапке «U1 Подача обращения». */
   readonly nodeTitle: string;
-  /** Фаза SLA на выбранную дату. */
   readonly slaPhase: SlaPhase;
 }
 
@@ -30,10 +28,13 @@ const PRIORITY_TITLES: Readonly<Record<Priority, string>> = {
   none: "вне SLA",
 };
 
-/** Пузыри переписки: свои сообщения справа, чужие слева, системные — по центру. */
+const initials = (name: string): string =>
+  name.split(/[\s-]+/).filter((part) => part.length > 0).slice(0, 2).map((part) => part[0]!.toUpperCase()).join("");
+
+/** Сообщения по композиции chat.html: пузыри с мини-аватаром, мета и системные пометки. */
 export const renderMessages = (snapshot: ChatSnapshot, activeRole: RoleId): string => {
   if (snapshot.messages.length === 0) {
-    return '<p class="hint" data-empty>На эту дату переписки ещё нет — заявка появится позже.</p>';
+    return '<p class="empty-state" data-empty>На эту дату переписки ещё нет — заявка появится позже.</p>';
   }
   let previousDay = "";
   return snapshot.messages
@@ -41,61 +42,61 @@ export const renderMessages = (snapshot: ChatSnapshot, activeRole: RoleId): stri
       const separator = message.day === previousDay ? "" : '<div class="day-sep">' + formatDay(message.day) + "</div>";
       previousDay = message.day;
       if (message.kind === "system") {
-        return separator + '<div class="msg system" data-msg data-role="system" data-day="' + message.day + '">' +
-          '<div class="bubble">' + escapeHtml(message.text) +
-          '<span class="time">' + formatStamp(message.at) + "</span></div></div>";
+        return separator + '<ui-chat-message class="chat-message" data-msg data-role="system" data-day="' + message.day + '">' +
+          '<div class="system-note">' + escapeHtml(message.text) + " · " + formatStamp(message.at) + "</div></ui-chat-message>";
       }
       const own = message.role === activeRole;
+      const avatar = '<span class="mini-avatar" style="background:' + ROLE_COLORS[message.role] + ';color:var(--avatar-text)" aria-hidden="true">' +
+        initials(ROLE_NAMES[message.role]) + "</span>";
+      const bubble = '<div class="bubble"><b>' + escapeHtml(message.author) +
+        ' · <span data-role-label>' + ROLE_NAMES[message.role] + "</span></b><br>" + escapeHtml(message.text) +
+        '<div class="bubble-meta">' + formatStamp(message.at) + " · " + message.nodeId + " " + escapeHtml(message.day === "" ? "" : message.nodeId) + "</div></div>";
       return (
         separator +
-        '<div class="msg ' + (own ? "own" : "other") + '" data-msg data-role="' + message.role +
-        '" data-day="' + message.day + '" data-node="' + message.nodeId + '">' +
-        '<span class="avatar" style="background:' + ROLE_COLORS[message.role] + '">' + ROLE_SHORT[message.role] + "</span>" +
-        '<div class="bubble"><span class="author">' + escapeHtml(message.author) +
-        ' · <span data-role-label>' + ROLE_NAMES[message.role] + "</span></span>" +
-        '<span class="text">' + escapeHtml(message.text) + "</span>" +
-        '<span class="time">' + formatStamp(message.at) + "</span></div></div>"
+        '<ui-chat-message class="chat-message ' + (own ? "own" : "other") + '" data-msg data-role="' + message.role + '" data-day="' + message.day +
+        '" data-node="' + message.nodeId + '">' +
+        '<div class="bubble-row' + (own ? " mine" : "") + '">' + avatar + bubble + "</div></ui-chat-message>"
       );
     })
     .join("");
 };
 
-/** Мобильный чат: макет телефона, без полей ввода — переписка только читается. */
+/** Окно переписки: та же функциональность, оформление по chat.html. */
 export const renderPhone = (input: PhoneInput): string => {
   const { incident, snapshot } = input;
   return [
-    '<div class="phone" data-phone>',
-    '<div class="phone-top" data-role="' + input.activeRole + '" style="--role-color:' + ROLE_COLORS[input.activeRole] + '">',
-    '<a class="phone-back" data-back href="' + input.backHref + '">‹ Хронология</a>',
-    '<div class="phone-inc"><b>' + incident.id + "</b> " + escapeHtml(incident.title) + "</div>",
-    '<div class="phone-sub">' + escapeHtml(incident.address) + " · " + PRIORITY_TITLES[incident.priority] +
-      " · узел " + snapshot.nodeId + " " + escapeHtml(input.nodeTitle) + "</div>",
-    '<div class="phone-date" data-chat-date>Переписка на ' + formatDay(snapshot.day) + "</div>",
+    '<div class="chat-window phone" data-phone>',
+    '<div class="chat-head phone-top" data-role="' + input.activeRole + '" style="--role-color:' + ROLE_COLORS[input.activeRole] + '">',
+    '<a class="button" data-back href="' + input.backHref + '">‹ Хронология</a>',
+    '<div class="chat-person"><span class="avatar" aria-hidden="true">' + initials(incident.id) + "</span><div>" +
+      "<strong>" + incident.id + " · " + escapeHtml(incident.title) + "</strong>" +
+      '<small class="muted">' + escapeHtml(incident.address) + " · " + PRIORITY_TITLES[incident.priority] +
+      " · узел " + snapshot.nodeId + " " + escapeHtml(input.nodeTitle) + "</small></div></div>",
+    '<span class="sla-badge" data-sla="' + input.slaPhase + '" style="color:' + SLA_COLORS[input.slaPhase] + '">SLA: ' +
+      SLA_PHASE_TITLES[input.slaPhase] + "</span>",
     "</div>",
-    '<div class="phone-roles">',
-    '<span>Вы общаетесь как: <b data-role-badge>' + ROLE_NAMES[input.activeRole] + "</b></span>",
-    '<span>Собеседник: <b data-interlocutor>' + ROLE_NAMES[input.interlocutor] + "</b></span>",
-    '<span class="sla-badge" data-sla="' + input.slaPhase + '" style="color:' + SLA_COLORS[input.slaPhase] +
-      '">SLA: ' + SLA_PHASE_TITLES[input.slaPhase] + "</span>",
-    input.overridden ? '<span class="hint" data-sim>режим симуляции: роль выбрана вручную</span>' : "",
+    '<div class="chat-roles phone-roles">',
+    '<span class="muted">Вы общаетесь как: <b data-role-badge>' + ROLE_NAMES[input.activeRole] + "</b></span>",
+    '<span class="muted">Собеседник: <b data-interlocutor>' + ROLE_NAMES[input.interlocutor] + "</b></span>",
+    '<span class="muted" data-chat-date>Переписка на ' + formatDay(snapshot.day) + "</span>",
+    input.overridden ? '<span class="muted" data-sim>режим симуляции: роль выбрана вручную</span>' : "",
     "</div>",
-    '<p class="phone-readonly" data-readonly>Только чтение: отправка сообщений недоступна.</p>',
-    '<div class="phone-body" data-messages>' + renderMessages(snapshot, input.activeRole) + "</div>",
-    '<div class="phone-actions">',
-    '<button data-action="prev-msg"' + (input.prevDay === "" ? " disabled" : "") + ">‹ Реплика назад</button>",
-    '<button data-action="next-msg"' + (input.nextDay === "" ? " disabled" : "") + ">Следующая реплика ›</button>",
-    '<button data-action="cycle-role">Сменить роль (симуляция)</button>',
+    '<p class="read-only-notice" data-readonly>Только чтение: отправка сообщений недоступна.</p>',
+    '<div class="chat-body phone-body" data-messages>' + renderMessages(snapshot, input.activeRole) + "</div>",
+    '<div class="chat-controls phone-actions">',
+    '<button class="button" data-action="prev-msg"' + (input.prevDay === "" ? " disabled" : "") + ">‹ Реплика назад</button>",
+    '<button class="button" data-action="next-msg"' + (input.nextDay === "" ? " disabled" : "") + ">Следующая реплика ›</button>",
     "</div>",
-    '<div class="phone-foot">Демонстрация: сообщения только читаются, отправка недоступна</div>',
+    '<p class="panel-foot muted">Демонстрация: сообщения только читаются, отправка недоступна</p>',
     "</div>",
   ].join("");
 };
 
-/** Компактная панель чата рядом с графом на широком экране. */
+/** Компактная панель переписки рядом с графом. */
 export const renderInlineChat = (incident: Incident, snapshot: ChatSnapshot, href: string): string =>
   '<aside class="inline-chat" data-inline-chat>' +
   '<div class="inline-head"><b>' + incident.id + "</b> " + escapeHtml(incident.title) +
-  '<span class="hint"> на ' + formatDay(snapshot.day) + "</span></div>" +
+  '<span class="muted"> на ' + formatDay(snapshot.day) + "</span></div>" +
   '<div class="inline-body">' + renderMessages(snapshot, snapshot.activeRole) + "</div>" +
-  '<a class="inline-link" href="' + href + '">Открыть мобильный чат этой заявки →</a>' +
+  '<a class="panel-link" href="' + href + '">Открыть мобильный чат этой заявки →</a>' +
   "</aside>";

@@ -3,9 +3,11 @@ import type { GanttModel } from "../core/gantt.ts";
 import { SLA_LEGEND_TITLES, SLA_PHASES } from "../core/sla-at.ts";
 import { pluralize } from "../core/text.ts";
 import { formatDay } from "../core/timeline.ts";
+import { HERO_INCIDENT_ID } from "../data/hero.ts";
+import { renderPanel } from "./components.ts";
 import { renderGanttGrid } from "./gantt-grid.ts";
 import { renderGitSvg } from "./git-svg.ts";
-import type { ViewMode } from "./router.ts";
+import { hrefChat, hrefIncidents, hrefTimeline, type ViewMode } from "./router.ts";
 import { FORK_MARK, MERGE_MARK, SLA_COLORS } from "./theme.ts";
 
 export interface TimelinePageInput {
@@ -53,11 +55,11 @@ export const renderChips = (input: TimelinePageInput): string => {
 /** Только картинка (граф или Гант) — её перерисовывают при движении ползунка.
  *  Тултип живёт в body (position: fixed): внутри прокручиваемой области он менял бы раскладку. */
 export const renderCanvas = (input: TimelinePageInput): string =>
-  '<div class="canvas" data-canvas tabindex="0" role="region" aria-label="' +
+  '<div class="graph-wrap"><div class="canvas graph-canvas" data-canvas tabindex="0" role="region" aria-label="' +
   (input.view === "gantt" ? "Диаграмма Ганта: заявки по дням" : "Git-граф заявок: узлы по колонкам, дни по строкам") +
   '">' +
   (input.view === "gantt" ? renderGanttGrid(input.gantt, input.filter) : renderGitSvg(input.git, input.filter)) +
-  "</div>";
+  "</div></div>";
 
 export const renderBody = (input: TimelinePageInput): string =>
   renderCanvas(input) +
@@ -66,8 +68,10 @@ export const renderBody = (input: TimelinePageInput): string =>
 
 /** Кнопки вида и сброса фильтра: их перерисовывают, когда фильтр меняется. */
 export const renderControls = (input: TimelinePageInput): string =>
-  '<div class="controls" data-controls>' +
-  '<div class="segmented" data-view-switch role="group" aria-label="Вид">' +
+  '<div class="timeline-controls" data-controls>' +
+  '<span class="timeline-date">◷ ' + formatDay(input.day) + "</span>" +
+  '<span class="hint">Срез времени:</span>' +
+  '<div class="segmented view-switch" data-view-switch role="group" aria-label="Вид">' +
   '<button data-view="git"' + (input.view === "git" ? ' class="on"' : "") + ' aria-pressed="' + String(input.view === "git") + '">Git-граф</button>' +
   '<button data-view="gantt"' + (input.view === "gantt" ? ' class="on"' : "") + ' aria-pressed="' + String(input.view === "gantt") + '">Диаграмма Ганта</button>' +
   "</div>" +
@@ -140,12 +144,34 @@ export const renderLegends = (input: TimelinePageInput): string => {
     '<span class="legend-item" data-legend-graph="merge">' + MERGE_MARK + " слияние</span>" +
     '<span class="legend-item" data-legend-graph="counts">коммитов ' + input.git.commits.length +
     " · заявок " + input.git.incidents.length + " · узлов " + input.git.columns.length + "</span>";
-  return '<div class="legends" data-legends>' + sla + graph + "</div>";
+  return '<div class="legends graph-legend" data-legends>' + sla + graph + "</div>";
 };
+
+/** Панели-справка под графом: как читать граф и связанные представления. */
+export const renderTimelineHelp = (input: TimelinePageInput): string =>
+  '<div class="two-col section-gap">' +
+  renderPanel({
+    title: input.view === "gantt" ? "Принцип визуального отображения SLA" : "Как читать граф",
+    body:
+      input.view === "gantt"
+        ? '<p class="muted">Полоса — время заявки на узле: цвет роли показывает исполнителя, рамка — фазу SLA (в срок, пауза, просрочка). ' +
+          "Диаграмма прокручивается по горизонтали, строки доступны с клавиатуры.</p>"
+        : '<p class="muted">Колонки — узлы процесса, строки — дни, точки — события заявок. Цвет точки показывает фазу SLA, ' +
+          "но не заменяет текстовую подпись. Граф прокручивается по горизонтали и доступен с клавиатуры.</p>",
+  }) +
+  renderPanel({
+    title: "Связанные виды",
+    body:
+      '<div class="stack">' +
+      '<a class="button" href="' + hrefTimeline(input.day, "gantt") + '">Диаграмма Ганта →</a>' +
+      '<a class="button" href="' + hrefChat(HERO_INCIDENT_ID, input.day) + '">Переписка ' + HERO_INCIDENT_ID + " →</a>" +
+      '<a class="button" href="' + hrefIncidents(input.day) + '">Все обращения →</a></div>',
+  }) +
+  "</div>";
 
 export const renderTimelinePage = (input: TimelinePageInput): string =>
   renderTimelineHeader(input) + renderTimeRuler(input) + renderLegends(input) + renderScrollHint() +
-  renderBody(input) + renderTimelineFooter();
+  renderBody(input) + renderTimelineFooter() + renderTimelineHelp(input);
 
 export const tooltipText = (commit: { incidentId: string; nodeId: string; title?: string; day: string; role: string; text: string }, nodeTitle: string): string =>
   commit.incidentId + " · " + commit.nodeId + " " + escapeHtml(nodeTitle) + " · " + formatDay(commit.day) + " · " + commit.role + ": " + commit.text;

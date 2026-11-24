@@ -11,9 +11,9 @@ export const renderGanttGrid = (model: GanttModel, filter = ""): string => {
   const rows = filter === "" ? model.rows : model.rows.filter((row) => row.incidentId === filter);
   const columns = "220px repeat(" + Math.max(model.days.length, 1) + ", minmax(26px, 1fr))";
   const head =
-    '<div class="gantt-row head" style="grid-template-columns:' + columns + '">' +
-    '<div class="gantt-cell name">заявка</div>' +
-    model.days.map((day) => '<div class="gantt-cell day">' + day.slice(8) + "</div>").join("") +
+    '<div class="gantt-row head gantt-head" style="grid-template-columns:' + columns + '">' +
+    '<div class="gantt-cell name gantt-name">заявка</div>' +
+    model.days.map((day) => '<div class="gantt-cell day gantt-day">' + day.slice(8) + "</div>").join("") +
     "</div>";
 
   const body = rows
@@ -22,7 +22,7 @@ export const renderGanttGrid = (model: GanttModel, filter = ""): string => {
         .map((segment) => {
           const span = Math.max(segment.toColumn - segment.fromColumn + 1, 1);
           return (
-            '<div class="bar" data-bar="' + row.incidentId + '" data-node="' + segment.nodeId +
+            '<div class="bar gantt-bar" data-bar="' + row.incidentId + '" data-node="' + segment.nodeId +
             '" data-from="' + segment.fromDay + '" data-to="' + segment.toDay +
             '" data-sla="' + segment.slaPhase + '" data-hours="' + segment.hours +
             '" style="grid-column:' + (segment.fromColumn + 2) + " / span " + span +
@@ -38,7 +38,7 @@ export const renderGanttGrid = (model: GanttModel, filter = ""): string => {
       return (
         '<div class="gantt-row' + (row.isHero ? " hero" : "") + '" data-row="' + row.incidentId +
         '" tabindex="0" role="button" style="grid-template-columns:' + columns + '">' +
-        '<div class="gantt-cell name"><b>' + row.incidentId + "</b> " + escapeHtml(row.title) +
+        '<div class="gantt-cell name gantt-name"><b>' + row.incidentId + "</b> " + escapeHtml(row.title) +
         '<i class="prio ' + row.priority + '">' + row.priority + "</i></div>" +
         bars +
         "</div>"
@@ -46,5 +46,5 @@ export const renderGanttGrid = (model: GanttModel, filter = ""): string => {
     })
     .join("");
 
-  return '<div class="gantt" data-gantt>' + head + body + "</div>";
+  return '<div class="gantt-wrap"><div class="gantt" data-gantt>' + head + body + "</div></div>";
 };
