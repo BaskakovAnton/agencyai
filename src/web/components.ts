@@ -20,11 +20,28 @@ export const renderPanel = (input: PanelInput): string =>
   "</div>" +
   '<div class="panel-body">' + input.body + "</div></ui-panel>";
 
-/** KPI-карточка по разметке overview.html: подпись, иконка, значение, пояснение. */
-export const renderKpi = (label: string, value: string, foot = "", icon = "", key = ""): string =>
+export interface KpiDeltaView {
+  readonly text: string;
+  readonly tone: "good" | "bad" | "neutral";
+  readonly title: string;
+}
+
+/** KPI-карточка по разметке overview.html: подпись, иконка, значение, пояснение и динамика. */
+export const renderKpi = (
+  label: string,
+  value: string,
+  foot = "",
+  icon = "",
+  key = "",
+  delta?: KpiDeltaView,
+): string =>
   "<ui-kpi class=\"kpi\"" + (key === "" ? "" : ' data-kpi="' + key + '"') +
   '><div class="kpi-top"><span class="kpi-label">' + esc(label) + "</span>" + icon + "</div>" +
   '<div class="kpi-value">' + esc(value) + "</div>" +
+  (delta === undefined
+    ? ""
+    : '<div class="kpi-delta kpi-delta-' + delta.tone + '" data-kpi-delta title="' + esc(delta.title) + '">' +
+      esc(delta.text) + "</div>") +
   (foot ? '<div class="kpi-note">' + esc(foot) + "</div>" : "") + "</ui-kpi>";
 
 /** Статус-бейдж: цвет всегда продублирован текстом. */

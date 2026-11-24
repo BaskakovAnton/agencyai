@@ -42,6 +42,8 @@ export const createOrgRepository = (initial: OrgWorkspace): OrgRepository => {
     eventsOf: (incidentId) => workspace.events.filter((event) => event.entityId === incidentId),
     lifecycleOf: (incidentId): IncidentLifecycle | undefined => workspace.lifecycles[incidentId],
     incidentIdsOfDepartment: (departmentId) => assignmentsOfDepartment(workspace.assignments, departmentId),
+    allLifecycles: () => workspace.lifecycles,
+    allAssignments: () => workspace.assignments,
   };
   return {
     ...query,

@@ -1,5 +1,7 @@
 import { formatDay } from "../core/timeline.ts";
-import { esc, renderBadge, renderEmptyState, renderKpi, renderPanel, renderSlaBadge } from "./components.ts";
+import { esc, renderBadge, renderEmptyState, renderKpi, renderPanel, renderSlaBadge, type KpiDeltaView } from "./components.ts";
+import { renderPeriodNotes, renderPeriodPanel, renderPeriodSwitch } from "./dashboard-period.ts";
+import { periodEndingAt } from "./periods-reexport.ts";
 import { hrefIncident, hrefIncidents, hrefTimeline } from "./router.ts";
 import type { Overview } from "./overview.ts";
 
@@ -13,6 +15,19 @@ const daySelect = (days: readonly string[], day: string): string =>
   '<label class="hint">Срез: <select data-day-select aria-label="Дата среза">' +
   days.map((value) => '<option value="' + value + '"' + (value === day ? " selected" : "") + ">" + formatDay(value) + "</option>").join("") +
   "</select></label>";
+
+/** Динамика KPI относительно предыдущего равного периода. */
+const deltaFor = (overview: Overview, id: string): KpiDeltaView | undefined => {
+  const kpi = overview.analytics.kpis.find((item) => item.id === id);
+  const delta = kpi?.delta;
+  if (!kpi || !delta) return undefined;
+  const arrow = delta.change > 0 ? "↑ " : delta.change < 0 ? "↓ " : "→ ";
+  return {
+    text: arrow + delta.text,
+    tone: delta.sentiment,
+    title: kpi.title + ": было " + delta.previous + " → стало " + delta.current + " (" + kpi.comparison + ")",
+  };
+};
 
 const kpiIcon = (glyph: string, tone: string): string =>
   '<span class="kpi-icon' + (tone === "" ? "" : " " + tone) + '" aria-hidden="true">' + glyph + "</span>";
@@ -83,10 +98,12 @@ const slaRows = (overview: Overview): string =>
 /** Экран «Обзор» по композиции overview.html. */
 export const renderDashboard = (input: DashboardInput): string => {
   const { overview } = input;
+  // Период берётся только из аналитики: карточки и график не могут расходиться.
+  const period = overview.analytics.period.length;
   if (overview.kpi.total === 0) {
     return (
       '<section class="dashboard" data-dashboard>' +
-      '<div class="toolbar">' + daySelect(input.days, input.day) + "</div>" +
+      '<div class="toolbar">' + daySelect(input.days, input.day) + renderPeriodSwitch(period) + "</div>" +
       renderEmptyState("В этом срезе нет заявок — выберите другую дату.") +
       "</section>"
     );
@@ -94,16 +111,24 @@ export const renderDashboard = (input: DashboardInput): string => {
 
   const kpis =
     '<div class="kpi-grid">' +
-    renderKpi("Активные обращения", String(overview.kpi.active), "не завершены в срезе", kpiIcon("▤", ""), "active") +
+    renderKpi("Активные обращения", String(overview.kpi.active), "не завершены в срезе", kpiIcon("▤", ""), "active", deltaFor(overview, "active")) +
     renderKpi(
       "Требуют внимания",
       String(overview.kpi.attention),
       "в том числе " + overview.atRisk + " с риском SLA",
       kpiIcon("!", "danger"),
       "attention",
+      deltaFor(overview, "overdue"),
     ) +
-    renderKpi("На паузе", String(overview.kpi.paused), "ожидают условия возобновления", kpiIcon("Ⅱ", "warning"), "paused") +
-    renderKpi("Завершено", String(overview.kpi.completed), "закрыто в срезе", kpiIcon("✓", "success"), "completed") +
+    renderKpi("На паузе", String(overview.kpi.paused), "ожидают условия возобновления", kpiIcon("Ⅱ", "warning"), "paused", deltaFor(overview, "paused")) +
+    renderKpi(
+      "Завершено за период",
+      String(overview.analytics.flow.finished),
+      "подтверждено " + overview.analytics.flow.approved,
+      kpiIcon("✓", "success"),
+      "completed",
+      deltaFor(overview, "finished"),
+    ) +
     "</div>";
 
   const attention =
@@ -114,7 +139,7 @@ export const renderDashboard = (input: DashboardInput): string => {
 
   return (
     '<section class="dashboard" data-dashboard>' +
-    '<div class="toolbar">' + daySelect(input.days, input.day) +
+    '<div class="toolbar">' + daySelect(input.days, input.day) + renderPeriodSwitch(period) +
     '<span class="grow"></span><span class="count">' + overview.kpi.total + " обращений в срезе</span>" +
     '<a class="panel-link" href="' + hrefIncidents(input.day) + '">Все обращения →</a>' +
     '<a class="panel-link" href="' + hrefTimeline(input.day, "git") + '">Хронология →</a></div>' +
@@ -131,6 +156,13 @@ export const renderDashboard = (input: DashboardInput): string => {
     "</div>" +
     '<div class="section-gap">' +
     renderPanel({ title: "Контроль сроков", subtitle: "SLA по открытым обращениям", body: slaRows(overview) }) +
+    "</div>" +
+    '<div class="section-gap">' +
+    renderPeriodPanel(
+      overview.analytics,
+      formatDay(overview.analytics.period.fromDay) + " — " + formatDay(overview.analytics.period.toDay),
+    ) +
+    renderPeriodNotes(overview.analytics) +
     "</div>" +
     "</section>"
   );

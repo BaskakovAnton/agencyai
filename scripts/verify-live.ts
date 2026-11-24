@@ -102,6 +102,17 @@ if (ready) {
   if ((await page.locator("[data-department-split] [data-department]").count()) === 0) problems.push("разрез по подразделениям пуст");
   if ((await page.locator("[data-waiting-review]").count()) === 0) problems.push("на обзоре нет строки «ждут подтверждения»");
   if ((await page.locator('th:has-text("Подразделение")').count()) === 0) problems.push("в таблице внимания нет колонки «Подразделение»");
+  // UX-3: период и динамика на обзоре.
+  if ((await page.locator("[data-period-switch]").count()) === 0) problems.push("на обзоре нет переключателя периода");
+  const rows7 = await page.locator("[data-dynamics-row]").count();
+  if (rows7 !== 7) problems.push("по умолчанию период не 7 дней: строк динамики " + rows7);
+  if ((await page.locator("[data-kpi-delta]").count()) < 4) problems.push("в карточках KPI нет динамики");
+  if ((await page.locator("[data-period-notes]").count()) === 0) problems.push("нет пояснения ограничений расчёта");
+  await page.locator('[data-period-button="30"]').click();
+  await page.waitForTimeout(400);
+  const rows30 = await page.locator("[data-dynamics-row]").count();
+  if (rows30 !== 30) problems.push("период 30 дней не переключился: строк динамики " + rows30);
+  if (!decodeURIComponent(page.url()).includes("period=30")) problems.push("период не записался в адрес: " + page.url());
 
   await page.goto(base + "?v=" + Date.now() + "#incidents");
   await page.waitForSelector("[data-incidents-table]");

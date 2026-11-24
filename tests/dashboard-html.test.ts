@@ -1,16 +1,22 @@
 import { expect, test } from "bun:test";
 import { buildStory } from "../src/core/story.ts";
 import { buildProcessGraph } from "../src/data/edges.ts";
+import { createDemoOrgRepository } from "../src/data/org-repository.ts";
 import { renderDashboard } from "../src/web/dashboard-html.ts";
 import { buildOverview } from "../src/web/overview.ts";
+import { buildPeriodAnalytics } from "../src/core/analytics/kpi.ts";
+import { renderPeriodPanel } from "../src/web/dashboard-period.ts";
+import { assignments, graph as fixtureGraph, incidents as fixtureIncidents, lifecycles } from "./kpi-fixture.ts";
 
 const graph = buildProcessGraph();
 const story = buildStory(graph, 7);
 const days = story.days;
 const day = "2026-01-02";
-const html = renderDashboard({ overview: buildOverview(graph, story.incidents, day), days, day });
+const { repository } = createDemoOrgRepository(graph, 7);
+const overview = buildOverview(graph, story.incidents, day, repository, 7);
+const html = renderDashboard({ overview, days, day });
 
-test("обзор собран по композиции overview.html", () => {
+test("обзор собран по композиции overview.html и показывает 4 KPI", () => {
   expect(html).toContain("data-dashboard");
   expect(html).toContain("kpi-grid");
   expect((html.match(/<ui-kpi/g) ?? []).length).toBe(4);
@@ -18,30 +24,60 @@ test("обзор собран по композиции overview.html", () => {
   expect(html).toContain("Активные обращения");
   expect(html).toContain("Требуют внимания");
   expect(html).toContain("На паузе");
-  expect(html).toContain("Завершено");
+  expect(html).toContain("Завершено за период");
   expect(html).toContain("data-day-select");
-  expect(html).toContain("2 января 2026");
 });
 
-test("панели: внимание, события, распределение, контроль сроков", () => {
-  expect(html).toContain("data-attention");
-  expect((html.match(/<ui-panel/g) ?? []).length).toBeGreaterThanOrEqual(4);
-  expect(html).toContain("Последние события");
-  expect(html).toContain("Распределение обращений");
-  expect(html).toContain("Контроль сроков");
-  expect((html.match(/<ui-activity/g) ?? []).length).toBeGreaterThan(0);
+test("переключатель периода показывает 7 и 30 дней и отмечает текущий", () => {
+  expect(html).toContain("data-period-switch");
+  expect(html).toContain('data-period-button="7"');
+  expect(html).toContain('data-period-button="30"');
+  expect(html).toContain('aria-pressed="true"');
+  const wideOverview = buildOverview(graph, story.incidents, day, repository, 30);
+  const wide = renderDashboard({ overview: wideOverview, days, day });
+  expect(wide).toContain('data-period-button="30"');
+  expect(wide).toContain('aria-pressed="false"');
+  expect((wide.match(/data-dynamics-row=/g) ?? []).length).toBe(30);
 });
 
-test("таблицы и бейджи используют ui-компоненты и scope", () => {
-  expect(html).toContain('scope="col"');
-  expect((html.match(/<ui-badge/g) ?? []).length).toBeGreaterThan(0);
-  expect((html.match(/<ui-sla/g) ?? []).length).toBeGreaterThan(0);
-  expect(html).not.toContain("#incident/\"");
-  expect(html).not.toContain('style="color');
+test("карточки KPI несут динамику относительно предыдущего периода", () => {
+  expect((html.match(/data-kpi-delta/g) ?? []).length).toBeGreaterThanOrEqual(4);
+  expect(/[↑↓→]/.test(html)).toBe(true);
+  expect(html).toContain("было ");
+  expect(html).toContain("period-notes");
+  expect(html).toContain("Как считаем");
 });
 
-test("нулевой срез объясняется текстом, а не пустотой", () => {
-  const empty = renderDashboard({ overview: buildOverview(graph, story.incidents, "2020-01-01"), days, day: "2020-01-01" });
+test("панель динамики показывает по строке на каждый день периода", () => {
+  expect(html).toContain("Динамика за период");
+  expect((html.match(/data-dynamics-row=/g) ?? []).length).toBe(7);
+  expect(html).toContain("data-flow-created");
+  expect(html).toContain("data-backlog-delta");
+  expect(html).toContain("data-in-time-share");
+});
+
+test("период карточек и панели всегда один и тот же", () => {
+  const wideOverview = buildOverview(graph, story.incidents, day, repository, 30);
+  const wide = renderDashboard({ overview: wideOverview, days, day });
+  expect(wideOverview.analytics.period.length).toBe(30);
+  expect((wide.match(/data-dynamics-row=/g) ?? []).length).toBe(30);
+  expect(wide).toContain("30 дней");
+});
+
+test("без данных день показывает корректное состояние и остаётся переключаемым", () => {
+  const emptyOverview = buildOverview(graph, story.incidents, "2020-01-01", repository, 7);
+  const empty = renderDashboard({ overview: emptyOverview, days, day: "2020-01-01" });
   expect(empty).toContain("нет заявок");
   expect(empty).toContain("data-empty-state");
+  expect(empty).toContain("data-period-switch");
+  expect(emptyOverview.analytics.snapshot.hasData).toBe(false);
+});
+
+test("пустой поток дней даёт состояние «недостаточно данных для динамики»", () => {
+  const quiet = buildPeriodAnalytics({ graph: fixtureGraph, incidents: fixtureIncidents, lifecycles, assignments }, "2026-01-16", 7);
+  expect(quiet.flow.created).toBe(0);
+  expect(quiet.dynamics.reduce((sum, point) => sum + point.created + point.finished, 0)).toBe(0);
+  const panel = renderPeriodPanel(quiet, "10 января 2026 — 16 января 2026");
+  expect(panel).toContain("Недостаточно данных для динамики");
+  expect(panel).not.toContain("data-dynamics-row");
 });

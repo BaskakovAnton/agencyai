@@ -1,6 +1,9 @@
 import { isFinished, priorityRank } from "../core/incident.ts";
-import { DEMO_ORIGIN, dayOf, formatStamp, incidentAt, visibleAt } from "../core/timeline.ts";
-import { SLA_PHASE_LABELS, hoursSince, slaPhaseOnDay, slaStateAt, type SlaPhase } from "../core/sla-at.ts";
+import { dayOf, formatStamp, incidentAt, visibleAt } from "../core/timeline.ts";
+import { SLA_PHASE_LABELS, slaPhaseOnDay, type SlaPhase } from "../core/sla-at.ts";
+import { slaHoursLeft, slaIsAtRisk, needsAttention } from "../core/sla-attention.ts";
+import { buildPeriodAnalytics, type PeriodAnalytics } from "../core/analytics/kpi.ts";
+import type { PeriodLength } from "../core/periods.ts";
 import { PRIORITY_TITLES } from "../data/roles.ts";
 import { SLA_PROFILES } from "../data/sla.ts";
 import type { OrgQuery } from "../core/org/repository.ts";
@@ -65,6 +68,8 @@ export interface Overview {
   readonly atRisk: number;
   /** Орг-факты (UX-4): подразделения и ожидание подтверждения; null — модель не подключена. */
   readonly org: OrgFacts | null;
+  /** Периодная аналитика (UX-3): Snapshot, Flow, дельта остатка и динамика. */
+  readonly analytics: PeriodAnalytics;
 }
 
 export const PRIORITY_TONES: Readonly<Record<Priority, Tone>> = { urgent: "red", normal: "amber", routine: "gray", none: "gray" };
@@ -72,31 +77,7 @@ export const PHASE_TONES: Readonly<Record<SlaPhase, Tone>> = { ok: "green", paus
 /** Подписи фаз: единый источник — core/sla-at.ts (SLA_PHASE_LABELS). */
 export const PHASE_TITLES: Readonly<Record<SlaPhase, string>> = SLA_PHASE_LABELS;
 
-/** Часы модельного времени на конец выбранного дня. */
-const dayEndHours = (day: string): number => hoursSince(DEMO_ORIGIN, day + "T23:59:59.999Z");
-
-/** Остаток норматива в часах (может быть отрицательным — срок уже нарушен). */
-export const slaHoursLeft = (incident: Incident, day: string): number =>
-  Math.round(slaStateAt(incident, day).dueAt - dayEndHours(day));
-
-/**
- * Формула «требуют внимания»: просрочен SLA **или** срочная незавершённая заявка.
- * Формула зафиксирована тестом `needsAttention`.
- */
-export const needsAttention = (graph: Graph, incident: Incident, day: string): boolean => {
-  if (slaPhaseOnDay(incident, day) === "overdue") return true;
-  return incident.priority === "urgent" && !isFinished(incidentAt(incident, day), graph);
-};
-
-/** Контроль сроков: нарушен, если фаза вне SLA; «на риске», если в срок, но осталось ≤ 24 ч. */
-export const slaIsAtRisk = (incident: Incident, day: string): boolean => {
-  const phase = slaPhaseOnDay(incident, day);
-  if (phase === "overdue") return true;
-  if (phase !== "ok") return false;
-  if (SLA_PROFILES[incident.priority].resolveHours === 0) return false;
-  const left = slaHoursLeft(incident, day);
-  return left > 0 && left <= 24;
-};
+export { needsAttention, slaHoursLeft, slaIsAtRisk } from "../core/sla-attention.ts";
 
 export const slaTextFor = (incident: Incident, day: string): string => {
   const phase = slaPhaseOnDay(incident, day);
@@ -107,7 +88,13 @@ export const slaTextFor = (incident: Incident, day: string): string => {
 };
 
 /** Сводка обзора: KPI, требующие внимания, события, распределение и контроль сроков. */
-export const buildOverview = (graph: Graph, incidents: readonly Incident[], day: string, org?: OrgQuery): Overview => {
+export const buildOverview = (
+  graph: Graph,
+  incidents: readonly Incident[],
+  day: string,
+  org?: OrgQuery,
+  period: PeriodLength = 7,
+): Overview => {
   const slice = visibleAt(incidents, day);
   const phases = slice.map((incident) => slaPhaseOnDay(incident, day));
 
@@ -182,5 +169,15 @@ export const buildOverview = (graph: Graph, incidents: readonly Incident[], day:
     sla,
     atRisk: slice.filter((incident) => slaIsAtRisk(incident, day)).length,
     org: org === undefined ? null : orgFactsFor(org, slice.map((incident) => incident.id)),
+    analytics: buildPeriodAnalytics(
+      {
+        graph,
+        incidents,
+        lifecycles: org?.allLifecycles?.() ?? {},
+        assignments: org?.allAssignments?.() ?? [],
+      },
+      day,
+      period,
+    ),
   };
 };

@@ -39,6 +39,15 @@ test("чтение даёт согласованные срезы по обра�
   expect(repository.eventsOf(withParticipants!).every((event) => event.entityId === withParticipants!)).toBe(true);
 });
 
+test("порт отдаёт полные наборы для периодной аналитики", () => {
+  const lifecycles = repository.allLifecycles!();
+  const assignments = repository.allAssignments!();
+  expect(Object.keys(lifecycles).length).toBeGreaterThan(0);
+  expect(assignments.length).toBeGreaterThan(30);
+  const first = repository.incidentIds[0]!;
+  expect(repository.lifecycleOf(first)).toBe(lifecycles[first]);
+});
+
 test("неизвестное обращение не даёт данных и не бросает исключение", () => {
   expect(repository.assignmentsOf("З-999")).toHaveLength(0);
   expect(repository.accountableOf("З-999")).toBeUndefined();

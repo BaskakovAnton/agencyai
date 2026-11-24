@@ -1,5 +1,6 @@
 import { HERO_INCIDENT_ID } from "../data/hero.ts";
 import type { OrgRepository } from "../core/org/repository.ts";
+import { isPeriodLength, type PeriodLength } from "../core/periods.ts";
 import type { Story } from "../core/story.ts";
 import type { Graph } from "../types.ts";
 import { mountChat } from "./chat-view.ts";
@@ -18,6 +19,8 @@ export interface Route {
   readonly incidentId: string;
   readonly at: string;
   readonly view: ViewMode;
+  /** Длина периода обзора (UX-3): 7 или 30 дней. */
+  readonly period: PeriodLength;
 }
 
 /** Разбор адреса: стартовый экран — обзор, модель живёт по явному #model. */
@@ -26,20 +29,28 @@ export const parseRoute = (hash: string): Route => {
   const path = value.split("?")[0] ?? "";
   const query = new URLSearchParams(value.split("?")[1] ?? "");
   const at = query.get("at") ?? "";
+  const periodValue = Number(query.get("period") ?? "7");
+  const period: PeriodLength = isPeriodLength(periodValue) ? periodValue : 7;
   const view: ViewMode = query.get("view") === "gantt" ? "gantt" : "git";
   if (path.startsWith("chat")) {
-    return { name: "chat", incidentId: decodeURIComponent(path.slice(4).replace(/^\//, "")), at, view };
+    return { name: "chat", incidentId: decodeURIComponent(path.slice(4).replace(/^\//, "")), at, view, period };
   }
-  if (path.startsWith("timeline")) return { name: "timeline", incidentId: "", at, view };
+  if (path.startsWith("timeline")) return { name: "timeline", incidentId: "", at, view, period };
   if (path.startsWith("incident/")) {
-    return { name: "incident", incidentId: decodeURIComponent(path.slice("incident/".length)), at, view };
+    return { name: "incident", incidentId: decodeURIComponent(path.slice("incident/".length)), at, view, period };
   }
-  if (path === "incidents") return { name: "incidents", incidentId: "", at, view };
-  if (path === "model") return { name: "model", incidentId: "", at, view };
-  return { name: "dashboard", incidentId: "", at, view };
+  if (path === "incidents") return { name: "incidents", incidentId: "", at, view, period };
+  if (path === "model") return { name: "model", incidentId: "", at, view, period };
+  return { name: "dashboard", incidentId: "", at, view, period };
 };
 
-export const hrefDashboard = (): string => "#dashboard";
+export const hrefDashboard = (at = "", period?: PeriodLength): string => {
+  const query = new URLSearchParams();
+  if (at !== "") query.set("at", at);
+  if (period !== undefined && period !== 7) query.set("period", String(period));
+  const suffix = query.toString();
+  return suffix === "" ? "#dashboard" : "#dashboard?" + suffix;
+};
 export const hrefIncidents = (at = ""): string => (at === "" ? "#incidents" : "#incidents?at=" + encodeURIComponent(at));
 export const hrefIncident = (id: string, at: string): string =>
   "#incident/" + encodeURIComponent(id) + "?at=" + encodeURIComponent(at);
@@ -72,7 +83,7 @@ export const mountRouter = (graph: Graph, story: Story, org?: OrgRepository): vo
     if (route.name === "timeline") mountTimeline(view, graph, story, route);
     else if (route.name === "chat") mountChat(view, graph, story, route);
     else if (route.name === "model") mountModel(view, graph);
-    else if (route.name === "dashboard") mountDashboard(view, graph, story, route, org);
+    else if (route.name === "dashboard") mountDashboard(view, graph, story, route, org); // период берётся из route.period
     else if (route.name === "incidents") mountIncidents(view, graph, story, route, org);
     else mountIncident(view, graph, story, route, { org });
   };

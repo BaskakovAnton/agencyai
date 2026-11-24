@@ -20,6 +20,10 @@ export interface OrgQuery {
   lifecycleOf(incidentId: string): IncidentLifecycle | undefined;
   /** Обращения, в которых подразделение участвует или отвечает (обратный индекс). */
   incidentIdsOfDepartment(departmentId: string): readonly string[];
+  /** Все жизненные циклы — для периодной аналитики (UX-3). */
+  allLifecycles?(): Readonly<Record<string, IncidentLifecycle>>;
+  /** Все назначения — для периодной аналитики (UX-3). */
+  allAssignments?(): readonly IncidentAssignment[];
 }
 
 /** Запись: снимок целиком. Адаптеры решают, как его сохранить. */
