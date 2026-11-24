@@ -1,112 +1,145 @@
-# AgencyAI — baseline редизайна (Этап 0)
+# Baseline редизайна по утверждённому каталогу эталонов
 
-**Дата:** 17.11.2026
-**Ветка:** `redesign/deepseek-harness` (от `main` = `19fd5ef`)
-**Статус:** PASS — продуктовый код не изменён
-**Инструмент скриншотов:** `scripts/redesign-shots.ts`
+**Дата:** 24.11.2026 · **Этап 0 — аудит и baseline** · **Статус: AUDIT ONLY, ждём разрешения**
+**Утверждённый источник:** https://goshva.github.io/agencyai-redesign/docs/redesign-reference/index.html
+**Репозиторий-источник:** `goshva/agencyai-redesign`, ветка `main` (клонирован в `%TEMP%\agencyai-redesign`).
 
----
+Прежний baseline другого цикла сохранён как `docs/redesign-baseline-2026-11-17.md`.
 
-## 1. Инструменты, доступные в этой сессии
+## 1. Что входит в утверждённый комплект
 
-| Возможность | Есть | Комментарий |
+| Материал | Статус у нас | Примечание |
 |---|---|---|
-| Чтение/поиск файлов | ✔ | read, glob, grep |
-| Редактирование файлов | ✔ | write, edit |
-| Терминал | ✔ | pwsh; bun 1.4.4 по абсолютному пути |
-| Unit/E2E тесты | ✔ | `bun test`, `bun run e2e` (Playwright + chromium) |
-| Браузерная проверка | ✔ | Playwright-скрипты проекта, скриншоты |
-| axe-core (доступность) | ✔ | devDependency, `bun run audit` |
-| Субагенты | ✔ | только анализ/review, без параллельного редактирования общих файлов |
-| browser-use / computer-use | ✘ | вместо них локальный Playwright |
-| Просмотр изображений | ✘ | модель без image input: пиксельную сверку делает владелец; я даю скриншоты и замеры DOM |
+| `redesign-reference/index.html` — каталог | синхронизирован | точка входа, определяет состав и маршруты |
+| `overview.html` | **обновлён** (отличался) | новый продуктовый экран |
+| `incidents.html` | **обновлён** | новый продуктовый экран |
+| `incident-detail.html` | **обновлён** | новый продуктовый экран |
+| `timeline-git.html` | **обновлён** | существующий маршрут |
+| `timeline-gantt.html` | **обновлён** | существующий маршрут |
+| `chat.html` | **обновлён** | существующий маршрут |
+| `model.html` | **обновлён** | существующий маршрут |
+| `assets/reference.css`, `reference.js` | совпадали | базовые токены и демо-интерактив |
+| `assets/components.css`, `components.js` | **добавлены** | host-стили и роли custom-элементов |
+| `components/COMPONENTS.md` | **добавлен** | карта компонентов и Definition of Done |
+| `docs/componentized-implementation-plan.md` | **добавлен** | этапы 0–5 и гейты (актуальная версия плана) |
+| `docs/componentized-html-check.md` | **добавлен** | статическая проверка 7 макетов |
+| `docs/redesign-plan.md`, `redesign-validation-guide.md`, `redesign-visual-implementation-guide.md`, `claude-code-redesign-tasks.md` | совпадали по SHA-256 | наши копии актуальны |
 
-**Отклонение от гайда (§3):** сессия работает в `danger-full-access` с автоотклонением approvals. Владелец подтвердил режим «как есть» при условии отсутствия разрушительных команд (никаких `reset --hard`, `clean -fd`, force push, установок плагинов).
+Проверка совпадения выполнялась по SHA-256: из 8 HTML совпал только `index.html`; 7 экранов были старее. Теперь в `docs/redesign-reference/` лежит утверждённая версия.
 
-## 2. Точки входа и сборка
+## 2. Состав каталога и маршруты
 
-| Что | Файл | Как работает |
+| Экран эталона | Статус в каталоге | Маршрут-ориентир | Наш маршрут сегодня |
+|---|---|---|---|
+| `overview.html` | ПРЕДЛАГАЕМЫЙ | новая страница, route не существовал | `#dashboard` (есть) |
+| `incidents.html` | ПРЕДЛАГАЕМЫЙ | новая страница | `#incidents` (есть) |
+| `incident-detail.html` | ПРЕДЛАГАЕМЫЙ | новая страница | `#incident/<id>?at=` (есть) |
+| `timeline-git.html` | СУЩЕСТВУЮЩИЙ | `demo/#timeline?at=2026-01-02&view=git` | совпадает |
+| `timeline-gantt.html` | СУЩЕСТВУЮЩИЙ | `demo/#timeline?at=2026-01-02&view=gantt` | совпадает |
+| `chat.html` | СУЩЕСТВУЮЩИЙ | `demo/#chat/<id>?at=YYYY-MM-DD` | совпадает |
+| `model.html` | СУЩЕСТВУЮЩИЙ | `demo/#model` | совпадает |
+
+**Важно:** каталог писался до нашей реализации, поэтому три «предлагаемых» маршрута у нас уже существуют (созданы в предыдущем цикле). Переименований не требуется, конфликтов с router нет: `parseRoute` разбирает `chat`, `timeline`, `incident/`, `incidents`, `model`, остальное — `dashboard`.
+
+## 3. Карта соответствия: эталон → наш код
+
+| Эталон | Экран приложения | Модули рендера | Маршрут |
+|---|---|---|---|
+| `index.html` | — (спецификация) | — | — |
+| `overview.html` | Обзор | `dashboard-view.ts`, `dashboard-html.ts`, `overview.ts` | `#dashboard` |
+| `incidents.html` | Обращения | `incidents-view.ts`, `incidents-html.ts`, `incidents.ts` | `#incidents` |
+| `incident-detail.html` | Карточка обращения | `incident-view.ts`, `incident-html.ts`, `incident.ts` | `#incident/<id>` |
+| `timeline-git.html` | Хронология · Git | `timeline-view.ts`, `timeline-html.ts`, `git-svg.ts` | `#timeline?view=git` |
+| `timeline-gantt.html` | Хронология · Гант | `timeline-view.ts`, `gantt-grid.ts` | `#timeline?view=gantt` |
+| `chat.html` | Переписка (read-only) | `chat-view.ts`, `chat-html.ts` | `#chat/<id>` |
+| `model.html` | Модель процесса | `model-view.ts`, `view.ts`, `card.ts`, `session.ts` | `#model` |
+
+Оболочка у всех экранов одна: `shell.ts` (сайдбар, топбар, тема) + `nav.ts` + `page-header.ts` + `index.html` + `tokens.css` / `shell.css` / `screens.css` / `style.css`.
+
+## 4. Карта компонентов эталона → наши блоки
+
+| Компонент эталона | Тег | Где в эталонах | Наш аналог сегодня |
+|---|---|---|---|
+| Sidebar | `ui-sidebar` | все 7 | `shell.ts`, `.sidebar`, `nav.ts` |
+| Topbar | `ui-topbar` | все 7 | `shell.ts`, `.topbar` |
+| KPI Card | `ui-kpi` | overview ×4 | `.kpi` в `screens.css` + `dashboard-html.ts` |
+| Panel | `ui-panel` | 7 экранов | `.panel`, `.card` |
+| Status Badge | `ui-badge` | incidents ×9, overview ×4, incident ×2, chat ×2, model ×1 | `.prio`, `.sla`, `.count` |
+| SLA Badge | `ui-sla` | overview ×3, incidents ×4 | `.sla`, `.sla-badge` |
+| Activity Item | `ui-activity` | overview ×3, incidents ×3 | `.attention-list`, `.event-list` |
+| Chat Message | `ui-chat-message` | chat ×6 | `.msg` в `chat-html.ts` |
+| Process Node | `ui-process-node` | model (плитки узлов) | плитки `.op` + матрица прав |
+| FilterBar, DataTable, IncidentSummary/Header, SlaSummary, TimelineToolbar, GitGraph, GanttChart, ChatThread, ProcessCanvas, EmptyState/ReadOnlyNotice/DemoNotice | описаны в `COMPONENTS.md` как следующий уровень | — | `.filters`, `.incidents-table`, `.matrix-table`, `.roles-matrix`, `.controls`, `git-svg`, `gantt-grid`, чат-поток, модель, пустые/read-only состояния |
+
+## 5. Источники данных по экранам (проверено по коду)
+
+| Экран | Откуда данные |
+|---|---|
+| Обзор | `story.incidents` → `visibleAt`, `incidentAt`; фазы — `slaPhaseOnDay`; события — `Move.at`; группы — `graph.byId[].group`; правила внимания — `needsAttention` (просрочка или срочная незавершённая) |
+| Обращения | `visibleAt` + `incidentAt`; поиск/фильтры/сортировка в `incidents.ts`; ситуация — `situationById`; SLA — `slaPhaseOnDay`, `slaStateAt` |
+| Карточка | `incidentAt`, `historyUpTo`, `slaStateAt`, `slaPhaseOnDay`, `SLA_PROFILES`, роли из `NODE_MESSAGES`, переходы — `branchesOf` / `neighborsOf` |
+| Git-граф | `core/gitgraph.ts` + `core/timeline.ts` (даты) + `core/sla-at.ts` (цвета фаз) |
+| Гант | `core/gantt.ts` + `core/timeline.ts` |
+| Переписка | `core/conversation.ts` + `data/messages.ts`, только чтение |
+| Модель | `data/nodes.ts`, `data/roles.ts`, `data/edges.ts`, `core/roles.ts` (права), матрица прав из `node.access` |
+
+Ни один экран не считает SLA или права сам: используются селекторы `src/core` — это соответствует контракту `COMPONENTS.md` (пункты 2–3).
+
+## 6. Baseline: что проверено до изменений
+
+| Проверка | Результат 24.11.2026 |
+|---|---|
+| `bun run typecheck` | чисто |
+| `bun test` | **201 pass / 0 fail** (43 файла) |
+| `bun run e2e` | **50 passed** (9 спеков) |
+| `bun run build:demo` | 6 файлов, сборка из `src/` |
+| `bun run audit` | axe 0, контраст 0, overflow 0, кеглей <12 px 0 |
+| Скриншоты | `docs/screenshots/redesign-baseline-catalog/` — наши 28 (7 экранов × 4 размера) и эталоны 32 (8 файлов × 4) |
+| Размеры контроля | 1440×1000, 1024×900, 768×1024, 390×844, zoom 100 % |
+| CI на `main` | последний прогон успешен (`45446170907`), Pages собран |
+
+**Нарушение лимита файла (200 строк):** `src/web/overview.ts` — 224 строки, `src/web/timeline-view.ts` — 203 строки. Требуется разбиение (кандидат — Этап 1/4).
+
+## 7. Ключевые отклонения текущей реализации от утверждённого дизайна
+
+1. **Палитра.** Сейчас внедрена зелёная гамма (акцент `#149447`, фон `#f4f6f5`, тёмный сайдбар `#111a18`), полученная из постороннего файла `Downloads/index.html` и опубликованная 17.11.2026. Утверждённый кит — светлая синяя система: акцент `#2563eb`, фон `#f4f6fa`, светлый сайдбар `#ffffff`, тёмный текст `#172033`. Это главное расхождение: на Этапе 1 палитру нужно вернуть к утверждённой, сохранив наши исправления доступности (текстовые варианты статусов, кегли ≥12 px, `scope`, `focus-visible`, `aria-hidden` на глифах).
+2. **Композиция экранов.** Обзор, реестр, карточка, хронология, переписка и модель сверстаны по прежнему циклу и не соответствуют утверждённым макетам: у них другие блоки, порядок и состав (например, в карточке нет панели участников и связанных представлений в том виде, как в `incident-detail.html`; в реестре нет колонки ответственного; в модели нет карты процесса `ProcessCanvas`).
+3. **Компонентная модель.** Эталон использует custom-элементы `ui-*` (Light DOM, presentation-only, `components.css` + `components.js`). У нас строковые рендеры и обычные классы. Нужно решение: (а) генерировать те же `ui-*` теги в рантайме, (б) соответствовать визуально и классам, без новых тегов, или (в) внедрить компоненты поэтапно (в `COMPONENTS.md` это предусмотрено).
+4. **Поля, которых нет в модели.** В эталонах реестра и карточки есть «ответственный» и «участники»; модель не даёт однозначного исполнителя — есть только роли узла (`NODE_MESSAGES`, `allowedRoles`). Заменять выдуманными значениями запрещено контрактом; предлагаю выводить роль узла с пометкой и не добавлять вымышленных людей.
+5. **Тёмная тема.** В эталоне её нет; у нас есть переключатель (localStorage). Нужно решить, оставляем ли как нашу надстройку.
+6. **Иконки.** В эталонах — текстовые глифы (▦ ▤ ⌁ ▥ ✧) и SVG в отдельных блоках; у нас эмодзи/буквы. Требуется единое решение (например, локальный SVG-набор).
+
+## 8. Риски
+
+| Риск | Влияние | Что делаем |
 |---|---|---|
-| Оболочка страницы | `src/web/index.html` | `#nav`, `#app`, подключает `./app.js` |
-| Вход приложения | `src/web/main.ts` | экспортирует API модели; `demoModel(seed=7)` = `buildProcessGraph(NODES)` + `buildStory`; `mountRouter(graph, story)` по DOMContentLoaded |
-| Роутер | `src/web/router.ts` | `parseRoute(hash)`, `mountRouter`, `hrefTimeline`, `hrefChat`; на каждый hashchange пересоздаёт `#app` |
-| Сборка | `scripts/build-web.ts` | `Bun.build` → `demo/app.js` + копии `index.html`, `style.css`; `bun run build:demo` |
-| Локальная раздача | `scripts/serve-demo.ts` | статика `demo/` на `http://127.0.0.1:4321` |
-| Скриншоты | `scripts/redesign-shots.ts` | `bun run scripts/redesign-shots.ts <outDir>` (нужен запущенный сервер) |
+| Возврат палитры затрагивает все 4 CSS и токены ролей/SLA | Средний: ломает снимки и контрастные проверки | Выполнить на Этапе 1, прогнать аудит, перегенерировать скриншоты |
+| Эталоны обновляются у автора отдельно от нас | Высокий: сверка по устаревшим файлам | Держать синхронизацию по SHA-256 в baseline/отчётах, сверять перед каждым этапом |
+| 7 экранов × 4 размера = 28 сверок | Средний: объём | Идти по этапам 1→4 с приёмкой после каждого |
+| Лимит файла 200 строк уже нарушен в 2 модулях | Низкий–средний (закон проекта) | Разбить при ближайшей правке этих файлов |
+| Дефекты доступности эталонов (контраст акцента 3.92:1, 15 `th` без `scope`, глифы без `aria-hidden`) | Средний: можно «утащить» в прод | Зафиксировать как наши обязательные доработки, не копировать дефекты |
+| Приём изображений у модели выключен | Средний: пиксельная сверка только по метрикам | Включить Image у vision-модели либо принимать по числам и снимкам владельцем |
+| Возврат к синему после опубликованной зелёной версии | Низкий: визуальный откат | Подтвердить владельцем до начала Этапа 1 |
 
-## 3. Фактические маршруты
+## 9. Открытые вопросы (нужно решение до Этапа 1)
 
-| Hash | route.name | Параметры | Обработчик | Данные | Эталон |
-|---|---|---|---|---|---|
-| `#` и **любой неизвестный** (включая `#model`) | model | игнорируются | `mountModel` | `createState(buildGraph(NODES), seed)` + `generateIncidents` + навигация | `model.html` |
-| `#timeline?at=YYYY-MM-DD&view=git\|gantt` | timeline | `at`, `view` | `mountTimeline` | `buildStory(graph, 7)`, `buildGitGraph`, `buildGantt`, `sla-at`, `conversation` | `timeline-git.html`, `timeline-gantt.html` |
-| `#chat/<id>?at=YYYY-MM-DD` | chat | `incidentId`, `at` | `mountChat` | `conversationFor`, `chatAt`, `slaPhaseOnDay` | `chat.html` |
-| `#dashboard`, `#incidents`, `#incident/<id>` | **нет** | — | попадают в model | — | `overview.html`, `incidents.html`, `incident-detail.html` |
+1. **Палитра:** возвращаемся к утверждённой синей системе (`#2563eb`, `#f4f6fa`, светлый сайдбар) — или утверждаем зелёную как официальную? По каталогу и `reference.css` утверждён синий.
+2. **Компоненты:** внедряем `ui-*` custom-элементы в рантайме, или ограничиваемся визуальным и классовым соответствием?
+3. **Тёмная тема:** сохраняем как нашу надстройку или убираем вслед за эталоном?
+4. **Ответственные и участники:** выводим роль узла с пометкой «роль по узлу» (без вымышленных имён) — согласовать формулировку.
+5. **Скриншоты и эталоны в git:** 7,17 МБ новых снимков + синхронизированные макеты — коммитить в репозиторий?
 
-Детали: `view` распознаёт только `gantt`, остальное → `git`; пустой/неизвестный `at` → последний день истории; URL обновляется через `history.replaceState` (перемотка дня, смена вида). Отдельного `#model` нет — это fallback.
+## 10. Gate этапа 0
 
-## 4. Источники данных
+- [x] каталог и все 7 экранов изучены;
+- [x] четыре документа и два новых документа прочитаны;
+- [x] общие стили и скрипты (`reference.css/js`, `components.css/js`) изучены;
+- [x] маршруты и архитектура подтверждены (`parseRoute`, конфликтов нет);
+- [x] источники данных по экранам зафиксированы;
+- [x] baseline тестов снят до изменений (201 unit, 50 e2e, typecheck, build);
+- [x] baseline-скриншоты сохранены в четырёх контрольных размерах;
+- [x] продуктовый код приложения не изменён;
+- [ ] **разрешение владельца на Этап 1 (дизайн-система и оболочка).**
 
-| Слой | Файлы | Что даёт |
-|---|---|---|
-| История | `core/story.ts`, `core/timeline.ts`, `data/hero.ts` | 30 заявок с датами; `DEMO_ORIGIN=2025-12-20T09:00Z`, создание каждые 12 ч; герой З-015 (U6→U7→U19) |
-| SLA | `core/sla.ts`, `core/sla-at.ts`, `data/sla.ts` | фазы ok/paused/overdue/none, профили 1/24, 24/72, ≤720 ч, пауза U14 / возобновление U15, пересчёт U2 |
-| Граф и Гант | `core/gitgraph.ts`, `core/gantt.ts` | коммиты, связи, колонки-узлы; сегменты по дням |
-| Переписка | `core/conversation.ts`, `data/messages.ts` | сценарные сообщения по узлам, снимок на дату |
-| Процесс | `core/navigation.ts`, `core/graph.ts`, `data/edges.ts` | переходы, развилки с весами, `prev` |
-| Роли и права | `core/roles.ts`, `data/roles.ts` | 7 ролей, 30 узлов, уровни доступа, названия |
-| Ситуации | `data/situations.ts`, `data/situation-nodes.ts` | 37 ситуаций: шаги, приоритет, SLA, связь с узлами |
-| Заявки | `core/incident.ts`, `core/generator.ts` | id `З-001…З-030`, приоритеты, сортировка |
+**Следующий безопасный шаг:** Этап 1 — design tokens по `reference.css` и оболочка (Sidebar, Topbar, Panel, Badge, SLA Badge, EmptyState, ReadOnlyNotice) с сохранением текущих маршрутов, тестов и доступности.
 
-**Только демонстрация:** все заявки генерируются из seed; CLI (`src/cli`), отчёты и запись на диск (`src/io/writers.ts`, `reports/`) — вне веб-демо; переписка read-only; backend/API/БД/авторизации нет. Данные в HTML-эталонах — вымышленные, за реальные не принимать.
-
-## 5. Стили и тема
-
-- `src/web/style.css` — 200 строк, тёмная тема в `:root` (`--bg #0f1115`, `--panel #171a21`, `--text #e7ebf2`, `--accent #4da3ff`, `--hero #ffd166`), один медиазапрос `max-width:1100px` и узкая правка `max-width:700px` для строк «Модели».
-- `src/web/theme.ts` — цвета ролей (7) и фаз SLA (4), инициалы, значки развилки/слияния.
-- Светлой темы и системы токенов нет: план редизайна требует светлую как основную — это работа Этапа 1.
-
-## 6. Baseline проверок
-
-| Проверка | Команда | Результат |
-|---|---|---|
-| Типы | `bun run typecheck` | чисто, 0 ошибок |
-| Unit | `bun test` | **160 pass / 0 fail**, 33 файла, 3329 expect |
-| E2E | `bun run e2e` | **26 passed** (chromium) |
-| Сборка | `bun run build:demo` | `demo/app.js`, `demo/index.html`, `demo/style.css`; `git status` без изменений → вывод детерминирован |
-| Аудит UI (16.11) | `bun run audit` | 82 находки, axe serious = 0 |
-
-E2E-сценарии: `e2e/timeline.spec.ts` (12), `e2e/model.spec.ts` (7), `e2e/chat.spec.ts` (7).
-
-## 7. Baseline-скриншоты
-
-Папка `docs/screenshots/redesign-baseline/` — 32 PNG (~3,4 МБ):
-
-- приложение: `app-{model,timeline-git,timeline-gantt,chat}-{1440,1024,768,390}.png` — 16;
-- эталоны: `ref-{index,overview,incidents,incident-detail,timeline-git,timeline-gantt,chat,model}-{1440,390}.png` — 16.
-
-## 8. Карта «экран → маршрут → исходник → данные → тесты → эталон»
-
-| Экран | Маршрут | Исходники UI | Данные | Тесты | Эталон |
-|---|---|---|---|---|---|
-| Модель процесса | `#` (fallback) | `model-view.ts`, `view.ts`, `card.ts`, `session.ts` | `NODES`, `generateIncidents`, `navigation`, `roles`, `sla` | `web.test.ts`, `web-session.test.ts`, `model.spec.ts` | `model.html` |
-| Хронология · Git | `#timeline?...&view=git` | `timeline-view.ts`, `timeline-html.ts`, `git-svg.ts`, `node-card.ts` | `story`, `gitgraph`, `sla-at`, `conversation` | `timeline-html.test.ts`, `git-svg.test.ts`, `node-card.test.ts`, `timeline.spec.ts` | `timeline-git.html` |
-| Хронология · Гант | `#timeline?...&view=gantt` | `gantt-grid.ts`, `timeline-html.ts` | `gantt`, `sla-at` | `gantt-grid.test.ts`, `timeline.spec.ts` | `timeline-gantt.html` |
-| Переписка | `#chat/<id>?at=` | `chat-view.ts`, `chat-html.ts` | `conversation`, `messages`, `sla-at` | `conversation.test.ts`, `chat.spec.ts` | `chat.html` |
-| Обзор | нет | нет | — | — | `overview.html` |
-| Обращения | нет | нет | — | — | `incidents.html` |
-| Детали обращения | нет | нет | — | — | `incident-detail.html` |
-
-## 9. Ограничения и риски
-
-1. **Тема:** текущая тёмная; план требует светлую основную — Этап 1 меняет палитру и вводит токены.
-2. **Маршруты:** `#dashboard`, `#incidents`, `#incident/<id>` отсутствуют; любой неизвестный hash сейчас молча показывает модель. Добавлять новые нужно так, чтобы не сломать fallback и старые URL.
-3. **Sandbox:** гайд требует `workspace-write` + approvals, сессия — `danger-full-access` (решение владельца «как есть», без разрушительных команд).
-4. **Коммиты:** по решению владельца коммитов нет; изменения копятся в рабочем дереве ветки.
-5. **Визуальная приёмка:** я не вижу изображения; сверка возможна через скриншоты (владелец/модель с image input) и замеры DOM, но не пиксельно.
-6. **Размер артефактов:** baseline ~3,4 МБ; решить, что коммитить из скриншотов.
-7. **Документы:** комплект скопирован в `docs/`; версии `redesign-plan.md` (589 строк) и `claude-code-redesign-tasks.md` (670 строк) из кита перекрыли более короткие варианты из коммита `913a908`.
-
-## 10. Следующий шаг
-
-Этап 1 — централизованные design tokens, App Shell (Sidebar/Topbar/PageHeader), адаптивная навигация, сохранение всех текущих маршрутов и тестов. Начинать только после приёмки Этапа 0.
