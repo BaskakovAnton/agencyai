@@ -8,8 +8,8 @@ test.describe("Обзор", () => {
 
   test("KPI считаются по модели и виден срез даты", async ({ page }) => {
     await expect(page.locator("[data-kpi]")).toHaveCount(4);
-    await expect(page.locator("[data-kpi]").first()).toContainText("Всего заявок");
-    const total = Number((await page.locator('[data-kpi="total"] b').innerText()).trim());
+    await expect(page.locator("[data-kpi]").first()).toContainText("Активные обращения");
+    const total = Number((await page.locator('[data-kpi="active"] .kpi-value').innerText()).trim());
     expect(total).toBeGreaterThan(0);
     await expect(page.locator("[data-day-select]")).toHaveValue("2026-01-02");
   });

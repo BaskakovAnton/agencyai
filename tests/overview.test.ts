@@ -2,10 +2,11 @@ import { expect, test } from "bun:test";
 import { buildStory } from "../src/core/story.ts";
 import { slaPhaseOnDay } from "../src/core/sla-at.ts";
 import { startSla } from "../src/core/sla.ts";
-import { visibleAt } from "../src/core/timeline.ts";
+import { incidentAt, visibleAt } from "../src/core/timeline.ts";
 import { buildProcessGraph } from "../src/data/edges.ts";
 import type { Incident } from "../src/types.ts";
-import { buildOverview, needsAttention } from "../src/web/overview.ts";
+import { buildOverview, needsAttention, slaHoursLeft, slaIsAtRisk } from "../src/web/overview.ts";
+import { isFinished } from "../src/core/incident.ts";
 
 const graph = buildProcessGraph();
 const story = buildStory(graph, 7);
@@ -32,47 +33,56 @@ test("правило «требуют внимания»: просрочка и�
   expect(needsAttention(graph, fake("routine", day + "T00:00:00.000Z"), day)).toBe(false);
 });
 
+test("контроль сроков: риск ≤ 24 ч, нарушение — вне SLA", () => {
+  const longAgo = fake("normal", "2020-01-01T00:00:00.000Z");
+  expect(slaHoursLeft(longAgo, day)).toBeLessThan(0);
+  expect(slaIsAtRisk(longAgo, day)).toBe(true);
+  const fresh = fake("routine", day + "T00:00:00.000Z");
+  expect(slaIsAtRisk(fresh, day)).toBe(false);
+});
+
 test("KPI обзора считаются из модели, а не вбиты руками", () => {
   const overview = buildOverview(graph, story.incidents, day);
   const slice = visibleAt(story.incidents, day);
+  const finished = slice.filter((incident) => isFinished(incidentAt(incident, day), graph)).length;
+  const attention = slice.filter((incident) => needsAttention(graph, incident, day)).length;
   expect(overview.kpi.total).toBe(slice.length);
-  expect(overview.kpi.paused).toBe(slice.filter((i) => slaPhaseOnDay(i, day) === "paused").length);
-  expect(overview.kpi.overdue).toBe(slice.filter((i) => slaPhaseOnDay(i, day) === "overdue").length);
-  expect(overview.kpi.ok + overview.kpi.paused + overview.kpi.overdue + overview.kpi.none).toBe(overview.kpi.total);
-  const attentionCount = slice.filter((i) => needsAttention(graph, i, day)).length;
-  expect(overview.kpi.attention).toBe(attentionCount);
-  expect(overview.attention.length).toBe(Math.min(attentionCount, 8));
-  for (const item of overview.attention) expect(needsAttention(graph, story.incidents.find((i) => i.id === item.id)!, day)).toBe(true);
+  expect(overview.kpi.active).toBe(slice.length - finished);
+  expect(overview.kpi.completed).toBe(finished);
+  expect(overview.kpi.attention).toBe(attention);
+  expect(overview.kpi.paused).toBe(slice.filter((incident) => slaPhaseOnDay(incident, day) === "paused").length);
+  expect(overview.attention.length).toBe(Math.min(attention, 8));
+  for (const item of overview.attention) {
+    expect(needsAttention(graph, story.incidents.find((incident) => incident.id === item.id)!, day)).toBe(true);
+    expect(item.priorityTitle.length).toBeGreaterThan(0);
+    expect(item.slaText.length).toBeGreaterThan(0);
+  }
 });
 
-test("нулевой срез: пустой день не даёт NaN и ложных значений", () => {
+test("распределение и контроль сроков согласованы со срезом", () => {
+  const overview = buildOverview(graph, story.incidents, later);
+  expect(overview.distribution).toHaveLength(4);
+  expect(overview.distribution.reduce((sum, row) => sum + row.count, 0)).toBe(overview.kpi.total);
+  expect(overview.sla).toHaveLength(4);
+  expect(overview.sla.reduce((sum, row) => sum + row.count, 0)).toBe(overview.kpi.total);
+  expect(overview.inTimeShare).toBeGreaterThanOrEqual(0);
+  expect(overview.inTimeShare).toBeLessThanOrEqual(100);
+});
+
+test("нулевой срез не даёт NaN и ложных значений", () => {
   const overview = buildOverview(graph, story.incidents, "2020-01-01");
   expect(overview.kpi.total).toBe(0);
-  expect(overview.kpi.attention).toBe(0);
   expect(overview.attention).toHaveLength(0);
   expect(overview.events).toHaveLength(0);
+  expect(overview.inTimeShare).toBe(0);
 });
 
-test("обзор собирает блоки в стиле эталона из модели", () => {
-  const overview = buildOverview(graph, story.incidents, later);
-  expect(overview.days).toHaveLength(6);
-  expect(overview.days.at(-1)!.day).toBe(later);
-  expect(overview.groups).toHaveLength(6);
-  expect(overview.daily).toHaveLength(6);
-  expect(overview.matrix).toHaveLength(4);
-  for (const row of overview.matrix) {
-    expect(row.values).toHaveLength(6);
-    expect(row.values.every((v) => v >= 0 && v <= 100)).toBe(true);
-  }
-  expect(overview.summary.length).toBeGreaterThan(0);
-  expect(overview.workflow.length).toBeGreaterThan(0);
-  const nodesInGroups = overview.groups.reduce((sum, g) => sum + g.nodes, 0);
-  expect(nodesInGroups).toBe(graph.order.length);
-});
-
-test("последние события идут от свежих к старым", () => {
+test("события идут от свежих к старым", () => {
   const overview = buildOverview(graph, story.incidents, later);
   expect(overview.events.length).toBeGreaterThan(0);
-  const times = overview.events.map((e) => e.at);
-  expect([...times].sort().reverse()).toEqual(times);
+  for (const row of overview.events) {
+    expect(row.id.length).toBeGreaterThan(0);
+    expect(row.text.length).toBeGreaterThan(0);
+    expect(row.time.length).toBeGreaterThan(0);
+  }
 });

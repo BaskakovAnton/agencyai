@@ -21,17 +21,19 @@ export const renderPanel = (input: PanelInput): string =>
   "</div>" +
   '<div class="panel-body">' + input.body + "</div></ui-panel>";
 
-/** KPI-карточка. */
-export const renderKpi = (label: string, value: string, foot = ""): string =>
-  '<ui-kpi class="kpi"><span class="kpi-top">' + esc(label) + '</span><b class="kpi-value">' + esc(value) +
-  "</b>" + (foot ? '<span class="kpi-foot">' + esc(foot) + "</span>" : "") + "</ui-kpi>";
+/** KPI-карточка по разметке overview.html: подпись, иконка, значение, пояснение. */
+export const renderKpi = (label: string, value: string, foot = "", icon = "", key = ""): string =>
+  "<ui-kpi class=\"kpi\"" + (key === "" ? "" : ' data-kpi="' + key + '"') +
+  '><div class="kpi-top"><span class="kpi-label">' + esc(label) + "</span>" + icon + "</div>" +
+  '<div class="kpi-value">' + esc(value) + "</div>" +
+  (foot ? '<div class="kpi-note">' + esc(foot) + "</div>" : "") + "</ui-kpi>";
 
 /** Статус-бейдж: цвет всегда продублирован текстом. */
 export const renderBadge = (text: string, tone: BadgeTone = "gray"): string =>
   '<ui-badge class="badge ' + tone + '">' + esc(text) + "</ui-badge>";
 
 /** Бейдж SLA. */
-export const renderSlaBadge = (text: string, tone: "green" | "amber" | "red" | "gray" = "gray"): string =>
+export const renderSlaBadge = (text: string, tone: BadgeTone = "gray"): string =>
   '<ui-sla class="sla ' + tone + '">' + esc(text) + "</ui-sla>";
 
 /** Пустой результат. */

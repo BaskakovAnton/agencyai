@@ -2,7 +2,10 @@ import { priorityRank } from "../core/incident.ts";
 import { slaPhaseOnDay, SLA_PHASES, type SlaPhase } from "../core/sla-at.ts";
 import { slaStateAt } from "../core/sla-at.ts";
 import { addHours, dayOf, historyUpTo, incidentAt, visibleAt } from "../core/timeline.ts";
+import { NODE_MESSAGES } from "../data/messages.ts";
+import { ROLE_NAMES } from "../data/roles.ts";
 import { situationById } from "../data/situations.ts";
+import { slaTextFor } from "./overview.ts";
 import type { Graph, Incident, Priority } from "../types.ts";
 
 export type IncidentSort = "id" | "priority" | "date" | "urgency";
@@ -25,6 +28,8 @@ export interface IncidentRow {
   readonly phase: SlaPhase;
   readonly lastEvent: string;
   readonly dueDay: string;
+  readonly roleTitle: string;
+  readonly slaText: string;
 }
 
 const PRIORITIES: readonly Priority[] = ["urgent", "normal", "routine", "none"];
@@ -58,6 +63,11 @@ export const filtersHash = (filters: IncidentFilters, day: string): string => {
   return "#incidents?" + params.toString();
 };
 
+const roleOf = (nodeId: string): string => {
+  const role = NODE_MESSAGES[nodeId]?.role;
+  return role === undefined ? "" : ROLE_NAMES[role];
+};
+
 const matches = (incident: Incident, situation: string, query: string): boolean => {
   const needle = query.trim().toLowerCase();
   if (needle === "") return true;
@@ -88,6 +98,8 @@ export const buildRows = (
         phase: slaPhaseOnDay(incident, day),
         lastEvent: last,
         dueDay: sla.dueAt > 0 ? dayOf(addHours("2025-12-20T09:00:00.000Z", sla.dueAt)) : "",
+        roleTitle: roleOf(asOf.nodeId),
+        slaText: slaTextFor(incident, day),
       };
     })
     .filter((row) => matches(incidents.find((i) => i.id === row.id) as Incident, row.situation, filters.q))

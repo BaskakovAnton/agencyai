@@ -1,113 +1,109 @@
 import { isFinished, priorityRank } from "../core/incident.ts";
-import { SLA_PHASES, slaPhaseOnDay, type SlaPhase } from "../core/sla-at.ts";
-import { addHours, dayOf, formatDay, incidentAt, visibleAt } from "../core/timeline.ts";
-import { GROUP_TITLES, PRIORITY_TITLES } from "../data/roles.ts";
-import { situationById } from "../data/situations.ts";
+import { DEMO_ORIGIN, dayOf, formatStamp, incidentAt, visibleAt } from "../core/timeline.ts";
+import { hoursSince, slaPhaseOnDay, slaStateAt, type SlaPhase } from "../core/sla-at.ts";
+import { PRIORITY_TITLES } from "../data/roles.ts";
+import { SLA_PROFILES } from "../data/sla.ts";
 import type { Graph, Incident, Priority } from "../types.ts";
 
-export interface OverviewKpi {
-  readonly total: number;
+export type Tone = "red" | "amber" | "green" | "gray" | "blue";
+
+export interface KpiSet {
+  readonly active: number;
   readonly attention: number;
   readonly paused: number;
-  readonly overdue: number;
-  readonly ok: number;
-  readonly none: number;
-  readonly urgent: number;
+  readonly completed: number;
+  readonly total: number;
 }
 
 export interface AttentionItem {
   readonly id: string;
   readonly title: string;
-  readonly situation: string;
+  readonly address: string;
   readonly priority: Priority;
+  readonly priorityTone: Tone;
+  readonly priorityTitle: string;
   readonly nodeId: string;
   readonly nodeTitle: string;
   readonly phase: SlaPhase;
-  readonly reason: string;
+  readonly slaTone: Tone;
+  readonly slaText: string;
 }
 
-export interface OverviewEvent {
+export interface ActivityRow {
   readonly id: string;
-  readonly at: string;
-  readonly nodeId: string;
-  readonly nodeTitle: string;
+  readonly icon: string;
+  readonly text: string;
+  readonly time: string;
 }
 
-export interface DayChip {
-  readonly day: string;
-  readonly label: string;
-  readonly total: number;
-  readonly attention: number;
-}
-
-export interface GroupTile {
-  readonly id: string;
+export interface DistributionRow {
+  readonly id: Priority;
   readonly title: string;
-  readonly nodes: number;
-  readonly incidents: number;
-}
-
-export interface DailyBar {
-  readonly day: string;
-  readonly label: string;
-  readonly total: number;
-  readonly overdue: number;
-}
-
-export interface MatrixRow {
-  readonly id: string;
-  readonly title: string;
-  readonly metric: string;
-  readonly values: readonly number[];
-  readonly delta: number;
-}
-
-export interface WorkflowStep {
-  readonly n: number;
-  readonly title: string;
-  readonly detail: string;
   readonly count: number;
-  readonly current: boolean;
+  readonly tone: Tone;
+}
+
+export interface SlaRow {
+  readonly id: SlaPhase;
+  readonly title: string;
+  readonly count: number;
+  readonly share: number;
 }
 
 export interface Overview {
   readonly day: string;
-  readonly kpi: OverviewKpi;
+  readonly kpi: KpiSet;
   readonly attention: readonly AttentionItem[];
-  readonly events: readonly OverviewEvent[];
-  readonly days: readonly DayChip[];
-  readonly groups: readonly GroupTile[];
-  readonly daily: readonly DailyBar[];
-  readonly matrix: readonly MatrixRow[];
-  readonly summary: readonly string[];
-  readonly workflow: readonly WorkflowStep[];
+  readonly events: readonly ActivityRow[];
+  readonly distribution: readonly DistributionRow[];
+  readonly sla: readonly SlaRow[];
+  readonly inTimeShare: number;
 }
 
-/** Формула «требуют внимания»: просрочен SLA **или** срочная заявка, ещё не завершённая. */
+export const PRIORITY_TONES: Readonly<Record<Priority, Tone>> = { urgent: "red", normal: "amber", routine: "gray", none: "gray" };
+export const PHASE_TONES: Readonly<Record<SlaPhase, Tone>> = { ok: "green", paused: "amber", overdue: "red", none: "gray" };
+export const PHASE_TITLES: Readonly<Record<SlaPhase, string>> = { ok: "В срок", paused: "Пауза", overdue: "Просрочено", none: "Нет SLA" };
+
+/** Часы модельного времени на конец выбранного дня. */
+const dayEndHours = (day: string): number => hoursSince(DEMO_ORIGIN, day + "T23:59:59.999Z");
+
+/** Остаток норматива в часах (может быть отрицательным — срок уже нарушен). */
+export const slaHoursLeft = (incident: Incident, day: string): number =>
+  Math.round(slaStateAt(incident, day).dueAt - dayEndHours(day));
+
+/**
+ * Формула «требуют внимания»: просрочен SLA **или** срочная незавершённая заявка.
+ * Формула зафиксирована тестом `needsAttention`.
+ */
 export const needsAttention = (graph: Graph, incident: Incident, day: string): boolean => {
   if (slaPhaseOnDay(incident, day) === "overdue") return true;
   return incident.priority === "urgent" && !isFinished(incidentAt(incident, day), graph);
 };
 
-/** Окно из шести дней, заканчивающееся выбранной датой. */
-export const dayWindow = (day: string, size = 6): readonly string[] => {
-  const out: string[] = [];
-  for (let i = size - 1; i >= 0; i--) out.push(dayOf(addHours(day + "T00:00:00.000Z", -24 * i)));
-  return out;
+/** Контроль сроков: нарушен, если фаза вне SLA; «на риске», если в срок, но осталось ≤ 24 ч. */
+export const slaIsAtRisk = (incident: Incident, day: string): boolean => {
+  const phase = slaPhaseOnDay(incident, day);
+  if (phase === "overdue") return true;
+  if (phase !== "ok") return false;
+  if (SLA_PROFILES[incident.priority].resolveHours === 0) return false;
+  const left = slaHoursLeft(incident, day);
+  return left > 0 && left <= 24;
 };
 
-const STAGES: readonly (readonly [string, string, number, number])[] = [
-  ["Приём и регистрация", "обращение принято и зарегистрировано", 1, 4],
-  ["Назначение и исполнение", "диспетчер назначает, подрядчик выполняет", 5, 13],
-  ["Контроль и закрытие", "проверка, согласования, паузы SLA", 14, 29],
-  ["Архив", "закрыто и сохранено на 5 лет", 30, 30],
-];
+export const slaTextFor = (incident: Incident, day: string): string => {
+  const phase = slaPhaseOnDay(incident, day);
+  if (phase !== "ok") return PHASE_TITLES[phase];
+  if (SLA_PROFILES[incident.priority].resolveHours === 0) return PHASE_TITLES.none;
+  const left = slaHoursLeft(incident, day);
+  return left > 0 ? "Осталось " + left + " ч" : PHASE_TITLES.overdue;
+};
 
-/** Сводка обзора на выбранный день: KPI, требующие внимания заявки, события и блоки эталона. */
+/** Сводка обзора: KPI, требующие внимания, события, распределение и контроль сроков. */
 export const buildOverview = (graph: Graph, incidents: readonly Incident[], day: string): Overview => {
   const slice = visibleAt(incidents, day);
   const phases = slice.map((incident) => slaPhaseOnDay(incident, day));
-  const attention = slice
+
+  const attention: AttentionItem[] = slice
     .filter((incident) => needsAttention(graph, incident, day))
     .map((incident) => {
       const asOf = incidentAt(incident, day);
@@ -115,110 +111,67 @@ export const buildOverview = (graph: Graph, incidents: readonly Incident[], day:
       return {
         id: incident.id,
         title: incident.title,
-        situation: situationById(incident.situationId)?.title ?? "",
+        address: incident.address ?? "",
         priority: incident.priority,
+        priorityTone: PRIORITY_TONES[incident.priority],
+        priorityTitle: PRIORITY_TITLES[incident.priority],
         nodeId: asOf.nodeId,
         nodeTitle: graph.byId[asOf.nodeId]?.title ?? "",
         phase,
-        reason: phase === "overdue" ? "просрочен SLA" : "срочная",
+        slaTone: PHASE_TONES[phase],
+        slaText: slaTextFor(incident, day),
       };
     })
     .sort((a, b) => priorityRank[a.priority] - priorityRank[b.priority] || a.id.localeCompare(b.id, "ru", { numeric: true }));
 
-  const events = slice
+  const eventRows = slice
     .flatMap((incident) =>
       incidentAt(incident, day).history
-        .filter((move) => move.at !== undefined)
-        .map((move) => ({ id: incident.id, at: move.at as string, nodeId: move.to, nodeTitle: graph.byId[move.to]?.title ?? "" })),
+        .filter((move) => move.at !== undefined && dayOf(move.at) <= day)
+        .map((move) => ({
+          id: incident.id,
+          at: move.at as string,
+          text: incident.id + " перешло на узел «" + (graph.byId[move.to]?.title ?? move.to) + "»",
+        })),
     )
     .sort((a, b) => b.at.localeCompare(a.at))
-    .slice(0, 8);
+    .slice(0, 6);
 
-  const window = dayWindow(day);
-  const days: DayChip[] = window.map((value) => {
-    const daySlice = visibleAt(incidents, value);
-    return {
-      day: value,
-      label: formatDay(value).replace(/ \d{4}$/, ""),
-      total: daySlice.length,
-      attention: daySlice.filter((incident) => needsAttention(graph, incident, value)).length,
-    };
-  });
-
-  const groups: GroupTile[] = Object.entries(GROUP_TITLES).map(([id, title]) => ({
-    id,
-    title,
-    nodes: graph.order.filter((nodeId) => graph.byId[nodeId]?.group === id).length,
-    incidents: slice.filter((incident) => graph.byId[incidentAt(incident, day).nodeId]?.group === id).length,
+  const events: ActivityRow[] = eventRows.map((row) => ({
+    id: row.id,
+    icon: "↗",
+    text: row.text,
+    time: formatStamp(row.at) + " · модель",
   }));
 
-  const daily: DailyBar[] = window.map((value) => {
-    const daySlice = visibleAt(incidents, value);
+  const distribution: DistributionRow[] = (["urgent", "normal", "routine", "none"] as readonly Priority[]).map((priority) => ({
+    id: priority,
+    title: PRIORITY_TITLES[priority],
+    count: slice.filter((incident) => incident.priority === priority).length,
+    tone: PRIORITY_TONES[priority],
+  }));
+
+  const sla: SlaRow[] = (["ok", "paused", "overdue", "none"] as readonly SlaPhase[]).map((phase) => {
+    const count = phases.filter((value) => value === phase).length;
     return {
-      day: value,
-      label: formatDay(value).replace(/ \d{4}$/, ""),
-      total: daySlice.length,
-      overdue: daySlice.filter((incident) => slaPhaseOnDay(incident, value) === "overdue").length,
+      id: phase,
+      title: PHASE_TITLES[phase],
+      count,
+      share: slice.length === 0 ? 0 : Math.round((count / slice.length) * 100),
     };
   });
 
-  const priorities: readonly Priority[] = ["urgent", "normal", "routine", "none"];
-  const matrix: MatrixRow[] = priorities.map((priority) => {
-    const values = window.map((value) => {
-      const list = visibleAt(incidents, value).filter((incident) => incident.priority === priority);
-      if (list.length === 0) return 0;
-      const ok = list.filter((incident) => slaPhaseOnDay(incident, value) === "ok").length;
-      return Math.round((ok / list.length) * 1000) / 10;
-    });
-    const first = values[0] ?? 0;
-    const last = values.at(-1) ?? 0;
-    return {
-      id: priority,
-      title: PRIORITY_TITLES[priority],
-      metric: "в срок, %",
-      values,
-      delta: Math.round((last - first) * 10) / 10,
-    };
-  });
-
-  const workflow: WorkflowStep[] = STAGES.map(([title, detail, from, to]) => {
-    const nodes = new Set(graph.order.slice(from - 1, to));
-    const count = slice.filter((incident) => nodes.has(incidentAt(incident, day).nodeId)).length;
-    return { n: 0, title, detail, count, current: false };
-  }).map((step, index) => ({ ...step, n: index + 1 }));
-  const busiest = workflow.reduce((best, step) => (step.count > best.count ? step : best), workflow[0]!);
-  const withCurrent = workflow.map((step) => ({ ...step, current: step.title === busiest.title && busiest.count > 0 }));
-
-  const total = slice.length;
-  const share = (value: number): string => (total === 0 ? "0" : String(Math.round((value / total) * 100)));
-  const summary: readonly string[] = [
-    "Заявок в срезе: " + total,
-    "В срок: " + share(phases.filter((phase) => phase === "ok").length) + "%",
-    "На паузе: " + phases.filter((phase) => phase === "paused").length,
-    "Просрочено: " + phases.filter((phase) => phase === "overdue").length,
-    "Требуют внимания: " + attention.length,
-  ];
+  const completed = slice.filter((incident) => isFinished(incidentAt(incident, day), graph)).length;
+  const paused = phases.filter((phase) => phase === "paused").length;
+  const overdue = phases.filter((phase) => phase === "overdue").length;
 
   return {
     day,
-    kpi: {
-      total,
-      attention: attention.length,
-      paused: phases.filter((phase) => phase === "paused").length,
-      overdue: phases.filter((phase) => phase === "overdue").length,
-      ok: phases.filter((phase) => phase === "ok").length,
-      none: phases.filter((phase) => phase === "none").length,
-      urgent: slice.filter((incident) => incident.priority === "urgent").length,
-    },
+    kpi: { active: slice.length - completed, attention: attention.length, paused, completed, total: slice.length },
     attention: attention.slice(0, 8),
     events,
-    days,
-    groups,
-    daily,
-    matrix,
-    summary,
-    workflow: withCurrent,
+    distribution,
+    sla,
+    inTimeShare: slice.length === 0 ? 0 : Math.round(((slice.length - overdue - paused) / slice.length) * 100),
   };
 };
-
-export { SLA_PHASES };

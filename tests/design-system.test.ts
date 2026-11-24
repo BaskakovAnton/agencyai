@@ -47,10 +47,11 @@ test("цвета ролей заданы и различимы (из кит-ма
     expect(roles.length).toBe(7);
     expect(new Set(roles).size).toBe(7);
   }
-  expect(compact).toContain("--role-resident:#4e83d9");
-  expect(compact).toContain("--role-deputy:#2d986e");
-  expect(compact).toContain("--role-contractor:#9066c8");
-  expect(compact).toContain("--role-system:#a0aaba");
+  // оттенки кита (#4e83d9, #2d986e, #9066c8, #a0aaba), затемнённые для белого текста
+  expect(compact).toContain("--role-resident:#3566b8");
+  expect(compact).toContain("--role-deputy:#1f7a57");
+  expect(compact).toContain("--role-contractor:#6f4aa8");
+  expect(compact).toContain("--role-system:#5c6878");
 });
 
 test("компоненты ui-* и их классы объявлены", () => {
