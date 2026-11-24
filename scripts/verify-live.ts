@@ -95,7 +95,7 @@ if (ready) {
   await page.goto(base + "?v=" + Date.now() + "#dashboard?at=2026-01-02");
   await page.waitForSelector("[data-dashboard]");
   if ((await page.locator("[data-kpi]").count()) !== 4) problems.push("на обзоре не 4 KPI");
-  const total = Number(((await page.locator('[data-kpi="total"] b').innerText()) ?? "0").trim());
+  const total = Number(((await page.locator('[data-kpi="active"] .kpi-value').innerText()) ?? "0").trim());
   if (!(total > 0)) problems.push("на обзоре нет заявок в срезе");
 
   await page.goto(base + "?v=" + Date.now() + "#incidents");
