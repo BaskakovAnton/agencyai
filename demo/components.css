@@ -1,0 +1,43 @@
+/* Компоненты дизайн-системы AgencyAI: host-стили ui-* и общие классы из reference.css. */
+ui-sidebar, ui-topbar, ui-panel, ui-kpi, ui-badge, ui-sla, ui-activity, ui-chat-message, ui-process-node { box-sizing: border-box; font: inherit; color: inherit; }
+ui-sidebar { display: block; }
+ui-topbar { display: flex; }
+ui-panel, ui-kpi { display: block; min-width: 0; }
+ui-badge, ui-sla { display: inline-flex; align-items: center; }
+ui-activity { display: flex; }
+ui-chat-message, ui-process-node { display: block; }
+
+.panel { min-width: 0; border: 1px solid var(--color-border); border-radius: var(--radius); background: var(--color-surface); box-shadow: var(--shadow); }
+.panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 15px 17px 0; }
+.panel-title { margin: 0; font-size: 15px; font-weight: 760; letter-spacing: -.2px; display: flex; align-items: center; gap: 8px; }
+.panel-sub { margin: 2px 0 0; color: var(--color-text-muted); font-size: 12px; }
+.panel-body { padding: 13px 17px 17px; }
+.panel-actions { display: flex; align-items: center; gap: 8px; }
+
+.kpi { min-height: 120px; padding: 16px 17px; border: 1px solid var(--color-border); border-radius: var(--radius); background: var(--color-surface); box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 4px; }
+.kpi-top { display: flex; align-items: center; gap: 8px; color: var(--color-text-muted); font-size: 12px; font-weight: 700; }
+.kpi-value { font-size: 26px; font-weight: 820; letter-spacing: -.7px; font-variant-numeric: tabular-nums; }
+.kpi-foot { color: var(--color-text-muted); font-size: 12px; }
+
+.badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 8px; border-radius: 6px; background: var(--color-neutral-bg); color: var(--color-text-muted); font-size: 12px; font-weight: 780; white-space: nowrap; }
+.badge:before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.badge.red { color: var(--color-danger-text); background: var(--color-danger-bg); }
+.badge.amber { color: var(--color-warning-text); background: var(--color-warning-bg); }
+.badge.green { color: var(--color-success-text); background: var(--color-success-bg); }
+.badge.blue { color: var(--color-primary-strong); background: var(--color-primary-soft); }
+.badge.gray { color: var(--color-text-muted); background: var(--color-neutral-bg); }
+
+.sla { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 750; color: var(--color-text-muted); white-space: nowrap; }
+.sla:before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.sla.green, .sla.ok { color: var(--color-success-text); }
+.sla.amber, .sla.paused { color: var(--color-warning-text); }
+.sla.red, .sla.overdue { color: var(--color-danger-text); }
+.sla.gray, .sla.none { color: var(--color-text-muted); }
+
+.role-chip { display: inline-flex; align-items: center; gap: 7px; padding: 7px 9px; border-radius: 8px; background: #f4f7fb; color: var(--nav-text); font-size: 12px; font-weight: 750; }
+.role-color { width: 8px; height: 8px; border-radius: 50%; background: var(--color-primary); }
+.avatar { width: 34px; height: 34px; display: grid; place-items: center; flex: none; border-radius: 50%; background: #e4edff; color: #31558d; font-size: 12px; font-weight: 800; }
+
+.empty-state { border: 1px dashed var(--color-border-strong); border-radius: var(--radius); padding: 20px; color: var(--color-text-muted); font-size: 13px; background: var(--color-surface); }
+.read-only-notice { display: flex; align-items: center; gap: 8px; padding: 9px 12px; border-radius: var(--radius-sm); background: var(--color-primary-soft); color: var(--color-primary-strong); font-size: 12px; font-weight: 650; }
+.demo-notice { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: var(--radius-pill); background: var(--color-neutral-bg); color: var(--color-text-muted); font-size: 12px; font-weight: 650; }

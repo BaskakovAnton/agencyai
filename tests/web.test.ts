@@ -33,6 +33,7 @@ test("сборка создаёт страницу, стили и бандл", a
   expect(screens.length).toBeGreaterThan(100);
   expect(page).toContain("./app.js");
   expect(page).toContain("./tokens.css");
+  expect(page).toContain("./components.css");
   expect(page).toContain("./shell.css");
   expect(page).toContain("./screens.css");
   expect(page).toContain("./style.css");

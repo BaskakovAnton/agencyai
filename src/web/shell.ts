@@ -1,3 +1,4 @@
+import { renderDemoNotice } from "./components.ts";
 import { renderNav } from "./nav.ts";
 import type { Route } from "./router.ts";
 
@@ -34,36 +35,34 @@ export const initTheme = (): void => {
   applyTheme(saved === "dark" ? "dark" : "light");
 };
 
-/** Оболочка приложения: сайдбар, топбар, заголовок страницы и слот контента. */
+/** Оболочка по утверждённому эталону: ui-sidebar 250 px, ui-topbar 68 px, H1 в топбаре. */
 export const renderShell = (input: ShellInput): string => {
   const dark = readTheme() === "dark";
   return (
     '<a class="skip-link" href="#view">К содержанию</a>' +
     '<div class="app" data-app>' +
-    '<aside class="sidebar" data-sidebar>' +
-    '<div class="brand"><span class="brand-mark" aria-hidden="true">A</span><span><b>agencyai</b><i>Приёмная депутата</i></span></div>' +
+    '<ui-sidebar class="sidebar" data-sidebar role="complementary" aria-label="Основная навигация">' +
+    '<div class="brand"><span class="brand-mark" aria-hidden="true">A</span>' +
+    "<span><b>agencyai</b><i>Приёмная депутата</i></span></div>" +
     '<p class="nav-label">Разделы</p>' +
     renderNav(input.route) +
-    '<div class="sidebar-status"><span><i class="live-dot" aria-hidden="true"></i>Демо-данные модели</span><span>30 заявок · 30 узлов</span></div>' +
-    "</aside>" +
+    '<div class="sidebar-status"><span><i class="live-dot" aria-hidden="true"></i>Демо-данные модели</span>' +
+    "<span>30 заявок · 30 узлов</span></div>" +
+    "</ui-sidebar>" +
     '<div class="main">' +
-    '<header class="topbar" data-topbar>' +
+    '<ui-topbar class="topbar" data-topbar role="banner">' +
     '<div class="topbar-main">' +
     '<button class="menu-btn" data-menu aria-label="Открыть меню" aria-expanded="false">☰</button>' +
-    '<div><h1 class="page-title">' + input.title + "</h1>" +
-    (input.subtitle ? '<p class="page-sub">' + input.subtitle + "</p>" : "") + "</div>" +
-    "</div>" +
+    "<div><h1 class=\"page-title\">" + input.title + "</h1>" +
+    (input.subtitle ? '<p class="page-sub">' + input.subtitle + "</p>" : "") +
+    "</div></div>" +
     '<div class="topbar-actions">' +
-    '<span class="demo-chip">Демо-данные</span>' +
+    renderDemoNotice(input.demoNote ?? "Демо-данные") +
     '<button class="theme-btn" data-theme-toggle aria-pressed="' + String(dark) + '">' +
-    (dark ? "Светлая тема" : "Тёмная тема") + "</button>" +
-    "</div>" +
-    "</header>" +
-    '<div class="content">' +
-    '<div id="view" class="view" data-view>' + input.content + "</div>" +
-    "</div>" +
-    "</div>" +
-    "</div>"
+    (dark ? "Светлая тема" : "Тёмная тема") +
+    "</button></div></ui-topbar>" +
+    '<div class="content"><div id="view" class="view" data-view>' + input.content + "</div></div>" +
+    "</div></div>"
   );
 };
 

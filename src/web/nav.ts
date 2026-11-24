@@ -23,7 +23,7 @@ export const renderNav = (route: Route): string => {
   const active = activeNav(route);
   const items = NAV_ITEMS.map(
     (item) =>
-      '<a class="nav-item' + (item.id === active ? " on" : "") + '" data-nav="' + item.id + '" href="' + item.href + '"' +
+      '<a class="nav-item nav-link' + (item.id === active ? " on active" : "") + '" data-nav="' + item.id + '" href="' + item.href + '"' +
       (item.id === active ? ' aria-current="page"' : "") + ">" + item.label + "</a>",
   ).join("");
   return '<nav class="nav" aria-label="Разделы">' + items + "</nav>";

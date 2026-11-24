@@ -1,0 +1,86 @@
+import { expect, test } from "bun:test";
+import { readFile } from "node:fs/promises";
+import { parseRoute } from "../src/web/router.ts";
+import { renderShell } from "../src/web/shell.ts";
+import { renderBadge, renderEmptyState, renderKpi, renderPanel, renderReadOnlyNotice, renderSlaBadge } from "../src/web/components.ts";
+
+const read = (p: string) => readFile(p, "utf8");
+const [tokens, components, shell, style, screens] = await Promise.all([
+  read("src/web/tokens.css"),
+  read("src/web/components.css"),
+  read("src/web/shell.css"),
+  read("src/web/style.css"),
+  read("src/web/screens.css"),
+]);
+const all = tokens + components + shell + style + screens;
+const compact = tokens.replace(/\s+/g, "");
+
+test("токены соответствуют утверждённому reference.css", () => {
+  expect(compact).toContain("--color-bg:#f4f6fa");
+  expect(compact).toContain("--color-surface:#ffffff");
+  expect(compact).toContain("--color-surface-muted:#f8fafc");
+  expect(compact).toContain("--color-text:#172033");
+  expect(compact).toContain("--color-primary:#2563eb");
+  expect(compact).toContain("--color-primary-strong:#1d4ed8");
+  expect(compact).toContain("--color-primary-soft:#eaf1ff");
+  expect(compact).toContain("--color-border:#dce3ec");
+  expect(compact).toContain("--color-line-2:#e9eef4");
+  expect(compact).toContain("--color-neutral-bg:#eef2f7");
+  expect(compact).toContain("--sidebar-w:250px");
+  expect(compact).toContain("--topbar-h:68px");
+  expect(compact).toContain("--radius:13px");
+});
+
+test("наши доработки доступности на месте", () => {
+  expect(compact).toContain("--color-success-text:#0f7a4a");
+  expect(compact).toContain("--color-warning-text:#8a5f13");
+  expect(compact).toContain("--color-danger-text:#a92f42");
+  expect(all).not.toContain("font-size: 9px");
+  expect(all).not.toContain("font-size: 10px");
+  expect(all).not.toContain("font-size: 11px");
+});
+
+test("цвета ролей заданы и различимы (из кит-макетов)", () => {
+  const [light, dark] = tokens.split('[data-theme="dark"]');
+  for (const block of [light!, dark!]) {
+    const roles = [...block.matchAll(/--role-[a-z]+:\s*(#[0-9a-f]{6})/gi)].map((m) => m[1]!);
+    expect(roles.length).toBe(7);
+    expect(new Set(roles).size).toBe(7);
+  }
+  expect(compact).toContain("--role-resident:#4e83d9");
+  expect(compact).toContain("--role-deputy:#2d986e");
+  expect(compact).toContain("--role-contractor:#9066c8");
+  expect(compact).toContain("--role-system:#a0aaba");
+});
+
+test("компоненты ui-* и их классы объявлены", () => {
+  for (const tag of ["ui-sidebar", "ui-topbar", "ui-panel", "ui-kpi", "ui-badge", "ui-sla", "ui-activity", "ui-chat-message", "ui-process-node"]) {
+    expect(components).toContain(tag);
+  }
+  for (const cls of [".panel", ".panel-head", ".panel-title", ".kpi", ".badge", ".sla", ".role-chip", ".empty-state", ".read-only-notice", ".demo-notice"]) {
+    expect(components).toContain(cls);
+  }
+});
+
+test("оболочка использует ui-sidebar и ui-topbar", () => {
+  const html = renderShell({ route: parseRoute("#dashboard"), title: "Обзор", subtitle: "тест", content: "<p>тело</p>" });
+  expect(html).toContain("<ui-sidebar");
+  expect(html).toContain("<ui-topbar");
+  expect(html).toContain('role="complementary"');
+  expect(html).toContain('role="banner"');
+  expect(html).toContain("data-sidebar");
+  expect(html).toContain("data-topbar");
+  expect(html).toContain('class="nav-item nav-link');
+  expect(html).toContain('id="view"');
+});
+
+test("хелперы компонентов отдают ui-разметку и экранируют текст", () => {
+  expect(renderPanel({ title: "Панель", body: "<b>тело</b>" })).toContain('<ui-panel class="panel">');
+  expect(renderPanel({ title: "Панель", body: "x" })).toContain("panel-title");
+  expect(renderKpi("Всего", "30", "в срезе")).toContain('<ui-kpi class="kpi">');
+  expect(renderBadge("Просрочено", "red")).toContain('class="badge red"');
+  expect(renderSlaBadge("в срок", "green")).toContain('class="sla green"');
+  expect(renderEmptyState("Ничего не найдено")).toContain("data-empty-state");
+  expect(renderReadOnlyNotice("Только чтение")).toContain("data-read-only");
+  expect(renderBadge("<script>", "gray")).toContain("&lt;script&gt;");
+});
