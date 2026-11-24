@@ -88,7 +88,10 @@ export interface Incident {
   readonly category: string;
   readonly title: string;
   readonly address: string;
+  /** Кто сообщил (обезличенная роль, без персональных данных). */
   readonly reporter: string;
+  /** Канал обращения: телефон, сайт, мессенджер, почта, личный приём. */
+  readonly channel?: string;
   readonly priority: Priority;
   readonly nodeId: string;
   /** Ситуация регламента, которую проигрывает заявка (С1…С37). */

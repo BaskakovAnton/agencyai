@@ -1,10 +1,10 @@
 import { PRIORITY_TITLES } from "../data/roles.ts";
 import { SLA_LEGEND_TITLES, SLA_PHASES } from "../core/sla-at.ts";
 import { formatDay, formatStamp } from "../core/timeline.ts";
-import { renderBadge, renderEmptyState, renderPanel, renderSlaBadge } from "./components.ts";
+import { esc, renderBadge, renderEmptyState, renderPanel, renderSlaBadge } from "./components.ts";
 import { hrefIncident } from "./router.ts";
 import type { IncidentFilters, IncidentRow, IncidentSort } from "./incidents.ts";
-import { PHASE_TONES, type Tone } from "./overview.ts";
+import { PHASE_TONES, PRIORITY_TONES } from "./overview.ts";
 
 export interface IncidentsInput {
   readonly rows: readonly IncidentRow[];
@@ -29,21 +29,20 @@ const select = (name: string, label: string, options: readonly (readonly [string
 const entries = (record: Readonly<Record<string, string>>): readonly (readonly [string, string])[] =>
   Object.entries(record).map(([id, title]) => [id, title] as const);
 
-const PRIORITY_TONES: Readonly<Record<string, Tone>> = { urgent: "red", normal: "amber", routine: "gray", none: "gray" };
-
 const stageTitle = (row: IncidentRow): string => (row.nodeTitle === "" ? row.nodeId : row.nodeId + " " + row.nodeTitle);
 
+/** Ответственное подразделение обращения (UX-4); «Нет данных», если модель не подключена. */
 const assignee = (row: IncidentRow): string =>
-  row.roleTitle === ""
+  row.departmentName === ""
     ? '<span class="muted">Нет данных</span>'
-    : '<div class="assignee"><span class="mini-avatar" aria-hidden="true">' + row.roleTitle.slice(0, 2) +
-      '</span><span class="assignee-name">' + row.roleTitle + "</span></div>";
+    : '<div class="assignee"><span class="mini-avatar" aria-hidden="true">' + esc(row.departmentName.slice(0, 2)) +
+      '</span><span class="assignee-name">' + esc(row.departmentName) + "</span></div>";
 
 /** Тело таблицы реестра: одна строка — одна заявка. */
 export const renderIncidentsBody = (rows: readonly IncidentRow[], filters: IncidentFilters, day: string): string => {
   const head =
     '<tr><th scope="col">Номер / обращение</th><th scope="col">Приоритет</th><th scope="col">Текущий этап</th>' +
-    '<th scope="col">Роль узла</th><th scope="col">Срок SLA</th><th scope="col">Изменено</th><th scope="col">Карточка</th></tr>';
+    '<th scope="col">Подразделение</th><th scope="col">Срок SLA</th><th scope="col">Изменено</th><th scope="col">Карточка</th></tr>';
   const body =
     rows.length === 0
       ? '<tr><td colspan="7">' + renderEmptyState("Ничего не найдено — измените фильтры или сбросьте их.") + "</td></tr>"
@@ -53,7 +52,7 @@ export const renderIncidentsBody = (rows: readonly IncidentRow[], filters: Incid
               '<tr class="click-row" data-incident-row="' + row.id + '">' +
               '<td><div class="case-id">' + row.id + '</div><div class="case-title">' + row.title +
               (row.situation === "" ? "" : '</div><div class="case-sub">' + row.situation) + "</div></td>" +
-              "<td>" + renderBadge(PRIORITY_TITLES[row.priority], PRIORITY_TONES[row.priority] ?? "gray") + "</td>" +
+              "<td>" + renderBadge(PRIORITY_TITLES[row.priority], PRIORITY_TONES[row.priority]) + "</td>" +
               "<td>" + stageTitle(row) + "</td>" +
               "<td>" + assignee(row) + "</td>" +
               "<td>" + renderSlaBadge(row.slaText, PHASE_TONES[row.phase]) + "</td>" +
@@ -83,6 +82,7 @@ const toolbar = (input: IncidentsInput): string => {
     select("filter-sla", "SLA", slaOptions, input.filters.sla) +
     select("filter-node", "Узел", nodes, input.filters.node) +
     select("sort", "Сортировка", entries(SORT_TITLES), input.filters.sort) +
+    select("filter-review", "Подтверждение", [["all", "любое"], ["pending", "ждут подтверждения"]] as const, input.filters.review) +
     '<label class="hint">Дата: <select data-day-select aria-label="Дата среза">' +
     input.days.map((value) => '<option value="' + value + '"' + (value === input.day ? " selected" : "") + ">" + formatDay(value) + "</option>").join("") +
     "</select></label>" +

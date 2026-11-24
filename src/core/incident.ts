@@ -6,6 +6,14 @@ import { startSla } from "./sla.ts";
 /** Каналы, по которым житель сообщает об инциденте. */
 export const CHANNELS: readonly string[] = ["телефон", "сайт", "мессенджер", "почта", "личный приём"];
 
+/** Обезличенные роли заявителей: персональные данные в модели не хранятся. */
+export const REPORTERS: readonly string[] = [
+  "Житель дома",
+  "Старший по подъезду",
+  "Представитель УК",
+  "Анонимное сообщение",
+];
+
 /** Номер заявки: З-001, З-002, … */
 export const incidentId = (index: number): string => "З-" + String(index + 1).padStart(3, "0");
 
@@ -30,7 +38,8 @@ export const createIncident = (input: CreateIncidentInput): Incident => {
     category: category.key,
     title,
     address: street + ", д. " + house + ", кв. " + flat,
-    reporter: pick(CHANNELS, rand),
+    reporter: pick(REPORTERS, rand),
+    channel: pick(CHANNELS, rand),
     priority: situation?.priority ?? category.priority,
     nodeId,
     situationId: situation?.id ?? "",

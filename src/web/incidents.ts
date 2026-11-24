@@ -6,6 +6,8 @@ import { NODE_MESSAGES } from "../data/messages.ts";
 import { ROLE_NAMES } from "../data/roles.ts";
 import { situationById } from "../data/situations.ts";
 import { slaTextFor } from "./overview.ts";
+import { incidentDepartmentName } from "./org-integration.ts";
+import type { OrgQuery } from "../core/org/repository.ts";
 import type { Graph, Incident, Priority } from "../types.ts";
 
 export type IncidentSort = "id" | "priority" | "date" | "urgency";
@@ -16,6 +18,8 @@ export interface IncidentFilters {
   readonly sla: SlaPhase | "";
   readonly node: string;
   readonly sort: IncidentSort;
+  /** `pending` — только обращения, ожидающие подтверждения завершения. */
+  readonly review: "all" | "pending";
 }
 
 export interface IncidentRow {
@@ -29,13 +33,15 @@ export interface IncidentRow {
   readonly lastEvent: string;
   readonly dueDay: string;
   readonly roleTitle: string;
+  /** Ответственное подразделение; пусто, если орг-модель не подключена. */
+  readonly departmentName: string;
   readonly slaText: string;
 }
 
 const PRIORITIES: readonly Priority[] = ["urgent", "normal", "routine", "none"];
 const SORTS: readonly IncidentSort[] = ["id", "priority", "date", "urgency"];
 
-export const defaultFilters = (): IncidentFilters => ({ q: "", priority: "", sla: "", node: "", sort: "id" });
+export const defaultFilters = (): IncidentFilters => ({ q: "", priority: "", sla: "", node: "", sort: "id", review: "all" });
 
 export const parseFilters = (hash: string): IncidentFilters => {
   const query = new URLSearchParams(hash.replace(/^#\/?/, "").split("?")[1] ?? "");
@@ -48,6 +54,7 @@ export const parseFilters = (hash: string): IncidentFilters => {
     sla: SLA_PHASES.includes(sla as SlaPhase) ? (sla as SlaPhase) : "",
     node: query.get("node") ?? "",
     sort: SORTS.includes(sort as IncidentSort) ? (sort as IncidentSort) : "id",
+    review: query.get("review") === "pending" ? "pending" : "all",
   };
 };
 
@@ -59,6 +66,7 @@ export const filtersHash = (filters: IncidentFilters, day: string): string => {
   if (filters.sla !== "") params.set("sla", filters.sla);
   if (filters.node !== "") params.set("node", filters.node);
   if (filters.sort !== "id") params.set("sort", filters.sort);
+  if (filters.review === "pending") params.set("review", "pending");
   params.set("at", day);
   return "#incidents?" + params.toString();
 };
@@ -71,7 +79,9 @@ const roleOf = (nodeId: string): string => {
 const matches = (incident: Incident, situation: string, query: string): boolean => {
   const needle = query.trim().toLowerCase();
   if (needle === "") return true;
-  const haystack = [incident.id, incident.title, incident.address, incident.reporter, situation].join(" ").toLowerCase();
+  const haystack = [incident.id, incident.title, incident.address, incident.reporter, incident.channel ?? "", situation]
+    .join(" ")
+    .toLowerCase();
   return haystack.includes(needle);
 };
 
@@ -81,6 +91,7 @@ export const buildRows = (
   incidents: readonly Incident[],
   day: string,
   filters: IncidentFilters,
+  org?: OrgQuery,
 ): readonly IncidentRow[] => {
   const rows = visibleAt(incidents, day)
     .map((incident) => {
@@ -99,13 +110,15 @@ export const buildRows = (
         lastEvent: last,
         dueDay: sla.dueAt > 0 ? dayOf(addHours("2025-12-20T09:00:00.000Z", sla.dueAt)) : "",
         roleTitle: roleOf(asOf.nodeId),
+        departmentName: org === undefined ? "" : incidentDepartmentName(org, incident.id),
         slaText: slaTextFor(incident, day),
       };
     })
     .filter((row) => matches(incidents.find((i) => i.id === row.id) as Incident, row.situation, filters.q))
     .filter((row) => filters.priority === "" || row.priority === filters.priority)
     .filter((row) => filters.sla === "" || row.phase === filters.sla)
-    .filter((row) => filters.node === "" || row.nodeId === filters.node);
+    .filter((row) => filters.node === "" || row.nodeId === filters.node)
+    .filter((row) => filters.review === "all" || org?.lifecycleOf(row.id)?.status === "pending_review");
 
   const sorted = [...rows];
   if (filters.sort === "priority") {

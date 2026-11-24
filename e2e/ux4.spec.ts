@@ -4,7 +4,7 @@ test.describe("UX-4: подразделения и подтверждение з
   test("обзор показывает разрез по подразделениям и ожидание подтверждения", async ({ page }) => {
     await page.goto("/#dashboard?at=2026-01-02");
     await expect(page.locator("[data-department-split]")).toBeVisible();
-    await expect(page.locator("[data-department-split]").locator("[data-department]").first()).toBeVisible();
+    await expect(page.locator("[data-department-split] [data-department]").first()).toBeVisible();
     await expect(page.locator("[data-waiting-review]")).toBeVisible();
     await expect(page.locator("[data-attention]").first()).toBeVisible();
     await expect(page.locator("th", { hasText: "Подразделение" })).toBeVisible();
@@ -24,14 +24,33 @@ test.describe("UX-4: подразделения и подтверждение з
     await page.locator("[data-org-actor]").selectOption("USR-EXECUTOR");
     await page.getByRole("button", { name: "Сообщить о выполнении" }).click();
     await expect(page.locator("[data-org-message]")).toContainText("Готово");
-    // Исполнителю подтверждение недоступно — запрет самоподтверждения и полномочий.
     await expect(page.getByRole("button", { name: "Подтвердить завершение" })).toBeDisabled();
     await page.locator("[data-org-actor]").selectOption("USR-CONTROL");
     await page.getByRole("button", { name: "Подтвердить завершение" }).click();
     await expect(page.locator("[data-org-message]")).toContainText("Готово");
     await expect(page.locator("[data-org-confirmation]")).toContainText("Завершено");
-    // Завершённое обращение можно переоткрыть контролёром.
     await page.getByRole("button", { name: "Переоткрыть" }).click();
     await expect(page.locator("[data-org-confirmation]")).toContainText("Переоткрыто");
+  });
+
+  test("реестр: колонка «Подразделение» и фильтр «ждут подтверждения»", async ({ page }) => {
+    await page.goto("/#incidents");
+    await expect(page.locator("th", { hasText: "Подразделение" })).toBeVisible();
+    await expect(page.locator("[data-incident-row]").first()).toContainText("(демо)");
+    const all = await page.locator("[data-incident-row]").count();
+    expect(all).toBe(30);
+    await page.locator("[data-filter-review]").selectOption("pending");
+    await expect.poll(() => decodeURIComponent(page.url())).toContain("review=pending");
+    const pending = await page.locator("[data-incident-row]").count();
+    expect(pending).toBeGreaterThan(0);
+    expect(pending).toBeLessThan(all);
+    await page.locator("[data-reset]").click();
+    await expect(page.locator("[data-incident-row]")).toHaveCount(all);
+  });
+
+  test("карточка показывает канал обращения", async ({ page }) => {
+    await page.goto("/#incident/" + encodeURIComponent("З-015") + "?at=2026-01-02");
+    await expect(page.locator(".detail-facts")).toContainText("Канал обращения");
+    await expect(page.locator(".detail-facts")).toContainText("Ответственное подразделение");
   });
 });

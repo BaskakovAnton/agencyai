@@ -1,6 +1,6 @@
 import { isFinished, priorityRank } from "../core/incident.ts";
 import { DEMO_ORIGIN, dayOf, formatStamp, incidentAt, visibleAt } from "../core/timeline.ts";
-import { hoursSince, slaPhaseOnDay, slaStateAt, type SlaPhase } from "../core/sla-at.ts";
+import { SLA_PHASE_LABELS, hoursSince, slaPhaseOnDay, slaStateAt, type SlaPhase } from "../core/sla-at.ts";
 import { PRIORITY_TITLES } from "../data/roles.ts";
 import { SLA_PROFILES } from "../data/sla.ts";
 import type { OrgQuery } from "../core/org/repository.ts";
@@ -61,7 +61,6 @@ export interface Overview {
   readonly events: readonly ActivityRow[];
   readonly distribution: readonly DistributionRow[];
   readonly sla: readonly SlaRow[];
-  readonly inTimeShare: number;
   /** Сколько обращений среза на риске нарушения SLA (просрочка или остаток ≤ 24 ч). */
   readonly atRisk: number;
   /** Орг-факты (UX-4): подразделения и ожидание подтверждения; null — модель не подключена. */
@@ -70,7 +69,8 @@ export interface Overview {
 
 export const PRIORITY_TONES: Readonly<Record<Priority, Tone>> = { urgent: "red", normal: "amber", routine: "gray", none: "gray" };
 export const PHASE_TONES: Readonly<Record<SlaPhase, Tone>> = { ok: "green", paused: "amber", overdue: "red", none: "gray" };
-export const PHASE_TITLES: Readonly<Record<SlaPhase, string>> = { ok: "В срок", paused: "Пауза", overdue: "Просрочено", none: "Нет SLA" };
+/** Подписи фаз: единый источник — core/sla-at.ts (SLA_PHASE_LABELS). */
+export const PHASE_TITLES: Readonly<Record<SlaPhase, string>> = SLA_PHASE_LABELS;
 
 /** Часы модельного времени на конец выбранного дня. */
 const dayEndHours = (day: string): number => hoursSince(DEMO_ORIGIN, day + "T23:59:59.999Z");
@@ -172,7 +172,6 @@ export const buildOverview = (graph: Graph, incidents: readonly Incident[], day:
 
   const completed = slice.filter((incident) => isFinished(incidentAt(incident, day), graph)).length;
   const paused = phases.filter((phase) => phase === "paused").length;
-  const overdue = phases.filter((phase) => phase === "overdue").length;
 
   return {
     day,
@@ -181,7 +180,6 @@ export const buildOverview = (graph: Graph, incidents: readonly Incident[], day:
     events,
     distribution,
     sla,
-    inTimeShare: slice.length === 0 ? 0 : Math.round(((slice.length - overdue - paused) / slice.length) * 100),
     atRisk: slice.filter((incident) => slaIsAtRisk(incident, day)).length,
     org: org === undefined ? null : orgFactsFor(org, slice.map((incident) => incident.id)),
   };

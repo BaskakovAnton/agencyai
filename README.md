@@ -8,9 +8,16 @@
 копия байт-в-байт; GitHub Pages, ветка `main`). Демо-приложение редизайна **опубликовано**:
 **https://baskakovanton.github.io/agencyai/demo/** — проверено живым верификатором 17.11.2026 (LIVE OK).
 
-**Редизайн (17.11.2026):** пройдены этапы 0–4 по [docs/redesign-plan.md](docs/redesign-plan.md) —
-светлая тема, App Shell, «Обзор», «Обращения», карточка обращения, обновлённые хронология, Гант,
-переписка и модель. Итог: [docs/redesign-final-report.md](docs/redesign-final-report.md); приёмка макетов — [docs/visual-acceptance.md](docs/visual-acceptance.md). Стиль **DarkStore** (тёмный сайдбар, зелёный акцент, состав «Обзора» по эталону) — [docs/forest-style-report.md](docs/forest-style-report.md).
+**Редизайн по утверждённому каталогу goshva (24.11.2026):** этапы 0–5 — палитра и компоненты кита
+(`#2563eb`, `#f4f6fa`, светлый сайдбар 250, топбар 68), оболочка на `ui-sidebar`/`ui-topbar`,
+«Обзор» и «Реестр» по `overview.html`/`incidents.html`, карточка по `incident-detail.html`,
+хронология/Гант/переписка/модель по своим макетам. Отчёты: [baseline](docs/redesign-baseline.md),
+[этапы 1–5](docs/redesign-stage-5-report.md).
+
+**Организационная модель (UX-2…UX-4, 24.11.2026):** подразделения, сотрудники и членства; назначения с одним
+активным ответственным и участниками; append-only события; подтверждение завершения контролёром.
+Доменный слой — `src/core/org/`, отчёты — [UX-2](docs/ux-audit/ux-2-domain-model-implementation.md),
+[UX-3](docs/ux-audit/ux-3-repository-adapter.md), [UX-4](docs/ux-audit/ux-4-dashboard-and-completion-ui.md).
 
 ## Структура
 
@@ -23,13 +30,14 @@
 ├── player.html    # свимлейн-плеер ситуаций по ролям (из deput, как есть)
 ├── matrix.html    # матрица «роль × узел процесса» (из deput, как есть)
 ├── src/           # core (чистые функции), data, cli, io, web (SPA демо)
-├── tests/         # bun test: 194 теста
-├── e2e/           # Playwright: 46 сценариев
+├── src/core/org/  # домен организации: типы, назначения, события, завершение, порты
+├── tests/         # bun test: 252 теста (включая org-* и ux4-*)
+├── e2e/           # Playwright: 57 сценариев
 ├── scripts/       # сборка, сервер, скриншоты, аудит, live-проверка
 ├── demo/          # прод-сборка для Pages: app.js + index.html + tokens/shell/screens/style.css
 ├── package.json   # скрипты bun (start, demo, test, e2e, build:demo, serve:demo, audit, typecheck)
 ├── tsconfig.json  # strict TypeScript
-└── docs/          # ТЗ, регламент, решения, редизайн (plan/baseline/stage-отчёты/эталоны)
+└── docs/          # ТЗ, решения, редизайн, UX-отчёты (docs/ux-audit), журнал проекта (docs/journal.md)
 ```
 
 ## Что уже решено
@@ -185,8 +193,12 @@ Cloudflare Pages / Amvera) либо возврат в приватный реж�
 11. ✔ Git-граф заявок с перемоткой времени, Гант-fallback и мобильный чат, синхронный по дате
 12. ✔ Шкала времени и легенды SLA/развилок, карточка узла по клику, SLA-цвета и роли в чате
 13. ✔ Редизайн: светлая тема и App Shell, «Обзор» с KPI, реестр обращений, карточка обращения,
-   обновлённые хронология/Гант/переписка/модель ([итоговый отчёт](docs/redesign-final-report.md))
-14. Дальше: публикация ветки редизайна и продуктовый слой (реальные обращения, хранение, авторизация)
+   обновлённые хронология/Гант/переписка/модель ([отчёт первого цикла](docs/redesign-final-report.md))
+14. ✔ Второй цикл дизайна по утверждённому каталогу goshva: этапы 0–5 ([отчёт](docs/redesign-stage-5-report.md))
+15. ✔ UX-2: домен организации, назначения и подтверждение завершения ([отчёт](docs/ux-audit/ux-2-domain-model-implementation.md))
+16. ✔ UX-3: порты репозитория и адаптер в памяти ([отчёт](docs/ux-audit/ux-3-repository-adapter.md))
+17. ✔ UX-4: подразделения и подтверждение в интерфейсе ([отчёт](docs/ux-audit/ux-4-dashboard-and-completion-ui.md))
+18. Дальше: очередь подтверждений для контролёра, периоды и динамика KPI, хранение состояния, авторизация
 
 ## Происхождение
 

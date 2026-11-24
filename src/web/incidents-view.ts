@@ -1,16 +1,17 @@
 import type { Story } from "../core/story.ts";
+import type { OrgQuery } from "../core/org/repository.ts";
 import type { Graph } from "../types.ts";
 import { renderIncidents, renderIncidentsBody } from "./incidents-html.ts";
 import { buildRows, defaultFilters, filtersHash, parseFilters, type IncidentFilters } from "./incidents.ts";
 import type { Route } from "./router.ts";
 
 /** Экран «Обращения»: фильтры живут в адресе, таблица перерисовывается без потери фокуса поиска. */
-export const mountIncidents = (root: HTMLElement, graph: Graph, story: Story, route: Route): void => {
+export const mountIncidents = (root: HTMLElement, graph: Graph, story: Story, route: Route, org?: OrgQuery): void => {
   const days = story.days;
   let day = /^\d{4}-\d{2}-\d{2}$/.test(route.at) ? route.at : days.at(-1) ?? "";
   let filters = parseFilters(location.hash);
   const nodes = graph.order.map((id) => ({ id, title: graph.byId[id]?.title ?? id }));
-  const rows = () => buildRows(graph, story.incidents, day, filters);
+  const rows = () => buildRows(graph, story.incidents, day, filters, org);
   const value = (target: HTMLElement): string => (target as HTMLSelectElement | HTMLInputElement).value;
 
   const paint = (): void => {
@@ -36,6 +37,7 @@ export const mountIncidents = (root: HTMLElement, graph: Graph, story: Story, ro
     if (target.matches("[data-filter-priority]")) filters = { ...filters, priority: value(target) as IncidentFilters["priority"] };
     else if (target.matches("[data-filter-sla]")) filters = { ...filters, sla: value(target) as IncidentFilters["sla"] };
     else if (target.matches("[data-filter-node]")) filters = { ...filters, node: value(target) };
+    else if (target.matches("[data-filter-review]")) filters = { ...filters, review: value(target) as IncidentFilters["review"] };
     else if (target.matches("[data-sort]")) filters = { ...filters, sort: value(target) as IncidentFilters["sort"] };
     else if (target.matches("[data-day-select]")) day = value(target);
     else return;

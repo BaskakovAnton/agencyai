@@ -73,7 +73,7 @@ export const mountRouter = (graph: Graph, story: Story, org?: OrgRepository): vo
     else if (route.name === "chat") mountChat(view, graph, story, route);
     else if (route.name === "model") mountModel(view, graph);
     else if (route.name === "dashboard") mountDashboard(view, graph, story, route, org);
-    else if (route.name === "incidents") mountIncidents(view, graph, story, route);
+    else if (route.name === "incidents") mountIncidents(view, graph, story, route, org);
     else mountIncident(view, graph, story, route, { org });
   };
   window.addEventListener("hashchange", apply);

@@ -65,8 +65,8 @@ test("распределение и контроль сроков согласо
   expect(overview.distribution.reduce((sum, row) => sum + row.count, 0)).toBe(overview.kpi.total);
   expect(overview.sla).toHaveLength(4);
   expect(overview.sla.reduce((sum, row) => sum + row.count, 0)).toBe(overview.kpi.total);
-  expect(overview.inTimeShare).toBeGreaterThanOrEqual(0);
-  expect(overview.inTimeShare).toBeLessThanOrEqual(100);
+  expect(overview.atRisk).toBeGreaterThanOrEqual(0);
+  expect(overview.atRisk).toBeLessThanOrEqual(overview.kpi.total);
 });
 
 test("нулевой срез не даёт NaN и ложных значений", () => {
@@ -74,7 +74,7 @@ test("нулевой срез не даёт NaN и ложных значений
   expect(overview.kpi.total).toBe(0);
   expect(overview.attention).toHaveLength(0);
   expect(overview.events).toHaveLength(0);
-  expect(overview.inTimeShare).toBe(0);
+  expect(overview.atRisk).toBe(0);
 });
 
 test("события идут от свежих к старым", () => {

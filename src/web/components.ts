@@ -9,7 +9,6 @@ export interface PanelInput {
   readonly subtitle?: string;
   readonly actions?: string;
   readonly body: string;
-  readonly tag?: "panel" | "kpi";
 }
 
 /** Панель/карточка: единый контракт заголовка и тела. */

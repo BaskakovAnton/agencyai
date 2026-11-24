@@ -22,8 +22,4 @@ export const mountDashboard = (
       location.hash = "#dashboard?at=" + encodeURIComponent((target as HTMLSelectElement).value);
     }
   });
-  root.addEventListener("click", (event) => {
-    const chip = (event.target as Element | null)?.closest<HTMLElement>("[data-day-chip]");
-    if (chip?.dataset.day) location.hash = "#dashboard?at=" + encodeURIComponent(chip.dataset.day);
-  });
 };

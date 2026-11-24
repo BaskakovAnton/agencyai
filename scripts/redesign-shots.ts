@@ -4,8 +4,8 @@ import { mkdir } from "node:fs/promises";
 const out = process.argv[2] ?? "docs/screenshots/redesign-baseline";
 const app = "http://127.0.0.1:4321/";
 const refs = "file:///C:/Users/Pavel/Desktop/agencyai/docs/redesign-reference/";
+/** Контрольные размеры из docs/redesign-validation-guide.md (четыре, zoom 100 %). */
 const vps = [
-  { name: "1920", width: 1920, height: 1080 },
   { name: "1440", width: 1440, height: 1000 },
   { name: "1024", width: 1024, height: 900 },
   { name: "768", width: 768, height: 1024 },

@@ -97,15 +97,28 @@ if (ready) {
   if ((await page.locator("[data-kpi]").count()) !== 4) problems.push("на обзоре не 4 KPI");
   const total = Number(((await page.locator('[data-kpi="active"] .kpi-value').innerText()) ?? "0").trim());
   if (!(total > 0)) problems.push("на обзоре нет заявок в срезе");
+  // Орг-модель (UX-3/UX-4): подразделения и ожидание подтверждения.
+  if ((await page.locator("[data-department-split]").count()) === 0) problems.push("на обзоре нет разреза по подразделениям");
+  if ((await page.locator("[data-department-split] [data-department]").count()) === 0) problems.push("разрез по подразделениям пуст");
+  if ((await page.locator("[data-waiting-review]").count()) === 0) problems.push("на обзоре нет строки «ждут подтверждения»");
+  if ((await page.locator('th:has-text("Подразделение")').count()) === 0) problems.push("в таблице внимания нет колонки «Подразделение»");
 
   await page.goto(base + "?v=" + Date.now() + "#incidents");
   await page.waitForSelector("[data-incidents-table]");
   const rows = await page.locator("[data-incident-row]").count();
   if (rows !== 30) problems.push("в реестре обращений не 30 строк: " + rows);
+  if ((await page.locator("[data-filter-review]").count()) === 0) problems.push("в реестре нет фильтра «ждут подтверждения»");
 
   await page.goto(base + "?v=" + Date.now() + "#incident/" + encodeURIComponent("З-015") + "?at=2026-01-02");
   await page.waitForSelector("[data-incident-detail]");
   if ((await page.locator("[data-history-row]").count()) === 0) problems.push("в карточке обращения нет истории");
+  // Подтверждение завершения и участники из орг-модели.
+  if ((await page.locator("[data-org-confirmation]").count()) === 0) problems.push("в карточке нет панели подтверждения");
+  if ((await page.locator("[data-org-actor]").count()) === 0) problems.push("в панели подтверждения нет выбора пользователя");
+  if ((await page.locator('[data-org-action="approve"]').count()) === 0) problems.push("в панели подтверждения нет кнопки подтверждения");
+  const detailFacts = (await page.locator(".detail-facts").innerText()).trim();
+  if (!detailFacts.includes("Ответственное подразделение")) problems.push("в фактах карточки нет ответственного подразделения");
+  if (!detailFacts.includes("Состояние подтверждения")) problems.push("в фактах карточки нет состояния подтверждения");
 
   await page.goto(base + "?v=" + Date.now() + "#model");
   await page.waitForSelector('[data-action="select"]');

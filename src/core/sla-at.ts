@@ -6,6 +6,11 @@ import { dayOf } from "./timeline.ts";
 /** Фаза SLA: в срок, на паузе, вне SLA (просрочено) или норматив не задан. */
 export type SlaPhase = "ok" | "paused" | "overdue" | "none";
 
+/**
+ * Короткие подписи для значков и легенд (исторический вид, нижний регистр).
+ * Внимание: у фаз `overdue` и `none` здесь совпадающая подпись — для различимых состояний
+ * используйте `SLA_PHASE_LABELS`.
+ */
 export const SLA_PHASE_TITLES: Readonly<Record<SlaPhase, string>> = {
   ok: "в срок",
   paused: "на паузе",
@@ -16,6 +21,14 @@ export const SLA_PHASE_TITLES: Readonly<Record<SlaPhase, string>> = {
 export const SLA_PHASES: readonly SlaPhase[] = ["ok", "paused", "overdue", "none"];
 
 /** Подписи для легенды: просрочка и «вне норматива» — разные вещи. */
+/** Полные подписи для карточек и таблиц: единый источник для веб-экранов. */
+export const SLA_PHASE_LABELS: Readonly<Record<SlaPhase, string>> = {
+  ok: "В срок",
+  paused: "Пауза",
+  overdue: "Просрочено",
+  none: "Нет SLA",
+};
+
 export const SLA_LEGEND_TITLES: Readonly<Record<SlaPhase, string>> = {
   ok: "в срок",
   paused: "на паузе",
