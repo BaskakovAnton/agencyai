@@ -34,3 +34,6 @@ docs/transcript-*.md
 docs/transcript-*.json
 docs/analysis-*.md
 docs/spec-*.md
+
+# локальный комплект дизайн-кита (копия уже лежит в docs/redesign-reference)
+agencyai-redesign-kit/

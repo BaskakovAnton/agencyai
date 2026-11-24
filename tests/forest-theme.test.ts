@@ -45,3 +45,24 @@ test("наши правила: нет кеглей меньше 12px и нет �
     expect(all).not.toContain("font-size:" + size);
   }
 });
+
+test("роли — в зелёно-бирюзовой гамме эталона и различимы", () => {
+  const light = tokens.slice(tokens.indexOf(":root"), tokens.indexOf('[data-theme="dark"]'));
+  const roles = [...light.matchAll(/--role-[a-z]+:\s*(#[0-9a-f]{6})/gi)].map((m) => m[1]!);
+  expect(roles).toHaveLength(7);
+  expect(new Set(roles).size).toBe(7);
+  const hue = (hex: string): number => {
+    const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255) as [number, number, number];
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    if (max === min) return 0;
+    const d = max - min;
+    const h = max === r ? ((g - b) / d + (g < b ? 6 : 0)) : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
+    return h * 60;
+  };
+  for (const hex of roles) {
+    const h = hue(hex);
+    expect(h).toBeGreaterThan(90);
+    expect(h).toBeLessThan(195);
+  }
+});
