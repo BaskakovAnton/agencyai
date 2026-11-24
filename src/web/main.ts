@@ -5,6 +5,7 @@ import { buildStory } from "../core/story.ts";
 import { daysRange, formatDay, formatStamp, visibleAt, withTimeline } from "../core/timeline.ts";
 import { buildProcessGraph } from "../data/edges.ts";
 import { NODES } from "../data/nodes.ts";
+import { createDemoOrgRepository } from "../data/org-repository.ts";
 import { mountChat } from "./chat-view.ts";
 import { renderPhone } from "./chat-html.ts";
 import { renderGanttGrid } from "./gantt-grid.ts";
@@ -55,7 +56,8 @@ export const demoModel = (seed = 7) => {
 if (typeof document !== "undefined") {
   const start = (): void => {
     const { graph, story } = demoModel();
-    mountRouter(graph, story);
+    // Орг-модель (UX-2…UX-4) подключается к экранам через порты репозитория.
+    mountRouter(graph, story, createDemoOrgRepository(graph).repository);
   };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);
   else start();

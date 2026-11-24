@@ -1,5 +1,5 @@
 import { formatDay } from "../core/timeline.ts";
-import { renderBadge, renderEmptyState, renderKpi, renderPanel, renderSlaBadge } from "./components.ts";
+import { esc, renderBadge, renderEmptyState, renderKpi, renderPanel, renderSlaBadge } from "./components.ts";
 import { hrefIncident, hrefIncidents, hrefTimeline } from "./router.ts";
 import type { Overview } from "./overview.ts";
 
@@ -25,7 +25,8 @@ const attentionRows = (overview: Overview): string =>
           '<tr class="click-row" data-attention="' + item.id + '"><td><div class="case-id">' + item.id +
           '</div><div class="case-title">' + item.title + '</div><div class="case-sub">' + item.address + "</div></td>" +
           "<td>" + renderBadge(item.priorityTitle, item.priorityTone) + "</td>" +
-          "<td>" + item.nodeId + " " + item.nodeTitle + "</td>" +
+          "<td>" + (item.departmentName === "" ? '<span class="muted">Нет данных</span>' : item.departmentName) +
+          '<div class="case-sub">' + item.nodeId + " · " + item.nodeTitle + "</div></td>" +
           "<td>" + renderSlaBadge(item.slaText, item.slaTone) + "</td>" +
           '<td><a class="panel-link" href="' + hrefIncident(item.id, overview.day) + '">Открыть →</a></td></tr>',
         )
@@ -50,7 +51,19 @@ const distributionRows = (overview: Overview): string =>
   overview.distribution
     .map((row) => '<div class="legend-item">' + renderBadge(row.title, row.tone) + "<b>" + row.count + "</b></div>")
     .join("") +
-  "</div>";
+  "</div>" +
+  (overview.org === null || overview.org.departments.length === 0
+    ? ""
+    : '<p class="fact-label section-gap">Ответственные подразделения</p>' +
+      '<div class="legend legend-single" data-department-split>' +
+      overview.org.departments
+        .map(
+          (row) =>
+            '<div class="legend-item"><span data-department="' + row.departmentId + '">' + esc(row.name) +
+            "</span><b>" + row.count + "</b></div>",
+        )
+        .join("") +
+      "</div>");
 
 const slaRows = (overview: Overview): string =>
   overview.sla
@@ -61,6 +74,10 @@ const slaRows = (overview: Overview): string =>
         row.id + '" style="width:' + row.share + '%"></span></div></div>',
     )
     .join("") +
+  (overview.org === null
+    ? ""
+    : '<div class="sla-row-head section-gap"><span class="muted">Ждут подтверждения</span><b data-waiting-review>' +
+      overview.org.waitingForReview + "</b></div>") +
   '<p class="readonly">Формулы: «активные» — незавершённые заявки среза, «требуют внимания» — просроченный SLA или срочная незавершённая, «в срок» — доля без просрочки и паузы. Считаются только из модели.</p>';
 
 /** Экран «Обзор» по композиции overview.html. */
@@ -78,7 +95,13 @@ export const renderDashboard = (input: DashboardInput): string => {
   const kpis =
     '<div class="kpi-grid">' +
     renderKpi("Активные обращения", String(overview.kpi.active), "не завершены в срезе", kpiIcon("▤", ""), "active") +
-    renderKpi("Требуют внимания", String(overview.kpi.attention), "просрочка или срочная", kpiIcon("!", "danger"), "attention") +
+    renderKpi(
+      "Требуют внимания",
+      String(overview.kpi.attention),
+      "в том числе " + overview.atRisk + " с риском SLA",
+      kpiIcon("!", "danger"),
+      "attention",
+    ) +
     renderKpi("На паузе", String(overview.kpi.paused), "ожидают условия возобновления", kpiIcon("Ⅱ", "warning"), "paused") +
     renderKpi("Завершено", String(overview.kpi.completed), "закрыто в срезе", kpiIcon("✓", "success"), "completed") +
     "</div>";
@@ -86,7 +109,7 @@ export const renderDashboard = (input: DashboardInput): string => {
   const attention =
     '<div class="table-wrap" tabindex="0" role="region" aria-label="Требуют внимания: таблица прокручивается по горизонтали">' +
     '<table class="data-table"><caption class="sr-only">Обращения, требующие внимания</caption><thead><tr>' +
-    '<th scope="col">Обращение</th><th scope="col">Приоритет</th><th scope="col">Этап</th><th scope="col">SLA</th><th scope="col">Карточка</th>' +
+    '<th scope="col">Обращение</th><th scope="col">Приоритет</th><th scope="col">Подразделение</th><th scope="col">SLA</th><th scope="col">Карточка</th>' +
     "</tr></thead><tbody>" + attentionRows(overview) + "</tbody></table></div>";
 
   return (

@@ -3,6 +3,8 @@ import { DEMO_ORIGIN, dayOf, formatStamp, incidentAt, visibleAt } from "../core/
 import { hoursSince, slaPhaseOnDay, slaStateAt, type SlaPhase } from "../core/sla-at.ts";
 import { PRIORITY_TITLES } from "../data/roles.ts";
 import { SLA_PROFILES } from "../data/sla.ts";
+import type { OrgQuery } from "../core/org/repository.ts";
+import { incidentDepartmentName, orgFactsFor, type OrgFacts } from "./org-integration.ts";
 import type { Graph, Incident, Priority } from "../types.ts";
 
 export type Tone = "red" | "amber" | "green" | "gray" | "blue";
@@ -27,6 +29,8 @@ export interface AttentionItem {
   readonly phase: SlaPhase;
   readonly slaTone: Tone;
   readonly slaText: string;
+  /** Ответственное подразделение; пусто, если орг-модель не подключена. */
+  readonly departmentName: string;
 }
 
 export interface ActivityRow {
@@ -58,6 +62,10 @@ export interface Overview {
   readonly distribution: readonly DistributionRow[];
   readonly sla: readonly SlaRow[];
   readonly inTimeShare: number;
+  /** Сколько обращений среза на риске нарушения SLA (просрочка или остаток ≤ 24 ч). */
+  readonly atRisk: number;
+  /** Орг-факты (UX-4): подразделения и ожидание подтверждения; null — модель не подключена. */
+  readonly org: OrgFacts | null;
 }
 
 export const PRIORITY_TONES: Readonly<Record<Priority, Tone>> = { urgent: "red", normal: "amber", routine: "gray", none: "gray" };
@@ -99,7 +107,7 @@ export const slaTextFor = (incident: Incident, day: string): string => {
 };
 
 /** Сводка обзора: KPI, требующие внимания, события, распределение и контроль сроков. */
-export const buildOverview = (graph: Graph, incidents: readonly Incident[], day: string): Overview => {
+export const buildOverview = (graph: Graph, incidents: readonly Incident[], day: string, org?: OrgQuery): Overview => {
   const slice = visibleAt(incidents, day);
   const phases = slice.map((incident) => slaPhaseOnDay(incident, day));
 
@@ -120,6 +128,7 @@ export const buildOverview = (graph: Graph, incidents: readonly Incident[], day:
         phase,
         slaTone: PHASE_TONES[phase],
         slaText: slaTextFor(incident, day),
+        departmentName: org === undefined ? "" : incidentDepartmentName(org, incident.id),
       };
     })
     .sort((a, b) => priorityRank[a.priority] - priorityRank[b.priority] || a.id.localeCompare(b.id, "ru", { numeric: true }));
@@ -173,5 +182,7 @@ export const buildOverview = (graph: Graph, incidents: readonly Incident[], day:
     distribution,
     sla,
     inTimeShare: slice.length === 0 ? 0 : Math.round(((slice.length - overdue - paused) / slice.length) * 100),
+    atRisk: slice.filter((incident) => slaIsAtRisk(incident, day)).length,
+    org: org === undefined ? null : orgFactsFor(org, slice.map((incident) => incident.id)),
   };
 };

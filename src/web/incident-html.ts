@@ -1,5 +1,5 @@
 import { formatDay } from "../core/timeline.ts";
-import { esc, renderBadge, renderPanel, renderReadOnlyNotice, renderSlaBadge } from "./components.ts";
+import { esc, renderBadge, renderEmptyState, renderPanel, renderReadOnlyNotice, renderSlaBadge, type BadgeTone } from "./components.ts";
 import { hrefChat, hrefIncidents, hrefTimeline } from "./router.ts";
 import type { IncidentView, StepRow } from "./incident.ts";
 
@@ -48,16 +48,82 @@ const slaBlock = (view: IncidentView): string =>
   '<div class="section-gap"><div class="fact-label">Норматив по приоритету</div><div class="fact-value">' + esc(view.normTitle) + "</div></div>" +
   '<div class="section-gap"><div class="fact-label">Паузы SLA</div><div class="fact-value">' + esc(view.pauseText) + "</div></div>";
 
+const ROLE_TYPE_TITLES: Readonly<Record<"accountable" | "participant", string>> = {
+  accountable: "ответственное подразделение",
+  participant: "участник",
+};
+
+/** Участники из орг-модели, если она подключена; иначе — роли узлов (прежнее поведение). */
+const orgParticipantsBlock = (view: IncidentView): string => {
+  const summary = view.orgSummary;
+  if (summary === null) return "";
+  if (summary.participants.length === 0) {
+    return renderEmptyState(
+      summary.status === "completed" || summary.status === "reopened"
+        ? "Активных назначений нет: завершение закрыло участие, для продолжения нужно новое назначение."
+        : "Назначения по этому обращению отсутствуют.",
+    );
+  }
+  return summary.participants
+    .map((participant) =>
+      '<div class="assignee section-gap"><span class="avatar" aria-hidden="true">' + esc(participant.name.slice(0, 2)) + "</span>" +
+      '<div><div class="assignee-name">' + esc(participant.name) + "</div>" +
+      '<div class="fact-label">' + ROLE_TYPE_TITLES[participant.type] +
+      (participant.employees.length === 0 ? " · сотрудник не назначен" : " · " + esc(participant.employees.join(", "))) +
+      "</div></div></div>",
+    )
+    .join("");
+};
+
 const participantsBlock = (view: IncidentView): string =>
-  view.participants.length === 0
-    ? '<p class="muted">Участники не определены моделью.</p>'
-    : view.participants
+  view.orgSummary !== null
+    ? orgParticipantsBlock(view)
+    : view.participants.length === 0
+      ? '<p class="muted">Участники не определены моделью.</p>'
+      : view.participants
         .map((person) =>
           '<div class="assignee section-gap"><span class="avatar" aria-hidden="true">' + esc(person.initials) + "</span>" +
           '<div><div class="assignee-name">' + esc(person.name) + "</div>" +
           '<div class="fact-label">' + esc(person.note) + "</div></div></div>",
         )
         .join("");
+
+const ORG_STATUS_TONES: Readonly<Record<string, BadgeTone>> = {
+  active: "blue",
+  pending_review: "amber",
+  completed: "green",
+  reopened: "gray",
+};
+
+const actionButton = (action: string, label: string, enabled: boolean, hint: string): string =>
+  '<button class="button" data-org-action="' + action + '"' + (enabled ? "" : " disabled") +
+  (enabled ? "" : ' title="' + esc(hint) + '"') + ">" + label + "</button>";
+
+/** Панель подтверждения: действия выполняются доменом, права и статусы проверяет модель. */
+const confirmationBlock = (view: IncidentView): string => {
+  const summary = view.orgSummary;
+  const actions = view.actions;
+  if (summary === null || actions === null) return "";
+  const options = view.actorOptions
+    .map((option) => '<option value="' + option.id + '"' + (option.id === view.actorUserId ? " selected" : "") + ">" + esc(option.label) + "</option>")
+    .join("");
+  return renderPanel({
+    title: "Подтверждение завершения",
+    subtitle: "Исполнитель сообщает о выполнении, подтверждает контролёр",
+    body:
+      '<div class="sla-head"><span class="muted">Состояние</span>' +
+      renderBadge(summary.statusTitle, ORG_STATUS_TONES[summary.status] ?? "gray") + "</div>" +
+      '<div class="section-gap"><label class="hint">Действовать от имени: <select data-org-actor aria-label="Пользователь для действий">' +
+      options + "</select></label></div>" +
+      '<div class="stack section-gap">' +
+      actionButton("submit", "Сообщить о выполнении", actions.submit, "Доступно исполнителю, когда обращение в работе") +
+      actionButton("approve", "Подтвердить завершение", actions.approve, "Доступно контролёру: обращение на проверке и работу сдал другой пользователь") +
+      actionButton("reject", "Отклонить с причиной", actions.reject, "Доступно контролёру для обращения на проверке") +
+      actionButton("reopen", "Переоткрыть", actions.reopen, "Доступно контролёру для завершённого обращения") +
+      "</div>" +
+      '<p class="readonly" data-org-message>Действия проверяются моделью: статус, полномочия и запрет самоподтверждения.</p>',
+  });
+};
 
 const linksBlock = (view: IncidentView, day: string): string =>
   '<div class="stack">' +
@@ -86,6 +152,7 @@ export const renderIncident = (view: IncidentView, day: string, days: readonly s
   "</div></div>" +
   "<div>" +
   '<div data-sla>' + renderPanel({ title: "Контроль SLA", body: slaBlock(view) }) + "</div>" +
+  (view.orgSummary === null ? "" : '<div class="section-gap" data-org-confirmation>' + confirmationBlock(view) + "</div>") +
   '<div class="section-gap">' + renderPanel({ title: "Участники", body: participantsBlock(view) }) + "</div>" +
   '<div class="section-gap" data-links>' + renderPanel({ title: "Связанные представления", body: linksBlock(view, day) }) + "</div>" +
   "</div></div></section>";

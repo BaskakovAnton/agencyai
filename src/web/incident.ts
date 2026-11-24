@@ -9,6 +9,8 @@ import { SLA_PROFILES } from "../data/sla.ts";
 import { situationById } from "../data/situations.ts";
 import type { Graph, Incident, Priority, RoleId } from "../types.ts";
 import { PHASE_TITLES, PHASE_TONES, slaHoursLeft, type Tone } from "./overview.ts";
+import type { OrgQuery } from "../core/org/repository.ts";
+import { availableOrgActions, incidentOrgSummary, type IncidentOrgSummary, type OrgActions } from "./org-integration.ts";
 
 export interface FactRow {
   readonly label: string;
@@ -65,6 +67,13 @@ export interface IncidentView {
   readonly next: readonly NextOption[];
   readonly branched: boolean;
   readonly participants: readonly Participant[];
+  /** Орг-модель (UX-4): ответственное подразделение, участники и состояние подтверждения. */
+  readonly orgSummary: IncidentOrgSummary | null;
+  /** Доступные операции подтверждения для выбранного пользователя. */
+  readonly actions: OrgActions | null;
+  /** Текущий пользователь действий и список демонстрационных пользователей. */
+  readonly actorUserId: string | null;
+  readonly actorOptions: readonly { readonly id: string; readonly label: string }[];
 }
 
 const ROLE_NOTES: Readonly<Record<RoleId, string>> = {
@@ -96,6 +105,8 @@ export const buildIncidentView = (
   incidents: readonly Incident[],
   ref: string,
   day: string,
+  org?: OrgQuery,
+  actorUserId: string | null = null,
 ): IncidentView | null => {
   const id = normalizeRef(ref);
   const incident = incidents.find((item) => item.id === id);
@@ -120,12 +131,17 @@ export const buildIncidentView = (
     phase === "overdue" ? "Превышение норматива" : phase === "ok" ? "В пределах норматива"
       : phase === "paused" ? "Отсчёт приостановлен" : "Норматив для приоритета не задан";
 
+  const orgSummary = org === undefined ? null : incidentOrgSummary(org, incident.id);
   const facts: FactRow[] = [
-    { label: "Текущий этап", value: beforeCreation ? nodeId + " · " + (node?.title ?? "") : nodeId + " · " + (node?.title ?? "") },
+    { label: "Текущий этап", value: nodeId + " · " + (node?.title ?? "") },
     { label: "Состояние SLA", value: PHASE_TITLES[phase], tone: PHASE_TONES[phase] },
-    { label: "Ответственная роль", value: roleTitle === "" ? "Нет данных" : roleTitle },
+    {
+      label: orgSummary === null ? "Ответственная роль" : "Ответственное подразделение",
+      value: orgSummary === null ? (roleTitle === "" ? "Нет данных" : roleTitle) : (orgSummary.accountableName === "" ? "Нет данных" : orgSummary.accountableName),
+    },
     { label: "Связанная ситуация", value: situation?.title ?? "Нет данных" },
   ];
+  if (orgSummary !== null) facts.push({ label: "Состояние подтверждения", value: orgSummary.statusTitle });
 
   const historySteps: StepRow[] = (beforeCreation ? [] : historyUpTo(incident, day)).map((move) => {
     const moveRole = NODE_MESSAGES[move.to]?.role;
@@ -193,6 +209,11 @@ export const buildIncidentView = (
     next,
     branched: branches.length > 0,
     participants: roles.map(participantOf),
+    orgSummary,
+    actions: org === undefined ? null : availableOrgActions(org, incident.id, actorUserId),
+    actorUserId,
+    actorOptions:
+      org === undefined ? [] : org.directory.users.map((user) => ({ id: user.id, label: user.displayName })),
   };
 };
 

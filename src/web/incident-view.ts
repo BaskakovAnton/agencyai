@@ -1,19 +1,63 @@
 import type { Story } from "../core/story.ts";
+import { approveCompletion, rejectCompletion, reopenIncident, submitExecution } from "../core/org/completion.ts";
+import type { OrgRepository } from "../core/org/repository.ts";
 import type { Graph } from "../types.ts";
 import { renderIncident, renderIncidentMissing } from "./incident-html.ts";
 import { buildIncidentView } from "./incident.ts";
+import { ACTOR_BY_ROLE } from "./org-integration.ts";
 import type { Route } from "./router.ts";
 
-/** Экран карточки обращения: дата среза синхронизирована с адресом. */
-export const mountIncident = (root: HTMLElement, graph: Graph, story: Story, route: Route): void => {
+export interface IncidentViewOptions {
+  readonly org?: OrgRepository;
+  /** Роль оператора: определяет демонстрационного пользователя для действий. */
+  readonly role?: keyof typeof ACTOR_BY_ROLE;
+}
+
+/** Экран карточки обращения: дата среза и действия подтверждения синхронны с моделью. */
+export const mountIncident = (
+  root: HTMLElement,
+  graph: Graph,
+  story: Story,
+  route: Route,
+  options: IncidentViewOptions = {},
+): void => {
   const days = story.days;
   const day = /^\d{4}-\d{2}-\d{2}$/.test(route.at) ? route.at : days.at(-1) ?? "";
-  const view = buildIncidentView(graph, story.incidents, route.incidentId, day);
-  root.innerHTML = view === null ? renderIncidentMissing(route.incidentId, day, days) : renderIncident(view, day, days);
+  const org = options.org;
+  let actorUserId: string | null = ACTOR_BY_ROLE[options.role ?? "deputy"] ?? org?.directory.users[0]?.id ?? null;
+
+  const paint = (message: string): void => {
+    const view = buildIncidentView(graph, story.incidents, route.incidentId, day, org, actorUserId);
+    root.innerHTML = view === null ? renderIncidentMissing(route.incidentId, day, days) : renderIncident(view, day, days);
+    const slot = root.querySelector("[data-org-message]");
+    if (slot && message !== "") slot.textContent = message;
+  };
+  paint("");
+
   root.addEventListener("change", (event) => {
     const target = event.target as HTMLElement | null;
     if (target?.matches("[data-day-select]")) {
       location.hash = "#incident/" + encodeURIComponent(route.incidentId) + "?at=" + encodeURIComponent((target as HTMLSelectElement).value);
+      return;
     }
+    if (target?.matches("[data-org-actor]")) {
+      actorUserId = (target as HTMLSelectElement).value;
+      paint("");
+    }
+  });
+
+  root.addEventListener("click", (event) => {
+    const button = (event.target as Element | null)?.closest<HTMLElement>("[data-org-action]");
+    if (!button || !org) return;
+    const action = button.dataset.orgAction ?? "";
+    const at = new Date().toISOString();
+    const actor = actorUserId ?? "";
+    const result = org.runCompletion(route.incidentId, (input) => {
+      if (action === "submit") return submitExecution(input, { at, actorUserId: actor, reason: "Сдано исполнителем (демо)" });
+      if (action === "approve") return approveCompletion(input, { at, actorUserId: actor, result: "Подтверждено (демо)" });
+      if (action === "reject") return rejectCompletion(input, { at, actorUserId: actor, reason: "Требуется доработка (демо)" });
+      return reopenIncident(input, { at, actorUserId: actor, reason: "Повторное обращение (демо)" });
+    });
+    paint(result.ok ? "Готово: состояние обновлено" : "Отказ модели: " + result.error);
   });
 };

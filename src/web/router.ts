@@ -1,4 +1,5 @@
 import { HERO_INCIDENT_ID } from "../data/hero.ts";
+import type { OrgRepository } from "../core/org/repository.ts";
 import type { Story } from "../core/story.ts";
 import type { Graph } from "../types.ts";
 import { mountChat } from "./chat-view.ts";
@@ -48,16 +49,16 @@ export const hrefChat = (incidentId: string, at: string): string =>
   "#chat/" + encodeURIComponent(incidentId) + "?at=" + encodeURIComponent(at);
 
 const pageMeta = (route: Route): { readonly title: string; readonly subtitle: string } => {
-  if (route.name === "dashboard") return { title: "Обзор", subtitle: "Сводка по демонстрационному срезу — появится на Этапе 2" };
-  if (route.name === "incidents") return { title: "Обращения", subtitle: "Список демонстрационных заявок — появится на Этапе 2" };
-  if (route.name === "incident") return { title: "Обращение " + (route.incidentId === "" ? "—" : route.incidentId), subtitle: "Карточка появится на Этапе 3" };
+  if (route.name === "dashboard") return { title: "Обзор", subtitle: "Сводка на выбранную дату: KPI, внимание, подразделения и сроки" };
+  if (route.name === "incidents") return { title: "Обращения", subtitle: "Реестр демонстрационных заявок с фильтрами и поиском" };
+  if (route.name === "incident") return { title: "Обращение " + (route.incidentId === "" ? "—" : route.incidentId), subtitle: "Контекст заявки, SLA, участники и подтверждение завершения" };
   if (route.name === "timeline") return { title: "Хронология", subtitle: "Git-граф и диаграмма Ганта на выбранную дату" };
   if (route.name === "chat") return { title: "Переписка", subtitle: "Сценарный просмотр сообщений, только чтение" };
   return { title: "Модель процесса", subtitle: "30 узлов, роли, права и SLA" };
 };
 
 /** Роутер по хэшу: оболочка перерисовывается, экран монтируется в слот #view. */
-export const mountRouter = (graph: Graph, story: Story): void => {
+export const mountRouter = (graph: Graph, story: Story, org?: OrgRepository): void => {
   const shell = document.querySelector("#shell");
   if (!shell) return;
   initTheme();
@@ -71,9 +72,9 @@ export const mountRouter = (graph: Graph, story: Story): void => {
     if (route.name === "timeline") mountTimeline(view, graph, story, route);
     else if (route.name === "chat") mountChat(view, graph, story, route);
     else if (route.name === "model") mountModel(view, graph);
-    else if (route.name === "dashboard") mountDashboard(view, graph, story, route);
+    else if (route.name === "dashboard") mountDashboard(view, graph, story, route, org);
     else if (route.name === "incidents") mountIncidents(view, graph, story, route);
-    else mountIncident(view, graph, story, route);
+    else mountIncident(view, graph, story, route, { org });
   };
   window.addEventListener("hashchange", apply);
   apply();
