@@ -1,5 +1,5 @@
 /** Хелперы компонентов дизайн-системы: Light DOM, теги ui-*, без вычислений модели. */
-const esc = (value: string): string =>
+export const esc = (value: string): string =>
   value.replace(/[&<>"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[char] as string);
 
 export type BadgeTone = "red" | "amber" | "green" | "blue" | "gray";

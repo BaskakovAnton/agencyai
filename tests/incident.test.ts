@@ -12,19 +12,32 @@ test("карточка героя на 2 января: узел, история 
   const view = buildIncidentView(graph, story.incidents, "З-015", day)!;
   expect(view.id).toBe("З-015");
   expect(view.title).toBe("Разбита дверь подъезда");
+  expect(view.caseLabel).toBe("Обращение З-015");
   expect(view.nodeId).toBe("U6");
-  expect(view.nodeTitle.length).toBeGreaterThan(0);
-  expect(view.history.length).toBe(1);
-  expect(view.history[0]!.to).toBe("U6");
-  expect(view.history[0]!.roleTitle).toBe("Депутат-диспетчер");
-  expect(view.history.every((row) => row.at !== "" && row.roleTitle !== "")).toBe(true);
-  const hero = story.incidents.find((i) => i.id === "З-015")!;
+  expect(view.facts.find((fact) => fact.label === "Текущий этап")!.value).toContain("U6");
+  expect(view.facts.find((fact) => fact.label === "Ответственная роль")!.value.length).toBeGreaterThan(0);
+  expect(view.steps.filter((step) => step.fromHistory)).toHaveLength(1);
+  expect(view.steps.filter((step) => step.state === "current")).toHaveLength(1);
+  expect(view.steps.every((step) => step.caption.length > 0)).toBe(true);
+  const hero = story.incidents.find((incident) => incident.id === "З-015")!;
   expect(view.phase).toBe(slaPhaseOnDay(hero, day));
-  expect(view.normHours).toBe(24);
+  expect(view.normTitle).toContain("авария");
+  expect(view.slaBig.length).toBeGreaterThan(0);
+  expect(view.slaNote.length).toBeGreaterThan(0);
   expect(view.beforeCreation).toBe(false);
 });
 
-test("следующий шаг — это варианты графа, а не утверждение", () => {
+test("участники собраны из ролей модели, без вымышленных имён", () => {
+  const view = buildIncidentView(graph, story.incidents, "З-015", day)!;
+  expect(view.participants.length).toBeGreaterThan(0);
+  expect(view.participants.map((person) => person.name)).toContain("Депутат-диспетчер");
+  for (const person of view.participants) {
+    expect(person.initials.length).toBeGreaterThan(0);
+    expect(person.note.length).toBeGreaterThan(0);
+  }
+});
+
+test("следующий шаг — варианты графа, а не утверждение", () => {
   const view = buildIncidentView(graph, story.incidents, "З-015", day)!;
   expect(view.next.length).toBeGreaterThan(0);
   for (const option of view.next) expect(graph.byId[option.to]).toBeDefined();
@@ -38,6 +51,7 @@ test("ссылка понимает короткий ввод, а неизвес
 test("до создания заявки карточка честно говорит об этом", () => {
   const view = buildIncidentView(graph, story.incidents, "З-015", "2025-12-20")!;
   expect(view.beforeCreation).toBe(true);
-  expect(view.history).toHaveLength(0);
+  expect(view.steps.filter((step) => step.fromHistory)).toHaveLength(0);
   expect(view.phase).toBe("none");
+  expect(view.slaBig).toBe("Норматив не задан");
 });

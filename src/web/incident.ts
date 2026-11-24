@@ -1,23 +1,33 @@
 import { branchesOf, neighborsOf } from "../core/graph.ts";
 import { normalizeRef } from "../core/refs.ts";
-import { SLA_LEGEND_TITLES, slaPhaseOnDay, slaStateAt, type SlaPhase } from "../core/sla-at.ts";
-import { DEMO_ORIGIN, addHours, dayOf, historyUpTo, incidentAt, isVisible } from "../core/timeline.ts";
+import { slaPhaseOnDay, slaStateAt, type SlaPhase } from "../core/sla-at.ts";
+import { DEMO_ORIGIN, addHours, dayOf, formatStamp, historyUpTo, incidentAt, isVisible } from "../core/timeline.ts";
 import { branchShares } from "../data/edges.ts";
 import { NODE_MESSAGES } from "../data/messages.ts";
 import { GROUP_TITLES, PRIORITY_TITLES, ROLE_NAMES } from "../data/roles.ts";
 import { SLA_PROFILES } from "../data/sla.ts";
 import { situationById } from "../data/situations.ts";
 import type { Graph, Incident, Priority, RoleId } from "../types.ts";
+import { PHASE_TITLES, PHASE_TONES, slaHoursLeft, type Tone } from "./overview.ts";
 
-export interface HistoryRow {
-  readonly step: number;
-  readonly from: string;
-  readonly fromTitle: string;
-  readonly to: string;
-  readonly toTitle: string;
-  readonly at: string;
-  readonly roleTitle: string;
-  readonly actor: string;
+export interface FactRow {
+  readonly label: string;
+  readonly value: string;
+  readonly tone?: Tone;
+}
+
+export interface StepRow {
+  readonly nodeId: string;
+  readonly nodeTitle: string;
+  readonly caption: string;
+  readonly state: "done" | "current" | "next";
+  readonly fromHistory: boolean;
+}
+
+export interface Participant {
+  readonly initials: string;
+  readonly name: string;
+  readonly note: string;
 }
 
 export interface NextOption {
@@ -28,36 +38,58 @@ export interface NextOption {
 
 export interface IncidentView {
   readonly id: string;
+  readonly caseLabel: string;
   readonly title: string;
+  readonly category: string;
+  readonly createdLabel: string;
   readonly address: string;
   readonly reporter: string;
-  readonly category: string;
   readonly priority: Priority;
   readonly priorityTitle: string;
+  readonly priorityTone: Tone;
   readonly situationTitle: string;
-  readonly situationSummary: string;
+  readonly description: string;
   readonly beforeCreation: boolean;
   readonly nodeId: string;
   readonly nodeTitle: string;
-  readonly groupTitle: string;
-  readonly nodeDesc: string;
   readonly nodeRoleTitle: string;
+  readonly facts: readonly FactRow[];
   readonly phase: SlaPhase;
   readonly phaseTitle: string;
+  readonly slaTone: Tone;
+  readonly slaBig: string;
+  readonly slaNote: string;
   readonly normTitle: string;
-  readonly normHours: number;
-  readonly dueDay: string;
-  readonly dueText: string;
-  readonly paused: boolean;
-  readonly pauseReason: string;
-  readonly history: readonly HistoryRow[];
+  readonly pauseText: string;
+  readonly steps: readonly StepRow[];
   readonly next: readonly NextOption[];
   readonly branched: boolean;
+  readonly participants: readonly Participant[];
 }
 
+const ROLE_NOTES: Readonly<Record<RoleId, string>> = {
+  resident: "Инициатор обращения",
+  deputy: "Принятие и маршрутизация",
+  contractor: "Исполнитель по заявке",
+  assistant: "Подключён к работе",
+  system: "Системные события",
+  observer: "Наблюдение за ходом",
+  auditor: "Проверка и аудит",
+};
+
+const initialsOf = (name: string): string =>
+  name.split(/[\s-]+/).filter((part) => part.length > 0).slice(0, 2).map((part) => part[0]!.toUpperCase()).join("");
+
+const participantOf = (role: RoleId): Participant => ({
+  initials: initialsOf(ROLE_NAMES[role]),
+  name: ROLE_NAMES[role],
+  note: ROLE_NOTES[role],
+});
+
 /**
- * Read-only представление заявки на выбранный день. SLA не пересчитывается:
- * берутся существующие функции `slaStateAt` / `slaPhaseOnDay`.
+ * Карточка обращения на выбранный день. Все значения — из модели:
+ * SLA берётся из `slaPhaseOnDay`/`slaStateAt`, история — из `historyUpTo`,
+ * роли — из `NODE_MESSAGES`. Ничего не досчитывается заново.
  */
 export const buildIncidentView = (
   graph: Graph,
@@ -77,8 +109,47 @@ export const buildIncidentView = (
   const state = slaStateAt(incident, day);
   const phase: SlaPhase = beforeCreation ? "none" : slaPhaseOnDay(incident, day);
   const profile = SLA_PROFILES[incident.priority];
-  const dueDay = state.dueAt > 0 ? dayOf(addHours(DEMO_ORIGIN, state.dueAt)) : "";
   const role = NODE_MESSAGES[nodeId]?.role;
+  const roleTitle = role === undefined ? "" : ROLE_NAMES[role];
+  const left = slaHoursLeft(incident, day);
+
+  const slaBig =
+    phase === "overdue" ? "+" + Math.abs(left) + " ч" : phase === "ok" ? "Осталось " + Math.max(0, left) + " ч"
+      : phase === "paused" ? "На паузе" : "Норматив не задан";
+  const slaNote =
+    phase === "overdue" ? "Превышение норматива" : phase === "ok" ? "В пределах норматива"
+      : phase === "paused" ? "Отсчёт приостановлен" : "Норматив для приоритета не задан";
+
+  const facts: FactRow[] = [
+    { label: "Текущий этап", value: beforeCreation ? nodeId + " · " + (node?.title ?? "") : nodeId + " · " + (node?.title ?? "") },
+    { label: "Состояние SLA", value: PHASE_TITLES[phase], tone: PHASE_TONES[phase] },
+    { label: "Ответственная роль", value: roleTitle === "" ? "Нет данных" : roleTitle },
+    { label: "Связанная ситуация", value: situation?.title ?? "Нет данных" },
+  ];
+
+  const historySteps: StepRow[] = (beforeCreation ? [] : historyUpTo(incident, day)).map((move) => {
+    const moveRole = NODE_MESSAGES[move.to]?.role;
+    return {
+      nodeId: move.to,
+      nodeTitle: graph.byId[move.to]?.title ?? move.to,
+      caption: (moveRole === undefined ? "" : ROLE_NAMES[moveRole] + " · ") + (move.at === undefined ? "" : formatStamp(move.at)),
+      state: "done" as const,
+      fromHistory: true,
+    };
+  });
+
+  const currentStep: StepRow = {
+    nodeId,
+    nodeTitle: node?.title ?? nodeId,
+    caption: beforeCreation ? "Начальный узел процесса" : "Текущий этап · SLA контролируется",
+    state: "current",
+    fromHistory: false,
+  };
+  const last = historySteps.at(-1);
+  const steps: StepRow[] =
+    last !== undefined && last.nodeId === nodeId
+      ? [...historySteps.slice(0, -1), { ...last, caption: last.caption + " · текущий этап", state: "current" }]
+      : [...historySteps, currentStep];
 
   const branches = branchesOf(graph, nodeId);
   const next: readonly NextOption[] =
@@ -86,46 +157,43 @@ export const buildIncidentView = (
       ? branchShares(branches).map((share) => ({ to: share.to, title: graph.byId[share.to]?.title ?? "", percent: share.percent }))
       : neighborsOf(graph, nodeId).next.map((to) => ({ to, title: graph.byId[to]?.title ?? "", percent: 0 }));
 
-  const history = (beforeCreation ? [] : historyUpTo(incident, day)).map((move) => {
+  const roles: RoleId[] = [];
+  if (role !== undefined) roles.push(role);
+  for (const move of beforeCreation ? [] : historyUpTo(incident, day)) {
     const moveRole = NODE_MESSAGES[move.to]?.role;
-    return {
-      step: move.step,
-      from: move.from,
-      fromTitle: graph.byId[move.from]?.title ?? "",
-      to: move.to,
-      toTitle: graph.byId[move.to]?.title ?? "",
-      at: move.at ?? "",
-      roleTitle: moveRole === undefined ? "" : ROLE_NAMES[moveRole as RoleId],
-      actor: move.actor,
-    };
-  });
+    if (moveRole !== undefined && !roles.includes(moveRole)) roles.push(moveRole);
+  }
 
   return {
     id: incident.id,
+    caseLabel: "Обращение " + incident.id,
     title: incident.title,
+    category: incident.category,
+    createdLabel: incident.createdAt === undefined ? "дата неизвестна" : formatStamp(incident.createdAt),
     address: incident.address,
     reporter: incident.reporter,
-    category: incident.category,
     priority: incident.priority,
     priorityTitle: PRIORITY_TITLES[incident.priority],
+    priorityTone: incident.priority === "urgent" ? "red" : incident.priority === "normal" ? "amber" : "gray",
     situationTitle: situation?.title ?? "",
-    situationSummary: situation?.summary ?? "",
+    description: (situation?.summary ?? "") === "" ? (node?.desc ?? "Нет данных") : situation!.summary,
     beforeCreation,
     nodeId,
     nodeTitle: node?.title ?? "",
-    groupTitle: node === undefined ? "" : GROUP_TITLES[node.group],
-    nodeDesc: node?.desc ?? "",
-    nodeRoleTitle: role === undefined ? "" : ROLE_NAMES[role],
+    nodeRoleTitle: roleTitle,
+    facts,
     phase,
-    phaseTitle: SLA_LEGEND_TITLES[phase],
+    phaseTitle: PHASE_TITLES[phase],
+    slaTone: PHASE_TONES[phase],
+    slaBig,
+    slaNote,
     normTitle: profile.title,
-    normHours: profile.resolveHours,
-    dueDay,
-    dueText: state.paused ? "пауза: " + state.pauseReason : state.dueAt > 0 ? "дедлайн " + dueDay : "норматив не задан",
-    paused: state.paused,
-    pauseReason: state.pauseReason,
-    history,
+    pauseText: state.paused ? "Пауза: " + state.pauseReason : "Нет активной паузы",
+    steps,
     next,
     branched: branches.length > 0,
+    participants: roles.map(participantOf),
   };
 };
+
+export { addHours, dayOf, DEMO_ORIGIN, GROUP_TITLES };
