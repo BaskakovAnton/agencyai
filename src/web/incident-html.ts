@@ -1,8 +1,10 @@
 import { formatDay } from "../core/timeline.ts";
-import { esc, renderBadge, renderEmptyState, renderPanel, renderReadOnlyNotice, renderSlaBadge, type BadgeTone } from "./components.ts";
-import { HISTORICAL_NOTICE } from "./historical.ts";
-import { hrefChat, hrefIncidents, hrefTimeline } from "./router.ts";
+import { esc, renderBadge, renderPanel, renderReadOnlyNotice, renderSlaBadge } from "./components.ts";
+import { hrefIncidents } from "./router.ts";
 import type { IncidentView, StepRow } from "./incident.ts";
+import { confirmationBlock } from "./incident-confirmation.ts";
+import { participantsBlock } from "./incident-org.ts";
+import { linksBlock } from "./incident-actor.ts";
 
 const daySelect = (days: readonly string[], day: string): string =>
   '<label class="hint">Дата среза: <select data-day-select aria-label="Дата среза">' +
@@ -48,108 +50,6 @@ const slaBlock = (view: IncidentView): string =>
   '<div class="fact-label">' + esc(view.slaNote) + "</div>" +
   '<div class="section-gap"><div class="fact-label">Норматив по приоритету</div><div class="fact-value">' + esc(view.normTitle) + "</div></div>" +
   '<div class="section-gap"><div class="fact-label">Паузы SLA</div><div class="fact-value">' + esc(view.pauseText) + "</div></div>";
-
-const ROLE_TYPE_TITLES: Readonly<Record<"accountable" | "participant", string>> = {
-  accountable: "ответственное подразделение",
-  participant: "участник",
-};
-
-/** Участники из орг-модели, если она подключена; иначе — роли узлов (прежнее поведение). */
-const orgParticipantsBlock = (view: IncidentView): string => {
-  const summary = view.orgSummary;
-  if (summary === null) return "";
-  if (summary.participants.length === 0) {
-    return renderEmptyState(
-      summary.status === "completed" || summary.status === "reopened"
-        ? "Активных назначений нет: завершение закрыло участие, для продолжения нужно новое назначение."
-        : "Назначения по этому обращению отсутствуют.",
-    );
-  }
-  return summary.participants
-    .map((participant) =>
-      '<div class="assignee section-gap"><span class="avatar" aria-hidden="true">' + esc(participant.name.slice(0, 2)) + "</span>" +
-      '<div><div class="assignee-name">' + esc(participant.name) + "</div>" +
-      '<div class="fact-label">' + ROLE_TYPE_TITLES[participant.type] +
-      (participant.employees.length === 0 ? " · сотрудник не назначен" : " · " + esc(participant.employees.join(", "))) +
-      "</div></div></div>",
-    )
-    .join("");
-};
-
-const participantsBlock = (view: IncidentView): string =>
-  view.orgSummary !== null
-    ? orgParticipantsBlock(view)
-    : view.participants.length === 0
-      ? '<p class="muted">Участники не определены моделью.</p>'
-      : view.participants
-        .map((person) =>
-          '<div class="assignee section-gap"><span class="avatar" aria-hidden="true">' + esc(person.initials) + "</span>" +
-          '<div><div class="assignee-name">' + esc(person.name) + "</div>" +
-          '<div class="fact-label">' + esc(person.note) + "</div></div></div>",
-        )
-        .join("");
-
-const ORG_STATUS_TONES: Readonly<Record<string, BadgeTone>> = {
-  active: "blue",
-  pending_review: "amber",
-  completed: "green",
-  reopened: "gray",
-};
-
-const actionButton = (action: string, label: string, enabled: boolean, hint: string): string =>
-  '<button class="button" data-org-action="' + action + '"' + (enabled ? "" : " disabled") +
-  (enabled ? "" : ' title="' + esc(hint) + '"') + ">" + label + "</button>";
-
-/**
- * Панель подтверждения: действия выполняются доменом, права и статусы проверяет модель.
- * В историческом срезе действия запрещены — состояние прошлого дня менять нельзя.
- */
-const shortDay = (day: string): string => day.slice(8, 10) + "." + day.slice(5, 7);
-
-const confirmationBlock = (view: IncidentView, historical: boolean, day: string): string => {
-  const summary = view.orgSummary;
-  const actions = view.actions;
-  if (summary === null || actions === null) return "";
-  const allowed = historical
-    ? { submit: false, approve: false, reject: false, reopen: false }
-    : actions;
-  const historicalHint = "Исторический срез: действия недоступны";
-  const options = view.actorOptions
-    .map((option) => '<option value="' + option.id + '"' + (option.id === view.actorUserId ? " selected" : "") + ">" + esc(option.label) + "</option>")
-    .join("");
-  return renderPanel({
-    title: "Подтверждение завершения",
-    subtitle: historical
-      ? "Исторический срез: состояние на " + shortDay(day) + ", действия недоступны"
-      : "Исполнитель сообщает о выполнении, подтверждает контролёр; состояние — на выбранную дату",
-    body:
-      '<div class="sla-head"><span class="muted">Состояние</span>' +
-      renderBadge(summary.statusTitle, ORG_STATUS_TONES[summary.status] ?? "gray") + "</div>" +
-      (historical
-        ? '<div class="section-gap" data-historical>' + renderReadOnlyNotice(HISTORICAL_NOTICE) + "</div>"
-        : "") +
-      '<div class="section-gap"><label class="hint">Действовать от имени: <select data-org-actor aria-label="Пользователь для действий">' +
-      options + "</select></label></div>" +
-      '<div class="stack section-gap">' +
-      actionButton("submit", "Сообщить о выполнении", allowed.submit, historical ? historicalHint : "Доступно исполнителю, когда обращение в работе") +
-      actionButton("approve", "Подтвердить завершение", allowed.approve, historical ? historicalHint : "Доступно контролёру: обращение на проверке и работу сдал другой пользователь") +
-      actionButton("reject", "Отклонить с причиной", allowed.reject, historical ? historicalHint : "Доступно контролёру для обращения на проверке") +
-      actionButton("reopen", "Переоткрыть", allowed.reopen, historical ? historicalHint : "Доступно контролёру для завершённого обращения") +
-      "</div>" +
-      '<p class="readonly" data-org-message>' +
-      (historical
-        ? HISTORICAL_NOTICE
-        : "Действия проверяются моделью: статус, полномочия и запрет самоподтверждения.") +
-      "</p>",
-  });
-};
-
-const linksBlock = (view: IncidentView, day: string): string =>
-  '<div class="stack">' +
-  '<a class="button" href="' + hrefTimeline(day, "git") + '">Открыть в хронологии →</a>' +
-  '<a class="button" href="' + hrefTimeline(day, "gantt") + '">Посмотреть сроки в Ганте →</a>' +
-  '<a class="button" href="' + hrefChat(view.id, day) + '">Открыть переписку →</a>' +
-  '<a class="button" href="' + hrefIncidents(day) + '">Все обращения →</a></div>';
 
 /** Карточка обращения по композиции incident-detail.html (только чтение). */
 export interface IncidentRenderOptions {
