@@ -2,6 +2,7 @@ import { PRIORITY_TITLES } from "../data/roles.ts";
 import { SLA_LEGEND_TITLES, SLA_PHASES } from "../core/sla-at.ts";
 import { formatDay, formatStamp } from "../core/timeline.ts";
 import { esc, renderBadge, renderEmptyState, renderPanel, renderSlaBadge } from "./components.ts";
+import { historicalIndicator } from "./historical.ts";
 import { hrefIncident } from "./router.ts";
 import type { IncidentFilters, IncidentRow, IncidentSort } from "./incidents.ts";
 import { PHASE_TONES, PRIORITY_TONES } from "./overview.ts";
@@ -12,6 +13,8 @@ export interface IncidentsInput {
   readonly day: string;
   readonly filters: IncidentFilters;
   readonly nodes?: readonly { readonly id: string; readonly title: string }[];
+  /** Исторический срез: показывается единый индикатор. */
+  readonly historical?: boolean;
 }
 
 const SORT_TITLES: Readonly<Record<IncidentSort, string>> = {
@@ -133,6 +136,7 @@ const slaLegend = (): string =>
 /** Экран «Обращения» по композиции incidents.html. */
 export const renderIncidents = (input: IncidentsInput): string =>
   '<section class="incidents-screen" data-incidents>' + toolbar(input) +
+  (input.historical === true ? historicalIndicator(input.day, input.days) : "") +
   renderPanel({
     title: "Все обращения",
     subtitle: "Демонстрационный реестр: " + input.rows.length + " записей в срезе",

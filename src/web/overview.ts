@@ -3,6 +3,7 @@ import { dayOf, formatStamp, incidentAt, visibleAt } from "../core/timeline.ts";
 import { SLA_PHASE_LABELS, slaPhaseOnDay, type SlaPhase } from "../core/sla-at.ts";
 import { slaHoursLeft, slaIsAtRisk, needsAttention } from "../core/sla-attention.ts";
 import { buildPeriodAnalytics, type PeriodAnalytics } from "../core/analytics/kpi.ts";
+import { snapshotOn } from "../core/analytics/snapshot.ts";
 import type { PeriodLength } from "../core/periods.ts";
 import { PRIORITY_TITLES } from "../data/roles.ts";
 import { SLA_PROFILES } from "../data/sla.ts";
@@ -157,17 +158,23 @@ export const buildOverview = (
     };
   });
 
-  const completed = slice.filter((incident) => isFinished(incidentAt(incident, day), graph)).length;
-  const paused = phases.filter((phase) => phase === "paused").length;
+  // KPI берутся из доменного Snapshot: одно правило для карточки, реестра и аналитики.
+  const state = snapshotOn(graph, incidents, day, org?.allLifecycles?.() ?? {});
 
   return {
     day,
-    kpi: { active: slice.length - completed, attention: attention.length, paused, completed, total: slice.length },
+    kpi: {
+      active: state.active,
+      attention: state.attention,
+      paused: state.paused,
+      completed: state.finished,
+      total: state.total,
+    },
     attention: attention.slice(0, 8),
     events,
     distribution,
     sla,
-    atRisk: slice.filter((incident) => slaIsAtRisk(incident, day)).length,
+    atRisk: state.atRisk,
     org: org === undefined ? null : orgFactsFor(org, slice.map((incident) => incident.id)),
     analytics: buildPeriodAnalytics(
       {

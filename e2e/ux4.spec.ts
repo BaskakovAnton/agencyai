@@ -20,7 +20,8 @@ test.describe("UX-4: подразделения и подтверждение з
   });
 
   test("сценарий подтверждения: сдаёт исполнитель, подтверждает контролёр", async ({ page }) => {
-    await page.goto("/#incident/З-001?at=2026-01-02");
+    // UX-3.1.1: действия доступны только на текущей дате модели, прошедшие дни — исторический срез.
+    await page.goto("/#incident/З-001");
     await page.locator("[data-org-actor]").selectOption("USR-EXECUTOR");
     await page.getByRole("button", { name: "Сообщить о выполнении" }).click();
     await expect(page.locator("[data-org-message]")).toContainText("Готово");

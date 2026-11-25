@@ -1,5 +1,6 @@
 import { formatDay } from "../core/timeline.ts";
 import { esc, renderBadge, renderEmptyState, renderPanel, renderReadOnlyNotice, renderSlaBadge, type BadgeTone } from "./components.ts";
+import { HISTORICAL_NOTICE } from "./historical.ts";
 import { hrefChat, hrefIncidents, hrefTimeline } from "./router.ts";
 import type { IncidentView, StepRow } from "./incident.ts";
 
@@ -99,29 +100,47 @@ const actionButton = (action: string, label: string, enabled: boolean, hint: str
   '<button class="button" data-org-action="' + action + '"' + (enabled ? "" : " disabled") +
   (enabled ? "" : ' title="' + esc(hint) + '"') + ">" + label + "</button>";
 
-/** Панель подтверждения: действия выполняются доменом, права и статусы проверяет модель. */
-const confirmationBlock = (view: IncidentView): string => {
+/**
+ * Панель подтверждения: действия выполняются доменом, права и статусы проверяет модель.
+ * В историческом срезе действия запрещены — состояние прошлого дня менять нельзя.
+ */
+const shortDay = (day: string): string => day.slice(8, 10) + "." + day.slice(5, 7);
+
+const confirmationBlock = (view: IncidentView, historical: boolean, day: string): string => {
   const summary = view.orgSummary;
   const actions = view.actions;
   if (summary === null || actions === null) return "";
+  const allowed = historical
+    ? { submit: false, approve: false, reject: false, reopen: false }
+    : actions;
+  const historicalHint = "Исторический срез: действия недоступны";
   const options = view.actorOptions
     .map((option) => '<option value="' + option.id + '"' + (option.id === view.actorUserId ? " selected" : "") + ">" + esc(option.label) + "</option>")
     .join("");
   return renderPanel({
     title: "Подтверждение завершения",
-    subtitle: "Исполнитель сообщает о выполнении, подтверждает контролёр",
+    subtitle: historical
+      ? "Исторический срез: состояние на " + shortDay(day) + ", действия недоступны"
+      : "Исполнитель сообщает о выполнении, подтверждает контролёр; состояние — на выбранную дату",
     body:
       '<div class="sla-head"><span class="muted">Состояние</span>' +
       renderBadge(summary.statusTitle, ORG_STATUS_TONES[summary.status] ?? "gray") + "</div>" +
+      (historical
+        ? '<div class="section-gap" data-historical>' + renderReadOnlyNotice(HISTORICAL_NOTICE) + "</div>"
+        : "") +
       '<div class="section-gap"><label class="hint">Действовать от имени: <select data-org-actor aria-label="Пользователь для действий">' +
       options + "</select></label></div>" +
       '<div class="stack section-gap">' +
-      actionButton("submit", "Сообщить о выполнении", actions.submit, "Доступно исполнителю, когда обращение в работе") +
-      actionButton("approve", "Подтвердить завершение", actions.approve, "Доступно контролёру: обращение на проверке и работу сдал другой пользователь") +
-      actionButton("reject", "Отклонить с причиной", actions.reject, "Доступно контролёру для обращения на проверке") +
-      actionButton("reopen", "Переоткрыть", actions.reopen, "Доступно контролёру для завершённого обращения") +
+      actionButton("submit", "Сообщить о выполнении", allowed.submit, historical ? historicalHint : "Доступно исполнителю, когда обращение в работе") +
+      actionButton("approve", "Подтвердить завершение", allowed.approve, historical ? historicalHint : "Доступно контролёру: обращение на проверке и работу сдал другой пользователь") +
+      actionButton("reject", "Отклонить с причиной", allowed.reject, historical ? historicalHint : "Доступно контролёру для обращения на проверке") +
+      actionButton("reopen", "Переоткрыть", allowed.reopen, historical ? historicalHint : "Доступно контролёру для завершённого обращения") +
       "</div>" +
-      '<p class="readonly" data-org-message>Действия проверяются моделью: статус, полномочия и запрет самоподтверждения.</p>',
+      '<p class="readonly" data-org-message>' +
+      (historical
+        ? HISTORICAL_NOTICE
+        : "Действия проверяются моделью: статус, полномочия и запрет самоподтверждения.") +
+      "</p>",
   });
 };
 
@@ -133,7 +152,17 @@ const linksBlock = (view: IncidentView, day: string): string =>
   '<a class="button" href="' + hrefIncidents(day) + '">Все обращения →</a></div>';
 
 /** Карточка обращения по композиции incident-detail.html (только чтение). */
-export const renderIncident = (view: IncidentView, day: string, days: readonly string[]): string =>
+export interface IncidentRenderOptions {
+  /** Исторический срез: действия запрещены, показывается пояснение. */
+  readonly historical?: boolean;
+}
+
+export const renderIncident = (
+  view: IncidentView,
+  day: string,
+  days: readonly string[],
+  options: IncidentRenderOptions = {},
+): string =>
   '<section class="incident-detail" data-incident-detail data-incident="' + view.id + '">' +
   '<div class="toolbar">' + daySelect(days, day) + '<span class="grow"></span><a class="panel-link" href="' + hrefIncidents(day) + '">Все обращения →</a></div>' +
   '<div class="detail-grid">' +
@@ -152,7 +181,9 @@ export const renderIncident = (view: IncidentView, day: string, days: readonly s
   "</div></div>" +
   "<div>" +
   '<div data-sla>' + renderPanel({ title: "Контроль SLA", body: slaBlock(view) }) + "</div>" +
-  (view.orgSummary === null ? "" : '<div class="section-gap" data-org-confirmation>' + confirmationBlock(view) + "</div>") +
+  (view.orgSummary === null
+    ? ""
+    : '<div class="section-gap" data-org-confirmation>' + confirmationBlock(view, options.historical === true, day) + "</div>") +
   '<div class="section-gap">' + renderPanel({ title: "Участники", body: participantsBlock(view) }) + "</div>" +
   '<div class="section-gap" data-links>' + renderPanel({ title: "Связанные представления", body: linksBlock(view, day) }) + "</div>" +
   "</div></div></section>";

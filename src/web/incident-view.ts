@@ -5,6 +5,7 @@ import type { Graph } from "../types.ts";
 import { renderIncident, renderIncidentMissing } from "./incident-html.ts";
 import { buildIncidentView } from "./incident.ts";
 import { ACTOR_BY_ROLE } from "./org-integration.ts";
+import { isHistoricalDay, modelTimestamp } from "./historical.ts";
 import type { Route } from "./router.ts";
 
 export interface IncidentViewOptions {
@@ -28,7 +29,11 @@ export const mountIncident = (
 
   const paint = (message: string): void => {
     const view = buildIncidentView(graph, story.incidents, route.incidentId, day, org, actorUserId);
-    root.innerHTML = view === null ? renderIncidentMissing(route.incidentId, day, days) : renderIncident(view, day, days);
+    const historical = isHistoricalDay(day, days);
+    root.innerHTML =
+      view === null
+        ? renderIncidentMissing(route.incidentId, day, days)
+        : renderIncident(view, day, days, { historical });
     const slot = root.querySelector("[data-org-message]");
     if (slot && message !== "") slot.textContent = message;
   };
@@ -49,8 +54,14 @@ export const mountIncident = (
   root.addEventListener("click", (event) => {
     const button = (event.target as Element | null)?.closest<HTMLElement>("[data-org-action]");
     if (!button || !org) return;
+    // Защита на уровне представления: исторический срез состояние не меняет.
+    if (button.hasAttribute("disabled") || isHistoricalDay(day, days)) {
+      paint("Действия недоступны: выбран исторический срез");
+      return;
+    }
     const action = button.dataset.orgAction ?? "";
-    const at = new Date().toISOString();
+    // Действие относится к текущему дню модели: так оно попадает и в карточку, и в периодную аналитику.
+    const at = modelTimestamp(day);
     const actor = actorUserId ?? "";
     const result = org.runCompletion(route.incidentId, (input) => {
       if (action === "submit") return submitExecution(input, { at, actorUserId: actor, reason: "Сдано исполнителем (демо)" });

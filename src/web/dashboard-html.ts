@@ -1,6 +1,7 @@
 import { formatDay } from "../core/timeline.ts";
 import { esc, renderBadge, renderEmptyState, renderKpi, renderPanel, renderSlaBadge, type KpiDeltaView } from "./components.ts";
 import { renderPeriodNotes, renderPeriodPanel, renderPeriodSwitch } from "./dashboard-period.ts";
+import { historicalIndicator } from "./historical.ts";
 import { periodEndingAt } from "./periods-reexport.ts";
 import { hrefIncident, hrefIncidents, hrefTimeline } from "./router.ts";
 import type { Overview } from "./overview.ts";
@@ -9,6 +10,8 @@ export interface DashboardInput {
   readonly overview: Overview;
   readonly days: readonly string[];
   readonly day: string;
+  /** Исторический срез: показывается единый индикатор. */
+  readonly historical?: boolean;
 }
 
 const daySelect = (days: readonly string[], day: string): string =>
@@ -104,6 +107,7 @@ export const renderDashboard = (input: DashboardInput): string => {
     return (
       '<section class="dashboard" data-dashboard>' +
       '<div class="toolbar">' + daySelect(input.days, input.day) + renderPeriodSwitch(period) + "</div>" +
+      (input.historical === true ? historicalIndicator(input.day, input.days) : "") +
       renderEmptyState("В этом срезе нет заявок — выберите другую дату.") +
       "</section>"
     );
@@ -118,7 +122,7 @@ export const renderDashboard = (input: DashboardInput): string => {
       "в том числе " + overview.atRisk + " с риском SLA",
       kpiIcon("!", "danger"),
       "attention",
-      deltaFor(overview, "overdue"),
+      deltaFor(overview, "attention"),
     ) +
     renderKpi("На паузе", String(overview.kpi.paused), "ожидают условия возобновления", kpiIcon("Ⅱ", "warning"), "paused", deltaFor(overview, "paused")) +
     renderKpi(
@@ -143,6 +147,7 @@ export const renderDashboard = (input: DashboardInput): string => {
     '<span class="grow"></span><span class="count">' + overview.kpi.total + " обращений в срезе</span>" +
     '<a class="panel-link" href="' + hrefIncidents(input.day) + '">Все обращения →</a>' +
     '<a class="panel-link" href="' + hrefTimeline(input.day, "git") + '">Хронология →</a></div>' +
+    (input.historical === true ? historicalIndicator(input.day, input.days) : "") +
     kpis +
     renderPanel({
       title: "Требуют внимания",

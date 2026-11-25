@@ -16,6 +16,12 @@ export interface IncidentLifecycle {
   readonly incidentId: string;
   readonly organizationId: string;
   readonly status: IncidentStatus;
+  /**
+   * Журнал проверок — **append-only**: новые записи добавляются только в конец (`withRecord`),
+   * существующие не изменяются и не удаляются. Порядок массива — часть контракта:
+   * записи с одинаковым `at` разрешаются по позиции (побеждает последняя),
+   * поэтому потребители не должны пересортировывать журнал. Sequence ID не нужен.
+   */
   readonly records: readonly ReviewRecord[];
 }
 

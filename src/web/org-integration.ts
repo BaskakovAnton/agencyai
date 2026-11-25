@@ -5,6 +5,8 @@
 import { hasPermission } from "../core/org/directory.ts";
 import type { IncidentStatus, OrgDirectory } from "../core/org/types.ts";
 import type { OrgQuery } from "../core/org/repository.ts";
+import { lifecycleStatusOn } from "../core/analytics/snapshot.ts";
+import { lastSubmitter } from "../core/org/completion.ts";
 import type { RoleId } from "../types.ts";
 
 /** Демонстрационные пользователи: роль оператора → пользователь домена. */
@@ -95,8 +97,11 @@ export const incidentDepartmentName = (org: OrgQuery, incidentId: string): strin
   return accountable ? departmentName(org.directory, accountable.departmentId) : "";
 };
 
-/** Состав участников обращения: ответственное подразделение и участники с сотрудниками. */
-export const incidentOrgSummary = (org: OrgQuery, incidentId: string): IncidentOrgSummary | null => {
+/**
+ * Состав участников обращения: ответственное подразделение и участники с сотрудниками.
+ * Если передана дата, статус берётся на неё — так карточка совпадает с аналитикой Dashboard.
+ */
+export const incidentOrgSummary = (org: OrgQuery, incidentId: string, day?: string): IncidentOrgSummary | null => {
   const lifecycle = org.lifecycleOf(incidentId);
   if (!lifecycle) return null;
   const participants: OrgParticipant[] = org.activeAssignmentsOf(incidentId).map((assignment) => ({
@@ -105,9 +110,10 @@ export const incidentOrgSummary = (org: OrgQuery, incidentId: string): IncidentO
     type: assignment.assignmentType,
     employees: employeeNames(org.directory, assignment.employeeId),
   }));
+  const status = day === undefined ? lifecycle.status : lifecycleStatusOn(lifecycle, day);
   return {
-    status: lifecycle.status,
-    statusTitle: ORG_STATUS_TITLES[lifecycle.status],
+    status,
+    statusTitle: ORG_STATUS_TITLES[status],
     accountableName: participants.find((participant) => participant.type === "accountable")?.name ?? "",
     participants,
   };
@@ -124,10 +130,10 @@ export const availableOrgActions = (org: OrgQuery, incidentId: string, actorUser
   const canComplete = hasPermission(org.directory, actorUserId, organizationId, "incident.complete");
   const canReopen = hasPermission(org.directory, actorUserId, organizationId, "incident.reopen");
   const isExecutor = org.activeAssignmentsOf(incidentId).some((assignment) => assignment.employeeId !== null);
-  const lastSubmitter = [...lifecycle.records].reverse().find((record) => record.type === "submitted")?.byUserId ?? null;
+  const submitter = lastSubmitter(lifecycle.records);
   return {
     submit: (lifecycle.status === "active" || lifecycle.status === "reopened") && isExecutor,
-    approve: lifecycle.status === "pending_review" && canComplete && lastSubmitter !== actorUserId,
+    approve: lifecycle.status === "pending_review" && canComplete && submitter !== actorUserId,
     reject: lifecycle.status === "pending_review" && canComplete,
     reopen: lifecycle.status === "completed" && canReopen,
   };

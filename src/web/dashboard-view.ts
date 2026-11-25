@@ -3,6 +3,7 @@ import type { OrgRepository } from "../core/org/repository.ts";
 import type { Graph } from "../types.ts";
 import { renderDashboard } from "./dashboard-html.ts";
 import { buildOverview } from "./overview.ts";
+import { isHistoricalDay } from "./historical.ts";
 import { hrefDashboard, type Route } from "./router.ts";
 
 /** Экран «Обзор»: сводка на выбранную дату, дата синхронизирована с адресом. */
@@ -16,7 +17,12 @@ export const mountDashboard = (
   const days = story.days;
   const day = /^\d{4}-\d{2}-\d{2}$/.test(route.at) ? route.at : days.at(-1) ?? "";
   const period = route.period;
-  root.innerHTML = renderDashboard({ overview: buildOverview(graph, story.incidents, day, org, period), days, day });
+  root.innerHTML = renderDashboard({
+    overview: buildOverview(graph, story.incidents, day, org, period),
+    days,
+    day,
+    historical: isHistoricalDay(day, days),
+  });
   root.addEventListener("click", (event) => {
     const button = (event.target as Element | null)?.closest<HTMLElement>("[data-period]");
     if (!button) return;

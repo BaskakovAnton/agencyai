@@ -97,7 +97,7 @@ export const buildIncidentView = (
   const role = NODE_MESSAGES[nodeId]?.role;
   const roleTitle = role === undefined ? "" : ROLE_NAMES[role];
   const headline = slaHeadline(phase, slaHoursLeft(incident, day));
-  const orgSummary = org === undefined ? null : incidentOrgSummary(org, incident.id);
+  const orgSummary = org === undefined ? null : incidentOrgSummary(org, incident.id, day);
   const next = buildNext(graph, nodeId);
 
   const facts: FactRow[] = [

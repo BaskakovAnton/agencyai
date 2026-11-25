@@ -1,5 +1,6 @@
 import type { Story } from "../core/story.ts";
 import type { OrgQuery } from "../core/org/repository.ts";
+import { isHistoricalDay } from "./historical.ts";
 import type { Graph } from "../types.ts";
 import { renderIncidents, renderIncidentsBody } from "./incidents-html.ts";
 import { buildRows, defaultFilters, filtersHash, parseFilters, type IncidentFilters } from "./incidents.ts";
@@ -15,7 +16,14 @@ export const mountIncidents = (root: HTMLElement, graph: Graph, story: Story, ro
   const value = (target: HTMLElement): string => (target as HTMLSelectElement | HTMLInputElement).value;
 
   const paint = (): void => {
-    root.innerHTML = renderIncidents({ rows: rows(), days, day, filters, nodes });
+    root.innerHTML = renderIncidents({
+      rows: rows(),
+      days,
+      day,
+      filters,
+      nodes,
+      historical: isHistoricalDay(day, days),
+    });
   };
   const paintBody = (): void => {
     const body = root.querySelector("[data-incidents-body]");
@@ -39,8 +47,13 @@ export const mountIncidents = (root: HTMLElement, graph: Graph, story: Story, ro
     else if (target.matches("[data-filter-node]")) filters = { ...filters, node: value(target) };
     else if (target.matches("[data-filter-review]")) filters = { ...filters, review: value(target) as IncidentFilters["review"] };
     else if (target.matches("[data-sort]")) filters = { ...filters, sort: value(target) as IncidentFilters["sort"] };
-    else if (target.matches("[data-day-select]")) day = value(target);
-    else return;
+    else if (target.matches("[data-day-select]")) {
+      day = value(target);
+      // Смена дня меняет и индикатор исторического режима: перерисовываем экран целиком.
+      paint();
+      history.replaceState(null, "", filtersHash(filters, day));
+      return;
+    } else return;
     paintBody();
   });
   root.addEventListener("click", (event) => {

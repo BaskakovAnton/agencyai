@@ -20,12 +20,14 @@ test("просрочка считается только по незавершё
 });
 
 test("Snapshot на более раннюю дату отличается и восстанавливается без истории вперёд", () => {
+  // UX-3.1: 3 января З-103 уже на терминальном узле, но подтверждение будет 4 января,
+  // поэтому она ожидает проверки и остаётся активной нагрузкой, а не завершённой.
   const early = snapshotOn(graph, incidents, "2026-01-03", lifecycles);
   expect(early.total).toBe(2);
-  expect(early.finished).toBe(1);
-  expect(early.active).toBe(1);
-  expect(early.pendingReview).toBe(0);
-  expect(early.overdue).toBe(1);
+  expect(early.finished).toBe(0);
+  expect(early.active).toBe(2);
+  expect(early.pendingReview).toBe(1);
+  expect(early.overdue).toBe(2); // З-101 и З-103 (обе срочные и вне норматива)
 });
 
 test("нет данных — нули и явный признак отсутствия", () => {

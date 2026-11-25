@@ -193,3 +193,6 @@ ui-chat-message, ui-process-node { display: block; }
 .period-notes { margin-top: 12px; }
 .period-notes ul { margin: 6px 0 0; padding-left: 18px; }
 .period-notes li { margin-bottom: 4px; font-size: 12px; }
+/* UX-3.1.2: единый индикатор исторического среза (Dashboard и реестр). */
+.historical-indicator { display: flex; align-items: center; gap: 6px; margin: 0 0 14px; padding: 9px 12px; border: 1px solid var(--color-warning-bg); border-radius: var(--radius-sm); background: var(--color-warning-bg); color: var(--color-warning-text); font-size: 12px; font-weight: 650; }
+.historical-indicator b { font-weight: 800; }
