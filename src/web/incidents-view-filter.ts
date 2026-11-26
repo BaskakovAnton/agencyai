@@ -32,9 +32,12 @@ export const matchesView = (
 ): boolean => {
   if (view === "all") return true;
   if (view === "review") return isPendingReviewOn(org, incident.id, day);
-  // Отсутствие активного ответственного: accountableOf возвращает undefined, поэтому нормализуем к null
-  // (та же нормализация, что в matchesDepartment ниже) — иначе режим всегда возвращал пустой список.
-  if (view === "unassigned") return org !== undefined && (org.accountableOf(incident.id) ?? null) === null;
+  // Утверждённая семантика (UX-3.2.4, вариант A): активные обращения без активного ответственного.
+  // Активность определяется существующим механизмом (isCompletedOn по историческому статусу на дату),
+  // отсутствие ответственного — нормализацией accountableOf к null (та же, что в matchesDepartment).
+  if (view === "unassigned") {
+    return !isCompletedOn(org, incident.id, day) && org !== undefined && (org.accountableOf(incident.id) ?? null) === null;
+  }
   if (isCompletedOn(org, incident.id, day)) return false; // активная нагрузка: завершённые исключены
   if (view === "active") return true;
   if (view === "attention") return needsAttention(graph, incident, day);

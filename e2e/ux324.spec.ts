@@ -33,6 +33,7 @@ test.describe("UX-3.2.4: управление представлением и п
     await go(page, "#incidents?at=" + LAST);
     await page.locator("[data-filter-department]").selectOption("none");
     await page.waitForTimeout(400);
+    // family "без ответственного" = department=none (включая завершённые) — на 13.01 три обращения
     expect(await rows(page)).toBe(3);
   });
 
@@ -40,8 +41,9 @@ test.describe("UX-3.2.4: управление представлением и п
     await go(page, "#incidents?at=" + DAY);
     const viewOptions = await page.locator("[data-filter-view] option").allInnerTexts();
     expect(viewOptions.join(" ")).not.toContain("ответствен");
+    // независимый расчёт по модели на 02.01: активные без ответственного — З-005 и З-027 (З-016 завершено)
     await go(page, "#incidents?at=" + DAY + "&view=unassigned");
-    expect(await rows(page)).toBe(3);
+    expect(await rows(page)).toBe(2);
   });
 
   test("панель чипов показывает активные фильтры и снимает по одному", async ({ page }) => {

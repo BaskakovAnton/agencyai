@@ -3,6 +3,8 @@ import { expect, test } from "bun:test";
 import { buildStory } from "../src/core/story.ts";
 import { buildProcessGraph } from "../src/data/edges.ts";
 import { createDemoOrgRepository } from "../src/data/org-repository.ts";
+import { visibleAt } from "../src/core/timeline.ts";
+import { lifecycleStatusOn } from "../src/core/analytics/snapshot.ts";
 import { buildRows, defaultFilters } from "../src/web/incidents.ts";
 import { matchesView } from "../src/web/incidents-view-filter.ts";
 
@@ -26,13 +28,32 @@ test("A2: обращение с ответственным не попадает
   }
 });
 
-test("A3: unassigned даёт тот же набор, что department=none (единый сценарий, DEC-UX-324-03)", () => {
+test("A3: unassigned = активные без ответственного (независимый расчёт по модели)", () => {
   for (const day of story.days) {
-    expect({ day, unassigned: ids(day, { view: "unassigned" }) }).toEqual({ day, unassigned: ids(day, { department: "none" }) });
+    const visible = visibleAt(story.incidents, day);
+    const expected = visible
+      .filter((incident) => lifecycleStatusOn(repository.allLifecycles!()[incident.id]!, day) !== "completed")
+      .filter((incident) => repository.accountableOf(incident.id) === undefined)
+      .map((incident) => incident.id)
+      .sort();
+    expect({ day, unassigned: ids(day, { view: "unassigned" }) }).toEqual({ day, unassigned: expected });
   }
   expect(ids("2025-12-22", { view: "unassigned" })).toEqual(["З-005"]);
-  expect(ids("2026-01-02", { view: "unassigned" })).toEqual(["З-005", "З-016", "З-027"]);
-  expect(ids("2026-01-13", { view: "unassigned" })).toEqual(["З-005", "З-016", "З-027"]);
+  expect(ids("2026-01-02", { view: "unassigned" })).toEqual(["З-005", "З-027"]);
+  expect(ids("2026-01-13", { view: "unassigned" })).toEqual(["З-005"]);
+});
+
+test("A3b: завершённые обращения без ответственного в unassigned не попадают", () => {
+  const day = "2026-01-13";
+  const none = ids(day, { department: "none" });
+  const unassigned = ids(day, { view: "unassigned" });
+  expect(none).toEqual(["З-005", "З-016", "З-027"]);
+  expect(unassigned).toEqual(["З-005"]);
+  for (const id of ["З-016", "З-027"]) {
+    expect(lifecycleStatusOn(repository.allLifecycles!()[id]!, day)).toBe("completed");
+    expect(none).toContain(id);
+    expect(unassigned).not.toContain(id);
+  }
 });
 
 test("A4: режим не пуст на большинстве дней окна и пуст до появления таких обращений", () => {
@@ -56,12 +77,13 @@ test("A5: остальные представления и department=none не 
   expect(ids("2026-01-13", { department: "none" }).length).toBe(3);
 });
 
-test("A6: unassigned не зависит от фазы SLA и от завершённости (совпадает с department=none)", () => {
-  const day = "2026-01-13";
-  const unassigned = ids(day, { view: "unassigned" });
-  const none = ids(day, { department: "none" });
-  const activeNone = ids(day, { view: "active" }).filter((id) => none.includes(id));
-  expect(unassigned).toEqual(none);
-  // завершённые без ответственного входят в набор: активных без ответственного на эту дату меньше
-  expect(activeNone.length).toBeLessThan(unassigned.length);
+test("A6: unassigned строго вложен в department=none и совпадает с active ∩ none", () => {
+  for (const day of ["2025-12-22", "2026-01-02", "2026-01-13"]) {
+    const unassigned = ids(day, { view: "unassigned" });
+    const none = ids(day, { department: "none" });
+    const activeNone = ids(day, { view: "active" }).filter((id) => none.includes(id));
+    expect({ day, unassigned }).toEqual({ day, unassigned: activeNone });
+    expect(unassigned.every((id) => none.includes(id))).toBe(true);
+  }
+  expect(ids("2026-01-13", { view: "unassigned" }).length).toBeLessThan(ids("2026-01-13", { department: "none" }).length);
 });
