@@ -8,6 +8,7 @@ import type { IncidentFilters, IncidentRow, IncidentSort } from "./incidents.ts"
 import { PHASE_TONES, PRIORITY_TONES } from "./overview.ts";
 import { filterChips, renderFilterChips } from "./incidents-chips.ts";
 import { emptyStateFor, renderEmptyIncidents } from "./incidents-empty.ts";
+import { renderAttributionNotice } from "./incidents-notice.ts";
 
 export interface IncidentsInput {
   readonly rows: readonly IncidentRow[];
@@ -93,6 +94,7 @@ export const renderIncidentsLive = (input: IncidentsInput): string => {
   return (
     '<div data-incidents-live>' +
     renderFilterChips(filterChips(input.filters, input.day, input.days, (id) => departmentTitle(input, id))) +
+    renderAttributionNotice(input.historical === true, input.filters.department) +
     (empty === null ? renderIncidentsBody(input.rows, input.filters, input.day) : renderEmptyIncidents(empty)) +
     "</div>"
   );
