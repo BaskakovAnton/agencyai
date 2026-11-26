@@ -34,9 +34,13 @@ export const renderKpi = (
   icon = "",
   key = "",
   delta?: KpiDeltaView,
+  /** Контекстный переход: подпись становится ссылкой на отфильтрованный реестр (UX-3.2.3.1). */
+  href?: string,
 ): string =>
   "<ui-kpi class=\"kpi\"" + (key === "" ? "" : ' data-kpi="' + key + '"') +
-  '><div class="kpi-top"><span class="kpi-label">' + esc(label) + "</span>" + icon + "</div>" +
+  '><div class="kpi-top"><span class="kpi-label">' +
+  (href === undefined ? esc(label) : '<a class="panel-link" data-kpi-link="' + esc(key) + '" href="' + esc(href) + '">' + esc(label) + "</a>") +
+  "</span>" + icon + "</div>" +
   '<div class="kpi-value">' + esc(value) + "</div>" +
   (delta === undefined
     ? ""

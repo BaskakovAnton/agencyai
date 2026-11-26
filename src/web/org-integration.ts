@@ -81,14 +81,14 @@ export const departmentDistribution = (org: OrgQuery, incidentIds: readonly stri
     .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name, "ru"));
 };
 
-/** Обращения, ожидающие подтверждения завершения. */
-export const waitingForReview = (org: OrgQuery, incidentIds: readonly string[]): number =>
-  incidentIds.filter((incidentId) => org.lifecycleOf(incidentId)?.status === "pending_review").length;
-
-/** Сводка по организации для обзора. */
-export const orgFactsFor = (org: OrgQuery, incidentIds: readonly string[]): OrgFacts => ({
+/**
+ * Сводка по организации для обзора. Количество ожидающих подтверждения передаётся
+ * вызывающим кодом из доменного Snapshot — исторический источник истины (DEC-03),
+ * чтобы счётчик обзора и список `view=review` считались одним правилом.
+ */
+export const orgFactsFor = (org: OrgQuery, incidentIds: readonly string[], waitingForReview: number): OrgFacts => ({
   departments: departmentDistribution(org, incidentIds),
-  waitingForReview: waitingForReview(org, incidentIds),
+  waitingForReview,
 });
 
 /** Ответственное подразделение обращения (для колонки и факта карточки). */

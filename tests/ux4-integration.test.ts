@@ -13,8 +13,9 @@ import {
   departmentDistribution,
   incidentDepartmentName,
   incidentOrgSummary,
-  waitingForReview,
 } from "../src/web/org-integration.ts";
+import { snapshotOn } from "../src/core/analytics/snapshot.ts";
+import { buildRows, defaultFilters } from "../src/web/incidents.ts";
 
 const graph = buildProcessGraph();
 const story = buildStory(graph, 7);
@@ -35,10 +36,11 @@ test("распределение по подразделениям соглас�
   expect(repository.incidentIdsOfDepartment(busiest.departmentId).length).toBeGreaterThanOrEqual(busiest.count);
 });
 
-test("ожидание подтверждения считается по жизненным циклам", () => {
-  const expected = ids.filter((id) => repository.lifecycleOf(id)?.status === "pending_review").length;
-  expect(waitingForReview(repository, ids)).toBe(expected);
+test("ожидание подтверждения считается по статусу на дату (DEC-03, вариант B)", () => {
+  // Историческая семантика: счётчик обзора и список view=review берут один источник — Snapshot на дату.
+  const expected = snapshotOn(graph, incidents, day, repository.allLifecycles!()).pendingReview;
   expect(expected).toBeGreaterThan(0);
+  expect(buildRows(graph, incidents, day, { ...defaultFilters(), view: "review" }, repository).length).toBe(expected);
 });
 
 test("ответственное подразделение и участники берутся из модели", () => {
@@ -88,7 +90,7 @@ test("обзор показывает подразделения, риск SLA �
   expect(html).toContain("Подразделение");
   expect(overview.atRisk).toBeGreaterThanOrEqual(0);
   expect(overview.org).not.toBeNull();
-  expect(overview.org!.waitingForReview).toBe(waitingForReview(repository, ids));
+  expect(overview.org!.waitingForReview).toBe(snapshotOn(graph, incidents, day, repository.allLifecycles!()).pendingReview);
 });
 
 test("без орг-модели обзор и карточка работают по-прежнему", () => {

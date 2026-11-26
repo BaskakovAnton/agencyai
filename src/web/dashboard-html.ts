@@ -1,4 +1,5 @@
 import { formatDay } from "../core/timeline.ts";
+import { defaultFilters, filtersHash } from "./incidents.ts";
 import { esc, renderBadge, renderEmptyState, renderKpi, renderPanel, renderSlaBadge, type KpiDeltaView } from "./components.ts";
 import { renderPeriodNotes, renderPeriodPanel, renderPeriodSwitch } from "./dashboard-period.ts";
 import { historicalIndicator } from "./historical.ts";
@@ -18,6 +19,10 @@ const daySelect = (days: readonly string[], day: string): string =>
   '<label class="hint">Срез: <select data-day-select aria-label="Дата среза">' +
   days.map((value) => '<option value="' + value + '"' + (value === day ? " selected" : "") + ">" + formatDay(value) + "</option>").join("") +
   "</select></label>";
+
+/** Контекстная ссылка в реестр на выбранную дату: канонический URL-контракт UX-3.2.1. */
+const registryHref = (overview: Overview, patch: Partial<ReturnType<typeof defaultFilters>>): string =>
+  filtersHash({ ...defaultFilters(), ...patch }, overview.day);
 
 /** Динамика KPI относительно предыдущего равного периода. */
 const deltaFor = (overview: Overview, id: string): KpiDeltaView | undefined => {
@@ -77,8 +82,10 @@ const distributionRows = (overview: Overview): string =>
       overview.org.departments
         .map(
           (row) =>
-            '<div class="legend-item"><span data-department="' + row.departmentId + '">' + esc(row.name) +
-            "</span><b>" + row.count + "</b></div>",
+            // Подразделение — контекстная ссылка на свой список обращений на ту же дату.
+            '<div class="legend-item"><a class="panel-link" data-department-link="' + row.departmentId +
+            '" href="' + registryHref(overview, { department: row.departmentId }) + '" data-department="' + row.departmentId + '">' +
+            esc(row.name) + "</a><b>" + row.count + "</b></div>",
         )
         .join("") +
       "</div>");
@@ -94,8 +101,10 @@ const slaRows = (overview: Overview): string =>
     .join("") +
   (overview.org === null
     ? ""
-    : '<div class="sla-row-head section-gap"><span class="muted">Ждут подтверждения</span><b data-waiting-review>' +
-      overview.org.waitingForReview + "</b></div>") +
+    // Счётчик = число строк view=review на ту же дату; значение ведёт в очередь.
+    : '<div class="sla-row-head section-gap"><span class="muted">Ждут подтверждения</span>' +
+      '<a class="panel-link" data-waiting-review href="' + registryHref(overview, { view: "review" }) + '">' +
+      overview.org.waitingForReview + "</a></div>") +
   '<p class="readonly">Формулы: «активные» — незавершённые заявки среза, «требуют внимания» — просроченный SLA или срочная незавершённая, «в срок» — доля без просрочки и паузы. Считаются только из модели.</p>';
 
 /** Экран «Обзор» по композиции overview.html. */
@@ -115,7 +124,7 @@ export const renderDashboard = (input: DashboardInput): string => {
 
   const kpis =
     '<div class="kpi-grid">' +
-    renderKpi("Активные обращения", String(overview.kpi.active), "не завершены в срезе", kpiIcon("▤", ""), "active", deltaFor(overview, "active")) +
+    renderKpi("Активные обращения", String(overview.kpi.active), "не завершены в срезе", kpiIcon("▤", ""), "active", deltaFor(overview, "active"), registryHref(overview, { view: "active" })) +
     renderKpi(
       "Требуют внимания",
       String(overview.kpi.attention),
@@ -123,8 +132,9 @@ export const renderDashboard = (input: DashboardInput): string => {
       kpiIcon("!", "danger"),
       "attention",
       deltaFor(overview, "attention"),
+      registryHref(overview, { view: "attention" }),
     ) +
-    renderKpi("На паузе", String(overview.kpi.paused), "ожидают условия возобновления", kpiIcon("Ⅱ", "warning"), "paused", deltaFor(overview, "paused")) +
+    renderKpi("На паузе", String(overview.kpi.paused), "ожидают условия возобновления", kpiIcon("Ⅱ", "warning"), "paused", deltaFor(overview, "paused"), registryHref(overview, { view: "paused" })) +
     renderKpi(
       "Завершено за период",
       String(overview.analytics.flow.finished),
@@ -152,7 +162,8 @@ export const renderDashboard = (input: DashboardInput): string => {
     renderPanel({
       title: "Требуют внимания",
       subtitle: "Обращения, по которым нужно проверить следующий шаг",
-      actions: '<a class="panel-link" href="' + hrefIncidents(input.day) + '">Все обращения →</a>',
+      // Переход сохраняет контекст панели: список именно требующих внимания.
+      actions: '<a class="panel-link" href="' + registryHref(overview, { view: "attention" }) + '">Все обращения →</a>',
       body: attention,
     }) +
     '<div class="two-col section-gap">' +

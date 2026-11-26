@@ -175,7 +175,8 @@ export const buildOverview = (
     distribution,
     sla,
     atRisk: state.atRisk,
-    org: org === undefined ? null : orgFactsFor(org, slice.map((incident) => incident.id)),
+    // Счётчик очереди — из Snapshot (историческая семантика на дату среза, DEC-03).
+    org: org === undefined ? null : orgFactsFor(org, slice.map((incident) => incident.id), state.pendingReview),
     analytics: buildPeriodAnalytics(
       {
         graph,
