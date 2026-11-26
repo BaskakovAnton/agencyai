@@ -26,22 +26,18 @@ test("A2: обращение с ответственным не попадает
   }
 });
 
-test("A3: unassigned = активные без ответственного (пересечение active и department=none)", () => {
-  for (const day of ["2025-12-22", "2026-01-02", "2026-01-13"]) {
-    const unassigned = ids(day, { view: "unassigned" });
-    const expected = ids(day, { view: "active" }).filter((id) => ids(day, { department: "none" }).includes(id));
-    expect({ day, unassigned }).toEqual({ day, unassigned: expected });
+test("A3: unassigned даёт тот же набор, что department=none (единый сценарий, DEC-UX-324-03)", () => {
+  for (const day of story.days) {
+    expect({ day, unassigned: ids(day, { view: "unassigned" }) }).toEqual({ day, unassigned: ids(day, { department: "none" }) });
   }
-  // 22.12: одно обращение без ответственного среди активных; 02.01: два.
-  expect(ids("2025-12-22", { view: "unassigned" }).length).toBe(1);
-  expect(ids("2026-01-02", { view: "unassigned" }).length).toBe(2);
+  expect(ids("2025-12-22", { view: "unassigned" })).toEqual(["З-005"]);
+  expect(ids("2026-01-02", { view: "unassigned" })).toEqual(["З-005", "З-016", "З-027"]);
+  expect(ids("2026-01-13", { view: "unassigned" })).toEqual(["З-005", "З-016", "З-027"]);
 });
 
-test("A4: режим не пуст ни на одной дате окна, где есть активные без ответственного", () => {
-  const days = story.days;
-  const nonEmpty = days.filter((day) => ids(day, { view: "unassigned" }).length > 0);
+test("A4: режим не пуст на большинстве дней окна и пуст до появления таких обращений", () => {
+  const nonEmpty = story.days.filter((day) => ids(day, { view: "unassigned" }).length > 0);
   expect(nonEmpty.length).toBeGreaterThan(10);
-  // на дату до появления таких обращений список пуст — это не ошибка фильтра
   expect(ids("2025-12-20", { view: "unassigned" }).length).toBe(0);
 });
 
@@ -60,10 +56,12 @@ test("A5: остальные представления и department=none не 
   expect(ids("2026-01-13", { department: "none" }).length).toBe(3);
 });
 
-test("A6: unassigned не зависит от фазы SLA и не включает завершённые без ответственного", () => {
+test("A6: unassigned не зависит от фазы SLA и от завершённости (совпадает с department=none)", () => {
   const day = "2026-01-13";
   const unassigned = ids(day, { view: "unassigned" });
   const none = ids(day, { department: "none" });
-  expect(none.length).toBeGreaterThan(unassigned.length); // в none есть завершённые без ответственного
-  expect(unassigned.every((id) => none.includes(id))).toBe(true);
+  const activeNone = ids(day, { view: "active" }).filter((id) => none.includes(id));
+  expect(unassigned).toEqual(none);
+  // завершённые без ответственного входят в набор: активных без ответственного на эту дату меньше
+  expect(activeNone.length).toBeLessThan(unassigned.length);
 });
