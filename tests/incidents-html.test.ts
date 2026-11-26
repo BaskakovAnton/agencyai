@@ -60,7 +60,9 @@ test("фильтр «ждут подтверждения» оставляет т
 
 test("пустой результат показывает понятное сообщение", () => {
   const empty = renderIncidents({ rows: [], days, day, filters: defaultFilters() });
-  expect(empty).toContain("Ничего не найдено");
+  // UX-3.2.4: пустой результат объясняется причиной, а не одним общим текстом (DEC-UX-324-06).
+  expect(empty).toContain("На эту дату обращений нет");
+  expect(empty).toContain('data-incidents-empty="no-data"');
   expect(empty).toContain("data-empty-state");
   expect(empty).toContain("Найдено: 0");
 });
