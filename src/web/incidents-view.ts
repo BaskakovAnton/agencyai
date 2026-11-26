@@ -25,10 +25,17 @@ export const mountIncidents = (root: HTMLElement, graph: Graph, story: Story, ro
       historical: isHistoricalDay(day, days),
     });
   };
-  const paintBody = (): void => {
+  /**
+   * Перерисовка тела и синхронизация адреса. Дискретные изменения (фильтры, дата) пишутся
+   * в историю браузера (push), чтобы работали back/forward; ввод поиска — replace,
+   * иначе каждое нажатие клавиши создавало бы запись истории.
+   */
+  const paintBody = (push = false): void => {
     const body = root.querySelector("[data-incidents-body]");
     if (body) body.outerHTML = '<div data-incidents-body>' + renderIncidentsBody(rows(), filters, day) + "</div>";
-    history.replaceState(null, "", filtersHash(filters, day));
+    const next = filtersHash(filters, day);
+    if (push && location.hash !== next) history.pushState(null, "", next);
+    else history.replaceState(null, "", next);
   };
 
   paint();
@@ -42,25 +49,26 @@ export const mountIncidents = (root: HTMLElement, graph: Graph, story: Story, ro
   root.addEventListener("change", (event) => {
     const target = event.target as HTMLElement | null;
     if (!target) return;
+    let discrete = true;
     if (target.matches("[data-filter-priority]")) filters = { ...filters, priority: value(target) as IncidentFilters["priority"] };
     else if (target.matches("[data-filter-sla]")) filters = { ...filters, sla: value(target) as IncidentFilters["sla"] };
     else if (target.matches("[data-filter-node]")) filters = { ...filters, node: value(target) };
-    else if (target.matches("[data-filter-review]")) filters = { ...filters, review: value(target) as IncidentFilters["review"] };
+    else if (target.matches("[data-filter-review]")) filters = { ...filters, view: value(target) === "pending" ? "review" : "all" };
     else if (target.matches("[data-sort]")) filters = { ...filters, sort: value(target) as IncidentFilters["sort"] };
     else if (target.matches("[data-day-select]")) {
       day = value(target);
       // Смена дня меняет и индикатор исторического режима: перерисовываем экран целиком.
       paint();
-      history.replaceState(null, "", filtersHash(filters, day));
+      paintBody(true);
       return;
-    } else return;
-    paintBody();
+    } else { discrete = false; return; }
+    paintBody(discrete);
   });
   root.addEventListener("click", (event) => {
     const reset = (event.target as Element | null)?.closest("[data-reset]");
     if (!reset) return;
     filters = defaultFilters();
     paint();
-    history.replaceState(null, "", filtersHash(filters, day));
+    paintBody(true);
   });
 };

@@ -85,7 +85,7 @@ const toolbar = (input: IncidentsInput): string => {
     select("filter-sla", "SLA", slaOptions, input.filters.sla) +
     select("filter-node", "Узел", nodes, input.filters.node) +
     select("sort", "Сортировка", entries(SORT_TITLES), input.filters.sort) +
-    select("filter-review", "Подтверждение", [["all", "любое"], ["pending", "ждут подтверждения"]] as const, input.filters.review) +
+    select("filter-review", "Подтверждение", [["all", "любое"], ["pending", "ждут подтверждения"]] as const, input.filters.view === "review" ? "pending" : "all") +
     '<label class="hint">Дата: <select data-day-select aria-label="Дата среза">' +
     input.days.map((value) => '<option value="' + value + '"' + (value === input.day ? " selected" : "") + ">" + formatDay(value) + "</option>").join("") +
     "</select></label>" +

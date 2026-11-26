@@ -52,7 +52,7 @@ test("без орг-модели подразделение честно пок�
 });
 
 test("фильтр «ждут подтверждения» оставляет только обращения на проверке", () => {
-  const pending = buildRows(graph, story.incidents, day, { ...defaultFilters(), review: "pending" }, repository);
+  const pending = buildRows(graph, story.incidents, day, { ...defaultFilters(), view: "review" }, repository);
   expect(pending.length).toBeGreaterThan(0);
   expect(pending.every((row) => repository.lifecycleOf(row.id)?.status === "pending_review")).toBe(true);
   expect(pending.length).toBeLessThan(rows.length);

@@ -1,4 +1,6 @@
 import { priorityRank } from "../core/incident.ts";
+import { needsAttention } from "../core/sla-attention.ts";
+import { lifecycleStatusOn } from "../core/analytics/snapshot.ts";
 import { slaPhaseOnDay, SLA_PHASES, type SlaPhase } from "../core/sla-at.ts";
 import { slaStateAt } from "../core/sla-at.ts";
 import { addHours, dayOf, historyUpTo, incidentAt, visibleAt } from "../core/timeline.ts";
@@ -7,10 +9,14 @@ import { ROLE_NAMES } from "../data/roles.ts";
 import { situationById } from "../data/situations.ts";
 import { slaTextFor } from "./overview.ts";
 import { incidentDepartmentName } from "./org-integration.ts";
+import { departmentFilterActive, matchesDepartment, matchesView } from "./incidents-view-filter.ts";
 import type { OrgQuery } from "../core/org/repository.ts";
 import type { Graph, Incident, Priority } from "../types.ts";
 
 export type IncidentSort = "id" | "priority" | "date" | "urgency";
+
+/** Представление списка: канонический параметр `view` (UX-3.2.1). */
+export type IncidentViewFilter = "all" | "active" | "attention" | "overdue" | "paused" | "review" | "unassigned";
 
 export interface IncidentFilters {
   readonly q: string;
@@ -18,8 +24,10 @@ export interface IncidentFilters {
   readonly sla: SlaPhase | "";
   readonly node: string;
   readonly sort: IncidentSort;
-  /** `pending` — только обращения, ожидающие подтверждения завершения. */
-  readonly review: "all" | "pending";
+  /** Состояние-представление: одно значение, второй источник состояния не создаётся. */
+  readonly view: IncidentViewFilter;
+  /** Подразделение: `DEP-*`, `none` (без ответственного) или пусто (без фильтра). */
+  readonly department: string;
 }
 
 export interface IncidentRow {
@@ -41,20 +49,38 @@ export interface IncidentRow {
 const PRIORITIES: readonly Priority[] = ["urgent", "normal", "routine", "none"];
 const SORTS: readonly IncidentSort[] = ["id", "priority", "date", "urgency"];
 
-export const defaultFilters = (): IncidentFilters => ({ q: "", priority: "", sla: "", node: "", sort: "id", review: "all" });
+const VIEWS: readonly IncidentViewFilter[] = ["all", "active", "attention", "overdue", "paused", "review", "unassigned"];
 
+export const defaultFilters = (): IncidentFilters => ({ q: "", priority: "", sla: "", node: "", sort: "id", view: "all", department: "" });
+
+/** Идентификатор подразделения: `DEP-*`, спецзначение `none`; прочее игнорируется. */
+const DEPARTMENT_ID = /^(?:none|DEP-[A-Za-z0-9_-]+)$/;
+
+/**
+ * Разбор фильтров из адреса. Канонический параметр — `view`; legacy `review=pending`
+ * читается как `view=review` (DEC-02) и в новые ссылки не пишется. Неизвестные значения
+ * игнорируются, экран не ломается.
+ */
 export const parseFilters = (hash: string): IncidentFilters => {
   const query = new URLSearchParams(hash.replace(/^#\/?/, "").split("?")[1] ?? "");
   const priority = query.get("priority") ?? "";
   const sla = query.get("sla") ?? "";
   const sort = query.get("sort") ?? "";
+  const department = query.get("department") ?? "";
+  const rawView = query.get("view") ?? "";
+  const view: IncidentViewFilter = VIEWS.includes(rawView as IncidentViewFilter)
+    ? (rawView as IncidentViewFilter)
+    : query.get("review") === "pending"
+      ? "review"
+      : "all";
   return {
     q: query.get("q") ?? "",
     priority: PRIORITIES.includes(priority as Priority) ? (priority as Priority) : "",
     sla: SLA_PHASES.includes(sla as SlaPhase) ? (sla as SlaPhase) : "",
     node: query.get("node") ?? "",
     sort: SORTS.includes(sort as IncidentSort) ? (sort as IncidentSort) : "id",
-    review: query.get("review") === "pending" ? "pending" : "all",
+    view,
+    department: DEPARTMENT_ID.test(department) ? department : "",
   };
 };
 
@@ -66,7 +92,8 @@ export const filtersHash = (filters: IncidentFilters, day: string): string => {
   if (filters.sla !== "") params.set("sla", filters.sla);
   if (filters.node !== "") params.set("node", filters.node);
   if (filters.sort !== "id") params.set("sort", filters.sort);
-  if (filters.review === "pending") params.set("review", "pending");
+  if (filters.view !== "all") params.set("view", filters.view); // legacy review=pending не пишется (DEC-02)
+  if (filters.department !== "") params.set("department", filters.department);
   params.set("at", day);
   return "#incidents?" + params.toString();
 };
@@ -93,7 +120,10 @@ export const buildRows = (
   filters: IncidentFilters,
   org?: OrgQuery,
 ): readonly IncidentRow[] => {
-  const rows = visibleAt(incidents, day)
+  const visible = visibleAt(incidents, day);
+  const byId = new Map(visible.map((incident) => [incident.id, incident] as const));
+  const byDepartment = departmentFilterActive(org, filters.department);
+  const rows = visible
     .map((incident) => {
       const asOf = incidentAt(incident, day);
       const situation = situationById(incident.situationId)?.title ?? "";
@@ -114,11 +144,12 @@ export const buildRows = (
         slaText: slaTextFor(incident, day),
       };
     })
-    .filter((row) => matches(incidents.find((i) => i.id === row.id) as Incident, row.situation, filters.q))
+    .filter((row) => matches(byId.get(row.id) as Incident, row.situation, filters.q))
     .filter((row) => filters.priority === "" || row.priority === filters.priority)
     .filter((row) => filters.sla === "" || row.phase === filters.sla)
     .filter((row) => filters.node === "" || row.nodeId === filters.node)
-    .filter((row) => filters.review === "all" || org?.lifecycleOf(row.id)?.status === "pending_review");
+    .filter((row) => matchesView(filters.view, graph, org, byId.get(row.id) as Incident, day))
+    .filter((row) => !byDepartment || matchesDepartment(org, row.id, filters.department));
 
   const sorted = [...rows];
   if (filters.sort === "priority") {
