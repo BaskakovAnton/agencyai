@@ -57,11 +57,11 @@ export const filterChips = (
 export const renderFilterChips = (chips: readonly FilterChip[]): string => {
   if (chips.length === 0) return "";
   return (
-    '<div class="chips" data-filter-chips role="group" aria-label="Активные фильтры">' +
+    '<div class="incident-chips" data-filter-chips role="group" aria-label="Активные фильтры">' +
     chips
       .map(
         (chip) =>
-          '<span class="chip" data-chip="' + chip.key + '">' + esc(chip.label) + ": " + esc(chip.text) +
+          '<span class="incident-chip" data-chip="' + chip.key + '">' + esc(chip.label) + ": " + esc(chip.text) +
           '<button type="button" data-filter-clear="' + chip.key + '" aria-label="Снять фильтр: ' + esc(chip.label) +
           ' — ' + esc(chip.text) + '">×</button></span>',
       )
