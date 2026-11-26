@@ -7,6 +7,7 @@ import { hrefIncident } from "./router.ts";
 import type { IncidentFilters, IncidentRow, IncidentSort } from "./incidents.ts";
 import { PHASE_TONES, PRIORITY_TONES } from "./overview.ts";
 import { filterChips, renderFilterChips } from "./incidents-chips.ts";
+import { emptyStateFor, renderEmptyIncidents } from "./incidents-empty.ts";
 
 export interface IncidentsInput {
   readonly rows: readonly IncidentRow[];
@@ -87,11 +88,15 @@ const departmentTitle = (input: IncidentsInput, departmentId: string): string =>
   input.departments?.find((item) => item.id === departmentId)?.name ?? departmentId;
 
 /** Живая область реестра: па��ель активных фильтров и тело таблицы. */
-export const renderIncidentsLive = (input: IncidentsInput): string =>
-  '<div data-incidents-live>' +
-  renderFilterChips(filterChips(input.filters, input.day, input.days, (id) => departmentTitle(input, id))) +
-  renderIncidentsBody(input.rows, input.filters, input.day) +
-  "</div>";
+export const renderIncidentsLive = (input: IncidentsInput): string => {
+  const empty = emptyStateFor(input.filters, input.rows.length);
+  return (
+    '<div data-incidents-live>' +
+    renderFilterChips(filterChips(input.filters, input.day, input.days, (id) => departmentTitle(input, id))) +
+    (empty === null ? renderIncidentsBody(input.rows, input.filters, input.day) : renderEmptyIncidents(empty)) +
+    "</div>"
+  );
+};
 
 const toolbar = (input: IncidentsInput): string => {
   const nodes: readonly (readonly [string, string])[] = [
