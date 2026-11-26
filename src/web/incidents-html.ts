@@ -7,7 +7,7 @@ import { hrefIncident } from "./router.ts";
 import type { IncidentFilters, IncidentRow, IncidentSort } from "./incidents.ts";
 import { PHASE_TONES, PRIORITY_TONES } from "./overview.ts";
 import { filterChips, renderFilterChips } from "./incidents-chips.ts";
-import { emptyStateFor, renderEmptyIncidents } from "./incidents-empty.ts";
+import { emptyStateFor, renderEmptyIncidents, type EmptyIncidentsState } from "./incidents-empty.ts";
 import { renderAttributionNotice } from "./incidents-notice.ts";
 
 export interface IncidentsInput {
@@ -57,13 +57,23 @@ const assignee = (row: IncidentRow): string =>
       '</span><span class="assignee-name">' + esc(row.departmentName) + "</span></div>";
 
 /** Тело таблицы реестра: одна строка — одна заявка. */
-export const renderIncidentsBody = (rows: readonly IncidentRow[], filters: IncidentFilters, day: string): string => {
+export const renderIncidentsBody = (
+  rows: readonly IncidentRow[],
+  filters: IncidentFilters,
+  day: string,
+  /** Контекстное пустое состояние (UX-3.2.4): таблица сохраняется, объяснение — внутри неё. */
+  empty?: EmptyIncidentsState | null,
+): string => {
   const head =
     '<tr><th scope="col">Номер / обращение</th><th scope="col">Приоритет</th><th scope="col">Текущий этап</th>' +
     '<th scope="col">Подразделение</th><th scope="col">Срок SLA</th><th scope="col">Изменено</th><th scope="col">Карточка</th></tr>';
   const body =
     rows.length === 0
-      ? '<tr><td colspan="7">' + renderEmptyState("Ничего не найдено — измените фильтры или сбросьте их.") + "</td></tr>"
+      ? '<tr><td colspan="7">' +
+        (empty === undefined || empty === null
+          ? renderEmptyState("Ничего не найдено — измените фильтры или сбросьте их.")
+          : renderEmptyIncidents(empty)) +
+        "</td></tr>"
       : rows
           .map(
             (row) =>
@@ -95,7 +105,7 @@ export const renderIncidentsLive = (input: IncidentsInput): string => {
     '<div data-incidents-live>' +
     renderFilterChips(filterChips(input.filters, input.day, input.days, (id) => departmentTitle(input, id))) +
     renderAttributionNotice(input.historical === true, input.filters.department) +
-    (empty === null ? renderIncidentsBody(input.rows, input.filters, input.day) : renderEmptyIncidents(empty)) +
+    renderIncidentsBody(input.rows, input.filters, input.day, empty) +
     "</div>"
   );
 };
