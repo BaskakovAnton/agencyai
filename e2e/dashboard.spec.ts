@@ -29,8 +29,9 @@ test.describe("Обзор", () => {
     await expect.poll(() => decodeURIComponent(page.url())).toContain("at=2026-01-05");
   });
 
-  test("нулевой срез объясняется текстом", async ({ page }) => {
+  test("дата вне окна модели объясняется текстом (UX-3.2.2)", async ({ page }) => {
     await page.goto("/#dashboard?at=2020-01-01");
-    await expect(page.locator("[data-dashboard]")).toContainText("нет заявок");
+    await expect(page.locator("[data-outside-window]")).toContainText("Дата вне доступного периода");
+    await expect(page.locator("[data-dashboard]")).toHaveCount(0);
   });
 });

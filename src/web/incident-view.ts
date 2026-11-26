@@ -6,7 +6,8 @@ import { renderIncident, renderIncidentMissing } from "./incident-html.ts";
 import { buildIncidentView } from "./incident.ts";
 import { ACTOR_BY_ROLE } from "./org-integration.ts";
 import { isHistoricalDay, modelTimestamp } from "./historical.ts";
-import type { Route } from "./router.ts";
+import { nearestDay, renderOutsideWindow, resolveDay } from "./day-window.ts";
+import { hrefIncident, type Route } from "./router.ts";
 
 export interface IncidentViewOptions {
   readonly org?: OrgRepository;
@@ -23,7 +24,13 @@ export const mountIncident = (
   options: IncidentViewOptions = {},
 ): void => {
   const days = story.days;
-  const day = /^\d{4}-\d{2}-\d{2}$/.test(route.at) ? route.at : days.at(-1) ?? "";
+  const resolved = resolveDay(route.at, days);
+  if (resolved.availability === "outside") {
+    // Никаких «фантомных» этапов: на дату вне окна модели карточка не отрисовывается.
+    root.innerHTML = renderOutsideWindow(route.at, days, hrefIncident(route.incidentId, nearestDay(route.at, days)));
+    return;
+  }
+  const day = resolved.day;
   const org = options.org;
   let actorUserId: string | null = ACTOR_BY_ROLE[options.role ?? "deputy"] ?? org?.directory.users[0]?.id ?? null;
 

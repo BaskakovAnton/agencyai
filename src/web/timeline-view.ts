@@ -17,12 +17,18 @@ import {
   type TimelinePageInput,
 } from "./timeline-html.ts";
 import { createClickHandler, createKeydownHandler, registerHoverHandlers } from "./timeline-interactions.ts";
+import { nearestDay, renderOutsideWindow, resolveDay } from "./day-window.ts";
 import { activeFilter, chatIncidentOf, initialTimelineState } from "./timeline-state.ts";
 import { commitNode, hideTooltip } from "./timeline-tooltip.ts";
 
 /** Экран хронологии: Git-граф (или Гант) с перемоткой времени, карточкой узла и чатом. */
 export const mountTimeline = (root: HTMLElement, graph: Graph, story: Story, route: Route): void => {
   const days = story.days;
+  const resolved = resolveDay(route.at, days);
+  if (resolved.availability === "outside") {
+    root.innerHTML = renderOutsideWindow(route.at, days, hrefTimeline(nearestDay(route.at, days), route.view));
+    return;
+  }
   const state = initialTimelineState(route, days);
 
   const model = (): TimelinePageInput => {

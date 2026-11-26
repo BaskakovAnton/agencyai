@@ -11,10 +11,11 @@ const story = buildStory(graph, 7);
 const days = story.days;
 const route = (at: string, view: "git" | "gantt" = "git"): Route => ({ name: "timeline", incidentId: "", at, view, period: 7 });
 
-test("день среза: известный берётся из адреса, неизвестный — последний доступный", () => {
+test("день среза: известный берётся из адреса, пустой — последний доступный (UX-3.2.2)", () => {
   expect(timelineDayFrom(route(""), days)).toBe(days.at(-1)!);
   expect(timelineDayFrom(route(days[0]!), days)).toBe(days[0]!);
-  expect(timelineDayFrom(route("2020-01-01"), days)).toBe(days.at(-1)!);
+  // Дата вне окна больше не подменяется: её обрабатывает состояние «вне окна модели» в представлении.
+  expect(timelineDayFrom(route("2020-01-01"), days)).toBe("2020-01-01");
 });
 
 test("начальное состояние повторяет прежние значения по умолчанию", () => {

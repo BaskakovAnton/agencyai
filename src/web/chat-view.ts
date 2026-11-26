@@ -7,6 +7,7 @@ import type { Story } from "../core/story.ts";
 import type { Graph, Incident, RoleId } from "../types.ts";
 import { renderBadge, renderPanel } from "./components.ts";
 import { renderPhone } from "./chat-html.ts";
+import { nearestDay, renderOutsideWindow, resolveDay } from "./day-window.ts";
 import { hrefChat, hrefTimeline, type Route } from "./router.ts";
 
 const nextRole = (role: RoleId): RoleId => ROLE_IDS[(ROLE_IDS.indexOf(role) + 1) % ROLE_IDS.length] as RoleId;
@@ -17,8 +18,12 @@ export const mountChat = (root: HTMLElement, graph: Graph, story: Story, route: 
   const hero = incidents.find((incident) => incident.id === HERO_INCIDENT_ID) ?? (incidents[0] as Incident);
   const incident = incidents.find((candidate) => candidate.id === route.incidentId) ?? hero;
   const days = story.days;
-  const fallbackDay = days.at(-1) ?? "";
-  let day = route.at !== "" && days.includes(route.at) ? route.at : fallbackDay;
+  const resolved = resolveDay(route.at, days);
+  if (resolved.availability === "outside") {
+    root.innerHTML = renderOutsideWindow(route.at, days, hrefChat(incident.id, nearestDay(route.at, days)));
+    return;
+  }
+  let day = resolved.day;
   let override: RoleId | null = null;
 
   const messageDays = conversationFor(graph, incident)

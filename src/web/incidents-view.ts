@@ -1,6 +1,8 @@
 import type { Story } from "../core/story.ts";
 import type { OrgQuery } from "../core/org/repository.ts";
 import { isHistoricalDay } from "./historical.ts";
+import { nearestDay, renderOutsideWindow, resolveDay } from "./day-window.ts";
+import { hrefIncidents } from "./router.ts";
 import type { Graph } from "../types.ts";
 import { renderIncidents, renderIncidentsBody } from "./incidents-html.ts";
 import { buildRows, defaultFilters, filtersHash, parseFilters, type IncidentFilters } from "./incidents.ts";
@@ -9,7 +11,12 @@ import type { Route } from "./router.ts";
 /** Экран «Обращения»: фильтры живут в адресе, таблица перерисовывается без потери фокуса поиска. */
 export const mountIncidents = (root: HTMLElement, graph: Graph, story: Story, route: Route, org?: OrgQuery): void => {
   const days = story.days;
-  let day = /^\d{4}-\d{2}-\d{2}$/.test(route.at) ? route.at : days.at(-1) ?? "";
+  const resolved = resolveDay(route.at, days);
+  if (resolved.availability === "outside") {
+    root.innerHTML = renderOutsideWindow(route.at, days, hrefIncidents(nearestDay(route.at, days)));
+    return;
+  }
+  let day = resolved.day;
   let filters = parseFilters(location.hash);
   const nodes = graph.order.map((id) => ({ id, title: graph.byId[id]?.title ?? id }));
   const rows = () => buildRows(graph, story.incidents, day, filters, org);

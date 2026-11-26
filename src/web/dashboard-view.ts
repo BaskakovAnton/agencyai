@@ -4,6 +4,7 @@ import type { Graph } from "../types.ts";
 import { renderDashboard } from "./dashboard-html.ts";
 import { buildOverview } from "./overview.ts";
 import { isHistoricalDay } from "./historical.ts";
+import { nearestDay as nearestDayOf, renderOutsideWindow, resolveDay } from "./day-window.ts";
 import { hrefDashboard, type Route } from "./router.ts";
 
 /** Экран «Обзор»: сводка на выбранную дату, дата синхронизирована с адресом. */
@@ -15,8 +16,14 @@ export const mountDashboard = (
   org?: OrgRepository,
 ): void => {
   const days = story.days;
-  const day = /^\d{4}-\d{2}-\d{2}$/.test(route.at) ? route.at : days.at(-1) ?? "";
   const period = route.period;
+  const resolved = resolveDay(route.at, days);
+  if (resolved.availability === "outside") {
+    // Дата вне окна модели: единое состояние вместо данных на несуществующую дату.
+    root.innerHTML = renderOutsideWindow(route.at, days, hrefDashboard(nearestDayOf(route.at, days), period));
+    return;
+  }
+  const day = resolved.day;
   root.innerHTML = renderDashboard({
     overview: buildOverview(graph, story.incidents, day, org, period),
     days,

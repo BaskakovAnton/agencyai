@@ -40,11 +40,13 @@ test.describe("UX-3: периоды и динамика KPI", () => {
     }
   });
 
-  test("состояние без данных показывается корректно и период остаётся переключаемым", async ({ page }) => {
+  test("дата вне окна модели показывает единое состояние и ссылку на доступную дату", async ({ page }) => {
     await page.goto("/#dashboard?at=2020-01-01");
-    await expect(page.locator("[data-dashboard]")).toContainText("нет заявок");
+    await expect(page.locator("[data-outside-window]")).toContainText("Дата вне доступного периода");
+    await expect(page.locator("[data-outside-link]")).toBeVisible();
+    await page.locator("[data-outside-link]").click();
+    await expect(page.locator("[data-dashboard]")).toBeVisible();
     await expect(page.locator("[data-period-switch]")).toBeVisible();
-    await expect(page.locator("[data-period-button='7']")).toBeVisible();
   });
 
   test("период переживает перезагрузку и не сбрасывает дату среза", async ({ page }) => {
