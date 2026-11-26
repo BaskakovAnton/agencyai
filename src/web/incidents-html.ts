@@ -6,6 +6,7 @@ import { historicalIndicator } from "./historical.ts";
 import { hrefIncident } from "./router.ts";
 import type { IncidentFilters, IncidentRow, IncidentSort } from "./incidents.ts";
 import { PHASE_TONES, PRIORITY_TONES } from "./overview.ts";
+import { filterChips, renderFilterChips } from "./incidents-chips.ts";
 
 export interface IncidentsInput {
   readonly rows: readonly IncidentRow[];
@@ -81,6 +82,16 @@ export const renderIncidentsBody = (rows: readonly IncidentRow[], filters: Incid
     "<thead>" + head + "</thead><tbody>" + body + "</tbody></table></div>"
   );
 };
+
+const departmentTitle = (input: IncidentsInput, departmentId: string): string =>
+  input.departments?.find((item) => item.id === departmentId)?.name ?? departmentId;
+
+/** Живая область реестра: па��ель активных фильтров и тело таблицы. */
+export const renderIncidentsLive = (input: IncidentsInput): string =>
+  '<div data-incidents-live>' +
+  renderFilterChips(filterChips(input.filters, input.day, input.days, (id) => departmentTitle(input, id))) +
+  renderIncidentsBody(input.rows, input.filters, input.day) +
+  "</div>";
 
 const toolbar = (input: IncidentsInput): string => {
   const nodes: readonly (readonly [string, string])[] = [
@@ -159,7 +170,7 @@ export const renderIncidents = (input: IncidentsInput): string =>
     title: "Все обращения",
     subtitle: "Демонстрационный реестр: " + input.rows.length + " записей в срезе",
     actions: '<span class="count">' + input.rows.length + "</span>",
-    body: renderIncidentsBody(input.rows, input.filters, input.day),
+    body: renderIncidentsLive(input),
   }) +
   '<div class="two-col section-gap">' +
   helpPanel("Порядок работы со списком", "Принципы реализации", guidance) +

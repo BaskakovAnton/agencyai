@@ -4,7 +4,8 @@ import { isHistoricalDay } from "./historical.ts";
 import { nearestDay, renderOutsideWindow, resolveDay } from "./day-window.ts";
 import { hrefIncidents } from "./router.ts";
 import type { Graph } from "../types.ts";
-import { renderIncidents, renderIncidentsBody } from "./incidents-html.ts";
+import { renderIncidents, renderIncidentsLive } from "./incidents-html.ts";
+import { filtersWithout, type ChipKey } from "./incidents-chips.ts";
 import { buildRows, defaultFilters, filtersHash, parseFilters, type IncidentFilters } from "./incidents.ts";
 import type { Route } from "./router.ts";
 
@@ -21,17 +22,32 @@ export const mountIncidents = (root: HTMLElement, graph: Graph, story: Story, ro
   const nodes = graph.order.map((id) => ({ id, title: graph.byId[id]?.title ?? id }));
   const rows = () => buildRows(graph, story.incidents, day, filters, org);
   const value = (target: HTMLElement): string => (target as HTMLSelectElement | HTMLInputElement).value;
+  const live = () => ({
+    rows: rows(),
+    days,
+    day,
+    filters,
+    nodes,
+    departments: org?.directory.departments ?? [],
+    historical: isHistoricalDay(day, days),
+  });
 
   const paint = (): void => {
-    root.innerHTML = renderIncidents({
-      rows: rows(),
-      days,
-      day,
-      filters,
-      nodes,
-      departments: org?.directory.departments ?? [],
-      historical: isHistoricalDay(day, days),
-    });
+    root.innerHTML = renderIncidents(live());
+  };
+
+  /** Приводит контролы к текущему состоянию фильтров (пос��е снятия чипа или сброса). */
+  const syncControls = (): void => {
+    const set = (selector: string, next: string): void => {
+      const element = root.querySelector<HTMLInputElement | HTMLSelectElement>(selector);
+      if (element) element.value = next;
+    };
+    set("[data-search]", filters.q);
+    set("[data-filter-view]", filters.view);
+    set("[data-filter-department]", filters.department);
+    set("[data-filter-priority]", filters.priority);
+    set("[data-filter-sla]", filters.sla);
+    set("[data-filter-node]", filters.node);
   };
   /**
    * Перерисовка тела и синхронизация адреса. Дискретные изменения (фильтры, дата) пишутся
@@ -39,8 +55,11 @@ export const mountIncidents = (root: HTMLElement, graph: Graph, story: Story, ro
    * иначе каждое нажатие клавиши создавало бы запись истории.
    */
   const paintBody = (push = false): void => {
-    const body = root.querySelector("[data-incidents-body]");
-    if (body) body.outerHTML = '<div data-incidents-body>' + renderIncidentsBody(rows(), filters, day) + "</div>";
+    const region = root.querySelector("[data-incidents-live]");
+    const state = live();
+    if (region) region.outerHTML = renderIncidentsLive(state);
+    const count = root.querySelector("[data-incidents-count]");
+    if (count) count.textContent = "Найдено: " + state.rows.length;
     const next = filtersHash(filters, day);
     if (push && location.hash !== next) history.pushState(null, "", next);
     else history.replaceState(null, "", next);
@@ -74,10 +93,27 @@ export const mountIncidents = (root: HTMLElement, graph: Graph, story: Story, ro
     paintBody(discrete);
   });
   root.addEventListener("click", (event) => {
-    const reset = (event.target as Element | null)?.closest("[data-reset]");
-    if (!reset) return;
-    filters = defaultFilters();
-    paint();
+    const target = event.target as Element | null;
+    if (target?.closest("[data-reset]") !== null && target?.closest("[data-reset]") !== undefined) {
+      // Полный сброс пользовательских фильтров: дата среза (at) сохраняется.
+      filters = defaultFilters();
+      paint();
+      syncControls();
+      paintBody(true);
+      return;
+    }
+    const chip = target?.closest<HTMLElement>("[data-filter-clear]");
+    const key = chip?.dataset.filterClear as ChipKey | undefined;
+    if (key === undefined) return;
+    if (key === "at") {
+      day = days.at(-1) ?? day;
+      paint();
+      syncControls();
+      paintBody(true);
+      return;
+    }
+    filters = filtersWithout(filters, key);
+    syncControls();
     paintBody(true);
   });
 };
