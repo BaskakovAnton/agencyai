@@ -40,7 +40,7 @@ test.describe("UX-4: подразделения и подтверждение з
     await expect(page.locator("[data-incident-row]").first()).toContainText("(демо)");
     const all = await page.locator("[data-incident-row]").count();
     expect(all).toBe(30);
-    await page.locator("[data-filter-review]").selectOption("pending"); // канонический URL: view=review (UX-3.2.1)
+    await page.locator("[data-filter-view]").selectOption("review"); // канонический URL: view=review (UX-3.2.1)
     await expect.poll(() => decodeURIComponent(page.url())).toContain("view=review");
     await expect.poll(() => decodeURIComponent(page.url())).not.toContain("review=pending");
     const pending = await page.locator("[data-incident-row]").count();

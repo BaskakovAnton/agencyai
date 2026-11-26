@@ -29,6 +29,7 @@ export const mountIncidents = (root: HTMLElement, graph: Graph, story: Story, ro
       day,
       filters,
       nodes,
+      departments: org?.directory.departments ?? [],
       historical: isHistoricalDay(day, days),
     });
   };
@@ -60,7 +61,8 @@ export const mountIncidents = (root: HTMLElement, graph: Graph, story: Story, ro
     if (target.matches("[data-filter-priority]")) filters = { ...filters, priority: value(target) as IncidentFilters["priority"] };
     else if (target.matches("[data-filter-sla]")) filters = { ...filters, sla: value(target) as IncidentFilters["sla"] };
     else if (target.matches("[data-filter-node]")) filters = { ...filters, node: value(target) };
-    else if (target.matches("[data-filter-review]")) filters = { ...filters, view: value(target) === "pending" ? "review" : "all" };
+    else if (target.matches("[data-filter-view]")) filters = { ...filters, view: value(target) as IncidentFilters["view"] };
+    else if (target.matches("[data-filter-department]")) filters = { ...filters, department: value(target) };
     else if (target.matches("[data-sort]")) filters = { ...filters, sort: value(target) as IncidentFilters["sort"] };
     else if (target.matches("[data-day-select]")) {
       day = value(target);

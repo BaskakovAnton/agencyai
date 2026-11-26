@@ -29,7 +29,7 @@ test("колонки соответствуют модели, лишних по�
   }
   expect(html).not.toContain("Роль узла");
   expect(html).toContain('scope="col"');
-  for (const hook of ["data-search", "data-filter-priority", "data-filter-sla", "data-filter-node", "data-sort", "data-filter-review", "data-reset", "data-day-select"]) {
+  for (const hook of ["data-search", "data-filter-priority", "data-filter-sla", "data-filter-node", "data-sort", "data-filter-view", "data-reset", "data-day-select"]) {
     expect(html).toContain(hook);
   }
 });

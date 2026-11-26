@@ -13,9 +13,21 @@ export interface IncidentsInput {
   readonly day: string;
   readonly filters: IncidentFilters;
   readonly nodes?: readonly { readonly id: string; readonly title: string }[];
+  /** Подразделения из справочника: селект формируется из модели, а не из разметки. */
+  readonly departments?: readonly { readonly id: string; readonly name: string }[];
   /** Исторический срез: показывается единый индикатор. */
   readonly historical?: boolean;
 }
+
+/** Представления реестра (UX-3.2.4, DEC-UX-324-02): один селект вместо «Подтверждение». */
+const VIEW_OPTIONS: readonly (readonly [string, string])[] = [
+  ["all", "все"],
+  ["active", "активные"],
+  ["attention", "требуют внимания"],
+  ["overdue", "просроченные (активные)"],
+  ["paused", "на паузе"],
+  ["review", "ждут подтверждения"],
+];
 
 const SORT_TITLES: Readonly<Record<IncidentSort, string>> = {
   id: "по номеру",
@@ -85,7 +97,13 @@ const toolbar = (input: IncidentsInput): string => {
     select("filter-sla", "SLA", slaOptions, input.filters.sla) +
     select("filter-node", "Узел", nodes, input.filters.node) +
     select("sort", "Сортировка", entries(SORT_TITLES), input.filters.sort) +
-    select("filter-review", "Подтверждение", [["all", "любое"], ["pending", "ждут подтверждения"]] as const, input.filters.view === "review" ? "pending" : "all") +
+    select("filter-view", "Представление", VIEW_OPTIONS, input.filters.view) +
+    select(
+      "filter-department",
+      "Подразделение",
+      [["", "все подразделения"], ...(input.departments ?? []).map((item) => [item.id, item.name] as const), ["none", "без ответственного"]] as const,
+      input.filters.department,
+    ) +
     '<label class="hint">Дата: <select data-day-select aria-label="Дата среза">' +
     input.days.map((value) => '<option value="' + value + '"' + (value === input.day ? " selected" : "") + ">" + formatDay(value) + "</option>").join("") +
     "</select></label>" +

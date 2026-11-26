@@ -118,7 +118,7 @@ if (ready) {
   await page.waitForSelector("[data-incidents-table]");
   const rows = await page.locator("[data-incident-row]").count();
   if (rows !== 30) problems.push("в реестре обращений не 30 строк: " + rows);
-  if ((await page.locator("[data-filter-review]").count()) === 0) problems.push("в реестре нет фильтра «ждут подтверждения»");
+  if ((await page.locator("[data-filter-view]").count()) === 0) problems.push("в реестре нет фильтра «ждут подтверждения»");
 
   await page.goto(base + "?v=" + Date.now() + "#incident/" + encodeURIComponent("З-015") + "?at=2026-01-02");
   await page.waitForSelector("[data-incident-detail]");

@@ -7,7 +7,7 @@ test.describe("UX-3.2.1: контракт URL и состояние фильтр
   test("A. прямое открытие view=review показывает очередь", async ({ page }) => {
     await page.goto(queue);
     await page.waitForSelector("[data-incidents-table]");
-    await expect(page.locator("[data-filter-review]")).toHaveValue("pending");
+    await expect(page.locator("[data-filter-view]")).toHaveValue("review");
     const rows = await page.locator("[data-incident-row]").count();
     expect(rows).toBeGreaterThan(0);
     await expect(page.locator("[data-incidents-count]")).toContainText(String(rows));
@@ -17,7 +17,7 @@ test.describe("UX-3.2.1: контракт URL и состояние фильтр
     await page.goto("/#incidents?at=" + DAY + "&review=pending");
     await page.waitForSelector("[data-incidents-table]");
     const legacyRows = await page.locator("[data-incident-row]").count();
-    await expect(page.locator("[data-filter-review]")).toHaveValue("pending");
+    await expect(page.locator("[data-filter-view]")).toHaveValue("review");
     await page.locator("[data-search]").fill("З-0");
     await page.waitForTimeout(400);
     const url = decodeURIComponent(page.url());
@@ -28,12 +28,12 @@ test.describe("UX-3.2.1: контракт URL и состояние фильтр
 
   test("C. период сохраняется при смене представления", async ({ page }) => {
     await page.goto(queue);
-    await page.locator("[data-filter-review]").selectOption("all");
+    await page.locator("[data-filter-view]").selectOption("all");
     await page.waitForTimeout(400);
     const url = decodeURIComponent(page.url());
     expect(url).toContain("at=" + DAY);
     expect(url).not.toContain("view=review");
-    await expect(page.locator("[data-filter-review]")).toHaveValue("all");
+    await expect(page.locator("[data-filter-view]")).toHaveValue("all");
   });
 
   test("D. подразделение сохраняется при изменении других фильтров", async ({ page }) => {
@@ -57,7 +57,7 @@ test.describe("UX-3.2.1: контракт URL и состояние фильтр
     const before = await page.locator("[data-incident-row]").count();
     await page.reload();
     await page.waitForSelector("[data-incidents-table]");
-    await expect(page.locator("[data-filter-review]")).toHaveValue("pending");
+    await expect(page.locator("[data-filter-view]")).toHaveValue("review");
     await expect(page.locator("[data-filter-priority]")).toHaveValue("urgent");
     await expect(page.locator("[data-sort]")).toHaveValue("date");
     expect(await page.locator("[data-incident-row]").count()).toBe(before);
@@ -71,7 +71,7 @@ test.describe("UX-3.2.1: контракт URL и состояние фильтр
     const other = await context.newPage();
     await other.goto("/" + shared);
     await other.waitForSelector("[data-incidents-table]");
-    await expect(other.locator("[data-filter-review]")).toHaveValue("pending");
+    await expect(other.locator("[data-filter-view]")).toHaveValue("review");
     expect(await other.locator("[data-incident-row]").count()).toBe(rows);
     await other.close();
   });
@@ -95,7 +95,7 @@ test.describe("UX-3.2.1: контракт URL и состояние фильтр
     page.on("pageerror", (e) => errors.push(e.message));
     await page.goto("/#incidents?at=" + DAY + "&view=нечто&department=ЧУЖОЕ&sla=никогда&priority=супер&sort=хаос");
     await page.waitForSelector("[data-incidents-table]");
-    await expect(page.locator("[data-filter-review]")).toHaveValue("all");
+    await expect(page.locator("[data-filter-view]")).toHaveValue("all");
     await expect(page.locator("[data-filter-sla]")).toHaveValue("");
     await expect(page.locator("[data-sort]")).toHaveValue("id");
     expect(await page.locator("[data-incident-row]").count()).toBeGreaterThan(0);
