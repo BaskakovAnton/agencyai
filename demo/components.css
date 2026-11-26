@@ -196,3 +196,17 @@ ui-chat-message, ui-process-node { display: block; }
 /* UX-3.1.2: единый индикатор исторического среза (Dashboard и реестр). */
 .historical-indicator { display: flex; align-items: center; gap: 6px; margin: 0 0 14px; padding: 9px 12px; border: 1px solid var(--color-warning-bg); border-radius: var(--radius-sm); background: var(--color-warning-bg); color: var(--color-warning-text); font-size: 12px; font-weight: 650; }
 .historical-indicator b { font-weight: 800; }
+
+/* UX-3.2.4: панель активных фильтров реестра и адаптация строки фильтров. */
+.incident-chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 2px 0 6px; }
+.incident-chip { display: inline-flex; align-items: center; gap: 2px; border: 1px solid var(--color-border); border-radius: 999px; padding: 1px 1px 1px 10px; font-size: 12px; background: var(--color-surface-muted); color: var(--color-text-muted); }
+.incident-chip button { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border: none; background: transparent; border-radius: 50%; font: inherit; font-size: 15px; line-height: 1; cursor: pointer; color: inherit; }
+.incident-chip button:hover { background: var(--color-border); }
+.notice[data-f5-notice] { margin: 6px 0 0; }
+@media (max-width: 767px) {
+  [data-incidents-filters] { gap: 8px; }
+  [data-incidents-filters] select { flex: 1 1 44%; min-width: 0; }
+  [data-incidents-filters] input[type="search"] { flex: 1 1 100%; }
+  [data-incidents-filters] .count { flex: 1 1 100%; }
+  .incident-chips { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; }
+}
