@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Макеты: радиальные индикаторы — на согласование</title>
+<link rel="stylesheet" href="./orbit/orbit.min.css">
+<script defer src="./orbit/orbit.min.js"></script>
+<style>
+:root {
+  --color-bg: #f4f6fa;
+  --color-surface: #ffffff;
+  --color-border: #dce3ec;
+  --color-text: #172033;
+  --color-text-muted: #4c5a6c;
+  --color-subtle: #616f81;
+  --color-primary: #2563eb;
+  --color-primary-strong: #1d4ed8;
+  --color-primary-soft: #eaf1ff;
+  --color-success-text: #0f7a4a;
+  --color-success-bg: #e9f7f0;
+  --color-warning-text: #8a5f13;
+  --color-warning-bg: #fff5df;
+  --color-danger-text: #a92f42;
+  --color-danger-bg: #fff0ef;
+  --color-neutral-bg: #eef2f7;
+}
+[data-theme="dark"] {
+  --color-bg: #0f1115;
+  --color-surface: #171a21;
+  --color-border: #2a2f3a;
+  --color-text: #e7ebf2;
+  --color-text-muted: #98a2b3;
+  --color-subtle: #8b95a6;
+  --color-primary: #4da3ff;
+  --color-primary-strong: #7cc0ff;
+  --color-primary-soft: #17293f;
+  --color-success-text: #6fd28a;
+  --color-success-bg: #14301f;
+  --color-warning-text: #ffc14d;
+  --color-warning-bg: #33280f;
+  --color-danger-text: #ff8a8a;
+  --color-danger-bg: #3a1c1c;
+  --color-neutral-bg: #232833;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--color-bg); color: var(--color-text); font: 15px/1.55 Inter, "Segoe UI", system-ui, sans-serif; }
+main { max-width: 1180px; margin: 0 auto; padding: 28px 18px 56px; }
+h1 { font-size: 24px; margin: 0 0 4px; letter-spacing: -.3px; }
+h2 { font-size: 18px; margin: 34px 0 6px; }
+h3 { font-size: 15px; margin: 0 0 2px; }
+.muted { color: var(--color-text-muted); font-size: 13px; margin: 0; }
+.toolbar { display: flex; gap: 8px; align-items: center; margin: 14px 0 0; flex-wrap: wrap; }
+button { min-height: 36px; padding: 0 12px; border-radius: 9px; border: 1px solid var(--color-border); background: var(--color-surface); color: var(--color-text); cursor: pointer; font: inherit; }
+button[aria-pressed='true'] { border-color: var(--color-primary); color: var(--color-primary-strong); }
+.grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); margin-top: 14px; }
+.card { border: 1px solid var(--color-border); border-radius: 14px; background: var(--color-surface); padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.card .ring { align-self: center; }
+.ring-value { font-size: 26px; font-weight: 700; fill: var(--color-text); }
+.ring-sub { font-size: 11px; fill: var(--color-text-muted); }
+.legend { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.legend li { display: grid; grid-template-columns: 10px 1fr auto; gap: 8px; align-items: center; font-size: 13px; }
+.dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+.legend-count { color: var(--color-text-muted); font-variant-numeric: tabular-nums; }
+.row { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+.state { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.state small { color: var(--color-text-muted); font-size: 12px; }
+.note { border-left: 3px solid var(--color-warning-text); background: var(--color-warning-bg); color: var(--color-text); padding: 10px 12px; border-radius: 8px; font-size: 13px; margin-top: 12px; }
+.foot { margin-top: 32px; border-top: 1px solid var(--color-border); padding-top: 14px; color: var(--color-text-muted); font-size: 12.5px; }
+code { background: var(--color-neutral-bg); padding: 1px 5px; border-radius: 5px; font-size: 12.5px; }
+/* Палитра Orbit под наши токены (тёмная и светлая темы) */
+.orbit-a { --o-fill: var(--color-primary); --o-back-fill: var(--color-neutral-bg); --o-stroke: var(--color-primary); }
+.o-wrap { display: grid; place-items: center; }
+.o-wrap .bigbang { width: 148px; }
+</style>
+</head>
+<body>
+<main>
+<h1>Радиальные индикаторы: макеты на согласование</h1>
+<p class="muted">Данные — демонстрационная модель на 02.01.2026 (28 обращений в работе, 14 просрочено, 5 в срок, 9 без норматива, 8 в списке внимания). Вариант A — собственное SVG (рекомендуемый путь). Вариант B — библиотека Orbit, подключена только в этом макете.</p>
+<div class="toolbar"><button type="button" data-theme-btn="dark" aria-pressed="true">Тёмная тема</button><button type="button" data-theme-btn="light" aria-pressed="false">Светлая тема</button></div>
+
+<h2>Вариант A. Собственное SVG (без зависимости, бюджет не растёт)</h2>
+<div class="grid">
+<div class="card"><h3>Фазы SLA на обзоре</h3><p class="muted">Заменяет строку «Контроль сроков» наглядным кольцом; числа и подписи остаются рядом.</p>
+<svg class="ring" viewBox="0 0 148 148" width="148" height="148" role="img" aria-label="28"><circle cx="74" cy="74" r="58" fill="none" stroke="var(--color-neutral-bg)" stroke-width="16"></circle><circle cx="74" cy="74" r="58" fill="none" stroke="var(--color-success-text)" stroke-width="16" stroke-dasharray="65.08 299.35" stroke-dashoffset="0.00" transform="rotate(-90 74 74)" stroke-linecap="butt"><title>В срок: 5</title></circle><circle cx="74" cy="74" r="58" fill="none" stroke="var(--color-danger-text)" stroke-width="16" stroke-dasharray="182.21 182.21" stroke-dashoffset="-65.08" transform="rotate(-90 74 74)" stroke-linecap="butt"><title>Просрочено: 14</title></circle><circle cx="74" cy="74" r="58" fill="none" stroke="var(--color-text-muted)" stroke-width="16" stroke-dasharray="117.14 247.29" stroke-dashoffset="-247.29" transform="rotate(-90 74 74)" stroke-linecap="butt"><title>Нет SLA: 9</title></circle><text x="74" y="70" text-anchor="middle" class="ring-value">28</text><text x="74" y="90" text-anchor="middle" class="ring-sub">обращений</text></svg>
+<ul class="legend"><li><span class="dot" style="background:var(--color-success-text)"></span><span class="legend-title">В срок</span><span class="legend-count">5</span></li><li><span class="dot" style="background:var(--color-danger-text)"></span><span class="legend-title">Просрочено</span><span class="legend-count">14</span></li><li><span class="dot" style="background:var(--color-text-muted)"></span><span class="legend-title">Без норматива</span><span class="legend-count">9</span></li></ul>
+</div>
+<div class="card"><h3>Внимание к очереди</h3><p class="muted">Сколько обращений требует внимания по правилу <code>needsAttention</code>.</p>
+<svg class="ring" viewBox="0 0 148 148" width="148" height="148" role="img" aria-label="8 из 28"><circle cx="74" cy="74" r="58" fill="none" stroke="var(--color-neutral-bg)" stroke-width="16"></circle><circle cx="74" cy="74" r="58" fill="none" stroke="var(--color-primary)" stroke-width="16" stroke-linecap="round" stroke-dasharray="104.12 260.30" transform="rotate(-90 74 74)"></circle><text x="74" y="70" text-anchor="middle" class="ring-value">8 из 28</text><text x="74" y="90" text-anchor="middle" class="ring-sub">29%</text></svg>
+<ul class="legend"><li><span class="dot" style="background:var(--color-primary)"></span><span class="legend-title">Требуют внимания</span><span class="legend-count">8</span></li><li><span class="dot" style="background:var(--color-neutral-bg)"></span><span class="legend-title">В плановом режиме</span><span class="legend-count">20</span></li></ul>
+</div>
+<div class="card"><h3>Состояния в карточке обращения</h3><p class="muted">Кольцо показывает фазу SLA, текст рядом — фазу и норматив. Без выдуманных часов.</p>
+<div class="row">
+<div class="state"><svg class="ring" viewBox="0 0 148 148" width="96" height="96" role="img" aria-label="В срок"><circle cx="74" cy="74" r="58" fill="none" stroke="var(--color-neutral-bg)" stroke-width="16"></circle><circle cx="74" cy="74" r="58" fill="none" stroke="var(--color-success-text)" stroke-width="16" stroke-linecap="round" stroke-dasharray="145.77 218.65" transform="rotate(-90 74 74)"></circle><text x="74" y="70" text-anchor="middle" class="ring-value">В срок</text><text x="74" y="90" text-anchor="middle" class="ring-sub">авария · 24 ч</text></svg><small>в срок</small></div>
+<div class="state"><svg class="ring" viewBox="0 0 148 148" width="96" height="96" role="img" aria-label="Просрочено"><circle cx="74" cy="74" r="58" fill="none" stroke="var(--color-neutral-bg)" stroke-width="16"></circle><circle cx="74" cy="74" r="58" fill="none" stroke="var(--color-danger-text)" stroke-width="16" stroke-linecap="round" stroke-dasharray="364.42 0.00" transform="rotate(-90 74 74)"></circle><text x="74" y="70" text-anchor="middle" class="ring-value">Просрочено</text><text x="74" y="90" text-anchor="middle" class="ring-sub">авария · 24 ч</text></svg><small>просрочено</small></div>
+<div class="state"><svg class="ring" viewBox="0 0 148 148" width="96" height="96" role="img" aria-label="Нет SLA"><circle cx="74" cy="74" r="58" fill="none" stroke="var(--color-neutral-bg)" stroke-width="16"></circle><circle cx="74" cy="74" r="58" fill="none" stroke="var(--color-text-muted)" stroke-width="16" stroke-linecap="round" stroke-dasharray="0.00 364.42" transform="rotate(-90 74 74)"></circle><text x="74" y="70" text-anchor="middle" class="ring-value">Нет SLA</text><text x="74" y="90" text-anchor="middle" class="ring-sub">без норматива</text></svg><small>нет норматива</small></div>
+</div>
+</div>
+</div>
+
+<h2>Вариант B. Библиотека Orbit (для сравнения)</h2>
+<div class="grid orbit-a">
+<div class="card"><h3>Фазы SLA на обзоре</h3><p class="muted">Разметка: <code>&lt;div class="bigbang"&gt; → &lt;div class="gravity-spot"&gt; → &lt;div class="orbit-10"&gt; → &lt;o-arc&gt;</code>.</p>
+<div class="o-wrap"><div class="bigbang"><div class="gravity-spot"><div class="orbit-10" style="--o-size-ratio: 2">
+<o-arc value="5" style="--o-max: 28; --o-fill: var(--color-success-text)" aria-label="В срок: 5"></o-arc>
+<o-arc value="14" style="--o-max: 28; --o-fill: var(--color-danger-text)" aria-label="Просрочено: 14"></o-arc>
+<o-arc value="9" style="--o-max: 28; --o-fill: var(--color-text-muted)" aria-label="Без норматива: 9"></o-arc>
+</div></div></div></div>
+<ul class="legend"><li><span class="dot" style="background:var(--color-success-text)"></span><span class="legend-title">В срок</span><span class="legend-count">5</span></li><li><span class="dot" style="background:var(--color-danger-text)"></span><span class="legend-title">Просрочено</span><span class="legend-count">14</span></li><li><span class="dot" style="background:var(--color-text-muted)"></span><span class="legend-title">Без норматива</span><span class="legend-count">9</span></li></ul>
+</div>
+<div class="card"><h3>Внимание к очереди</h3><p class="muted">Разметка: <code>&lt;o-progress value="29"&gt;</code>.</p>
+<div class="o-wrap"><div class="bigbang"><div class="gravity-spot"><div class="orbit-10" style="--o-size-ratio: 2">
+<o-progress value="29" role="progressbar" aria-label="Требуют внимания: 8 из 28" aria-valuenow="29" aria-valuemin="0" aria-valuemax="100"></o-progress>
+</div></div></div></div>
+<ul class="legend"><li><span class="dot" style="background:var(--color-primary)"></span><span class="legend-title">Требуют внимания</span><span class="legend-count">8</span></li><li><span class="dot" style="background:var(--color-neutral-bg)"></span><span class="legend-title">В плановом режиме</span><span class="legend-count">20</span></li></ul>
+</div>
+<div class="card"><h3>Состояния в карточке обращения</h3><p class="muted">Три кольца с <code>variant="stroke"</code> — тонкая линия вместо полосы.</p>
+<div class="row">
+<div class="state"><div class="o-wrap" style="width:96px"><div class="bigbang" style="width:96px"><div class="gravity-spot"><div class="orbit-10" style="--o-size-ratio: 2"><o-progress variant="stroke" value="40" style="--o-stroke: var(--color-success-text)" aria-label="В срок"></o-progress></div></div></div></div><small>в срок</small></div>
+<div class="state"><div class="o-wrap" style="width:96px"><div class="bigbang" style="width:96px"><div class="gravity-spot"><div class="orbit-10" style="--o-size-ratio: 2"><o-progress variant="stroke" value="100" style="--o-stroke: var(--color-danger-text)" aria-label="Просрочено"></o-progress></div></div></div></div><small>просрочено</small></div>
+<div class="state"><div class="o-wrap" style="width:96px"><div class="bigbang" style="width:96px"><div class="gravity-spot"><div class="orbit-10" style="--o-size-ratio: 2"><o-progress variant="stroke" value="0" style="--o-stroke: var(--color-text-muted)" aria-label="Нет норматива"></o-progress></div></div></div></div><small>нет норматива</small></div>
+</div>
+</div>
+</div>
+
+<div class="note"><b>Вопрос к домену, найденный при подготовке макетов.</b> На 02.01.2026 у обращений с фазой «в срок» функция <code>slaHoursLeft</code> возвращает отрицательные часы (например, З-016: фаза «в срок», −159 ч). Значит, кольцо «остаток норматива» пока строить нельзя: сначала нужно согласовать, что считается остатком. В макетах вместо часов показана фаза и норматив.</div>
+
+<h2>Что нужно решить</h2>
+<ol><li>Идём своим SVG (вариант A) или берём Orbit (вариант B)?</li>
+<li>Ставим кольцо фаз SLA на обзор вместо строки «Контроль сроков» или рядом с ней?</li>
+<li>Нужен ли индикатор внимания в шапке раздела или только на обзоре?</li>
+<li>Нужен ли радиальный циферблат суток в хронологии (замена существующей шкалы)?</li></ol>
+
+<div class="foot">Источник данных: демонстрационная модель проекта, срез 02.01.2026. Исследование: <code>docs/research/orbit-css-research.md</code>, <code>docs/research/orbit-integration-research.md</code>. Orbit подключён только для этого макета (файлы в <code>./orbit/</code>), в сборку приложения не входит.</div>
+</main>
+<script>
+document.querySelectorAll("[data-theme-btn]").forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    var theme = btn.dataset.themeBtn;
+    document.documentElement.dataset.theme = theme;
+    document.querySelectorAll("[data-theme-btn]").forEach(function (other) {
+      other.setAttribute("aria-pressed", String(other === btn));
+    });
+  });
+});
+</script>
+</body>
+</html>

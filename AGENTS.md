@@ -111,7 +111,7 @@ SHA256 перенесённых файлов (сверены с источник
 
 **План интерфейса (28.11.2026):** единый канонический план работ — [`docs/design/interface-roadmap.md`](docs/design/interface-roadmap.md): он задаёт порядок и критерии готовности, объединяя «модернизацию интерфейса 2026» и дизайн-спецификацию UX-3.3. Спецификация остатка — [`docs/specifications/ux-3-4-implementation-specification.md`](docs/specifications/ux-3-4-implementation-specification.md) (пакеты WP-1…WP-11), план тестирования — [`docs/specifications/ux-3-4-test-plan.md`](docs/specifications/ux-3-4-test-plan.md). Бренд «ДЕПУТАТ 360°» и тёмная тема как основная утверждены владельцем 28.11.2026 (DEC-UX33-07).
 
-**Исследования (28.11.2026):** Orbit CSS — два разных проекта (радиальная библиотека `@zumer/orbit` 2.3.1 и Flexbox-фреймворк `orbitcss` 2.0.0). Факты — `docs/research/orbit-css-research.md` и `docs/research/orbit-css-research.json`; исследование внедрения в наш проект (цена 186 КБ CSS + 31 КБ JS, спайк в трёх движках, варианты O1–O4, рекомендация) — `docs/research/orbit-integration-research.md`.
+**Исследования (28.11.2026):** Orbit CSS — два разных проекта (радиальная библиотека `@zumer/orbit` 2.3.1 и Flexbox-фреймворк `orbitcss` 2.0.0). Факты — `docs/research/orbit-css-research.md` и `docs/research/orbit-css-research.json`; исследование внедрения в наш проект (цена 186 КБ CSS + 31 КБ JS, спайк в трёх движках, варианты O1–O4, рекомендация) — `docs/research/orbit-integration-research.md`. Макеты радиальных индикаторов на согласование (вариант A своё SVG и вариант B Orbit, обе темы, замеры) — `docs/design/mockups/`.
 
 **Ещё открыто:**
 
