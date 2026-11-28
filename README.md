@@ -7,7 +7,7 @@
 **Статус (28.11.2026):** демо-приложение **опубликовано** — **https://baskakovanton.github.io/agencyai/demo/**;
 прогоны: `bun test` — 416/0, `bun run e2e` — 156/0, `bun run audit` — нарушений 0.
 Бренд **«ДЕПУТАТ 360° · ПРИЁМНАЯ ДЕПУТАТА»**, **тёмная тема — основная**, светлая равноправна.
-Прототипные страницы `deput` в корне сохранены как исторический артефакт.
+Прототип `deput` сведён к одной странице-источнику: `index.html` — источник, `process.html`, `player.html`, `matrix.html` — редиректы (решение OD-7=B).
 
 **Планы и отчёты:** единый план интерфейса — [interface-roadmap.md](docs/design/interface-roadmap.md) (выполнен);
 план закрытия остатков — [project-closeout-plan.md](docs/specifications/project-closeout-plan.md);
