@@ -18,8 +18,10 @@ jobs:
       - run: bun run coverage:gate
       # Гейт C1: закоммиченный demo/ должен совпадать со сборкой — Pages раздаёт именно его.
       - run: bun run verify:demo
+      # Гейт B3: бюджет размера сборки.
+      - run: bun run size:budget
       - run: bun run scripts/build-web.ts demo
-      - run: bunx playwright install --with-deps chromium
+      - run: bunx playwright install --with-deps chromium firefox webkit
       - run: bunx playwright test
       - uses: actions/upload-artifact@v4
         if: failure()
@@ -27,3 +29,17 @@ jobs:
           name: playwright-report
           path: test-results
           retention-days: 7
+  # B2: после публикации проверяем живой сайт (тема, бренд, экраны, консоль).
+  live:
+    needs: playwright
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.4
+      - run: bun install --frozen-lockfile
+      - run: bunx playwright install --with-deps chromium
+      - run: bun run verify:live
+        env:
+          LIVE_BASE: https://baskakovanton.github.io/agencyai/demo/

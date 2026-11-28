@@ -15,7 +15,12 @@ export default defineConfig({
     baseURL: "http://127.0.0.1:4321",
     trace: "off",
   },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  projects: [
+    { name: "chromium", use: { ...devices["Desktop Chrome"] } },
+    // Кросс-браузер (B1): полный набор идёт в chromium, базовый — ещё в firefox и webkit.
+    { name: "firefox", use: { ...devices["Desktop Firefox"] }, testMatch: /smoke\.spec\.ts/ },
+    { name: "webkit", use: { ...devices["Desktop Safari"] }, testMatch: /smoke\.spec\.ts/ },
+  ],
   webServer: {
     command: `"${BUN}" run scripts/serve-demo.ts`,
     url: "http://127.0.0.1:4321/index.html",

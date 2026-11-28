@@ -139,5 +139,38 @@ if (ready) {
   if ((await page.locator("[data-group]").count()) !== 6) problems.push("в легенде не 6 групп узлов");
 }
 
+// B2: живой сайт — бренд, тема, шесть экранов и консоль без ошибок.
+const liveScreens: readonly (readonly [string, string])[] = [
+  ["#dashboard?at=2026-01-02", "[data-dashboard]"],
+  ["#incidents?at=2026-01-02", "[data-incidents-table]"],
+  ["#incident/" + encodeURIComponent("З-015") + "?at=2026-01-02", "[data-incident-detail]"],
+  ["#timeline?at=2026-01-02", "[data-timeline]"],
+  ["#chat/" + encodeURIComponent("З-015") + "?at=2026-01-02", "[data-phone]"],
+  ["#model", ".row"],
+];
+for (const [hash, selector] of liveScreens) {
+  await page.goto(base + "?v=" + Date.now() + hash, { waitUntil: "domcontentloaded" });
+  try {
+    await page.waitForSelector(selector, { timeout: 15_000 });
+  } catch {
+    problems.push("живой экран не открылся: " + hash);
+  }
+}
+await page.goto(base + "?v=" + Date.now() + "#dashboard?at=2026-01-02", { waitUntil: "domcontentloaded" });
+const liveTheme = await page.evaluate(() => document.documentElement.dataset.theme);
+if (liveTheme !== "dark") problems.push("живая тема не тёмная: " + liveTheme);
+const liveBrand = ((await page.locator(".brand b").textContent()) ?? "").trim();
+if (liveBrand !== "ДЕПУТАТ 360°") problems.push("живой бренд не «ДЕПУТАТ 360°»: " + liveBrand);
+
+const consoleErrors: string[] = [];
+const fresh = await browser.newPage({ viewport: { width: 1440, height: 950 } });
+fresh.on("pageerror", (error) => consoleErrors.push(error.message));
+fresh.on("console", (message) => {
+  if (message.type() === "error") consoleErrors.push(message.text());
+});
+await fresh.goto(base + "?v=" + Date.now() + "#dashboard?at=2026-01-02", { waitUntil: "networkidle" });
+await fresh.close();
+if (consoleErrors.length > 0) problems.push("ошибки консоли на живом сайте: " + consoleErrors.slice(0, 2).join(" | "));
+
 await browser.close();
 console.log(problems.length === 0 ? "LIVE OK: " + base : "LIVE ПРОБЛЕМЫ: " + problems.join("; "));

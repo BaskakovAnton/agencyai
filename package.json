@@ -15,7 +15,9 @@
     "audit": "bun run scripts/audit-ui.ts",
     "typecheck": "tsc --noEmit",
     "verify:demo": "bun run scripts/verify-demo-sync.ts",
-    "coverage:gate": "bun run scripts/coverage-gate.ts"
+    "coverage:gate": "bun run scripts/coverage-gate.ts",
+    "size:budget": "bun run scripts/size-budget.ts",
+    "verify:live": "bun run scripts/verify-live.ts"
   },
   "devDependencies": {
     "@playwright/test": "^1.65.1",
