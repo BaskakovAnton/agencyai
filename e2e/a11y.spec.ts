@@ -13,6 +13,24 @@ const routes = [
 
 interface Violation { readonly id: string; readonly impact: string | null; readonly nodes: number }
 
+/** Прогон axe: возвращает только критичные и серьёзные нарушения. */
+const blockingViolations = async (page: import("@playwright/test").Page): Promise<Violation[]> => {
+  await page.addScriptTag({ content: axeSource });
+  const violations = (await page.evaluate(async () => {
+    const runner = (window as unknown as { axe: { run: (root: Document, options: object) => Promise<{ violations: Violation[] }> } }).axe;
+    const result = await runner.run(document, { resultTypes: ["violations"] });
+    return result.violations.map((item) => ({ id: item.id, impact: item.impact, nodes: item.nodes.length }));
+  })) as Violation[];
+  return violations.filter((item) => item.impact === "critical" || item.impact === "serious");
+};
+
+const states = [
+  { name: "пустой реестр", hash: "#incidents?at=2026-01-02&q=НЕТ-ТАКОГО" },
+  { name: "события периода", hash: "#incidents?period=30&at=2026-01-13" },
+  { name: "начало окна модели", hash: "#timeline?at=2025-12-20&view=git" },
+  { name: "переписка до создания", hash: "#chat/" + encodeURIComponent("З-001") + "?at=2025-12-20" },
+];
+
 test.describe("Клавиатура и подписи", () => {
   test("ползунок времени подписан и озвучивает значение", async ({ page }) => {
     await page.goto("/#timeline?at=2026-01-02&view=git");
@@ -72,15 +90,30 @@ for (const width of [390, 1440]) {
       test("axe: " + hash, async ({ page }) => {
         await page.goto("/" + hash);
         await page.waitForTimeout(700);
-        await page.addScriptTag({ content: axeSource });
-        const violations = (await page.evaluate(async () => {
-          const runner = (window as unknown as { axe: { run: (root: Document, options: object) => Promise<{ violations: Violation[] }> } }).axe;
-          const result = await runner.run(document, { resultTypes: ["violations"] });
-          return result.violations.map((item) => ({ id: item.id, impact: item.impact, nodes: item.nodes.length }));
-        })) as Violation[];
-        const blocking = violations.filter((item) => item.impact === "critical" || item.impact === "serious");
+        const blocking = await blockingViolations(page);
         expect(blocking, JSON.stringify(blocking)).toEqual([]);
       });
     }
+  });
+}
+
+for (const width of [390, 1440]) {
+  test.describe("Состояния " + width + "px", () => {
+    test.use({ viewport: { width, height: 900 } });
+    for (const state of states) {
+      test("axe: " + state.name, async ({ page }) => {
+        await page.goto("/" + state.hash);
+        await page.waitForTimeout(700);
+        const blocking = await blockingViolations(page);
+        expect(blocking, JSON.stringify(blocking)).toEqual([]);
+      });
+    }
+    test("axe: светлая тема", async ({ page }) => {
+      await page.addInitScript(() => localStorage.setItem("agencyai-theme", "light"));
+      await page.goto("/#dashboard?at=2026-01-02");
+      await page.waitForTimeout(700);
+      const blocking = await blockingViolations(page);
+      expect(blocking, JSON.stringify(blocking)).toEqual([]);
+    });
   });
 }
