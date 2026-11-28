@@ -29,6 +29,25 @@ test.describe("Мобильная адаптация", () => {
   });
 
   for (const width of [360, 390, 430]) {
+    test("фильтры реестра на " + width + "px: свёрнутая панель ≤ 220 px", async ({ page }) => {
+      await page.setViewportSize({ width, height: 844 });
+      await page.goto("/#incidents?at=2026-01-02");
+      const bar = page.locator("[data-incidents-filters]");
+      await expect(bar).toBeVisible();
+      expect(await bar.evaluate((el) => Math.round(el.getBoundingClientRect().height))).toBeLessThanOrEqual(220);
+      const toggle = page.locator("[data-filters-toggle]");
+      await expect(toggle).toBeVisible();
+      await expect(toggle).toHaveAttribute("aria-expanded", "false");
+      await toggle.click();
+      await expect(toggle).toHaveAttribute("aria-expanded", "true");
+      const priority = page.locator("[data-filter-priority]");
+      await expect(priority).toBeVisible();
+      await priority.selectOption("urgent");
+      await expect.poll(() => page.evaluate(() => location.hash)).toContain("priority=urgent");
+    });
+  }
+
+  for (const width of [360, 390, 430]) {
     test("реестр на " + width + "px: карточки строк вместо горизонтальной прокрутки", async ({ page }) => {
       await page.setViewportSize({ width, height: 844 });
       await page.goto("/#incidents?at=2026-01-02");

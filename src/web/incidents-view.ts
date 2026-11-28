@@ -66,6 +66,17 @@ export const mountIncidents = (root: HTMLElement, graph: Graph, story: Story, ro
   };
 
   paint();
+  root.addEventListener("click", (event) => {
+    const target = event.target as HTMLElement | null;
+    if (!target?.closest("[data-filters-toggle]")) return;
+    const more = root.querySelector("[data-filters-more]");
+    const toggle = root.querySelector<HTMLElement>("[data-filters-toggle]");
+    if (!more || !toggle) return;
+    const open = more.getAttribute("data-open") !== "true";
+    more.setAttribute("data-open", String(open));
+    toggle.setAttribute("aria-expanded", String(open));
+  });
+
   root.addEventListener("input", (event) => {
     const target = event.target as HTMLElement | null;
     if (target?.matches("[data-search]")) {

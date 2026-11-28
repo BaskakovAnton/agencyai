@@ -132,7 +132,17 @@ test.describe("UX-3.2.4: управление представлением и п
       notice: document.querySelector("[data-f5-notice]") !== null,
     }));
     expect(m.overflow).toBe(false);
-    expect(m.controls.every((h) => h >= 32)).toBe(true);
+    // WP-1: второстепенные контролы скрыты до раскрытия «Параметры» и имеют высоту 0;
+    // проверяем видимые, затем те же требования после раскрытия.
+    expect(m.controls.filter((h) => h > 0).every((h) => h >= 32)).toBe(true);
+    await page.locator("[data-filters-toggle]").click();
+    const shown = await page.evaluate(() =>
+      [...document.querySelectorAll("[data-incidents-filters] select, [data-incidents-filters] input, [data-incidents-filters] button")]
+        .map((el) => Math.round(el.getBoundingClientRect().height))
+        .filter((h) => h > 0),
+    );
+    expect(shown.length).toBeGreaterThanOrEqual(m.controls.filter((h) => h > 0).length);
+    expect(shown.every((h) => h >= 32)).toBe(true);
     expect(m.chipButtons.every((h) => h >= 32)).toBe(true);
     expect(m.notice).toBe(true);
     await page.locator('[data-filter-clear="q"]').click();

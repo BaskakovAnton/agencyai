@@ -181,3 +181,20 @@
   [data-incidents-table] tbody tr:not(.click-row) { display: block; }
   [data-incidents-table] tbody tr:not(.click-row) > td { display: block; padding: 12px 0; }
 }
+
+/* WP-1: компактная панель фильтров на мобильном — второстепенные контролы за «Параметры». */
+@media (max-width: 767px) {
+  [data-incidents-filters] { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; padding: 10px; }
+  [data-incidents-filters] input[type="search"] { grid-column: 1 / -1; flex: none; min-height: 44px; }
+  [data-incidents-filters] select { width: 100%; min-height: 44px; }
+  [data-incidents-filters] button { min-height: 44px; }
+  [data-incidents-filters] .hint-label { display: none; }
+  [data-incidents-filters] .grow { display: none; }
+  [data-incidents-filters] .count { grid-column: 1 / -1; }
+  .filters-more { display: contents; }
+  .filters-toggle { font: inherit; }
+  .filters-more[data-open="true"] .filters-toggle::after { content: " ▴"; }
+  .filters-more[data-open="false"] .filters-toggle::after { content: " ▾"; }
+  .filters-more-body { display: none; grid-column: 1 / -1; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
+  .filters-more[data-open="true"] .filters-more-body { display: grid; }
+}
