@@ -28,6 +28,40 @@ test.describe("Мобильная адаптация", () => {
     }
   });
 
+  for (const width of [360, 390, 430]) {
+    test("реестр на " + width + "px: карточки строк вместо горизонтальной прокрутки", async ({ page }) => {
+      await page.setViewportSize({ width, height: 844 });
+      await page.goto("/#incidents?at=2026-01-02");
+      await expect(page.locator("[data-incidents-table]")).toBeVisible();
+      await expect(page.locator("[data-incidents-table] thead")).toBeHidden();
+      const row = page.locator("[data-incident-row]").first();
+      await expect(row).toBeVisible();
+      expect(await row.evaluate((el) => getComputedStyle(el).display)).toBe("grid");
+      expect(await page.locator("[data-incidents-body]").evaluate((el) => el.scrollWidth - el.clientWidth)).toBeLessThanOrEqual(1);
+      await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
+      const label = await page.locator("[data-incidents-table] tbody td:nth-child(2)").first().evaluate((el) => getComputedStyle(el, "::before").content);
+      expect(label).toContain("Приоритет");
+      const anchor = row.locator('a[href*="#incident/"]');
+      await expect(anchor).toBeVisible();
+      // Ссылка растянута на всю карточку: контракт проверяем по геометрии, клик — по факту перехода.
+      const stretched = await anchor.evaluate((el) => ({
+        after: getComputedStyle(el, "::after").position,
+        inset: getComputedStyle(el, "::after").inset,
+        card: getComputedStyle(el.closest("tr") as Element).position,
+      }));
+      expect(stretched).toEqual({ after: "absolute", inset: "0px", card: "relative" });
+      await anchor.click();
+      await expect(page).toHaveURL(/#incident/);
+    });
+  }
+
+  test("планшет 1024px: реестр остаётся таблицей", async ({ page }) => {
+    await page.setViewportSize({ width: 1024, height: 900 });
+    await page.goto("/#incidents?at=2026-01-02");
+    await expect(page.locator("[data-incidents-table] thead")).toBeVisible();
+    expect(await page.locator("[data-incident-row]").first().evaluate((el) => getComputedStyle(el).display)).toBe("table-row");
+  });
+
   test("внимание открывается компактной плиткой без горизонтального ухода", async ({ page }) => {
     await page.goto("/#dashboard?at=2026-01-02");
     const card = page.locator("[data-attention-card]").first();
