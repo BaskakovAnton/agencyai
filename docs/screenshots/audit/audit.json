@@ -4,22 +4,22 @@
       "page": "dashboard",
       "viewport": "wide",
       "kind": "tap-targets",
-      "count": 16,
-      "detail": "К содержанию 95x21 | Тёмная тема 99x33 | 20 декабря 2025\n21 дек 138x36 | 7 дней 62x32 | 30 дней 69x32"
+      "count": 26,
+      "detail": "К содержанию 95x21 | Светлая тема 103x33 | 20 декабря 2025\n21 дек 138x36 | 7 дней 62x32 | 30 дней 69x32"
     },
     {
       "page": "dashboard",
       "viewport": "wide",
       "kind": "headings",
-      "count": 6,
-      "detail": "H1: Обзор | H2: Требуют внимания | H2: Последние события | H2: Распределение обращений | H2: Контроль сроков | H2: Динамика за период"
+      "count": 7,
+      "detail": "H1: Обзор | H2: Следующие действия | H2: Требуют внимания | H2: Последние события | H2: Распределение обращений | H2: Контроль сроков | H2: Динамика за период"
     },
     {
       "page": "incidents",
       "viewport": "wide",
       "kind": "tap-targets",
-      "count": 38,
-      "detail": "К содержанию 95x21 | Тёмная тема 99x33 | Поиск обращений 493x36 | любой\nавария / экстрен 162x36 | любой\nв срок\nна паузе\n 172x36"
+      "count": 41,
+      "detail": "К содержанию 95x21 | Светлая тема 103x33 | Поиск обращений 901x36 | все\nактивные\nтребуют в 197x36 | 20 декабря 2025\n21 дек 138x36"
     },
     {
       "page": "incidents",
@@ -32,22 +32,22 @@
       "page": "incident",
       "viewport": "wide",
       "kind": "tap-targets",
-      "count": 13,
-      "detail": "К содержанию 95x21 | Тёмная тема 99x33 | 20 декабря 2025\n21 дек 138x36 | Все обращения → 104x18 | Демо-диспетчер (пользо 235x19"
+      "count": 14,
+      "detail": "К содержанию 95x21 | Светлая тема 103x33 | 20 декабря 2025\n21 дек 138x36 | Все обращения → 104x18 | Хронология → 85x18"
     },
     {
       "page": "incident",
       "viewport": "wide",
       "kind": "headings",
-      "count": 7,
-      "detail": "H1: Обращение З-015 | H2: Разбита дверь подъезда | H2: История прохождения | H2: Контроль SLA | H2: Подтверждение завершения | H2: Участники | H2: Связанные представления"
+      "count": 10,
+      "detail": "H1: Обращение З-015 | H2: Следующий шаг по модели | H2: Историческая атрибуция на дату | H2: Длительности | H2: Разбита дверь подъезда | H2: История прохождения | H2: Контроль SLA | H2: Подтверждение завершения | H2: Участники | H2: Связанные представления"
     },
     {
       "page": "timeline",
       "viewport": "wide",
       "kind": "tap-targets",
-      "count": 156,
-      "detail": "К содержанию 95x21 | Тёмная тема 99x33 | Git-граф 72x31 | Диаграмма Ганта 125x31 | Обычная 77x31"
+      "count": 157,
+      "detail": "К содержанию 95x21 | Светлая тема 103x33 | Git-граф 72x31 | Диаграмма Ганта 125x31 | Обычная 77x31"
     },
     {
       "page": "timeline",
@@ -71,15 +71,47 @@
       "page": "timeline",
       "viewport": "wide",
       "kind": "headings",
-      "count": 3,
-      "detail": "H1: Хронология | H2: Как читать граф | H2: Связанные виды"
+      "count": 4,
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды"
+    },
+    {
+      "page": "timeline-graph",
+      "viewport": "wide",
+      "kind": "tap-targets",
+      "count": 157,
+      "detail": "К содержанию 95x21 | Светлая тема 103x33 | Git-граф 72x31 | Диаграмма Ганта 125x31 | Обычная 77x31"
+    },
+    {
+      "page": "timeline-graph",
+      "viewport": "wide",
+      "kind": "canvas-scroll",
+      "detail": "canvas 1150/1438 (auto)"
+    },
+    {
+      "page": "timeline-graph",
+      "viewport": "wide",
+      "kind": "slider-a11y",
+      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
+    },
+    {
+      "page": "timeline-graph",
+      "viewport": "wide",
+      "kind": "commit-a11y",
+      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0"
+    },
+    {
+      "page": "timeline-graph",
+      "viewport": "wide",
+      "kind": "headings",
+      "count": 4,
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды"
     },
     {
       "page": "timeline-card",
       "viewport": "wide",
       "kind": "tap-targets",
-      "count": 158,
-      "detail": "К содержанию 95x21 | Тёмная тема 99x33 | Git-граф 72x31 | Диаграмма Ганта 125x31 | Обычная 77x31"
+      "count": 159,
+      "detail": "К содержанию 95x21 | Светлая тема 103x33 | Git-граф 72x31 | Диаграмма Ганта 125x31 | Обычная 77x31"
     },
     {
       "page": "timeline-card",
@@ -103,21 +135,21 @@
       "page": "timeline-card",
       "viewport": "wide",
       "kind": "card-position",
-      "detail": "top=284px, в окне: true"
+      "detail": "top=416px, в окне: true"
     },
     {
       "page": "timeline-card",
       "viewport": "wide",
       "kind": "headings",
-      "count": 3,
-      "detail": "H1: Хронология | H2: Как читать граф | H2: Связанные виды"
+      "count": 4,
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды"
     },
     {
       "page": "gantt",
       "viewport": "wide",
       "kind": "tap-targets",
-      "count": 77,
-      "detail": "К содержанию 95x21 | Тёмная тема 99x33 | Git-граф 72x31 | Диаграмма Ганта 125x31 | Обычная 77x31"
+      "count": 78,
+      "detail": "К содержанию 95x21 | Светлая тема 103x33 | Git-граф 72x31 | Диаграмма Ганта 125x31 | Обычная 77x31"
     },
     {
       "page": "gantt",
@@ -129,15 +161,15 @@
       "page": "gantt",
       "viewport": "wide",
       "kind": "headings",
-      "count": 3,
-      "detail": "H1: Хронология | H2: Принцип визуального отображения SLA | H2: Связанные виды"
+      "count": 4,
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Принцип визуального отображения SLA | H2: Связанные виды"
     },
     {
       "page": "chat",
       "viewport": "wide",
       "kind": "tap-targets",
       "count": 6,
-      "detail": "К содержанию 95x21 | Тёмная тема 99x33 | ‹ Хронология 107x39 | ‹ Реплика назад 113x32 | Следующая реплика › 150x32"
+      "detail": "К содержанию 95x21 | Светлая тема 103x33 | ‹ Хронология 107x39 | ‹ Реплика назад 113x32 | Следующая реплика › 150x32"
     },
     {
       "page": "chat",
@@ -151,7 +183,7 @@
       "viewport": "wide",
       "kind": "tap-targets",
       "count": 102,
-      "detail": "К содержанию 95x21 | Тёмная тема 99x33 | +4 ч 51x33 | Массовый шаг вперёд 157x33 | Сбросить (seed 42) 136x33"
+      "detail": "К содержанию 95x21 | Светлая тема 103x33 | +4 ч 51x33 | Массовый шаг вперёд 157x33 | Сбросить (seed 42) 136x33"
     },
     {
       "page": "model",
@@ -170,22 +202,22 @@
       "page": "dashboard",
       "viewport": "desktop",
       "kind": "tap-targets",
-      "count": 16,
-      "detail": "К содержанию 95x21 | Тёмная тема 99x33 | 20 декабря 2025\n21 дек 138x36 | 7 дней 62x32 | 30 дней 69x32"
+      "count": 26,
+      "detail": "К содержанию 95x21 | Светлая тема 103x33 | 20 декабря 2025\n21 дек 138x36 | 7 дней 62x32 | 30 дней 69x32"
     },
     {
       "page": "dashboard",
       "viewport": "desktop",
       "kind": "headings",
-      "count": 6,
-      "detail": "H1: Обзор | H2: Требуют внимания | H2: Последние события | H2: Распределение обращений | H2: Контроль сроков | H2: Динамика за период"
+      "count": 7,
+      "detail": "H1: Обзор | H2: Следующие действия | H2: Требуют внимания | H2: Последние события | H2: Распределение обращений | H2: Контроль сроков | H2: Динамика за период"
     },
     {
       "page": "incidents",
       "viewport": "desktop",
       "kind": "tap-targets",
-      "count": 38,
-      "detail": "К содержанию 95x21 | Тёмная тема 99x33 | Поиск обращений 341x36 | любой\nавария / экстрен 162x36 | любой\nв срок\nна паузе\n 172x36"
+      "count": 41,
+      "detail": "К содержанию 95x21 | Светлая тема 103x33 | Поиск обращений 531x36 | все\nактивные\nтребуют в 197x36 | 20 декабря 2025\n21 дек 138x36"
     },
     {
       "page": "incidents",
@@ -198,22 +230,22 @@
       "page": "incident",
       "viewport": "desktop",
       "kind": "tap-targets",
-      "count": 13,
-      "detail": "К содержанию 95x21 | Тёмная тема 99x33 | 20 декабря 2025\n21 дек 138x36 | Все обращения → 104x18 | Демо-диспетчер (пользо 235x19"
+      "count": 14,
+      "detail": "К содержанию 95x21 | Светлая тема 103x33 | 20 декабря 2025\n21 дек 138x36 | Все обращения → 104x18 | Хронология → 85x18"
     },
     {
       "page": "incident",
       "viewport": "desktop",
       "kind": "headings",
-      "count": 7,
-      "detail": "H1: Обращение З-015 | H2: Разбита дверь подъезда | H2: История прохождения | H2: Контроль SLA | H2: Подтверждение завершения | H2: Участники | H2: Связанные представления"
+      "count": 10,
+      "detail": "H1: Обращение З-015 | H2: Следующий шаг по модели | H2: Историческая атрибуция на дату | H2: Длительности | H2: Разбита дверь подъезда | H2: История прохождения | H2: Контроль SLA | H2: Подтверждение завершения | H2: Участники | H2: Связанные представления"
     },
     {
       "page": "timeline",
       "viewport": "desktop",
       "kind": "tap-targets",
-      "count": 156,
-      "detail": "К содержанию 95x21 | Тёмная тема 99x33 | Git-граф 72x31 | Диаграмма Ганта 125x31 | Обычная 77x31"
+      "count": 157,
+      "detail": "К содержанию 95x21 | Светлая тема 103x33 | Git-граф 72x31 | Диаграмма Ганта 125x31 | Обычная 77x31"
     },
     {
       "page": "timeline",
@@ -243,15 +275,53 @@
       "page": "timeline",
       "viewport": "desktop",
       "kind": "headings",
-      "count": 3,
-      "detail": "H1: Хронология | H2: Как читать граф | H2: Связанные виды"
+      "count": 4,
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды"
+    },
+    {
+      "page": "timeline-graph",
+      "viewport": "desktop",
+      "kind": "tap-targets",
+      "count": 157,
+      "detail": "К содержанию 95x21 | Светлая тема 103x33 | Git-граф 72x31 | Диаграмма Ганта 125x31 | Обычная 77x31"
+    },
+    {
+      "page": "timeline-graph",
+      "viewport": "desktop",
+      "kind": "canvas-scroll",
+      "detail": "canvas 780/1438 (auto)"
+    },
+    {
+      "page": "timeline-graph",
+      "viewport": "desktop",
+      "kind": "chips-scroll",
+      "detail": "1122/1471"
+    },
+    {
+      "page": "timeline-graph",
+      "viewport": "desktop",
+      "kind": "slider-a11y",
+      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
+    },
+    {
+      "page": "timeline-graph",
+      "viewport": "desktop",
+      "kind": "commit-a11y",
+      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0"
+    },
+    {
+      "page": "timeline-graph",
+      "viewport": "desktop",
+      "kind": "headings",
+      "count": 4,
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды"
     },
     {
       "page": "timeline-card",
       "viewport": "desktop",
       "kind": "tap-targets",
-      "count": 158,
-      "detail": "К содержанию 95x21 | Тёмная тема 99x33 | Git-граф 72x31 | Диаграмма Ганта 125x31 | Обычная 77x31"
+      "count": 159,
+      "detail": "К содержанию 95x21 | Светлая тема 103x33 | Git-граф 72x31 | Диаграмма Ганта 125x31 | Обычная 77x31"
     },
     {
       "page": "timeline-card",
@@ -281,21 +351,21 @@
       "page": "timeline-card",
       "viewport": "desktop",
       "kind": "card-position",
-      "detail": "top=176px, в окне: true"
+      "detail": "top=351px, в окне: true"
     },
     {
       "page": "timeline-card",
       "viewport": "desktop",
       "kind": "headings",
-      "count": 3,
-      "detail": "H1: Хронология | H2: Как читать граф | H2: Связанные виды"
+      "count": 4,
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды"
     },
     {
       "page": "gantt",
       "viewport": "desktop",
       "kind": "tap-targets",
-      "count": 77,
-      "detail": "К содержанию 95x21 | Тёмная тема 99x33 | Git-граф 72x31 | Диаграмма Ганта 125x31 | Обычная 77x31"
+      "count": 78,
+      "detail": "К содержанию 95x21 | Светлая тема 103x33 | Git-граф 72x31 | Диаграмма Ганта 125x31 | Обычная 77x31"
     },
     {
       "page": "gantt",
@@ -313,15 +383,15 @@
       "page": "gantt",
       "viewport": "desktop",
       "kind": "headings",
-      "count": 3,
-      "detail": "H1: Хронология | H2: Принцип визуального отображения SLA | H2: Связанные виды"
+      "count": 4,
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Принцип визуального отображения SLA | H2: Связанные виды"
     },
     {
       "page": "chat",
       "viewport": "desktop",
       "kind": "tap-targets",
       "count": 6,
-      "detail": "К содержанию 95x21 | Тёмная тема 99x33 | ‹ Хронология 107x39 | ‹ Реплика назад 113x32 | Следующая реплика › 150x32"
+      "detail": "К содержанию 95x21 | Светлая тема 103x33 | ‹ Хронология 107x39 | ‹ Реплика назад 113x32 | Следующая реплика › 150x32"
     },
     {
       "page": "chat",
@@ -335,7 +405,7 @@
       "viewport": "desktop",
       "kind": "tap-targets",
       "count": 102,
-      "detail": "К содержанию 95x21 | Тёмная тема 99x33 | +4 ч 51x33 | Массовый шаг вперёд 157x33 | Сбросить (seed 42) 136x33"
+      "detail": "К содержанию 95x21 | Светлая тема 103x33 | +4 ч 51x33 | Массовый шаг вперёд 157x33 | Сбросить (seed 42) 136x33"
     },
     {
       "page": "model",
@@ -354,22 +424,22 @@
       "page": "dashboard",
       "viewport": "tablet",
       "kind": "tap-targets",
-      "count": 16,
-      "detail": "К содержанию 95x21 | Тёмная тема 99x33 | 20 декабря 2025\n21 дек 138x36 | 7 дней 62x32 | 30 дней 69x32"
+      "count": 26,
+      "detail": "К содержанию 95x21 | Светлая тема 103x33 | 20 декабря 2025\n21 дек 138x36 | 7 дней 62x32 | 30 дней 69x32"
     },
     {
       "page": "dashboard",
       "viewport": "tablet",
       "kind": "headings",
-      "count": 6,
-      "detail": "H1: Обзор | H2: Требуют внимания | H2: Последние события | H2: Распределение обращений | H2: Контроль сроков | H2: Динамика за период"
+      "count": 7,
+      "detail": "H1: Обзор | H2: Следующие действия | H2: Требуют внимания | H2: Последние события | H2: Распределение обращений | H2: Контроль сроков | H2: Динамика за период"
     },
     {
       "page": "incidents",
       "viewport": "tablet",
       "kind": "tap-targets",
-      "count": 38,
-      "detail": "К содержанию 95x21 | Тёмная тема 99x33 | Поиск обращений 268x36 | любой\nавария / экстрен 162x36 | любой\nв срок\nна паузе\n 172x36"
+      "count": 41,
+      "detail": "К содержанию 95x21 | Светлая тема 103x33 | Поиск обращений 414x36 | все\nактивные\nтребуют в 197x36 | 20 декабря 2025\n21 дек 138x36"
     },
     {
       "page": "incidents",
@@ -382,22 +452,22 @@
       "page": "incident",
       "viewport": "tablet",
       "kind": "tap-targets",
-      "count": 13,
-      "detail": "К содержанию 95x21 | Тёмная тема 99x33 | 20 декабря 2025\n21 дек 138x36 | Все обращения → 104x18 | Демо-диспетчер (пользо 235x19"
+      "count": 14,
+      "detail": "К содержанию 95x21 | Светлая тема 103x33 | 20 декабря 2025\n21 дек 138x36 | Все обращения → 104x18 | Хронология → 71x36"
     },
     {
       "page": "incident",
       "viewport": "tablet",
       "kind": "headings",
-      "count": 7,
-      "detail": "H1: Обращение З-015 | H2: Разбита дверь подъезда | H2: История прохождения | H2: Контроль SLA | H2: Подтверждение завершения | H2: Участники | H2: Связанные представления"
+      "count": 10,
+      "detail": "H1: Обращение З-015 | H2: Следующий шаг по модели | H2: Историческая атрибуция на дату | H2: Длительности | H2: Разбита дверь подъезда | H2: История прохождения | H2: Контроль SLA | H2: Подтверждение завершения | H2: Участники | H2: Связанные представления"
     },
     {
       "page": "timeline",
       "viewport": "tablet",
       "kind": "tap-targets",
       "count": 156,
-      "detail": "К содержанию 95x21 | Тёмная тема 99x33 | Git-граф 72x31 | Диаграмма Ганта 125x31 | Обычная 77x31"
+      "detail": "К содержанию 95x21 | Светлая тема 103x33 | Git-граф 72x31 | Диаграмма Ганта 125x31 | Обычная 77x31"
     },
     {
       "page": "timeline",
@@ -427,15 +497,53 @@
       "page": "timeline",
       "viewport": "tablet",
       "kind": "headings",
-      "count": 3,
-      "detail": "H1: Хронология | H2: Как читать граф | H2: Связанные виды"
+      "count": 4,
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды"
+    },
+    {
+      "page": "timeline-graph",
+      "viewport": "tablet",
+      "kind": "tap-targets",
+      "count": 156,
+      "detail": "К содержанию 95x21 | Светлая тема 103x33 | Git-граф 72x31 | Диаграмма Ганта 125x31 | Обычная 77x31"
+    },
+    {
+      "page": "timeline-graph",
+      "viewport": "tablet",
+      "kind": "canvas-scroll",
+      "detail": "canvas 736/1438 (auto)"
+    },
+    {
+      "page": "timeline-graph",
+      "viewport": "tablet",
+      "kind": "chips-scroll",
+      "detail": "738/1471"
+    },
+    {
+      "page": "timeline-graph",
+      "viewport": "tablet",
+      "kind": "slider-a11y",
+      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
+    },
+    {
+      "page": "timeline-graph",
+      "viewport": "tablet",
+      "kind": "commit-a11y",
+      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0"
+    },
+    {
+      "page": "timeline-graph",
+      "viewport": "tablet",
+      "kind": "headings",
+      "count": 4,
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды"
     },
     {
       "page": "timeline-card",
       "viewport": "tablet",
       "kind": "tap-targets",
       "count": 158,
-      "detail": "К содержанию 95x21 | Тёмная тема 99x33 | Git-граф 72x31 | Диаграмма Ганта 125x31 | Обычная 77x31"
+      "detail": "К содержанию 95x21 | Светлая тема 103x33 | Git-граф 72x31 | Диаграмма Ганта 125x31 | Обычная 77x31"
     },
     {
       "page": "timeline-card",
@@ -471,15 +579,15 @@
       "page": "timeline-card",
       "viewport": "tablet",
       "kind": "headings",
-      "count": 3,
-      "detail": "H1: Хронология | H2: Как читать граф | H2: Связанные виды"
+      "count": 4,
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды"
     },
     {
       "page": "gantt",
       "viewport": "tablet",
       "kind": "tap-targets",
       "count": 77,
-      "detail": "К содержанию 95x21 | Тёмная тема 99x33 | Git-граф 72x31 | Диаграмма Ганта 125x31 | Обычная 77x31"
+      "detail": "К содержанию 95x21 | Светлая тема 103x33 | Git-граф 72x31 | Диаграмма Ганта 125x31 | Обычная 77x31"
     },
     {
       "page": "gantt",
@@ -497,15 +605,15 @@
       "page": "gantt",
       "viewport": "tablet",
       "kind": "headings",
-      "count": 3,
-      "detail": "H1: Хронология | H2: Принцип визуального отображения SLA | H2: Связанные виды"
+      "count": 4,
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Принцип визуального отображения SLA | H2: Связанные виды"
     },
     {
       "page": "chat",
       "viewport": "tablet",
       "kind": "tap-targets",
       "count": 6,
-      "detail": "К содержанию 95x21 | Тёмная тема 99x33 | ‹ Хронология 107x39 | ‹ Реплика назад 113x32 | Следующая реплика › 150x32"
+      "detail": "К содержанию 95x21 | Светлая тема 103x33 | ‹ Хронология 107x39 | ‹ Реплика назад 113x32 | Следующая реплика › 150x32"
     },
     {
       "page": "chat",
@@ -519,7 +627,7 @@
       "viewport": "tablet",
       "kind": "tap-targets",
       "count": 102,
-      "detail": "К содержанию 95x21 | Тёмная тема 99x33 | +4 ч 51x33 | Массовый шаг вперёд 157x33 | Сбросить (seed 42) 136x33"
+      "detail": "К содержанию 95x21 | Светлая тема 103x33 | +4 ч 51x33 | Массовый шаг вперёд 157x33 | Сбросить (seed 42) 136x33"
     },
     {
       "page": "model",
@@ -538,22 +646,22 @@
       "page": "dashboard",
       "viewport": "portrait",
       "kind": "tap-targets",
-      "count": 17,
-      "detail": "К содержанию 95x21 | ☰ 36x33 | Тёмная тема 99x33 | 20 декабря 2025\n21 дек 138x36 | 7 дней 62x32"
+      "count": 27,
+      "detail": "К содержанию 95x21 | ☰ 36x33 | Светлая тема 103x33 | 20 декабря 2025\n21 дек 138x36 | 7 дней 62x32"
     },
     {
       "page": "dashboard",
       "viewport": "portrait",
       "kind": "headings",
-      "count": 6,
-      "detail": "H1: Обзор | H2: Требуют внимания | H2: Последние события | H2: Распределение обращений | H2: Контроль сроков | H2: Динамика за период"
+      "count": 7,
+      "detail": "H1: Обзор | H2: Следующие действия | H2: Требуют внимания | H2: Последние события | H2: Распределение обращений | H2: Контроль сроков | H2: Динамика за период"
     },
     {
       "page": "incidents",
       "viewport": "portrait",
       "kind": "tap-targets",
-      "count": 39,
-      "detail": "К содержанию 95x21 | ☰ 36x33 | Тёмная тема 99x33 | Поиск обращений 270x36 | любой\nавария / экстрен 162x36"
+      "count": 42,
+      "detail": "К содержанию 95x21 | ☰ 36x33 | Светлая тема 103x33 | Поиск обращений 416x36 | все\nактивные\nтребуют в 197x36"
     },
     {
       "page": "incidents",
@@ -566,22 +674,22 @@
       "page": "incident",
       "viewport": "portrait",
       "kind": "tap-targets",
-      "count": 14,
-      "detail": "К содержанию 95x21 | ☰ 36x33 | Тёмная тема 99x33 | 20 декабря 2025\n21 дек 138x36 | Все обращения → 104x18"
+      "count": 15,
+      "detail": "К содержанию 95x21 | ☰ 36x33 | Светлая тема 103x33 | 20 декабря 2025\n21 дек 138x36 | Все обращения → 104x18"
     },
     {
       "page": "incident",
       "viewport": "portrait",
       "kind": "headings",
-      "count": 7,
-      "detail": "H1: Обращение З-015 | H2: Разбита дверь подъезда | H2: История прохождения | H2: Контроль SLA | H2: Подтверждение завершения | H2: Участники | H2: Связанные представления"
+      "count": 10,
+      "detail": "H1: Обращение З-015 | H2: Следующий шаг по модели | H2: Историческая атрибуция на дату | H2: Длительности | H2: Разбита дверь подъезда | H2: История прохождения | H2: Контроль SLA | H2: Подтверждение завершения | H2: Участники | H2: Связанные представления"
     },
     {
       "page": "timeline",
       "viewport": "portrait",
       "kind": "tap-targets",
       "count": 157,
-      "detail": "К содержанию 95x21 | ☰ 36x33 | Тёмная тема 99x33 | Git-граф 72x31 | Диаграмма Ганта 125x31"
+      "detail": "К содержанию 95x21 | ☰ 36x33 | Светлая тема 103x33 | Git-граф 72x31 | Диаграмма Ганта 125x31"
     },
     {
       "page": "timeline",
@@ -611,15 +719,53 @@
       "page": "timeline",
       "viewport": "portrait",
       "kind": "headings",
-      "count": 3,
-      "detail": "H1: Хронология | H2: Как читать граф | H2: Связанные виды"
+      "count": 4,
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды"
+    },
+    {
+      "page": "timeline-graph",
+      "viewport": "portrait",
+      "kind": "tap-targets",
+      "count": 157,
+      "detail": "К содержанию 95x21 | ☰ 36x33 | Светлая тема 103x33 | Git-граф 72x31 | Диаграмма Ганта 125x31"
+    },
+    {
+      "page": "timeline-graph",
+      "viewport": "portrait",
+      "kind": "canvas-scroll",
+      "detail": "canvas 738/1438 (auto)"
+    },
+    {
+      "page": "timeline-graph",
+      "viewport": "portrait",
+      "kind": "chips-scroll",
+      "detail": "740/1471"
+    },
+    {
+      "page": "timeline-graph",
+      "viewport": "portrait",
+      "kind": "slider-a11y",
+      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
+    },
+    {
+      "page": "timeline-graph",
+      "viewport": "portrait",
+      "kind": "commit-a11y",
+      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0"
+    },
+    {
+      "page": "timeline-graph",
+      "viewport": "portrait",
+      "kind": "headings",
+      "count": 4,
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды"
     },
     {
       "page": "timeline-card",
       "viewport": "portrait",
       "kind": "tap-targets",
       "count": 159,
-      "detail": "К содержанию 95x21 | ☰ 36x33 | Тёмная тема 99x33 | Git-граф 72x31 | Диаграмма Ганта 125x31"
+      "detail": "К содержанию 95x21 | ☰ 36x33 | Светлая тема 103x33 | Git-граф 72x31 | Диаграмма Ганта 125x31"
     },
     {
       "page": "timeline-card",
@@ -655,15 +801,15 @@
       "page": "timeline-card",
       "viewport": "portrait",
       "kind": "headings",
-      "count": 3,
-      "detail": "H1: Хронология | H2: Как читать граф | H2: Связанные виды"
+      "count": 4,
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды"
     },
     {
       "page": "gantt",
       "viewport": "portrait",
       "kind": "tap-targets",
       "count": 78,
-      "detail": "К содержанию 95x21 | ☰ 36x33 | Тёмная тема 99x33 | Git-граф 72x31 | Диаграмма Ганта 125x31"
+      "detail": "К содержанию 95x21 | ☰ 36x33 | Светлая тема 103x33 | Git-граф 72x31 | Диаграмма Ганта 125x31"
     },
     {
       "page": "gantt",
@@ -681,15 +827,15 @@
       "page": "gantt",
       "viewport": "portrait",
       "kind": "headings",
-      "count": 3,
-      "detail": "H1: Хронология | H2: Принцип визуального отображения SLA | H2: Связанные виды"
+      "count": 4,
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Принцип визуального отображения SLA | H2: Связанные виды"
     },
     {
       "page": "chat",
       "viewport": "portrait",
       "kind": "tap-targets",
       "count": 7,
-      "detail": "К содержанию 95x21 | ☰ 36x33 | Тёмная тема 99x33 | ‹ Хронология 107x39 | ‹ Реплика назад 113x32"
+      "detail": "К содержанию 95x21 | ☰ 36x33 | Светлая тема 103x33 | ‹ Хронология 107x39 | ‹ Реплика назад 113x32"
     },
     {
       "page": "chat",
@@ -703,7 +849,7 @@
       "viewport": "portrait",
       "kind": "tap-targets",
       "count": 103,
-      "detail": "К содержанию 95x21 | ☰ 36x33 | Тёмная тема 99x33 | +4 ч 51x33 | Массовый шаг вперёд 157x33"
+      "detail": "К содержанию 95x21 | ☰ 36x33 | Светлая тема 103x33 | +4 ч 51x33 | Массовый шаг вперёд 157x33"
     },
     {
       "page": "model",
@@ -722,22 +868,29 @@
       "page": "dashboard",
       "viewport": "mobile",
       "kind": "tap-targets",
-      "count": 15,
-      "detail": "К содержанию 95x21 | ☰ 36x33 | 20 декабря 2025\n21 дек 138x36 | 7 дней 62x32 | 30 дней 69x32"
+      "count": 20,
+      "detail": "К содержанию 95x21 | Все обращения → 104x18 | Хронология → 85x18 | Активные обращения 129x16 | Требуют внимания 112x16"
+    },
+    {
+      "page": "dashboard",
+      "viewport": "mobile",
+      "kind": "unlabeled",
+      "count": 8,
+      "detail": "A.panel-link | A.panel-link | A.panel-link | A.panel-link | A.panel-link"
     },
     {
       "page": "dashboard",
       "viewport": "mobile",
       "kind": "headings",
-      "count": 6,
-      "detail": "H1: Обзор | H2: Требуют внимания | H2: Последние события | H2: Распределение обращений | H2: Контроль сроков | H2: Динамика за период"
+      "count": 7,
+      "detail": "H1: Обзор | H2: Следующие действия | H2: Требуют внимания | H2: Последние события | H2: Распределение обращений | H2: Контроль сроков | H2: Динамика за период"
     },
     {
       "page": "incidents",
       "viewport": "mobile",
       "kind": "tap-targets",
-      "count": 38,
-      "detail": "К содержанию 95x21 | ☰ 36x33 | Поиск обращений 332x36 | любой\nавария / экстрен 162x36 | любой\nв срок\nна паузе\n 172x36"
+      "count": 2,
+      "detail": "К содержанию 95x21 | × 32x44"
     },
     {
       "page": "incidents",
@@ -750,34 +903,28 @@
       "page": "incident",
       "viewport": "mobile",
       "kind": "tap-targets",
-      "count": 13,
-      "detail": "К содержанию 95x21 | ☰ 36x33 | 20 декабря 2025\n21 дек 138x36 | Все обращения → 104x18 | Демо-диспетчер (пользо 235x19"
+      "count": 3,
+      "detail": "К содержанию 95x21 | Все обращения → 104x18 | Хронология → 71x36"
     },
     {
       "page": "incident",
       "viewport": "mobile",
       "kind": "headings",
-      "count": 7,
-      "detail": "H1: Обращение З-015 | H2: Разбита дверь подъезда | H2: История прохождения | H2: Контроль SLA | H2: Подтверждение завершения | H2: Участники | H2: Связанные представления"
+      "count": 10,
+      "detail": "H1: Обращение З-015 | H2: Следующий шаг по модели | H2: Историческая атрибуция на дату | H2: Длительности | H2: Разбита дверь подъезда | H2: История прохождения | H2: Контроль SLA | H2: Подтверждение завершения | H2: Участники | H2: Связанные представления"
     },
     {
       "page": "timeline",
       "viewport": "mobile",
       "kind": "tap-targets",
-      "count": 156,
-      "detail": "К содержанию 95x21 | ☰ 36x33 | Git-граф 72x31 | Диаграмма Ганта 125x31 | Обычная 77x31"
-    },
-    {
-      "page": "timeline",
-      "viewport": "mobile",
-      "kind": "canvas-scroll",
-      "detail": "canvas 360/1438 (auto)"
+      "count": 1,
+      "detail": "К содержанию 95x21"
     },
     {
       "page": "timeline",
       "viewport": "mobile",
       "kind": "chips-scroll",
-      "detail": "362/1471"
+      "detail": "366/1471"
     },
     {
       "page": "timeline",
@@ -795,27 +942,65 @@
       "page": "timeline",
       "viewport": "mobile",
       "kind": "headings",
-      "count": 3,
-      "detail": "H1: Хронология | H2: Как читать граф | H2: Связанные виды"
+      "count": 4,
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды"
+    },
+    {
+      "page": "timeline-graph",
+      "viewport": "mobile",
+      "kind": "tap-targets",
+      "count": 1,
+      "detail": "К содержанию 95x21"
+    },
+    {
+      "page": "timeline-graph",
+      "viewport": "mobile",
+      "kind": "canvas-scroll",
+      "detail": "canvas 364/1794 (auto)"
+    },
+    {
+      "page": "timeline-graph",
+      "viewport": "mobile",
+      "kind": "chips-scroll",
+      "detail": "366/1471"
+    },
+    {
+      "page": "timeline-graph",
+      "viewport": "mobile",
+      "kind": "slider-a11y",
+      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
+    },
+    {
+      "page": "timeline-graph",
+      "viewport": "mobile",
+      "kind": "commit-a11y",
+      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0"
+    },
+    {
+      "page": "timeline-graph",
+      "viewport": "mobile",
+      "kind": "headings",
+      "count": 4,
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды"
     },
     {
       "page": "timeline-card",
       "viewport": "mobile",
       "kind": "tap-targets",
-      "count": 158,
-      "detail": "К содержанию 95x21 | ☰ 36x33 | Git-граф 72x31 | Диаграмма Ганта 125x31 | Обычная 77x31"
+      "count": 2,
+      "detail": "К содержанию 95x21 | Открыть чат на эту дат 130x18"
     },
     {
       "page": "timeline-card",
       "viewport": "mobile",
       "kind": "canvas-scroll",
-      "detail": "canvas 360/1438 (auto)"
+      "detail": "canvas 364/1794 (auto)"
     },
     {
       "page": "timeline-card",
       "viewport": "mobile",
       "kind": "chips-scroll",
-      "detail": "362/1471"
+      "detail": "366/1471"
     },
     {
       "page": "timeline-card",
@@ -833,27 +1018,27 @@
       "page": "timeline-card",
       "viewport": "mobile",
       "kind": "card-position",
-      "detail": "top=298px, в окне: true"
+      "detail": "top=240px, в окне: true"
     },
     {
       "page": "timeline-card",
       "viewport": "mobile",
       "kind": "headings",
-      "count": 3,
-      "detail": "H1: Хронология | H2: Как читать граф | H2: Связанные виды"
+      "count": 4,
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды"
     },
     {
       "page": "gantt",
       "viewport": "mobile",
       "kind": "tap-targets",
-      "count": 77,
-      "detail": "К содержанию 95x21 | ☰ 36x33 | Git-граф 72x31 | Диаграмма Ганта 125x31 | Обычная 77x31"
+      "count": 1,
+      "detail": "К содержанию 95x21"
     },
     {
       "page": "gantt",
       "viewport": "mobile",
       "kind": "chips-scroll",
-      "detail": "362/1471"
+      "detail": "366/1471"
     },
     {
       "page": "gantt",
@@ -865,15 +1050,15 @@
       "page": "gantt",
       "viewport": "mobile",
       "kind": "headings",
-      "count": 3,
-      "detail": "H1: Хронология | H2: Принцип визуального отображения SLA | H2: Связанные виды"
+      "count": 4,
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Принцип визуального отображения SLA | H2: Связанные виды"
     },
     {
       "page": "chat",
       "viewport": "mobile",
       "kind": "tap-targets",
-      "count": 6,
-      "detail": "К содержанию 95x21 | ☰ 36x33 | ‹ Хронология 107x39 | ‹ Реплика назад 113x32 | Следующая реплика › 150x32"
+      "count": 1,
+      "detail": "К содержанию 95x21"
     },
     {
       "page": "chat",
@@ -886,8 +1071,8 @@
       "page": "model",
       "viewport": "mobile",
       "kind": "tap-targets",
-      "count": 102,
-      "detail": "К содержанию 95x21 | ☰ 36x33 | +4 ч 51x33 | Массовый шаг вперёд 157x33 | Сбросить (seed 42) 136x33"
+      "count": 61,
+      "detail": "К содержанию 95x21 | ‹ 28x44 | › 28x44 | ‹ 28x44 | › 28x44"
     },
     {
       "page": "model",
@@ -908,6 +1093,7 @@
     "docs/screenshots/audit/wide-incidents.png",
     "docs/screenshots/audit/wide-incident.png",
     "docs/screenshots/audit/wide-timeline.png",
+    "docs/screenshots/audit/wide-timeline-graph.png",
     "docs/screenshots/audit/wide-timeline-card.png",
     "docs/screenshots/audit/wide-gantt.png",
     "docs/screenshots/audit/wide-chat.png",
@@ -916,6 +1102,7 @@
     "docs/screenshots/audit/desktop-incidents.png",
     "docs/screenshots/audit/desktop-incident.png",
     "docs/screenshots/audit/desktop-timeline.png",
+    "docs/screenshots/audit/desktop-timeline-graph.png",
     "docs/screenshots/audit/desktop-timeline-card.png",
     "docs/screenshots/audit/desktop-gantt.png",
     "docs/screenshots/audit/desktop-chat.png",
@@ -924,6 +1111,7 @@
     "docs/screenshots/audit/tablet-incidents.png",
     "docs/screenshots/audit/tablet-incident.png",
     "docs/screenshots/audit/tablet-timeline.png",
+    "docs/screenshots/audit/tablet-timeline-graph.png",
     "docs/screenshots/audit/tablet-timeline-card.png",
     "docs/screenshots/audit/tablet-gantt.png",
     "docs/screenshots/audit/tablet-chat.png",
@@ -932,6 +1120,7 @@
     "docs/screenshots/audit/portrait-incidents.png",
     "docs/screenshots/audit/portrait-incident.png",
     "docs/screenshots/audit/portrait-timeline.png",
+    "docs/screenshots/audit/portrait-timeline-graph.png",
     "docs/screenshots/audit/portrait-timeline-card.png",
     "docs/screenshots/audit/portrait-gantt.png",
     "docs/screenshots/audit/portrait-chat.png",
@@ -940,6 +1129,7 @@
     "docs/screenshots/audit/mobile-incidents.png",
     "docs/screenshots/audit/mobile-incident.png",
     "docs/screenshots/audit/mobile-timeline.png",
+    "docs/screenshots/audit/mobile-timeline-graph.png",
     "docs/screenshots/audit/mobile-timeline-card.png",
     "docs/screenshots/audit/mobile-gantt.png",
     "docs/screenshots/audit/mobile-chat.png",

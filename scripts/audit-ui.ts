@@ -149,6 +149,8 @@ const run = async (): Promise<void> => {
     await go("#incidents?at=2026-01-02", "incidents", 600);
     await go("#incident/" + encodeURIComponent("З-015") + "?at=2026-01-02", "incident", 600);
     await go("#timeline?at=2026-01-02", "timeline", 900);
+    // WP-3: на мобильном по умолчанию список событий, граф — по view=git; карточку узла проверяем на графе.
+    await go("#timeline?at=2026-01-02&view=git", "timeline-graph", 900);
     const commit = page.locator('[data-commit][data-incident="З-015"][data-node="U6"]');
     if ((await commit.count()) > 0) {
       await commit.click();
@@ -161,7 +163,7 @@ const run = async (): Promise<void> => {
     await go("#timeline?at=2026-01-02&view=gantt", "gantt");
     await go("#chat/З-015?at=2026-01-02", "chat", 600);
     await go("#model", "model", 600);
-    await page.goto(base + "#timeline?at=2026-01-02", { waitUntil: "domcontentloaded" });
+    await page.goto(base + "#timeline?at=2026-01-02&view=git", { waitUntil: "domcontentloaded" });
     await page.waitForTimeout(800);
     await page.locator("[data-commit]").first().focus();
     await page.keyboard.press("Enter");
