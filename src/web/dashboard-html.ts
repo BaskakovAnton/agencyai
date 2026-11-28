@@ -6,6 +6,7 @@ import { historicalIndicator } from "./historical.ts";
 import { periodEndingAt } from "./periods-reexport.ts";
 import { hrefIncident, hrefIncidents, hrefTimeline } from "./router.ts";
 import { renderActionQueue } from "./dashboard-queue.ts";
+import { renderSlaControl } from "./dashboard-sla.ts";
 import { renderAttention } from "./dashboard-attention.ts";
 import type { Overview } from "./overview.ts";
 
@@ -77,23 +78,6 @@ const distributionRows = (overview: Overview): string =>
         .join("") +
       "</div>");
 
-const slaRows = (overview: Overview): string =>
-  overview.sla
-    .map(
-      (row) =>
-        '<div class="sla-row"><div class="sla-row-head"><span class="muted">' + row.title + "</span><b>" + row.share +
-        '%</b></div><div class="progress" role="img" aria-label="' + row.title + ": " + row.share + '%"><span class="progress-' +
-        row.id + '" style="width:' + row.share + '%"></span></div></div>',
-    )
-    .join("") +
-  (overview.org === null
-    ? ""
-    // Счётчик = число строк view=review на ту же дату; значение ведёт в очередь.
-    : '<div class="sla-row-head section-gap"><span class="muted">Ждут подтверждения</span>' +
-      '<a class="panel-link" data-waiting-review href="' + registryHref(overview, { view: "review" }) + '">' +
-      overview.org.waitingForReview + "</a></div>") +
-  '<p class="readonly">Формулы: «активные» — незавершённые заявки среза, «требуют внимания» — просроченный SLA или срочная незавершённая, «в срок» — доля без просрочки и паузы. Считаются только из модели.</p>';
-
 /** Экран «Обзор» по композиции overview.html. */
 export const renderDashboard = (input: DashboardInput): string => {
   const { overview } = input;
@@ -157,7 +141,7 @@ export const renderDashboard = (input: DashboardInput): string => {
     renderPanel({ title: "Распределение обращений", subtitle: "По приоритетам", body: distributionRows(overview) }) +
     "</div>" +
     '<div class="section-gap">' +
-    renderPanel({ title: "Контроль сроков", subtitle: "SLA по открытым обращениям", body: slaRows(overview) }) +
+    renderPanel({ title: "Контроль сроков", subtitle: "SLA по открытым обращениям", body: renderSlaControl(overview, registryHref(overview, { view: "review" })) }) +
     "</div>" +
     '<div class="section-gap">' +
     renderPeriodPanel(

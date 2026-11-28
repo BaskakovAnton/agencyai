@@ -101,3 +101,15 @@ test("пустой поток дней даёт состояние «недос�
   expect(panel).toContain("Недостаточно данных для динамики");
   expect(panel).not.toContain("data-dynamics-row");
 });
+
+test("контроль сроков показан кольцом фаз SLA с текстовой легендой", () => {
+  expect(html).toContain("data-sla-ring");
+  expect(html).toContain("Фазы SLA");
+  expect(html).toContain("data-sla-legend");
+  for (const title of ["В срок", "Пауза", "Просрочено", "Нет SLA"]) expect(html).toContain(title);
+  // Старые полосы прогресса ушли вместе со строкой.
+  expect(html).not.toContain('class="progress"');
+  expect(html).not.toContain("progress-overdue");
+  // Счётчики и доли остаются текстом, а не только цветом.
+  expect(html).toMatch(/data-sla-count="overdue">14</);
+});

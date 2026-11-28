@@ -53,3 +53,26 @@ test.describe("Обзор", () => {
     await expect(page.locator("[data-period-mode]")).toContainText("События за");
   });
 });
+
+test.describe("Кольцо фаз SLA", () => {
+  test("на обзоре вместо полос — кольцо с легендой", async ({ page }) => {
+    await page.goto("/#dashboard?at=2026-01-02");
+    const ring = page.locator("[data-sla-ring]");
+    await expect(ring).toBeVisible();
+    await expect(ring).toHaveAttribute("aria-label", /Фазы SLA/);
+    // Числа и доли остаются текстом: цвет — не единственный канал.
+    await expect(page.locator('[data-sla-count="overdue"]')).toHaveText("14");
+    await expect(page.locator('[data-sla-seg="ok"] .ring-legend-share')).toHaveText("18%");
+    // Старых полос больше нет.
+    expect(await page.locator(".progress").count()).toBe(0);
+  });
+
+  test("кольцо помещается на мобильном экране", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/#dashboard?at=2026-01-02");
+    const box = await page.locator("[data-sla-ring]").boundingBox();
+    expect(box).not.toBeNull();
+    expect(Math.round(box!.x + box!.width)).toBeLessThanOrEqual(390);
+    await expect(page.locator("[data-sla-legend]")).toBeVisible();
+  });
+});

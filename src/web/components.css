@@ -86,11 +86,6 @@ ui-chat-message, ui-process-node { display: block; }
 .sla-row { margin-bottom: 14px; }
 .sla-row-head { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 6px; font-size: 12px; }
 .sla-row-head .muted { color: var(--color-text-muted); }
-.progress { height: 8px; border-radius: var(--radius-pill); background: var(--color-neutral-bg); overflow: hidden; }
-.progress span { display: block; height: 100%; background: var(--color-success); }
-.progress-paused { background: var(--color-warning); }
-.progress-overdue { background: var(--color-danger); }
-.progress-none { background: var(--color-text-muted); }
 .readonly { margin: 12px 0 0; padding: 10px 12px; border-radius: var(--radius-sm); background: var(--color-primary-soft); color: var(--color-primary-strong); font-size: 12px; }
 @media (max-width: 1180px) {
   .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }

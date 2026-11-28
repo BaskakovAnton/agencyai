@@ -11,6 +11,13 @@ test("в CSS нет правил для удалённых классов рее
   }
 });
 
+test("в CSS нет полос прогресса, заменённых кольцом SLA", async () => {
+  for (const file of cssFiles) {
+    const css = await readFile("src/web/" + file, "utf8");
+    expect(css.match(/\.progress(-head|-paused|-overdue|-none)?\b/g) ?? []).toEqual([]);
+  }
+});
+
 test("бейджи и пустые состояния не собираются вручную на экранах", async () => {
   for (const file of tsFiles.filter((name) => name !== "components.ts")) {
     const source = await readFile("src/web/" + file, "utf8");
