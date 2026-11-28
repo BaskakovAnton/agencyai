@@ -5,7 +5,7 @@ import { renderShell } from "../src/web/shell.ts";
 import { renderBadge, renderEmptyState, renderKpi, renderPanel, renderReadOnlyNotice, renderSlaBadge } from "../src/web/components.ts";
 
 const read = (p: string) => readFile(p, "utf8");
-const [tokens, components, shell, style, screens, mobile, matrix, index] = await Promise.all([
+const [tokens, components, shell, style, screens, mobile, matrix, appeal, index] = await Promise.all([
   read("src/web/tokens.css"),
   read("src/web/components.css"),
   read("src/web/shell.css"),
@@ -13,9 +13,10 @@ const [tokens, components, shell, style, screens, mobile, matrix, index] = await
   read("src/web/screens.css"),
   read("src/web/mobile.css"),
   read("src/web/matrix.css"),
+  read("src/web/appeal.css"),
   read("src/web/index.html"),
 ]);
-const all = tokens + components + shell + style + screens + mobile + matrix;
+const all = tokens + components + shell + style + screens + mobile + matrix + appeal;
 const compact = tokens.replace(/\s+/g, "");
 
 test("токены соответствуют утверждённому reference.css", () => {
@@ -56,7 +57,7 @@ test("период «весь период модели» доступен и с
 
 test("нет литеральных цветов вне tokens.css (WP-9)", () => {
   // Токены живут только в tokens.css; остальные стили пользуются переменными.
-  const noTokens = components + shell + style + screens + mobile + matrix;
+  const noTokens = components + shell + style + screens + mobile + matrix + appeal;
   const literals = (noTokens.match(/#[0-9a-fA-F]{3,8}\b/g) ?? []).filter(
     (value) => value.length === 4 || value.length === 7 || value.length === 9,
   );

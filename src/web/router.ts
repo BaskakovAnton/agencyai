@@ -9,9 +9,10 @@ import { mountIncident } from "./incident-view.ts";
 import { mountIncidents } from "./incidents-view.ts";
 import { mountModel } from "./model-view.ts";
 import { bindShell, initTheme, renderShell } from "./shell.ts";
+import { mountAppeal } from "./appeal-view.ts";
 import { mountTimeline } from "./timeline-view.ts";
 
-export type RouteName = "dashboard" | "incidents" | "incident" | "timeline" | "chat" | "model";
+export type RouteName = "dashboard" | "incidents" | "incident" | "timeline" | "chat" | "model" | "appeal";
 export type ViewMode = "gantt";
 
 export interface Route {
@@ -40,6 +41,7 @@ export const parseRoute = (hash: string): Route => {
   if (path.startsWith("incident/")) {
     return { name: "incident", incidentId: decodeURIComponent(path.slice("incident/".length)), at, view, period };
   }
+  if (path === "appeal") return { name: "appeal", incidentId: "", at, view, period };
   if (path === "incidents") return { name: "incidents", incidentId: "", at, view, period };
   if (path === "model") return { name: "model", incidentId: "", at, view, period };
   return { name: "dashboard", incidentId: "", at, view, period };
@@ -57,6 +59,9 @@ export const hrefIncident = (id: string, at: string): string =>
   "#incident/" + encodeURIComponent(id) + "?at=" + encodeURIComponent(at);
 export const hrefTimeline = (at: string, view: ViewMode = "gantt"): string =>
   "#timeline?at=" + encodeURIComponent(at) + "&view=" + view;
+export const hrefAppeal = (stream?: "official" | "operational"): string =>
+  stream === undefined ? "#appeal" : "#appeal?stream=" + stream;
+
 export const hrefChat = (incidentId: string, at: string): string =>
   "#chat/" + encodeURIComponent(incidentId) + "?at=" + encodeURIComponent(at);
 
@@ -66,6 +71,7 @@ const pageMeta = (route: Route): { readonly title: string; readonly subtitle: st
   if (route.name === "incident") return { title: "Обращение " + (route.incidentId === "" ? "—" : route.incidentId), subtitle: "Контекст заявки, SLA, участники и подтверждение завершения" };
   if (route.name === "timeline") return { title: "Хронология", subtitle: "Git-граф и диаграмма Ганта на выбранную дату" };
   if (route.name === "chat") return { title: "Переписка", subtitle: "Сценарный просмотр сообщений, только чтение" };
+  if (route.name === "appeal") return { title: "Обращение", subtitle: "Два потока: официальное обращение по 59-ФЗ и оперативное сообщение" };
   return { title: "Модель процесса", subtitle: "30 узлов, роли, права и SLA" };
 };
 
@@ -85,7 +91,8 @@ export const mountRouter = (graph: Graph, story: Story, org?: OrgRepository): vo
     else if (route.name === "chat") mountChat(view, graph, story, route);
     else if (route.name === "model") mountModel(view, graph);
     else if (route.name === "dashboard") mountDashboard(view, graph, story, route, org); // период берётся из route.period
-    else if (route.name === "incidents") mountIncidents(view, graph, story, route, org);
+    else if (route.name === "appeal") mountAppeal(view);
+  else if (route.name === "incidents") mountIncidents(view, graph, story, route, org);
     else mountIncident(view, graph, story, route, { org });
   };
   window.addEventListener("hashchange", apply);

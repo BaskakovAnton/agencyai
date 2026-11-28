@@ -79,6 +79,15 @@
       "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
+      "page": "appeal-form",
+      "viewport": "wide",
+      "kind": "headings",
+      "severity": "metric",
+      "count": 2,
+      "detail": "H1: Обращение | H1: Официальное обращение",
+      "note": "снимок иерархии заголовков экрана для сверки"
+    },
+    {
       "page": "chat",
       "viewport": "wide",
       "kind": "headings",
@@ -195,6 +204,15 @@
       "severity": "metric",
       "count": 4,
       "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Принцип визуального отображения SLA | H2: Связанные виды",
+      "note": "снимок иерархии заголовков экрана для сверки"
+    },
+    {
+      "page": "appeal-form",
+      "viewport": "desktop",
+      "kind": "headings",
+      "severity": "metric",
+      "count": 2,
+      "detail": "H1: Обращение | H1: Официальное обращение",
       "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
@@ -317,6 +335,15 @@
       "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
+      "page": "appeal-form",
+      "viewport": "tablet",
+      "kind": "headings",
+      "severity": "metric",
+      "count": 2,
+      "detail": "H1: Обращение | H1: Официальное обращение",
+      "note": "снимок иерархии заголовков экрана для сверки"
+    },
+    {
       "page": "chat",
       "viewport": "tablet",
       "kind": "headings",
@@ -436,6 +463,15 @@
       "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
+      "page": "appeal-form",
+      "viewport": "portrait",
+      "kind": "headings",
+      "severity": "metric",
+      "count": 2,
+      "detail": "H1: Обращение | H1: Официальное обращение",
+      "note": "снимок иерархии заголовков экрана для сверки"
+    },
+    {
       "page": "chat",
       "viewport": "portrait",
       "kind": "headings",
@@ -552,6 +588,15 @@
       "severity": "metric",
       "count": 4,
       "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Принцип визуального отображения SLA | H2: Связанные виды",
+      "note": "снимок иерархии заголовков экрана для сверки"
+    },
+    {
+      "page": "appeal-form",
+      "viewport": "mobile",
+      "kind": "headings",
+      "severity": "metric",
+      "count": 2,
+      "detail": "H1: Обращение | H1: Официальное обращение",
       "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
@@ -587,6 +632,7 @@
     "docs/screenshots/audit/wide-incident.png",
     "docs/screenshots/audit/wide-timeline.png",
     "docs/screenshots/audit/wide-gantt.png",
+    "docs/screenshots/audit/wide-appeal-form.png",
     "docs/screenshots/audit/wide-chat.png",
     "docs/screenshots/audit/wide-model.png",
     "docs/screenshots/audit/desktop-dashboard.png",
@@ -594,6 +640,7 @@
     "docs/screenshots/audit/desktop-incident.png",
     "docs/screenshots/audit/desktop-timeline.png",
     "docs/screenshots/audit/desktop-gantt.png",
+    "docs/screenshots/audit/desktop-appeal-form.png",
     "docs/screenshots/audit/desktop-chat.png",
     "docs/screenshots/audit/desktop-model.png",
     "docs/screenshots/audit/tablet-dashboard.png",
@@ -601,6 +648,7 @@
     "docs/screenshots/audit/tablet-incident.png",
     "docs/screenshots/audit/tablet-timeline.png",
     "docs/screenshots/audit/tablet-gantt.png",
+    "docs/screenshots/audit/tablet-appeal-form.png",
     "docs/screenshots/audit/tablet-chat.png",
     "docs/screenshots/audit/tablet-model.png",
     "docs/screenshots/audit/portrait-dashboard.png",
@@ -608,6 +656,7 @@
     "docs/screenshots/audit/portrait-incident.png",
     "docs/screenshots/audit/portrait-timeline.png",
     "docs/screenshots/audit/portrait-gantt.png",
+    "docs/screenshots/audit/portrait-appeal-form.png",
     "docs/screenshots/audit/portrait-chat.png",
     "docs/screenshots/audit/portrait-model.png",
     "docs/screenshots/audit/mobile-dashboard.png",
@@ -615,6 +664,7 @@
     "docs/screenshots/audit/mobile-incident.png",
     "docs/screenshots/audit/mobile-timeline.png",
     "docs/screenshots/audit/mobile-gantt.png",
+    "docs/screenshots/audit/mobile-appeal-form.png",
     "docs/screenshots/audit/mobile-chat.png",
     "docs/screenshots/audit/mobile-model.png"
   ]

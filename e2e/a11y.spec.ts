@@ -9,6 +9,7 @@ const routes = [
   "#timeline?at=2026-01-02&view=gantt",
   "#chat/" + encodeURIComponent("З-015") + "?at=2026-01-02",
   "#model",
+  "#appeal",
 ];
 
 interface Violation { readonly id: string; readonly impact: string | null; readonly nodes: number }
@@ -111,7 +112,7 @@ for (const width of [390, 1440]) {
   });
 }
 
-for (const hash of ["#dashboard?at=2026-01-02", "#incidents?at=2026-01-02", "#incident/" + encodeURIComponent("З-015") + "?at=2026-01-02", "#timeline?at=2026-01-02&view=gantt", "#chat/" + encodeURIComponent("З-015") + "?at=2026-01-02", "#model"]) {
+for (const hash of ["#dashboard?at=2026-01-02", "#incidents?at=2026-01-02", "#incident/" + encodeURIComponent("З-015") + "?at=2026-01-02", "#timeline?at=2026-01-02&view=gantt", "#chat/" + encodeURIComponent("З-015") + "?at=2026-01-02", "#model", "#appeal", "#appeal?stream=official", "#appeal?stream=operational"]) {
   test.describe("Светлая тема 1440px", () => {
     test.use({ viewport: { width: 1440, height: 900 } });
     test("axe: " + hash, async ({ page }) => {

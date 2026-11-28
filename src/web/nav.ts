@@ -14,6 +14,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { id: "timeline", label: "Хронология", href: "#timeline" },
   { id: "chat", label: "Переписка", href: "#chat/" + encodeURIComponent(HERO_INCIDENT_ID) },
   { id: "model", label: "Модель процесса", href: "#model" },
+  { id: "appeal", label: "Форма обращения", href: "#appeal" },
 ];
 
 /** Карточка обращения подсвечивает раздел «Обращения». */

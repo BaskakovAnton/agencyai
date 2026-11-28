@@ -40,6 +40,7 @@ const shot = async (hash: string, name: string, wait: string): Promise<void> => 
 await shot("#timeline?at=2026-01-02&view=gantt", "timeline-gantt.png", "[data-gantt]");
 await shot("#chat/З-015?at=2026-01-02", "chat-2-january.png", "[data-phone]");
 await shot("#chat/З-015?at=2026-01-05", "chat-5-january.png", "[data-phone]");
+await shot("#appeal", "appeal.png", "[data-appeal-chooser]");
 await shot("#model", "model.png", '[data-action="select"]');
 
 await browser.close();

@@ -22,14 +22,15 @@ test("оболочка: сайдбар, топбар, контент и пере
   expect((html.match(/data-nav=/g) ?? []).length).toBe(NAV_ITEMS.length);
 });
 
-test("навигация: пять разделов и активный пункт", () => {
-  expect(NAV_ITEMS.length).toBe(5);
+test("навигация: шесть разделов и активный пункт", () => {
+  expect(NAV_ITEMS.length).toBe(6);
   const html = renderNav(timeline);
   expect(html).toContain('href="#dashboard"');
   expect(html).toContain('href="#incidents"');
   expect(html).toContain('href="#timeline"');
   expect(html).toContain('href="#chat/');
   expect(html).toContain('href="#model"');
+  expect(html).toContain('href="#appeal"');
   expect(html).toContain('data-nav="timeline"');
   expect(html).toContain('aria-current="page"');
 });

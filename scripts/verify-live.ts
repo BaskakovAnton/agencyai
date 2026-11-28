@@ -21,9 +21,9 @@ const waitFor = async (hash: string, selector: string, timeoutMs = 240_000): Pro
   return false;
 };
 
-// Новый бандл узнаём по шкале времени: старый граф тоже есть, поэтому ждём именно новый маркер.
-const ready = await waitFor("#timeline", "[data-ruler]");
-if (!ready) problems.push("новый бандл (шкала времени) не появился на Pages за отведённое время");
+// Новый бандл узнаём по экрану формы обращения: он появился последним, значит публикация дошла.
+const ready = await waitFor("#appeal", "[data-appeal-chooser]");
+if (!ready) problems.push("новый бандл (форма обращения) не появился на Pages за отведённое время");
 
 if (ready) {
   const allBars = await page.locator("[data-bar]").count();
@@ -62,6 +62,16 @@ if (ready) {
   } else {
     problems.push("в диаграмме нет строки З-015");
   }
+
+  const streams = await page.locator("[data-appeal-stream]").count();
+  if (streams !== 2) problems.push("в форме обращения не два потока: " + streams);
+  await page.goto(base + "?v=" + Date.now() + "#appeal?stream=operational");
+  await page.waitForSelector("[data-appeal-form]");
+  const operational = await page.locator("[data-appeal-form]").innerText();
+  if (!operational.includes("не является официальным обращением")) problems.push("оперативный поток не предупреждает о статусе сообщения");
+  await page.goto(base + "?v=" + Date.now() + "#appeal?stream=official");
+  await page.waitForSelector("[data-appeal-form]");
+  if ((await page.locator('[name="identified"]').count()) !== 1) problems.push("в официальном потоке нет подтверждения идентификации");
 
   await page.goto(base + "?v=" + Date.now() + "#chat/З-015?at=2026-01-02");
   await page.waitForSelector("[data-phone]");

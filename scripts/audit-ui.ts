@@ -127,6 +127,7 @@ const run = async (): Promise<void> => {
     await go("#incident/" + encodeURIComponent("З-015") + "?at=2026-01-02", "incident", 600);
     await go("#timeline?at=2026-01-02", "timeline", 900);
     await go("#timeline?at=2026-01-02&view=gantt", "gantt");
+    await go("#appeal?stream=official", "appeal-form", 600);
     await go("#chat/З-015?at=2026-01-02", "chat", 600);
     await go("#model", "model", 600);
     await page.goto(base + "#timeline?at=2026-01-02&view=gantt", { waitUntil: "domcontentloaded" });
