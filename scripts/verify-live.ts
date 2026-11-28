@@ -26,6 +26,8 @@ const ready = await waitFor("#appeal", "[data-appeal-chooser]");
 if (!ready) problems.push("новый бандл (форма обращения) не появился на Pages за отведённое время");
 
 if (ready) {
+  await page.goto(base + "?v=" + Date.now() + "#timeline?at=2026-01-02");
+  await page.waitForSelector("[data-gantt]");
   const allBars = await page.locator("[data-bar]").count();
   await page.locator('[data-action="jump"][data-day="2026-01-02"]').click();
   await page.waitForTimeout(400);
@@ -63,6 +65,8 @@ if (ready) {
     problems.push("в диаграмме нет строки З-015");
   }
 
+  await page.goto(base + "?v=" + Date.now() + "#appeal");
+  await page.waitForSelector("[data-appeal-chooser]");
   const streams = await page.locator("[data-appeal-stream]").count();
   if (streams !== 2) problems.push("в форме обращения не два потока: " + streams);
   await page.goto(base + "?v=" + Date.now() + "#appeal?stream=operational");
