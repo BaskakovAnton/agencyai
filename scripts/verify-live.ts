@@ -53,6 +53,7 @@ if (ready) {
 
   await page.goto(base + "?v=" + Date.now() + "#timeline?at=2026-01-02&view=gantt");
   await page.waitForSelector("[data-gantt]");
+  if ((await page.locator("[data-gantt]").count()) === 0) problems.push("диаграмма Ганта не отрисовалась");
   const row = page.locator('[data-row="З-015"]');
   if ((await row.count()) > 0) {
     await row.click();
@@ -60,8 +61,6 @@ if (ready) {
     if (!decodeURIComponent(page.url()).includes("#chat/З-015")) problems.push("клик по строке диаграммы не открыл переписку: " + page.url());
   } else {
     problems.push("в диаграмме нет строки З-015");
-  }
-  if ((await page.locator("[data-gantt]").count()) === 0) problems.push("диаграмма Ганта не отрисовалась");
   }
 
   await page.goto(base + "?v=" + Date.now() + "#chat/З-015?at=2026-01-02");
