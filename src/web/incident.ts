@@ -11,6 +11,7 @@ import type { OrgQuery } from "../core/org/repository.ts";
 import { availableOrgActions, incidentOrgSummary, type IncidentOrgSummary, type OrgActions } from "./org-integration.ts";
 import { buildNext, buildParticipants, buildSteps } from "./incident-steps.ts";
 import { durationsOf, type DurationReport } from "../core/analytics/durations.ts";
+import { departmentOn, type Attribution } from "../core/analytics/attribution.ts";
 
 export type { NextOption, NextSteps, Participant, StepRow } from "./incident-steps.ts";
 import type { NextOption, Participant, StepRow } from "./incident-steps.ts";
@@ -55,6 +56,8 @@ export interface IncidentView {
   readonly orgSummary: IncidentOrgSummary | null;
   /** Два потока времени: этапы процесса и жизненный цикл подтверждения. */
   readonly durations: DurationReport;
+  /** Историческая атрибуция подразделения на дату (блок F). */
+  readonly attribution: Attribution;
   /** Доступные операции подтверждения для выбранного пользователя. */
   readonly actions: OrgActions | null;
   /** Текущий пользователь действий и список демонстрационных пользователей. */
@@ -151,6 +154,7 @@ export const buildIncidentView = (
     participants: buildParticipants(role, incident, beforeCreation, day),
     orgSummary,
     durations: durationsOf({ history: incident.history, lifecycle: org?.lifecycleOf(incident.id) }),
+    attribution: departmentOn(org?.assignmentsOf(incident.id) ?? [], incident.id, day),
     actions: org === undefined ? null : availableOrgActions(org, incident.id, actorUserId),
     actorUserId,
     actorOptions: org === undefined ? [] : org.directory.users.map((user) => ({ id: user.id, label: user.displayName })),
