@@ -10,6 +10,7 @@ import { hrefChat, hrefTimeline, type Route } from "./router.ts";
 import {
   renderCanvas,
   renderChips,
+  renderEventList,
   renderControls,
   renderStats,
   renderTimeRuler,
@@ -41,6 +42,7 @@ export const mountTimeline = (root: HTMLElement, graph: Graph, story: Story, rou
       dayIndex: days.indexOf(state.day),
       view: state.view,
       density: state.density,
+      graphMode: state.graphMode,
       filter: activeFilter(state),
       git,
       gantt: buildGantt(graph, story.incidents, state.day),
@@ -58,6 +60,7 @@ export const mountTimeline = (root: HTMLElement, graph: Graph, story: Story, rou
       ["[data-chips]", renderChips(page)],
       ["[data-ruler]", renderTimeRuler(page)],
       ["[data-canvas]", renderCanvas(page)],
+      ["[data-event-list]", renderEventList(page)],
       ["[data-inline-chat]", page.chat],
       ["[data-node-card-slot]", '<div class="node-card-slot" data-node-card-slot>' + (page.card ?? "") + "</div>"],
     ];
@@ -66,13 +69,14 @@ export const mountTimeline = (root: HTMLElement, graph: Graph, story: Story, rou
       if (element) element.outerHTML = html;
     }
     root.querySelector(".timeline")?.classList.toggle("density-compact", state.density === "compact");
+    root.querySelector("[data-timeline]")?.setAttribute("data-graph-mode", String(state.graphMode));
     if (focusCard) root.querySelector<HTMLElement>("[data-node-card]")?.focus();
   };
 
   const paint = (): void => {
     hideTooltip();
     root.innerHTML =
-      '<div class="timeline' + (state.density === "compact" ? " density-compact" : "") + '" data-timeline>' +
+      '<div class="timeline' + (state.density === "compact" ? " density-compact" : "") + '" data-timeline data-graph-mode="' + String(state.graphMode) + '">' +
       renderTimelinePage(model()) + "</div>";
     const slider = root.querySelector("[data-slider]") as HTMLInputElement | null;
     slider?.addEventListener("input", () => jumpTo(days[Number(slider.value)] ?? state.day));

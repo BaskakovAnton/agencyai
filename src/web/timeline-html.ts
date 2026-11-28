@@ -1,9 +1,10 @@
 import type { GitModel } from "../core/gitgraph.ts";
 import type { GanttModel } from "../core/gantt.ts";
-import { SLA_LEGEND_TITLES, SLA_PHASES } from "../core/sla-at.ts";
+import { SLA_LEGEND_TITLES, SLA_PHASE_TITLES, SLA_PHASES } from "../core/sla-at.ts";
 import { pluralize } from "../core/text.ts";
 import { formatDay } from "../core/timeline.ts";
 import { HERO_INCIDENT_ID } from "../data/hero.ts";
+import { ROLE_NAMES } from "../data/roles.ts";
 import { renderPanel } from "./components.ts";
 import { renderGanttGrid } from "./gantt-grid.ts";
 import { renderGitSvg } from "./git-svg.ts";
@@ -24,6 +25,8 @@ export interface TimelinePageInput {
   readonly card?: string;
   /** Плотность отображения графа и Ганта. */
   readonly density?: "normal" | "compact";
+  /** Мобильный: показывать графический режим вместо списка событий. */
+  readonly graphMode?: boolean;
 }
 
 /** На мобильном граф рисуется с шагом ≥ 44 px, чтобы зона попадания коммита не перекрывала соседей. */
@@ -67,8 +70,29 @@ export const renderCanvas = (input: TimelinePageInput): string =>
   (input.view === "gantt" ? renderGanttGrid(input.gantt, input.filter) : renderGitSvg(input.git, input.filter, gitOptions())) +
   "</div></div>";
 
+export const renderEventList = (input: TimelinePageInput): string => {
+  const commits = (input.filter === "" ? input.git.commits : input.git.commits.filter((item) => item.incidentId === input.filter))
+    .filter((item) => item.day === input.day)
+    .slice()
+    .sort((a, b) => a.at.localeCompare(b.at));
+  const rows = commits
+    .map(
+      (commit) =>
+        '<li class="event-row" data-event-item="' + commit.id + '"><time datetime="' + commit.at + '">' + commit.at.slice(11, 16) +
+        '</time><span class="event-main"><b>' + commit.incidentId + "</b> · " + commit.nodeId + " " + escapeHtml(commit.nodeTitle) +
+        '</span><span class="event-meta">' + ROLE_NAMES[commit.role] + " · SLA: " + SLA_PHASE_TITLES[commit.slaPhase] + "</span></li>",
+    )
+    .join("");
+  return (
+    '<section class="event-list" data-event-list aria-label="События дня">' +
+    '<h2 class="event-list-title">События ' + formatDay(input.day) + "</h2>" +
+    (commits.length === 0 ? '<p class="muted">На выбранный день событий нет.</p>' : '<ol class="events">' + rows + "</ol>") +
+    "</section>"
+  );
+};
+
 export const renderBody = (input: TimelinePageInput): string =>
-  renderCanvas(input) +
+  renderCanvas(input) + renderEventList(input) +
   '<div class="node-card-slot" data-node-card-slot>' + (input.card ?? "") + "</div>" +
   input.chat;
 
@@ -86,6 +110,8 @@ export const renderControls = (input: TimelinePageInput): string =>
   '<button data-density="compact"' + (input.density === "compact" ? ' class="on"' : "") + ">Компактная</button>" +
   "</div>" +
   '<button data-action="clear"' + (input.filter === "" ? " disabled" : "") + ">Показать все заявки</button>" +
+  '<button class="graph-toggle" data-graph-toggle aria-pressed="' + String(input.graphMode === true) + '">Граф' +
+  (input.graphMode === true ? " скрыть" : " показать") + "</button>" +
   "</div>";
 
 /** Подсказка про горизонтальную прокрутку и клавиатуру. */

@@ -20,7 +20,7 @@ test("день среза: известный берётся из адреса, 
 
 test("начальное состояние повторяет прежние значения по умолчанию", () => {
   const state = initialTimelineState(route(""), days);
-  expect(state).toEqual({ day: days.at(-1)!, view: "git", filter: "", override: null, selectedId: null, density: "normal" });
+  expect(state).toEqual({ day: days.at(-1)!, view: "git", filter: "", override: null, selectedId: null, density: "normal", graphMode: false });
   expect(initialTimelineState(route(days[2]!, "gantt"), days).view).toBe("gantt");
 });
 

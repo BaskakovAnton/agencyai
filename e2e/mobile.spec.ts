@@ -74,6 +74,22 @@ test.describe("Мобильная адаптация", () => {
     });
   }
 
+  test("хронология 390: по умолчанию список событий, граф по кнопке и без смены URL", async ({ page }) => {
+    await page.goto("/#timeline?at=2026-01-02");
+    await expect(page.locator("[data-event-list]")).toBeVisible();
+    await expect(page.locator("[data-canvas]")).toBeHidden();
+    const before = page.url();
+    await page.locator("[data-graph-toggle]").click();
+    await expect(page.locator("[data-canvas]")).toBeVisible();
+    await expect(page.locator("[data-event-list]")).toBeHidden();
+    expect(page.url()).toBe(before);
+  });
+
+  test("хронология 390: явный view=git сразу открывает граф", async ({ page }) => {
+    await page.goto("/#timeline?at=2026-01-02&view=git");
+    await expect(page.locator("[data-canvas]")).toBeVisible();
+  });
+
   for (const view of ["git", "gantt"]) {
     test("хронология (" + view + ") на 390px: все зоны нажатия ≥ 44 px", async ({ page }) => {
       await page.goto("/#timeline?at=2026-01-02&view=" + view);

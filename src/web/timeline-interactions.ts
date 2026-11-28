@@ -14,9 +14,10 @@ interface TimelineActions {
 /** Делегирование: обработчики живут на контейнере и переживают перерисовку блоков. */
 export const createClickHandler = (state: TimelineState, actions: TimelineActions) => (event: Event): void => {
   const target = (event.target as Element | null)?.closest<HTMLElement>(
-    "[data-commit],[data-bar],[data-row],[data-view],[data-density],[data-incident-filter],[data-action],[data-ruler-day],[data-card-action]",
+    "[data-commit],[data-bar],[data-row],[data-view],[data-density],[data-incident-filter],[data-action],[data-ruler-day],[data-card-action],[data-graph-toggle]",
   );
   if (!target) return;
+  if (target.dataset.graphToggle !== undefined) { state.graphMode = !state.graphMode; actions.paintBody(); return; }
   if (target.dataset.cardAction === "close") { actions.closeCard(); return; }
   if (target.dataset.commit) { actions.select(target.dataset.commit); return; }
   if (target.dataset.bar) { location.hash = hrefChat(target.dataset.bar, target.dataset.from ?? state.day); return; }

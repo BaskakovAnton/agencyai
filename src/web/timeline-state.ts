@@ -11,6 +11,8 @@ export interface TimelineState {
   override: string | null;
   selectedId: string | null;
   density: "normal" | "compact";
+  /** Мобильный: список событий по умолчанию, граф — по кнопке (в URL не пишется). */
+  graphMode: boolean;
 }
 
 /** День среза по единому правилу (UX-3.2.2): без подмены даты вне окна модели. */
@@ -23,6 +25,8 @@ export const initialTimelineState = (route: Route, days: readonly string[]): Tim
   override: null,
   selectedId: null,
   density: "normal",
+  // Явный view= в адресе (ссылка на граф/Гант) сразу включает графический режим.
+  graphMode: typeof location !== "undefined" && /[?&]view=/.test(location.hash),
 });
 
 /** Заявка для панели чата: выбранная в полосе, иначе герой демонстрации. */
