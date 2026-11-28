@@ -36,3 +36,17 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .page-title { font-size: 20px; letter-spacing: -.3px; }
   .content { padding: 18px 14px 40px; }
 }
+
+/* Мобильная оболочка: верхняя панель не конкурирует с содержимым и все основные действия доступны пальцем. */
+@media (max-width: 700px) {
+  .topbar { min-height: 60px; height: auto; padding: 8px 12px; align-items: center; }
+  .topbar-main { gap: 8px; }
+  .page-title { font-size: 18px; line-height: 1.15; }
+  .page-sub, .topbar-actions .demo-notice { display: none; }
+  .topbar-actions { gap: 6px; }
+  .menu-btn, .theme-btn { min-width: 44px; min-height: 44px; padding: 6px 9px; }
+  .theme-btn { font-size: 12px; white-space: nowrap; }
+  .content { padding: 14px 12px 32px; }
+  .sidebar { padding-top: 16px; }
+  .nav-item { min-height: 48px; }
+}

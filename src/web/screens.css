@@ -105,10 +105,18 @@
   .operations { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 700px) {
+  .card-pad, .panel { padding: 12px; }
+  .card-head { align-items: flex-start; flex-direction: column; gap: 6px; }
+  .dashboard-head { align-items: flex-start; gap: 8px; }
   .kpis { grid-template-columns: minmax(0, 1fr); }
   .weeks { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .operations { grid-template-columns: minmax(0, 1fr); }
   .chart-wrap { height: 150px; }
   .detail-grid { grid-template-columns: minmax(0, 1fr); }
   .detail-grid [data-history], .detail-grid [data-next], .detail-grid [data-links] { grid-column: span 1; }
+  .filters { gap: 8px; padding: 10px; }
+  .filters input[type="search"], .filters select, .filters button { min-height: 40px; }
+  .filters select { flex: 1 1 calc(50% - 4px); min-width: 0; }
+  .filters input[type="search"] { flex-basis: 100%; }
+  .table-wrap { margin: 0 -12px; padding: 0 12px 4px; overscroll-behavior-inline: contain; }
 }
