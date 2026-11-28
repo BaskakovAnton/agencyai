@@ -198,3 +198,20 @@
   .filters-more-body { display: none; grid-column: 1 / -1; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
   .filters-more[data-open="true"] .filters-more-body { display: grid; }
 }
+
+/* WP-2: на мобильном все интерактивные зоны хронологии не меньше 44 px. */
+@media (max-width: 767px) {
+  #view button, #view input, #view select, #view a.button, #view .chip, #view .ruler-day, #view .gantt-row { min-height: 44px; }
+  #view .chip { display: inline-flex; align-items: center; }
+  #view .ruler-day { display: inline-flex; align-items: center; justify-content: center; }
+  #view .gantt-row { align-items: center; }
+}
+
+/* WP-2: линейка прокручивается, у дней зона 44 px; маркер живёт внутри дорожки и не разъезжается. */
+.ruler-track { position: relative; }
+@media (max-width: 767px) {
+  .ruler-scroll { overflow-x: auto; overscroll-behavior-inline: contain; }
+  .ruler-track { min-width: max-content; }
+  .ruler-hours { width: 100%; }
+  #view .ruler-day { flex: 0 0 44px; min-width: 44px; }
+}

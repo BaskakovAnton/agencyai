@@ -26,6 +26,12 @@ export interface TimelinePageInput {
   readonly density?: "normal" | "compact";
 }
 
+/** На мобильном граф рисуется с шагом ≥ 44 px, чтобы зона попадания коммита не перекрывала соседей. */
+const gitOptions = (): { columnWidth: number; rowHeight: number; slotStep: number; hitSize: number } | Record<string, never> =>
+  typeof window !== "undefined" && window.innerWidth < 768
+    ? { columnWidth: 56, rowHeight: 56, slotStep: 44, hitSize: 44 }
+    : {};
+
 const escapeHtml = (value: string): string =>
   value.replace(/[&<>"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[char] as string);
 
@@ -58,7 +64,7 @@ export const renderCanvas = (input: TimelinePageInput): string =>
   '<div class="graph-wrap"><div class="canvas graph-canvas" data-canvas tabindex="0" role="region" aria-label="' +
   (input.view === "gantt" ? "Диаграмма Ганта: заявки по дням" : "Git-граф заявок: узлы по колонкам, дни по строкам") +
   '">' +
-  (input.view === "gantt" ? renderGanttGrid(input.gantt, input.filter) : renderGitSvg(input.git, input.filter)) +
+  (input.view === "gantt" ? renderGanttGrid(input.gantt, input.filter) : renderGitSvg(input.git, input.filter, gitOptions())) +
   "</div></div>";
 
 export const renderBody = (input: TimelinePageInput): string =>
@@ -125,9 +131,11 @@ export const renderTimeRuler = (input: TimelinePageInput): string => {
     '<div class="ruler" data-ruler>' +
     '<div class="ruler-head"><span class="hint">Шкала времени: сутки и часы выбранного дня</span>' +
     '<b data-ruler-label>' + formatDay(input.day) + "</b></div>" +
+    '<div class="ruler-scroll"><div class="ruler-track">' +
     '<div class="ruler-days">' + ticks + "</div>" +
     '<div class="ruler-hours">' + hours + "</div>" +
     '<div class="ruler-marker" data-ruler-marker style="left:' + share + '%"></div>' +
+    "</div></div>" +
     "</div>"
   );
 };

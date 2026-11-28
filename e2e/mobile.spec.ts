@@ -74,6 +74,28 @@ test.describe("Мобильная адаптация", () => {
     });
   }
 
+  for (const view of ["git", "gantt"]) {
+    test("хронология (" + view + ") на 390px: все зоны нажатия ≥ 44 px", async ({ page }) => {
+      await page.goto("/#timeline?at=2026-01-02&view=" + view);
+      await page.waitForTimeout(500);
+      const small = await page.evaluate(() =>
+        [...document.querySelectorAll("#view a, #view button, #view [role='button'], #view svg [tabindex], #view input, #view select")]
+          .map((el) => el.getBoundingClientRect())
+          .filter((r) => r.width > 0)
+          .filter((r) => r.width < 44 || r.height < 44)
+          .length,
+      );
+      expect(small).toBe(0);
+    });
+  }
+
+  test("клик по коммиту после расширения зон открывает карточку узла", async ({ page }) => {
+    await page.goto("/#timeline?at=2026-01-02&view=git");
+    await page.waitForTimeout(500);
+    await page.locator("[data-commit]").first().click();
+    await expect(page.locator("[data-card], [data-node-card]").first()).toBeVisible();
+  });
+
   test("планшет 1024px: реестр остаётся таблицей", async ({ page }) => {
     await page.setViewportSize({ width: 1024, height: 900 });
     await page.goto("/#incidents?at=2026-01-02");

@@ -9,6 +9,8 @@ export interface GitSvgOptions {
   readonly rowHeight?: number;
   readonly labelWidth?: number;
   readonly slotStep?: number;
+  /** Сторона квадратной зоны попадания коммита (мобильный — 44 px). */
+  readonly hitSize?: number;
 }
 
 const escapeHtml = (value: string): string =>
@@ -25,6 +27,8 @@ export const renderGitSvg = (model: GitModel, filter = "", options: GitSvgOption
   const baseRow = options.rowHeight ?? 26;
   const labelWidth = options.labelWidth ?? 86;
   const slotStep = options.slotStep ?? 17;
+  const hitW = options.hitSize ?? 18;
+  const hitH = options.hitSize ?? 16;
   const top = 34;
   const commits = filter === "" ? model.commits : model.commits.filter((commit) => commit.incidentId === filter);
 
@@ -118,7 +122,7 @@ export const renderGitSvg = (model: GitModel, filter = "", options: GitSvgOption
         : "";
       return (
         '<g class="commit' + (commit.isHero ? " hero" : "") + '" ' + attributes + ">" +
-        '<rect class="hit" x="' + (cx - 9) + '" y="' + (cy - 8) + '" width="18" height="16" fill="transparent"></rect>' +
+        '<rect class="hit" x="' + (cx - hitW / 2) + '" y="' + (cy - hitH / 2) + '" width="' + hitW + '" height="' + hitH + '" fill="transparent"></rect>' +
         '<circle cx="' + cx + '" cy="' + cy + '" r="6" style="fill:' + SLA_COLORS[commit.slaPhase] + '"></circle>' +
         forkMark + mergeMark +
         "</g>" +
