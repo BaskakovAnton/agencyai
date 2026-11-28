@@ -14,6 +14,8 @@ jobs:
       - run: bun install --frozen-lockfile
       - run: bun run typecheck
       - run: bun test
+      # Гейт C1: закоммиченный demo/ должен совпадать со сборкой — Pages раздаёт именно его.
+      - run: bun run verify:demo
       - run: bun run scripts/build-web.ts demo
       - run: bunx playwright install --with-deps chromium
       - run: bunx playwright test
