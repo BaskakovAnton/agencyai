@@ -183,3 +183,8 @@ span.chip { border: 1px solid var(--color-border); color: var(--color-text-muted
 .roles-matrix .mark { color: var(--color-primary-strong); }
 .group-legend { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
 .phone-readonly { margin: 0; padding: 6px 14px; font-size: 12px; color: var(--color-text-muted); background: var(--color-surface-muted); border-bottom: 1px solid var(--color-border); border-left: 3px solid var(--color-warning); }
+
+/* V3: единая обратная связь — нажатие заметно, фокус одинаков во всех разделах. */
+button:active:not(:disabled), a.button:active, .panel-link:active, .chip:active { transform: translateY(1px); }
+.click-row:active, .event-row:active, .action-item:active { background: var(--color-surface-hover); }
+.gantt-row:focus-visible { outline-width: 2px; outline-offset: 2px; }

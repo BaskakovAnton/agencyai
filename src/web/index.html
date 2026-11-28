@@ -17,6 +17,10 @@
   }
 </script>
 <title>ДЕПУТАТ 360° · Приёмная депутата</title>
+<link rel="icon" href="./favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="./favicon.svg">
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="description" content="Рабочая система учёта обращений жителей: реестр, карточка, хронология, SLA.">
 <link rel="stylesheet" href="./tokens.css">
 <link rel="stylesheet" href="./components.css">
 <link rel="stylesheet" href="./shell.css">
@@ -26,7 +30,13 @@
 <link rel="stylesheet" href="./mobile.css">
 </head>
 <body>
-<div id="shell"><p class="hint">Загрузка модели…</p></div>
+<div id="shell">
+  <div class="boot" data-boot role="status" aria-live="polite">
+    <span class="boot-mark" aria-hidden="true">360</span>
+    <p class="boot-text">Загрузка модели…</p>
+    <div class="boot-rows" aria-hidden="true"><i></i><i></i><i></i></div>
+  </div>
+</div>
 <script type="module" src="./app.js"></script>
 </body>
 </html>
