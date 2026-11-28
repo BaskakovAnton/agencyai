@@ -44,6 +44,15 @@ test("тёмная тема — основная: HTML и токены согл�
   expect(darkBlock).toContain("color-scheme: dark");
 });
 
+test("нет литеральных цветов вне tokens.css (WP-9)", () => {
+  // Токены живут только в tokens.css; остальные стили пользуются переменными.
+  const noTokens = components + shell + style + screens + mobile;
+  const literals = (noTokens.match(/#[0-9a-fA-F]{3,8}\b/g) ?? []).filter(
+    (value) => value.length === 4 || value.length === 7 || value.length === 9,
+  );
+  expect(literals).toEqual([]);
+});
+
 test("наши доработки доступности на месте", () => {
   expect(compact).toContain("--color-success-text:#0f7a4a");
   expect(compact).toContain("--color-warning-text:#8a5f13");

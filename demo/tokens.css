@@ -67,9 +67,51 @@
   --dim: var(--color-text-muted);
   --accent: var(--color-primary);
   --hero: var(--color-warning-text);
+  /* Семантические токены WP-9: значения совпадают с прежними литералами светлой темы. */
+  --color-surface-tint: #f4f7fb;
+  --color-surface-soft: #fbfcfe;
+  --color-surface-hover: #f9fbfe;
+  --color-icon-bg: #e4edff;
+  --color-icon-text: #31558d;
+  --color-icon-bg-soft: #edf3ff;
+  --color-icon-accent: #3d70cb;
+  --color-icon-bg-muted: #eff4fc;
+  --color-icon-muted-text: #3a67ad;
+  --color-text-strong: #334157;
+  --color-text-strong-muted: #344258;
+  --color-success-step: #29956a;
+  --color-success-step-ring: #a5d5bd;
+  --color-step-mark: #4f86df;
+  --color-step-mark-ring: #a9c4f2;
+  --color-step-line: #dce6f3;
+  --color-on-brand: #ffffff;
+  --brand-start: #3478f6;
+  --brand-end: #1748bb;
+  --brand-shadow: rgba(37, 99, 235, .22);
 }
 
 [data-theme="dark"] {
+  /* WP-9: тёмные значения семантических токенов (раньше литералы светлой темы попадали и в тёмную). */
+  --color-surface-tint: #1d2129;
+  --color-surface-soft: #1b1f27;
+  --color-surface-hover: #1d2129;
+  --color-icon-bg: #1f2937;
+  --color-icon-text: #cfe0ff;
+  --color-icon-bg-soft: #1b2536;
+  --color-icon-accent: #7cc0ff;
+  --color-icon-bg-muted: #1b2330;
+  --color-icon-muted-text: #9fc2ff;
+  --color-text-strong: #e7ebf2;
+  --color-text-strong-muted: #dbe2ec;
+  --color-success-step: #2f7d5b;
+  --color-success-step-ring: #245c43;
+  --color-step-mark: #4da3ff;
+  --color-step-mark-ring: #2a4a6d;
+  --color-step-line: #2a2f3a;
+  --color-on-brand: #ffffff;
+  --brand-start: #3478f6;
+  --brand-end: #1748bb;
+  --brand-shadow: rgba(37, 99, 235, .22);
   color-scheme: dark;
   --color-bg: #0f1115;
   --color-surface: #171a21;
