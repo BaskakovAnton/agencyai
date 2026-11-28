@@ -15,10 +15,13 @@ const viewports = [
   { name: "mobile", width: 390, height: 844 },
 ] as const;
 
+/** Минимальная зона нажатия: телефон и планшет-портрет 44 px, широкие экраны 36 px. */
+const MIN_TARGET: Readonly<Record<string, number>> = { wide: 36, desktop: 36, tablet: 36, portrait: 44, mobile: 44 };
+
 interface Finding { page: string; viewport: string; kind: string; detail: string; count?: number }
 
 const auditPage = async (page: Page, name: string, viewport: string): Promise<Finding[]> =>
-  page.evaluate(({ name, viewport }) => {
+  page.evaluate(({ name, viewport, minTarget }) => {
     const out: { page: string; viewport: string; kind: string; detail: string; count?: number }[] = [];
     const lum = (rgb: number[]): number => {
       const f = (v: number): number => {
@@ -38,13 +41,15 @@ const auditPage = async (page: Page, name: string, viewport: string): Promise<Fi
     };
     const doc = document.documentElement;
     if (doc.scrollWidth > doc.clientWidth + 1) out.push({ page: name, viewport, kind: "overflow-x", detail: doc.scrollWidth + " > " + doc.clientWidth });
-    const interactive = Array.from(document.querySelectorAll("button, a, [tabindex], input, select, textarea")).filter((el) => {
+    // Зоны нажатия считаются только в рабочей области: оболочка и скрытые контролы не в счёте.
+    const scope = document.querySelector("#view") ?? document.body;
+    const interactive = Array.from(scope.querySelectorAll("button, a, [tabindex], input, select, textarea")).filter((el) => {
       const r = (el as Element).getBoundingClientRect();
       return r.width > 0 && r.height > 0;
     });
     const small = interactive.filter((el) => {
       const r = (el as Element).getBoundingClientRect();
-      return r.width < 40 || r.height < 40;
+      return r.width < minTarget || r.height < minTarget;
     });
     if (small.length > 0) out.push({ page: name, viewport, kind: "tap-targets", count: small.length, detail: small.slice(0, 5).map((el) => {
       const r = (el as Element).getBoundingClientRect();

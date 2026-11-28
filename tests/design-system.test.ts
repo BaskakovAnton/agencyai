@@ -44,6 +44,15 @@ test("тёмная тема — основная: HTML и токены согл�
   expect(darkBlock).toContain("color-scheme: dark");
 });
 
+test("период «весь период модели» доступен и считается (UX-3.5, OD-2)", async () => {
+  const { isPeriodLength, periodEndingAt, PERIOD_LENGTHS, PERIOD_TITLES } = await import("../src/core/periods.ts");
+  expect(PERIOD_LENGTHS).toEqual([7, 30, 25]);
+  expect(PERIOD_TITLES[25]).toBe("весь период модели");
+  expect(isPeriodLength(25)).toBe(true);
+  expect(isPeriodLength(90)).toBe(false);
+  expect(periodEndingAt("2026-01-13", 25).days.length).toBe(25);
+});
+
 test("нет литеральных цветов вне tokens.css (WP-9)", () => {
   // Токены живут только в tokens.css; остальные стили пользуются переменными.
   const noTokens = components + shell + style + screens + mobile;

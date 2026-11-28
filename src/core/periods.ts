@@ -2,9 +2,16 @@
  * Периоды отчётности (UX-3): модельные календарные дни UTC, как и весь проект.
  * Локальная тайм-зона браузера на расчёт не влияет: даты — строки вида «2026-01-10».
  */
-export type PeriodLength = 7 | 30;
+export type PeriodLength = 7 | 30 | 25;
 
-export const PERIOD_LENGTHS: readonly PeriodLength[] = [7, 30];
+export const PERIOD_LENGTHS: readonly PeriodLength[] = [7, 30, 25];
+
+/** Подписи периодов: 25 — окно демонстрационной модели (20.12–13.01). */
+export const PERIOD_TITLES: Readonly<Record<PeriodLength, string>> = {
+  7: "7 дней",
+  30: "30 дней",
+  25: "весь период модели",
+};
 
 export interface Period {
   readonly length: PeriodLength;
@@ -14,7 +21,7 @@ export interface Period {
   readonly days: readonly string[];
 }
 
-export const isPeriodLength = (value: number): value is PeriodLength => value === 7 || value === 30;
+export const isPeriodLength = (value: number): value is PeriodLength => value === 7 || value === 30 || value === 25;
 
 /** Сдвиг календарного дня на дельту (может быть отрицательной). */
 export const dayShift = (day: string, delta: number): string =>

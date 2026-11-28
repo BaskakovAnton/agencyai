@@ -1,5 +1,5 @@
 /** Разметка периода UX-3: переключатель 7/30 дней, динамика по дням и ограничения данных. */
-import { PERIOD_LENGTHS, type PeriodAnalytics, type PeriodLength } from "./periods-reexport.ts";
+import { PERIOD_LENGTHS, PERIOD_TITLES, type PeriodAnalytics, type PeriodLength } from "./periods-reexport.ts";
 import { renderEmptyState, renderPanel } from "./components.ts";
 
 const dayLabel = (day: string): string => day.slice(8, 10) + "." + day.slice(5, 7);
