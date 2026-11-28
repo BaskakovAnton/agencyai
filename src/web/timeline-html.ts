@@ -8,6 +8,8 @@ import { ROLE_NAMES } from "../data/roles.ts";
 import { renderPanel } from "./components.ts";
 import { renderGanttGrid } from "./gantt-grid.ts";
 import { renderEventList } from "./timeline-events.ts";
+import { renderChips, renderStats, visibleIds } from "./timeline-blocks.ts";
+import { renderTimeRuler } from "./timeline-ruler.ts";
 import { renderGitSvg } from "./git-svg.ts";
 import { hrefChat, hrefIncidents, hrefTimeline, type ViewMode } from "./router.ts";
 import { FORK_MARK, MERGE_MARK, SLA_COLORS } from "./theme.ts";
@@ -39,31 +41,8 @@ const gitOptions = (): { columnWidth: number; rowHeight: number; slotStep: numbe
 const escapeHtml = (value: string): string =>
   value.replace(/[&<>"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[char] as string);
 
-export const visibleIds = (input: TimelinePageInput): readonly string[] =>
-  input.view === "gantt" ? input.gantt.rows.map((row) => row.incidentId) : input.git.incidents;
 
-export const renderStats = (input: TimelinePageInput): string => {
-  const total = visibleIds(input).length;
-  return (
-    '<div class="stats" data-stats>' + formatDay(input.day) + " · заявок на дату: " + total + " (" +
-    pluralize(total, "заявка", "заявки", "заявок") + ") · узлов " + input.git.columns.length + "</div>"
-  );
-};
 
-export const renderChips = (input: TimelinePageInput): string => {
-  const ids = visibleIds(input);
-  const chips = ids
-    .map(
-      (id) =>
-        '<button class="chip' + (input.filter === id ? " on" : "") + '" data-incident-filter="' + id + '">' + id + "</button>",
-    )
-    .join("");
-  return (
-    '<div class="chips" data-chips role="group" tabindex="0" aria-label="Заявки на дату: прокручивается по горизонтали">' +
-    chips +
-    "</div>"
-  );
-};
 
 /** Только картинка (граф или Гант) — её перерисовывают при движении ползунка. */
 /** Только картинка (граф или Гант) — её перерисовывают при движении ползунка.
@@ -124,31 +103,6 @@ export const renderTimelineFooter = (): string =>
   "Точки — события процесса, линии — путь заявки, колонки — узлы U1…U30.</footer>";
 
 /** Горизонтальная шкала времени: тики по суткам и часы выбранного дня. */
-export const renderTimeRuler = (input: TimelinePageInput): string => {
-  const ticks = input.days
-    .map(
-      (day, index) =>
-        '<button class="ruler-day' + (day === input.day ? " on" : "") + '" data-ruler-day="' + day +
-        '" data-ruler-index="' + index + '" title="' + formatDay(day) + '" aria-label="' + day.slice(8) + " · " + formatDay(day) + '"' +
-        (day === input.day ? ' aria-current="date"' : "") + ">" + day.slice(8) + "</button>",
-    )
-    .join("");
-  const hours = Array.from({ length: 24 }, (_, hour) =>
-    '<span class="ruler-hour" data-ruler-hour="' + hour + '" title="' + String(hour).padStart(2, "0") + ':00"></span>',
-  ).join("");
-  const share = input.days.length > 1 ? Math.round((Math.max(input.dayIndex, 0) / (input.days.length - 1)) * 100) : 0;
-  return (
-    '<div class="ruler" data-ruler>' +
-    '<div class="ruler-head"><span class="hint">Шкала времени: сутки и часы выбранного дня</span>' +
-    '<b data-ruler-label>' + formatDay(input.day) + "</b></div>" +
-    '<div class="ruler-scroll"><div class="ruler-track">' +
-    '<div class="ruler-days">' + ticks + "</div>" +
-    '<div class="ruler-hours">' + hours + "</div>" +
-    '<div class="ruler-marker" data-ruler-marker style="left:' + share + '%"></div>' +
-    "</div></div>" +
-    "</div>"
-  );
-};
 
 /** Легенды: что означают цвета SLA и значки развилок и слияний. */
 export const renderLegends = (input: TimelinePageInput): string => {
@@ -193,3 +147,6 @@ export const renderTimelinePage = (input: TimelinePageInput): string =>
 
 export const tooltipText = (commit: { incidentId: string; nodeId: string; title?: string; day: string; role: string; text: string }, nodeTitle: string): string =>
   commit.incidentId + " · " + commit.nodeId + " " + escapeHtml(nodeTitle) + " · " + formatDay(commit.day) + " · " + commit.role + ": " + commit.text;
+
+export { renderTimeRuler } from "./timeline-ruler.ts";
+export { renderChips, renderStats, visibleIds } from "./timeline-blocks.ts";

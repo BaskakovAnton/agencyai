@@ -150,40 +150,6 @@ span.chip { border: 1px solid var(--color-border); color: var(--color-text-muted
 .inline-body .bubble { font-size: 12px; }
 .inline-link { font-size: 12px; }
 
-@media (max-width: 1100px) {
-  .timeline { grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "time" "chips" "ruler" "legends" "canvas" "card" "foot"; }
-  .inline-chat { display: none; }
-  .cols { grid-template-columns: minmax(0, 1fr); }
-  .chat-screen { grid-template-columns: minmax(0, 1fr); }
-}
-@media (max-width: 700px) {
-  button { min-height: 40px; }
-  .row-main { grid-template-columns: 52px minmax(0, 1fr) auto; }
-  .row-main .prio, .row-main span.chip { display: none; }
-  .phone { max-width: 100%; }
-  .timeline { gap: 8px; }
-  .canvas { max-height: 56vh; padding: 6px; -webkit-overflow-scrolling: touch; }
-  .ruler { padding: 9px 10px; }
-  .node-card { padding: 12px; }
-  .node-card-row { align-items: flex-start; flex-direction: column; gap: 3px; }
-  .phone-body { max-height: 50vh; }
-}
-/* ── этап 4: панель, матрица прав, читаемость ───────────────── */
-.segmented { display: inline-flex; border: 1px solid var(--color-border); border-radius: 8px; overflow: hidden; }
-.segmented button { border: 0; border-radius: 0; }
-.segmented button.on { background: var(--color-primary-soft); color: var(--color-primary-strong); }
-.scroll-hint { margin: 0; color: var(--color-text-muted); font-size: 12px; }
-.gantt-row.head { position: sticky; top: 0; z-index: 2; background: var(--color-surface); }
-.density-compact .gantt-row { min-height: 18px; }
-.density-compact .bar { height: 16px; font-size: 12px; }
-.density-compact .git { transform: scale(.86); transform-origin: top left; }
-.roles-matrix { width: 100%; border-collapse: collapse; font-size: 12px; }
-.roles-matrix th { text-align: left; color: var(--color-text-muted); font-weight: 500; padding: 4px 6px; border-bottom: 1px solid var(--color-border); }
-.roles-matrix td { padding: 4px 6px; border-bottom: 1px solid var(--color-border); }
-.roles-matrix .mark { color: var(--color-primary-strong); }
-.group-legend { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
-.phone-readonly { margin: 0; padding: 6px 14px; font-size: 12px; color: var(--color-text-muted); background: var(--color-surface-muted); border-bottom: 1px solid var(--color-border); border-left: 3px solid var(--color-warning); }
-
 /* V3: единая обратная связь — нажатие заметно, фокус одинаков во всех разделах. */
 button:active:not(:disabled), a.button:active, .panel-link:active, .chip:active { transform: translateY(1px); }
 .click-row:active, .event-row:active, .action-item:active { background: var(--color-surface-hover); }

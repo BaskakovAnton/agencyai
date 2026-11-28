@@ -136,3 +136,24 @@
   [data-incidents-filters] .count { flex: 1 1 100%; }
   .incident-chips { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; }
 }
+
+
+/* Адаптив экранов: перенесено из style.css (B4, лимит строк). */
+@media (max-width: 1100px) {
+  .timeline { grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "time" "chips" "ruler" "legends" "canvas" "card" "foot"; }
+  .inline-chat { display: none; }
+  .cols { grid-template-columns: minmax(0, 1fr); }
+  .chat-screen { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 700px) {
+  button { min-height: 40px; }
+  .row-main { grid-template-columns: 52px minmax(0, 1fr) auto; }
+  .row-main .prio, .row-main span.chip { display: none; }
+  .phone { max-width: 100%; }
+  .timeline { gap: 8px; }
+  .canvas { max-height: 56vh; padding: 6px; -webkit-overflow-scrolling: touch; }
+  .ruler { padding: 9px 10px; }
+  .node-card { padding: 12px; }
+  .node-card-row { align-items: flex-start; flex-direction: column; gap: 3px; }
+  .phone-body { max-height: 50vh; }
+}

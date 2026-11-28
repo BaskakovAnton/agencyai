@@ -16,5 +16,5 @@ test("buildWeb запускается как CLI и печатает путь с
   const out = new TextDecoder().decode(proc.stdout);
   expect(proc.exitCode).toBe(0);
   expect(out).toContain("собрано");
-  expect((await readdir(dir)).sort()).toEqual(["app.js", "components.css", "favicon.svg", "index.html", "manifest.webmanifest", "mobile.css", "operations.css", "print.css", "screens.css", "shell.css", "style.css", "tokens.css"]);
+  expect((await readdir(dir)).sort()).toEqual(["app.js", "components.css", "favicon.svg", "index.html", "manifest.webmanifest", "matrix.css", "mobile.css", "operations.css", "print.css", "screens.css", "shell.css", "style.css", "tokens.css"]);
 });

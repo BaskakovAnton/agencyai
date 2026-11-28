@@ -1,24 +1,7 @@
 import { chromium, type Page } from "@playwright/test";
 import { mkdir, writeFile } from "node:fs/promises";
-import { createRequire } from "node:module";
-
-/** UX/a11y-аудит демо: скриншоты, axe-core (WCAG 2.1 AA) и измеримые метрики интерфейса. */
-const base = "http://127.0.0.1:4321/";
-const outDir = "docs/screenshots/audit";
-const require = createRequire(import.meta.url);
-const axePath = require.resolve("axe-core/axe.min.js");
-const viewports = [
-  { name: "wide", width: 1920, height: 1080 },
-  { name: "desktop", width: 1440, height: 950 },
-  { name: "tablet", width: 1024, height: 768 },
-  { name: "portrait", width: 768, height: 1024 },
-  { name: "mobile", width: 390, height: 844 },
-] as const;
-
-/** Минимальная зона нажатия: телефон и планшет-портрет 44 px, широкие экраны 36 px. */
-const MIN_TARGET: Readonly<Record<string, number>> = { wide: 36, desktop: 36, tablet: 36, portrait: 44, mobile: 44 };
-
-interface Finding { page: string; viewport: string; kind: string; detail: string; count?: number; severity?: "violation" | "metric" }
+import { base, Finding, METRIC_NOTES, MIN_TARGET, outDir, viewports } from "./audit-config.ts";
+import { axePage } from "./audit-axe.ts";
 
 const auditPage = async (page: Page, name: string, viewport: string): Promise<Finding[]> =>
   page.evaluate(({ name, viewport, minTarget }) => {
@@ -127,17 +110,6 @@ const auditPage = async (page: Page, name: string, viewport: string): Promise<Fi
     return out;
   }, { name, viewport });
 
-const axePage = async (page: Page, name: string, viewport: string): Promise<Finding[]> => {
-  await page.addScriptTag({ path: axePath });
-  const result = await page.evaluate(async () => {
-    const axe = (window as unknown as { axe: { run: (ctx: Document, opts: unknown) => Promise<{ violations: { id: string; impact: string | null; nodes: { target: string[] }[] }[] }> } }).axe;
-    return axe.run(document, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"] } });
-  });
-  return result.violations.map((v) => ({
-    page: name, viewport, kind: "axe:" + v.id, count: v.nodes.length,
-    detail: "impact=" + (v.impact ?? "?") + "; " + v.nodes.slice(0, 3).map((n) => n.target.join(" ")).join(" | "),
-  }));
-};
 
 const run = async (): Promise<void> => {
   await mkdir(outDir, { recursive: true });
@@ -184,7 +156,7 @@ const run = async (): Promise<void> => {
   }
   await browser.close();
   const violations = report.filter((item) => item.severity !== "metric");
-  const metrics = report.filter((item) => item.severity === "metric");
+  const metrics = report.filter((item) => item.severity === "metric").map((item) => ({ ...item, note: METRIC_NOTES[item.kind] ?? "справочная метрика" }));
   await writeFile(outDir + "/audit.json", JSON.stringify({ violations, metrics, shots }, null, 2));
   console.log(JSON.stringify({ violations: violations.length, metrics: metrics.length, shots: shots.length }, null, 2));
 };

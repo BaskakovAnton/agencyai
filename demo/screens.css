@@ -124,3 +124,34 @@
   [data-incidents-table] thead th { position: sticky; top: 0; z-index: 2; box-shadow: inset 0 -1px 0 var(--color-border); }
   [data-incidents-table] tbody tr.click-row:nth-child(even) { background: var(--color-surface-tint); }
 }
+
+
+/* Карточка обращения: перенесено из components.css (B4, лимит строк). */
+/* Карточка обращения: факты, шаги, SLA, участники (по incident-detail.html). */
+.detail-grid { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(270px, .85fr); gap: 15px; align-items: start; }
+.detail-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 10px; }
+.fact { padding: 12px; border: 1px solid var(--color-line-2); border-radius: 9px; background: var(--color-surface-soft); }
+.fact-label { color: var(--color-subtle); font-size: 12px; }
+.fact-value { margin-top: 4px; color: var(--color-text-strong); font-size: 12px; font-weight: 750; }
+.fact-value[data-tone="red"] { color: var(--color-danger-text); }
+.fact-value[data-tone="amber"] { color: var(--color-warning-text); }
+.fact-value[data-tone="green"] { color: var(--color-success-text); }
+.step-list { display: grid; gap: 0; }
+.step { position: relative; display: grid; grid-template-columns: 22px 1fr; gap: 10px; padding: 0 0 18px; }
+.step:not(:last-child):before { content: ""; position: absolute; left: 7px; top: 15px; bottom: 0; width: 1px; background: var(--color-step-line); }
+.step-mark { position: relative; z-index: 1; width: 15px; height: 15px; margin-top: 2px; border: 3px solid var(--color-surface); border-radius: 50%; background: var(--color-step-mark); box-shadow: 0 0 0 1px var(--color-step-mark-ring); }
+.step.done .step-mark { background: var(--color-success-step); box-shadow: 0 0 0 1px var(--color-success-step-ring); }
+.step.current .step-mark { background: var(--color-primary); box-shadow: 0 0 0 1px var(--color-primary-soft); }
+.step-title { color: var(--color-text-strong-muted); font-size: 12px; font-weight: 750; }
+.step-caption { margin-top: 3px; color: var(--color-text-muted); font-size: 12px; }
+.summary-big { margin-top: 10px; font-size: 26px; font-weight: 800; letter-spacing: -.7px; }
+.summary-big[data-tone="red"] { color: var(--color-danger-text); }
+.summary-big[data-tone="amber"] { color: var(--color-warning-text); }
+.summary-big[data-tone="green"] { color: var(--color-success-text); }
+.sla-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.muted { color: var(--color-text-muted); }
+.button { min-height: 39px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 13px; border: 1px solid var(--color-border); border-radius: 9px; background: var(--color-surface); color: var(--color-text); font-size: 12px; font-weight: 700; }
+.button:hover { border-color: var(--color-border-strong); background: var(--color-surface-hover); }
+.stack { display: grid; gap: 8px; }
+.next-list { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: 12px; }
+@media (max-width: 1180px) { .detail-grid { grid-template-columns: minmax(0, 1fr); } }

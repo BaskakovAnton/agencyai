@@ -8,5 +8,11 @@ import { demoMismatches } from "../scripts/verify-demo-sync.ts";
 test("закоммиченный demo/ совпадает со свежей сборкой из исходников", async () => {
   const dir = await mkdtemp(join(tmpdir(), "agencyai-demo-sync-test-"));
   await buildWeb({ outDir: dir, minify: true });
-  expect(await demoMismatches("demo", dir)).toEqual([]);
+  let problems = await demoMismatches("demo", dir);
+  if (problems.length > 0) {
+    // Возможная гонка с параллельной пересборкой demo/: при настоящем расхождении оно сохранится.
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    problems = await demoMismatches("demo", dir);
+  }
+  expect(problems).toEqual([]);
 });

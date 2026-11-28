@@ -7,7 +7,8 @@
       "kind": "headings",
       "severity": "metric",
       "count": 7,
-      "detail": "H1: Обзор | H2: Следующие действия | H2: Требуют внимания | H2: Последние события | H2: Распределение обращений | H2: Контроль сроков | H2: Динамика за период"
+      "detail": "H1: Обзор | H2: Следующие действия | H2: Требуют внимания | H2: Последние события | H2: Распределение обращений | H2: Контроль сроков | H2: Динамика за период",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "incidents",
@@ -15,7 +16,8 @@
       "kind": "headings",
       "severity": "metric",
       "count": 4,
-      "detail": "H1: Обращения | H2: Все обращения | H2: Порядок работы со списком | H2: Статусы и SLA"
+      "detail": "H1: Обращения | H2: Все обращения | H2: Порядок работы со списком | H2: Статусы и SLA",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "incident",
@@ -23,28 +25,32 @@
       "kind": "headings",
       "severity": "metric",
       "count": 11,
-      "detail": "H1: Обращение З-015 | H2: Следующий шаг по модели | H2: Историческая атрибуция на дату | H2: Длительности | H2: Разбита дверь подъезда | H2: Передачи подразделению | H2: История прохождения | H2: Контроль SLA | H2: Подтверждение завершения | H2: Участники | H2: Связанные представления"
+      "detail": "H1: Обращение З-015 | H2: Следующий шаг по модели | H2: Историческая атрибуция на дату | H2: Длительности | H2: Разбита дверь подъезда | H2: Передачи подразделению | H2: История прохождения | H2: Контроль SLA | H2: Подтверждение завершения | H2: Участники | H2: Связанные представления",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "timeline",
       "viewport": "wide",
       "kind": "canvas-scroll",
       "severity": "metric",
-      "detail": "canvas 1150/1438 (auto)"
+      "detail": "canvas 1150/1438 (auto)",
+      "note": "канвас прокручивается намеренно: область подписана и доступна с клавиатуры"
     },
     {
       "page": "timeline",
       "viewport": "wide",
       "kind": "slider-a11y",
       "severity": "metric",
-      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
+      "detail": "aria-label=нет; aria-valuetext=2 января 2026",
+      "note": "снимок подписи и озвучки ползунка времени"
     },
     {
       "page": "timeline",
       "viewport": "wide",
       "kind": "commit-a11y",
       "severity": "metric",
-      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0"
+      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0",
+      "note": "снимок роли, подписи и фокуса коммита графа"
     },
     {
       "page": "timeline",
@@ -52,28 +58,32 @@
       "kind": "headings",
       "severity": "metric",
       "count": 4,
-      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды"
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "timeline-graph",
       "viewport": "wide",
       "kind": "canvas-scroll",
       "severity": "metric",
-      "detail": "canvas 1150/1438 (auto)"
+      "detail": "canvas 1150/1438 (auto)",
+      "note": "канвас прокручивается намеренно: область подписана и доступна с клавиатуры"
     },
     {
       "page": "timeline-graph",
       "viewport": "wide",
       "kind": "slider-a11y",
       "severity": "metric",
-      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
+      "detail": "aria-label=нет; aria-valuetext=2 января 2026",
+      "note": "снимок подписи и озвучки ползунка времени"
     },
     {
       "page": "timeline-graph",
       "viewport": "wide",
       "kind": "commit-a11y",
       "severity": "metric",
-      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0"
+      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0",
+      "note": "снимок роли, подписи и фокуса коммита графа"
     },
     {
       "page": "timeline-graph",
@@ -81,35 +91,40 @@
       "kind": "headings",
       "severity": "metric",
       "count": 4,
-      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды"
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "timeline-card",
       "viewport": "wide",
       "kind": "canvas-scroll",
       "severity": "metric",
-      "detail": "canvas 1150/1438 (auto)"
+      "detail": "canvas 1150/1438 (auto)",
+      "note": "канвас прокручивается намеренно: область подписана и доступна с клавиатуры"
     },
     {
       "page": "timeline-card",
       "viewport": "wide",
       "kind": "slider-a11y",
       "severity": "metric",
-      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
+      "detail": "aria-label=нет; aria-valuetext=2 января 2026",
+      "note": "снимок подписи и озвучки ползунка времени"
     },
     {
       "page": "timeline-card",
       "viewport": "wide",
       "kind": "commit-a11y",
       "severity": "metric",
-      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0"
+      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0",
+      "note": "снимок роли, подписи и фокуса коммита графа"
     },
     {
       "page": "timeline-card",
       "viewport": "wide",
       "kind": "card-position",
       "severity": "metric",
-      "detail": "top=416px, в окне: true"
+      "detail": "top=416px, в окне: true",
+      "note": "снимок положения карточки узла в окне"
     },
     {
       "page": "timeline-card",
@@ -117,14 +132,16 @@
       "kind": "headings",
       "severity": "metric",
       "count": 4,
-      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды"
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "gantt",
       "viewport": "wide",
       "kind": "slider-a11y",
       "severity": "metric",
-      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
+      "detail": "aria-label=нет; aria-valuetext=2 января 2026",
+      "note": "снимок подписи и озвучки ползунка времени"
     },
     {
       "page": "gantt",
@@ -132,7 +149,8 @@
       "kind": "headings",
       "severity": "metric",
       "count": 4,
-      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Принцип визуального отображения SLA | H2: Связанные виды"
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Принцип визуального отображения SLA | H2: Связанные виды",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "chat",
@@ -140,7 +158,8 @@
       "kind": "headings",
       "severity": "metric",
       "count": 3,
-      "detail": "H1: Переписка | H2: Параметры просмотра | H2: Участники сценария"
+      "detail": "H1: Переписка | H2: Параметры просмотра | H2: Участники сценария",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "model",
@@ -148,14 +167,16 @@
       "kind": "headings",
       "severity": "metric",
       "count": 7,
-      "detail": "H1: Модель процесса | H2: Группы модели | H2: Узлы процесса | H2: Обозначения доступа | H2: Матрица «роль × узел» | H2: Справка по модели | H2: Заявки (30)"
+      "detail": "H1: Модель процесса | H2: Группы модели | H2: Узлы процесса | H2: Обозначения доступа | H2: Матрица «роль × узел» | H2: Справка по модели | H2: Заявки (30)",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "keyboard",
       "viewport": "wide",
       "kind": "enter-on-commit",
       "severity": "metric",
-      "detail": "карточка открылась"
+      "detail": "карточка открылась",
+      "note": "проверка открытия карточки узла клавишей Enter"
     },
     {
       "page": "dashboard",
@@ -163,7 +184,8 @@
       "kind": "headings",
       "severity": "metric",
       "count": 7,
-      "detail": "H1: Обзор | H2: Следующие действия | H2: Требуют внимания | H2: Последние события | H2: Распределение обращений | H2: Контроль сроков | H2: Динамика за период"
+      "detail": "H1: Обзор | H2: Следующие действия | H2: Требуют внимания | H2: Последние события | H2: Распределение обращений | H2: Контроль сроков | H2: Динамика за период",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "incidents",
@@ -171,7 +193,8 @@
       "kind": "headings",
       "severity": "metric",
       "count": 4,
-      "detail": "H1: Обращения | H2: Все обращения | H2: Порядок работы со списком | H2: Статусы и SLA"
+      "detail": "H1: Обращения | H2: Все обращения | H2: Порядок работы со списком | H2: Статусы и SLA",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "incident",
@@ -179,35 +202,40 @@
       "kind": "headings",
       "severity": "metric",
       "count": 11,
-      "detail": "H1: Обращение З-015 | H2: Следующий шаг по модели | H2: Историческая атрибуция на дату | H2: Длительности | H2: Разбита дверь подъезда | H2: Передачи подразделению | H2: История прохождения | H2: Контроль SLA | H2: Подтверждение завершения | H2: Участники | H2: Связанные представления"
+      "detail": "H1: Обращение З-015 | H2: Следующий шаг по модели | H2: Историческая атрибуция на дату | H2: Длительности | H2: Разбита дверь подъезда | H2: Передачи подразделению | H2: История прохождения | H2: Контроль SLA | H2: Подтверждение завершения | H2: Участники | H2: Связанные представления",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "timeline",
       "viewport": "desktop",
       "kind": "canvas-scroll",
       "severity": "metric",
-      "detail": "canvas 780/1438 (auto)"
+      "detail": "canvas 780/1438 (auto)",
+      "note": "канвас прокручивается намеренно: область подписана и доступна с клавиатуры"
     },
     {
       "page": "timeline",
       "viewport": "desktop",
       "kind": "chips-scroll",
       "severity": "metric",
-      "detail": "1122/1471"
+      "detail": "1122/1471",
+      "note": "лента заявок прокручивается намеренно: подписана, доступна с клавиатуры"
     },
     {
       "page": "timeline",
       "viewport": "desktop",
       "kind": "slider-a11y",
       "severity": "metric",
-      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
+      "detail": "aria-label=нет; aria-valuetext=2 января 2026",
+      "note": "снимок подписи и озвучки ползунка времени"
     },
     {
       "page": "timeline",
       "viewport": "desktop",
       "kind": "commit-a11y",
       "severity": "metric",
-      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0"
+      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0",
+      "note": "снимок роли, подписи и фокуса коммита графа"
     },
     {
       "page": "timeline",
@@ -215,35 +243,40 @@
       "kind": "headings",
       "severity": "metric",
       "count": 4,
-      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды"
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "timeline-graph",
       "viewport": "desktop",
       "kind": "canvas-scroll",
       "severity": "metric",
-      "detail": "canvas 780/1438 (auto)"
+      "detail": "canvas 780/1438 (auto)",
+      "note": "канвас прокручивается намеренно: область подписана и доступна с клавиатуры"
     },
     {
       "page": "timeline-graph",
       "viewport": "desktop",
       "kind": "chips-scroll",
       "severity": "metric",
-      "detail": "1122/1471"
+      "detail": "1122/1471",
+      "note": "лента заявок прокручивается намеренно: подписана, доступна с клавиатуры"
     },
     {
       "page": "timeline-graph",
       "viewport": "desktop",
       "kind": "slider-a11y",
       "severity": "metric",
-      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
+      "detail": "aria-label=нет; aria-valuetext=2 января 2026",
+      "note": "снимок подписи и озвучки ползунка времени"
     },
     {
       "page": "timeline-graph",
       "viewport": "desktop",
       "kind": "commit-a11y",
       "severity": "metric",
-      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0"
+      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0",
+      "note": "снимок роли, подписи и фокуса коммита графа"
     },
     {
       "page": "timeline-graph",
@@ -251,42 +284,48 @@
       "kind": "headings",
       "severity": "metric",
       "count": 4,
-      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды"
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "timeline-card",
       "viewport": "desktop",
       "kind": "canvas-scroll",
       "severity": "metric",
-      "detail": "canvas 780/1438 (auto)"
+      "detail": "canvas 780/1438 (auto)",
+      "note": "канвас прокручивается намеренно: область подписана и доступна с клавиатуры"
     },
     {
       "page": "timeline-card",
       "viewport": "desktop",
       "kind": "chips-scroll",
       "severity": "metric",
-      "detail": "1122/1471"
+      "detail": "1122/1471",
+      "note": "лента заявок прокручивается намеренно: подписана, доступна с клавиатуры"
     },
     {
       "page": "timeline-card",
       "viewport": "desktop",
       "kind": "slider-a11y",
       "severity": "metric",
-      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
+      "detail": "aria-label=нет; aria-valuetext=2 января 2026",
+      "note": "снимок подписи и озвучки ползунка времени"
     },
     {
       "page": "timeline-card",
       "viewport": "desktop",
       "kind": "commit-a11y",
       "severity": "metric",
-      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0"
+      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0",
+      "note": "снимок роли, подписи и фокуса коммита графа"
     },
     {
       "page": "timeline-card",
       "viewport": "desktop",
       "kind": "card-position",
       "severity": "metric",
-      "detail": "top=351px, в окне: true"
+      "detail": "top=351px, в окне: true",
+      "note": "снимок положения карточки узла в окне"
     },
     {
       "page": "timeline-card",
@@ -294,21 +333,24 @@
       "kind": "headings",
       "severity": "metric",
       "count": 4,
-      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды"
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "gantt",
       "viewport": "desktop",
       "kind": "chips-scroll",
       "severity": "metric",
-      "detail": "1122/1471"
+      "detail": "1122/1471",
+      "note": "лента заявок прокручивается намеренно: подписана, доступна с клавиатуры"
     },
     {
       "page": "gantt",
       "viewport": "desktop",
       "kind": "slider-a11y",
       "severity": "metric",
-      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
+      "detail": "aria-label=нет; aria-valuetext=2 января 2026",
+      "note": "снимок подписи и озвучки ползунка времени"
     },
     {
       "page": "gantt",
@@ -316,7 +358,8 @@
       "kind": "headings",
       "severity": "metric",
       "count": 4,
-      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Принцип визуального отображения SLA | H2: Связанные виды"
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Принцип визуального отображения SLA | H2: Связанные виды",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "chat",
@@ -324,7 +367,8 @@
       "kind": "headings",
       "severity": "metric",
       "count": 3,
-      "detail": "H1: Переписка | H2: Параметры просмотра | H2: Участники сценария"
+      "detail": "H1: Переписка | H2: Параметры просмотра | H2: Участники сценария",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "model",
@@ -332,14 +376,16 @@
       "kind": "headings",
       "severity": "metric",
       "count": 7,
-      "detail": "H1: Модель процесса | H2: Группы модели | H2: Узлы процесса | H2: Обозначения доступа | H2: Матрица «роль × узел» | H2: Справка по модели | H2: Заявки (30)"
+      "detail": "H1: Модель процесса | H2: Группы модели | H2: Узлы процесса | H2: Обозначения доступа | H2: Матрица «роль × узел» | H2: Справка по модели | H2: Заявки (30)",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "keyboard",
       "viewport": "desktop",
       "kind": "enter-on-commit",
       "severity": "metric",
-      "detail": "карточка открылась"
+      "detail": "карточка открылась",
+      "note": "проверка открытия карточки узла клавишей Enter"
     },
     {
       "page": "dashboard",
@@ -347,7 +393,8 @@
       "kind": "headings",
       "severity": "metric",
       "count": 7,
-      "detail": "H1: Обзор | H2: Следующие действия | H2: Требуют внимания | H2: Последние события | H2: Распределение обращений | H2: Контроль сроков | H2: Динамика за период"
+      "detail": "H1: Обзор | H2: Следующие действия | H2: Требуют внимания | H2: Последние события | H2: Распределение обращений | H2: Контроль сроков | H2: Динамика за период",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "incidents",
@@ -355,7 +402,8 @@
       "kind": "headings",
       "severity": "metric",
       "count": 4,
-      "detail": "H1: Обращения | H2: Все обращения | H2: Порядок работы со списком | H2: Статусы и SLA"
+      "detail": "H1: Обращения | H2: Все обращения | H2: Порядок работы со списком | H2: Статусы и SLA",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "incident",
@@ -363,35 +411,40 @@
       "kind": "headings",
       "severity": "metric",
       "count": 11,
-      "detail": "H1: Обращение З-015 | H2: Следующий шаг по модели | H2: Историческая атрибуция на дату | H2: Длительности | H2: Разбита дверь подъезда | H2: Передачи подразделению | H2: История прохождения | H2: Контроль SLA | H2: Подтверждение завершения | H2: Участники | H2: Связанные представления"
+      "detail": "H1: Обращение З-015 | H2: Следующий шаг по модели | H2: Историческая атрибуция на дату | H2: Длительности | H2: Разбита дверь подъезда | H2: Передачи подразделению | H2: История прохождения | H2: Контроль SLA | H2: Подтверждение завершения | H2: Участники | H2: Связанные представления",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "timeline",
       "viewport": "tablet",
       "kind": "canvas-scroll",
       "severity": "metric",
-      "detail": "canvas 736/1438 (auto)"
+      "detail": "canvas 736/1438 (auto)",
+      "note": "канвас прокручивается намеренно: область подписана и доступна с клавиатуры"
     },
     {
       "page": "timeline",
       "viewport": "tablet",
       "kind": "chips-scroll",
       "severity": "metric",
-      "detail": "738/1471"
+      "detail": "738/1471",
+      "note": "лента заявок прокручивается намеренно: подписана, доступна с клавиатуры"
     },
     {
       "page": "timeline",
       "viewport": "tablet",
       "kind": "slider-a11y",
       "severity": "metric",
-      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
+      "detail": "aria-label=нет; aria-valuetext=2 января 2026",
+      "note": "снимок подписи и озвучки ползунка времени"
     },
     {
       "page": "timeline",
       "viewport": "tablet",
       "kind": "commit-a11y",
       "severity": "metric",
-      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0"
+      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0",
+      "note": "снимок роли, подписи и фокуса коммита графа"
     },
     {
       "page": "timeline",
@@ -399,35 +452,40 @@
       "kind": "headings",
       "severity": "metric",
       "count": 4,
-      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды"
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "timeline-graph",
       "viewport": "tablet",
       "kind": "canvas-scroll",
       "severity": "metric",
-      "detail": "canvas 736/1438 (auto)"
+      "detail": "canvas 736/1438 (auto)",
+      "note": "канвас прокручивается намеренно: область подписана и доступна с клавиатуры"
     },
     {
       "page": "timeline-graph",
       "viewport": "tablet",
       "kind": "chips-scroll",
       "severity": "metric",
-      "detail": "738/1471"
+      "detail": "738/1471",
+      "note": "лента заявок прокручивается намеренно: подписана, доступна с клавиатуры"
     },
     {
       "page": "timeline-graph",
       "viewport": "tablet",
       "kind": "slider-a11y",
       "severity": "metric",
-      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
+      "detail": "aria-label=нет; aria-valuetext=2 января 2026",
+      "note": "снимок подписи и озвучки ползунка времени"
     },
     {
       "page": "timeline-graph",
       "viewport": "tablet",
       "kind": "commit-a11y",
       "severity": "metric",
-      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0"
+      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0",
+      "note": "снимок роли, подписи и фокуса коммита графа"
     },
     {
       "page": "timeline-graph",
@@ -435,42 +493,48 @@
       "kind": "headings",
       "severity": "metric",
       "count": 4,
-      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды"
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "timeline-card",
       "viewport": "tablet",
       "kind": "canvas-scroll",
       "severity": "metric",
-      "detail": "canvas 736/1438 (auto)"
+      "detail": "canvas 736/1438 (auto)",
+      "note": "канвас прокручивается намеренно: область подписана и доступна с клавиатуры"
     },
     {
       "page": "timeline-card",
       "viewport": "tablet",
       "kind": "chips-scroll",
       "severity": "metric",
-      "detail": "738/1471"
+      "detail": "738/1471",
+      "note": "лента заявок прокручивается намеренно: подписана, доступна с клавиатуры"
     },
     {
       "page": "timeline-card",
       "viewport": "tablet",
       "kind": "slider-a11y",
       "severity": "metric",
-      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
+      "detail": "aria-label=нет; aria-valuetext=2 января 2026",
+      "note": "снимок подписи и озвучки ползунка времени"
     },
     {
       "page": "timeline-card",
       "viewport": "tablet",
       "kind": "commit-a11y",
       "severity": "metric",
-      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0"
+      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0",
+      "note": "снимок роли, подписи и фокуса коммита графа"
     },
     {
       "page": "timeline-card",
       "viewport": "tablet",
       "kind": "card-position",
       "severity": "metric",
-      "detail": "top=261px, в окне: true"
+      "detail": "top=261px, в окне: true",
+      "note": "снимок положения карточки узла в окне"
     },
     {
       "page": "timeline-card",
@@ -478,21 +542,24 @@
       "kind": "headings",
       "severity": "metric",
       "count": 4,
-      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды"
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "gantt",
       "viewport": "tablet",
       "kind": "chips-scroll",
       "severity": "metric",
-      "detail": "738/1471"
+      "detail": "738/1471",
+      "note": "лента заявок прокручивается намеренно: подписана, доступна с клавиатуры"
     },
     {
       "page": "gantt",
       "viewport": "tablet",
       "kind": "slider-a11y",
       "severity": "metric",
-      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
+      "detail": "aria-label=нет; aria-valuetext=2 января 2026",
+      "note": "снимок подписи и озвучки ползунка времени"
     },
     {
       "page": "gantt",
@@ -500,7 +567,8 @@
       "kind": "headings",
       "severity": "metric",
       "count": 4,
-      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Принцип визуального отображения SLA | H2: Связанные виды"
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Принцип визуального отображения SLA | H2: Связанные виды",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "chat",
@@ -508,7 +576,8 @@
       "kind": "headings",
       "severity": "metric",
       "count": 3,
-      "detail": "H1: Переписка | H2: Параметры просмотра | H2: Участники сценария"
+      "detail": "H1: Переписка | H2: Параметры просмотра | H2: Участники сценария",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "model",
@@ -516,14 +585,16 @@
       "kind": "headings",
       "severity": "metric",
       "count": 7,
-      "detail": "H1: Модель процесса | H2: Группы модели | H2: Узлы процесса | H2: Обозначения доступа | H2: Матрица «роль × узел» | H2: Справка по модели | H2: Заявки (30)"
+      "detail": "H1: Модель процесса | H2: Группы модели | H2: Узлы процесса | H2: Обозначения доступа | H2: Матрица «роль × узел» | H2: Справка по модели | H2: Заявки (30)",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "keyboard",
       "viewport": "tablet",
       "kind": "enter-on-commit",
       "severity": "metric",
-      "detail": "карточка открылась"
+      "detail": "карточка открылась",
+      "note": "проверка открытия карточки узла клавишей Enter"
     },
     {
       "page": "dashboard",
@@ -531,7 +602,8 @@
       "kind": "headings",
       "severity": "metric",
       "count": 7,
-      "detail": "H1: Обзор | H2: Следующие действия | H2: Требуют внимания | H2: Последние события | H2: Распределение обращений | H2: Контроль сроков | H2: Динамика за период"
+      "detail": "H1: Обзор | H2: Следующие действия | H2: Требуют внимания | H2: Последние события | H2: Распределение обращений | H2: Контроль сроков | H2: Динамика за период",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "incidents",
@@ -539,7 +611,8 @@
       "kind": "headings",
       "severity": "metric",
       "count": 4,
-      "detail": "H1: Обращения | H2: Все обращения | H2: Порядок работы со списком | H2: Статусы и SLA"
+      "detail": "H1: Обращения | H2: Все обращения | H2: Порядок работы со списком | H2: Статусы и SLA",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "incident",
@@ -547,35 +620,40 @@
       "kind": "headings",
       "severity": "metric",
       "count": 11,
-      "detail": "H1: Обращение З-015 | H2: Следующий шаг по модели | H2: Историческая атрибуция на дату | H2: Длительности | H2: Разбита дверь подъезда | H2: Передачи подразделению | H2: История прохождения | H2: Контроль SLA | H2: Подтверждение завершения | H2: Участники | H2: Связанные представления"
+      "detail": "H1: Обращение З-015 | H2: Следующий шаг по модели | H2: Историческая атрибуция на дату | H2: Длительности | H2: Разбита дверь подъезда | H2: Передачи подразделению | H2: История прохождения | H2: Контроль SLA | H2: Подтверждение завершения | H2: Участники | H2: Связанные представления",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "timeline",
       "viewport": "portrait",
       "kind": "canvas-scroll",
       "severity": "metric",
-      "detail": "canvas 738/1438 (auto)"
+      "detail": "canvas 738/1438 (auto)",
+      "note": "канвас прокручивается намеренно: область подписана и доступна с клавиатуры"
     },
     {
       "page": "timeline",
       "viewport": "portrait",
       "kind": "chips-scroll",
       "severity": "metric",
-      "detail": "740/1471"
+      "detail": "740/1471",
+      "note": "лента заявок прокручивается намеренно: подписана, доступна с клавиатуры"
     },
     {
       "page": "timeline",
       "viewport": "portrait",
       "kind": "slider-a11y",
       "severity": "metric",
-      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
+      "detail": "aria-label=нет; aria-valuetext=2 января 2026",
+      "note": "снимок подписи и озвучки ползунка времени"
     },
     {
       "page": "timeline",
       "viewport": "portrait",
       "kind": "commit-a11y",
       "severity": "metric",
-      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0"
+      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0",
+      "note": "снимок роли, подписи и фокуса коммита графа"
     },
     {
       "page": "timeline",
@@ -583,35 +661,40 @@
       "kind": "headings",
       "severity": "metric",
       "count": 4,
-      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды"
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "timeline-graph",
       "viewport": "portrait",
       "kind": "canvas-scroll",
       "severity": "metric",
-      "detail": "canvas 738/1438 (auto)"
+      "detail": "canvas 738/1438 (auto)",
+      "note": "канвас прокручивается намеренно: область подписана и доступна с клавиатуры"
     },
     {
       "page": "timeline-graph",
       "viewport": "portrait",
       "kind": "chips-scroll",
       "severity": "metric",
-      "detail": "740/1471"
+      "detail": "740/1471",
+      "note": "лента заявок прокручивается намеренно: подписана, доступна с клавиатуры"
     },
     {
       "page": "timeline-graph",
       "viewport": "portrait",
       "kind": "slider-a11y",
       "severity": "metric",
-      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
+      "detail": "aria-label=нет; aria-valuetext=2 января 2026",
+      "note": "снимок подписи и озвучки ползунка времени"
     },
     {
       "page": "timeline-graph",
       "viewport": "portrait",
       "kind": "commit-a11y",
       "severity": "metric",
-      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0"
+      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0",
+      "note": "снимок роли, подписи и фокуса коммита графа"
     },
     {
       "page": "timeline-graph",
@@ -619,42 +702,48 @@
       "kind": "headings",
       "severity": "metric",
       "count": 4,
-      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды"
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "timeline-card",
       "viewport": "portrait",
       "kind": "canvas-scroll",
       "severity": "metric",
-      "detail": "canvas 738/1438 (auto)"
+      "detail": "canvas 738/1438 (auto)",
+      "note": "канвас прокручивается намеренно: область подписана и доступна с клавиатуры"
     },
     {
       "page": "timeline-card",
       "viewport": "portrait",
       "kind": "chips-scroll",
       "severity": "metric",
-      "detail": "740/1471"
+      "detail": "740/1471",
+      "note": "лента заявок прокручивается намеренно: подписана, доступна с клавиатуры"
     },
     {
       "page": "timeline-card",
       "viewport": "portrait",
       "kind": "slider-a11y",
       "severity": "metric",
-      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
+      "detail": "aria-label=нет; aria-valuetext=2 января 2026",
+      "note": "снимок подписи и озвучки ползунка времени"
     },
     {
       "page": "timeline-card",
       "viewport": "portrait",
       "kind": "commit-a11y",
       "severity": "metric",
-      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0"
+      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0",
+      "note": "снимок роли, подписи и фокуса коммита графа"
     },
     {
       "page": "timeline-card",
       "viewport": "portrait",
       "kind": "card-position",
       "severity": "metric",
-      "detail": "top=389px, в окне: true"
+      "detail": "top=389px, в окне: true",
+      "note": "снимок положения карточки узла в окне"
     },
     {
       "page": "timeline-card",
@@ -662,21 +751,24 @@
       "kind": "headings",
       "severity": "metric",
       "count": 4,
-      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды"
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "gantt",
       "viewport": "portrait",
       "kind": "chips-scroll",
       "severity": "metric",
-      "detail": "740/1471"
+      "detail": "740/1471",
+      "note": "лента заявок прокручивается намеренно: подписана, доступна с клавиатуры"
     },
     {
       "page": "gantt",
       "viewport": "portrait",
       "kind": "slider-a11y",
       "severity": "metric",
-      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
+      "detail": "aria-label=нет; aria-valuetext=2 января 2026",
+      "note": "снимок подписи и озвучки ползунка времени"
     },
     {
       "page": "gantt",
@@ -684,7 +776,8 @@
       "kind": "headings",
       "severity": "metric",
       "count": 4,
-      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Принцип визуального отображения SLA | H2: Связанные виды"
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Принцип визуального отображения SLA | H2: Связанные виды",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "chat",
@@ -692,7 +785,8 @@
       "kind": "headings",
       "severity": "metric",
       "count": 3,
-      "detail": "H1: Переписка | H2: Параметры просмотра | H2: Участники сценария"
+      "detail": "H1: Переписка | H2: Параметры просмотра | H2: Участники сценария",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "model",
@@ -700,14 +794,16 @@
       "kind": "headings",
       "severity": "metric",
       "count": 7,
-      "detail": "H1: Модель процесса | H2: Группы модели | H2: Узлы процесса | H2: Обозначения доступа | H2: Матрица «роль × узел» | H2: Справка по модели | H2: Заявки (30)"
+      "detail": "H1: Модель процесса | H2: Группы модели | H2: Узлы процесса | H2: Обозначения доступа | H2: Матрица «роль × узел» | H2: Справка по модели | H2: Заявки (30)",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "keyboard",
       "viewport": "portrait",
       "kind": "enter-on-commit",
       "severity": "metric",
-      "detail": "карточка открылась"
+      "detail": "карточка открылась",
+      "note": "проверка открытия карточки узла клавишей Enter"
     },
     {
       "page": "dashboard",
@@ -715,7 +811,8 @@
       "kind": "headings",
       "severity": "metric",
       "count": 7,
-      "detail": "H1: Обзор | H2: Следующие действия | H2: Требуют внимания | H2: Последние события | H2: Распределение обращений | H2: Контроль сроков | H2: Динамика за период"
+      "detail": "H1: Обзор | H2: Следующие действия | H2: Требуют внимания | H2: Последние события | H2: Распределение обращений | H2: Контроль сроков | H2: Динамика за период",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "incidents",
@@ -723,7 +820,8 @@
       "kind": "headings",
       "severity": "metric",
       "count": 4,
-      "detail": "H1: Обращения | H2: Все обращения | H2: Порядок работы со списком | H2: Статусы и SLA"
+      "detail": "H1: Обращения | H2: Все обращения | H2: Порядок работы со списком | H2: Статусы и SLA",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "incident",
@@ -731,28 +829,32 @@
       "kind": "headings",
       "severity": "metric",
       "count": 11,
-      "detail": "H1: Обращение З-015 | H2: Следующий шаг по модели | H2: Историческая атрибуция на дату | H2: Длительности | H2: Разбита дверь подъезда | H2: Передачи подразделению | H2: История прохождения | H2: Контроль SLA | H2: Подтверждение завершения | H2: Участники | H2: Связанные представления"
+      "detail": "H1: Обращение З-015 | H2: Следующий шаг по модели | H2: Историческая атрибуция на дату | H2: Длительности | H2: Разбита дверь подъезда | H2: Передачи подразделению | H2: История прохождения | H2: Контроль SLA | H2: Подтверждение завершения | H2: Участники | H2: Связанные представления",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "timeline",
       "viewport": "mobile",
       "kind": "chips-scroll",
       "severity": "metric",
-      "detail": "366/1471"
+      "detail": "366/1471",
+      "note": "лента заявок прокручивается намеренно: подписана, доступна с клавиатуры"
     },
     {
       "page": "timeline",
       "viewport": "mobile",
       "kind": "slider-a11y",
       "severity": "metric",
-      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
+      "detail": "aria-label=нет; aria-valuetext=2 января 2026",
+      "note": "снимок подписи и озвучки ползунка времени"
     },
     {
       "page": "timeline",
       "viewport": "mobile",
       "kind": "commit-a11y",
       "severity": "metric",
-      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0"
+      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0",
+      "note": "снимок роли, подписи и фокуса коммита графа"
     },
     {
       "page": "timeline",
@@ -760,35 +862,40 @@
       "kind": "headings",
       "severity": "metric",
       "count": 4,
-      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды"
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "timeline-graph",
       "viewport": "mobile",
       "kind": "canvas-scroll",
       "severity": "metric",
-      "detail": "canvas 364/1794 (auto)"
+      "detail": "canvas 364/1794 (auto)",
+      "note": "канвас прокручивается намеренно: область подписана и доступна с клавиатуры"
     },
     {
       "page": "timeline-graph",
       "viewport": "mobile",
       "kind": "chips-scroll",
       "severity": "metric",
-      "detail": "366/1471"
+      "detail": "366/1471",
+      "note": "лента заявок прокручивается намеренно: подписана, доступна с клавиатуры"
     },
     {
       "page": "timeline-graph",
       "viewport": "mobile",
       "kind": "slider-a11y",
       "severity": "metric",
-      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
+      "detail": "aria-label=нет; aria-valuetext=2 января 2026",
+      "note": "снимок подписи и озвучки ползунка времени"
     },
     {
       "page": "timeline-graph",
       "viewport": "mobile",
       "kind": "commit-a11y",
       "severity": "metric",
-      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0"
+      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0",
+      "note": "снимок роли, подписи и фокуса коммита графа"
     },
     {
       "page": "timeline-graph",
@@ -796,42 +903,48 @@
       "kind": "headings",
       "severity": "metric",
       "count": 4,
-      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды"
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "timeline-card",
       "viewport": "mobile",
       "kind": "canvas-scroll",
       "severity": "metric",
-      "detail": "canvas 364/1794 (auto)"
+      "detail": "canvas 364/1794 (auto)",
+      "note": "канвас прокручивается намеренно: область подписана и доступна с клавиатуры"
     },
     {
       "page": "timeline-card",
       "viewport": "mobile",
       "kind": "chips-scroll",
       "severity": "metric",
-      "detail": "366/1471"
+      "detail": "366/1471",
+      "note": "лента заявок прокручивается намеренно: подписана, доступна с клавиатуры"
     },
     {
       "page": "timeline-card",
       "viewport": "mobile",
       "kind": "slider-a11y",
       "severity": "metric",
-      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
+      "detail": "aria-label=нет; aria-valuetext=2 января 2026",
+      "note": "снимок подписи и озвучки ползунка времени"
     },
     {
       "page": "timeline-card",
       "viewport": "mobile",
       "kind": "commit-a11y",
       "severity": "metric",
-      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0"
+      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0",
+      "note": "снимок роли, подписи и фокуса коммита графа"
     },
     {
       "page": "timeline-card",
       "viewport": "mobile",
       "kind": "card-position",
       "severity": "metric",
-      "detail": "top=240px, в окне: true"
+      "detail": "top=240px, в окне: true",
+      "note": "снимок положения карточки узла в окне"
     },
     {
       "page": "timeline-card",
@@ -839,21 +952,24 @@
       "kind": "headings",
       "severity": "metric",
       "count": 4,
-      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды"
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "gantt",
       "viewport": "mobile",
       "kind": "chips-scroll",
       "severity": "metric",
-      "detail": "366/1471"
+      "detail": "366/1471",
+      "note": "лента заявок прокручивается намеренно: подписана, доступна с клавиатуры"
     },
     {
       "page": "gantt",
       "viewport": "mobile",
       "kind": "slider-a11y",
       "severity": "metric",
-      "detail": "aria-label=нет; aria-valuetext=2 января 2026"
+      "detail": "aria-label=нет; aria-valuetext=2 января 2026",
+      "note": "снимок подписи и озвучки ползунка времени"
     },
     {
       "page": "gantt",
@@ -861,7 +977,8 @@
       "kind": "headings",
       "severity": "metric",
       "count": 4,
-      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Принцип визуального отображения SLA | H2: Связанные виды"
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Принцип визуального отображения SLA | H2: Связанные виды",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "chat",
@@ -869,7 +986,8 @@
       "kind": "headings",
       "severity": "metric",
       "count": 3,
-      "detail": "H1: Переписка | H2: Параметры просмотра | H2: Участники сценария"
+      "detail": "H1: Переписка | H2: Параметры просмотра | H2: Участники сценария",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "model",
@@ -877,14 +995,16 @@
       "kind": "headings",
       "severity": "metric",
       "count": 7,
-      "detail": "H1: Модель процесса | H2: Группы модели | H2: Узлы процесса | H2: Обозначения доступа | H2: Матрица «роль × узел» | H2: Справка по модели | H2: Заявки (30)"
+      "detail": "H1: Модель процесса | H2: Группы модели | H2: Узлы процесса | H2: Обозначения доступа | H2: Матрица «роль × узел» | H2: Справка по модели | H2: Заявки (30)",
+      "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
       "page": "keyboard",
       "viewport": "mobile",
       "kind": "enter-on-commit",
       "severity": "metric",
-      "detail": "карточка открылась"
+      "detail": "карточка открылась",
+      "note": "проверка открытия карточки узла клавишей Enter"
     }
   ],
   "shots": [
