@@ -11,3 +11,15 @@
   .muted, .case-sub, .fact-label { color: #333 !important; }
   @page { margin: 14mm; }
 }
+
+/* A2: список реестра печатается таблицей (а не карточками) и не рвётся по строкам. */
+@media print {
+  #view table { display: table !important; width: 100% !important; min-width: 0 !important; }
+  #view thead { display: table-header-group !important; }
+  #view tbody { display: table-row-group !important; }
+  #view tr { display: table-row !important; break-inside: avoid; }
+  #view td, #view th { display: table-cell !important; padding: 4px 6px !important; border: 1px solid #999 !important; vertical-align: top; }
+  #view [data-incidents-filters], #view [data-filter-chips], #view [data-chips], #view .chips, #view .ruler, #view .toolbar-actions { display: none !important; }
+  #view .event-list { display: block !important; }
+  #view .kpis, #view .operations { display: block !important; }
+}

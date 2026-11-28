@@ -157,3 +157,6 @@
   .node-card-row { align-items: flex-start; flex-direction: column; gap: 3px; }
   .phone-body { max-height: 50vh; }
 }
+/* A1: кнопки выгрузки и печати живут внутри «Параметры», чтобы не растить панель. */
+.toolbar-actions { display: inline-flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.toolbar-actions button { min-height: 32px; }

@@ -7,6 +7,7 @@ import type { Graph } from "../types.ts";
 import { renderIncidents, renderIncidentsLive } from "./incidents-html.ts";
 import { filtersWithout, type ChipKey } from "./incidents-chips.ts";
 import { buildRows, defaultFilters, eventsInPeriod, filtersHash, parseFilters, type IncidentFilters } from "./incidents.ts";
+import { download, exportFileName, toCsv, toJson } from "./registry-export.ts";
 import type { Route } from "./router.ts";
 
 /** Экран «Обращения»: фильтры живут в адресе, таблица перерисовывается без потери фокуса поиска. */
@@ -78,6 +79,22 @@ export const mountIncidents = (root: HTMLElement, graph: Graph, story: Story, ro
   paint();
   root.addEventListener("click", (event) => {
     const target = event.target as HTMLElement | null;
+    // A1/A2: выгрузка и печать текущего среза — данные берём из уже построенных строк.
+    if (target?.closest("[data-print]")) {
+      window.print();
+      return;
+    }
+    const exportKind = target?.closest<HTMLElement>("[data-export]")?.dataset.export;
+    if (exportKind !== undefined) {
+      const payload = { day, period: periodMode ? periodLength : 1, filters: { ...filters }, rows: rows() };
+      const isCsv = exportKind === "csv";
+      download(
+        isCsv ? toCsv(payload.rows) : toJson(payload),
+        exportFileName(isCsv ? "csv" : "json", day, payload.period),
+        isCsv ? "text/csv;charset=utf-8" : "application/json;charset=utf-8",
+      );
+      return;
+    }
     if (!target?.closest("[data-filters-toggle]")) return;
     const more = root.querySelector("[data-filters-more]");
     const toggle = root.querySelector<HTMLElement>("[data-filters-toggle]");

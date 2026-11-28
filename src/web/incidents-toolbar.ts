@@ -74,6 +74,11 @@ export const renderToolbar = (input: ToolbarInput): string => {
     select("filter-node", "Узел", nodes, input.filters.node) +
     select("sort", "Сортировка", entries(SORT_TITLES), input.filters.sort) +
     select("filter-department", "Подразделение", departments, input.filters.department) +
+    '<div class="toolbar-actions">' +
+    '<button type="button" data-export="csv">Выгрузить CSV</button>' +
+    '<button type="button" data-export="json">Выгрузить JSON</button>' +
+    '<button type="button" data-print>Печать</button>' +
+    "</div>" +
     "</div></div>" +
     '<span class="grow"></span><span class="count" data-incidents-count>Найдено: ' + input.rows.length + "</span></div>"
   );
