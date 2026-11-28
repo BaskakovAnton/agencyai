@@ -49,6 +49,7 @@ export const buildWeb = async (options: BuildOptions): Promise<readonly string[]
     ["src/web/mobile.css", "mobile.css"],
     ["src/web/favicon.svg", "favicon.svg"],
     ["src/web/manifest.webmanifest", "manifest.webmanifest"],
+    ["src/web/print.css", "print.css"],
   ];
   const copied = [bundlePath];
   for (const [from, to] of assets) {

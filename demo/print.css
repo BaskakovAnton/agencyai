@@ -1,0 +1,13 @@
+/* V8: печать карточки обращения — только содержимое, без обвязки интерфейса. */
+@media print {
+  ui-sidebar, ui-topbar, .skip-link, .toolbar, .timeline-controls, .chips, .ruler, .scroll-hint, .foot, .panel-link, .theme-btn, button { display: none !important; }
+  html, body { background: #fff !important; color: #000 !important; }
+  .app { display: block !important; }
+  .content { padding: 0 !important; }
+  .detail-grid, .two-col, .dashboard, .incidents-screen { display: block !important; }
+  .panel, .card, .fact, .transfer-row, .event-row { break-inside: avoid; border-color: #999 !important; box-shadow: none !important; background: #fff !important; }
+  .panel + .panel, .section-gap { margin-top: 8mm; }
+  a { color: #000 !important; text-decoration: underline; }
+  .muted, .case-sub, .fact-label { color: #333 !important; }
+  @page { margin: 14mm; }
+}

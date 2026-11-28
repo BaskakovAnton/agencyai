@@ -443,6 +443,23 @@ details.more li { font-size: 13px; margin-bottom: 4px; color: var(--text-2); }
 </style>
 </head>
 <body>
+<!-- V7: указатель на рабочую систему (SPA). Прототип остаётся на месте. -->
+<aside class="dsh-demo-banner" data-demo-banner style="position:fixed;left:0;right:0;bottom:0;z-index:9999;display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap;padding:10px 14px;font:14px/1.4 Inter,'Segoe UI',sans-serif;color:#fff;background:#0f1115;border-top:1px solid #2a2f3a;box-shadow:0 -6px 18px rgba(0,0,0,.28)">
+  <b style="font-weight:800">ДЕПУТАТ 360°</b>
+  <span style="opacity:.85">рабочая система: реестр, карточка, хронология, SLA</span>
+  <a href="./demo/" style="display:inline-flex;align-items:center;min-height:36px;padding:0 14px;border-radius:9px;background:#3478f6;color:#fff;font-weight:700;text-decoration:none">Открыть →</a>
+  <button type="button" data-demo-banner-close aria-label="Скрыть подсказку" style="min-height:36px;padding:0 10px;border:1px solid #2a2f3a;border-radius:9px;background:transparent;color:#fff;cursor:pointer">Скрыть</button>
+</aside>
+<script>
+  try {
+    var dshBanner = document.querySelector("[data-demo-banner]");
+    if (localStorage.getItem("dsh-demo-banner") === "hidden") dshBanner.remove();
+    document.querySelector("[data-demo-banner-close]").addEventListener("click", function () {
+      dshBanner.remove();
+      try { localStorage.setItem("dsh-demo-banner", "hidden"); } catch (e) {}
+    });
+  } catch (e) {}
+</script>
 
 <!-- Шапка: бренд + тема -->
 <header class="appbar">

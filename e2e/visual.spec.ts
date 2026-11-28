@@ -67,3 +67,24 @@ test.describe("Плотность и ориентирование", () => {
     await expect(page.locator("[data-empty-state] .empty-text").first()).not.toBeEmpty();
   });
 });
+
+test.describe("Печать и движение", () => {
+  test("печать скрывает обвязку и оставляет содержимое карточки", async ({ page }) => {
+    await page.goto("/#incident/" + encodeURIComponent("З-015") + "?at=2026-01-02");
+    await page.emulateMedia({ media: "print" });
+    await expect(page.locator("ui-sidebar")).toBeHidden();
+    await expect(page.locator("ui-topbar")).toBeHidden();
+    await expect(page.locator("[data-incident-detail]")).toBeVisible();
+    await expect(page.locator("[data-transfers]")).toBeVisible();
+  });
+
+  test("появление экрана анимируется и отключается при reduced-motion", async ({ page }) => {
+    await page.goto("/#dashboard?at=2026-01-02");
+    const name = await page.locator("#view > *").first().evaluate((el) => getComputedStyle(el).animationName);
+    expect(name).toContain("screen-in");
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.reload();
+    const off = await page.locator("#view > *").first().evaluate((el) => getComputedStyle(el).animationName);
+    expect(off).toBe("none");
+  });
+});

@@ -188,3 +188,8 @@ span.chip { border: 1px solid var(--color-border); color: var(--color-text-muted
 button:active:not(:disabled), a.button:active, .panel-link:active, .chip:active { transform: translateY(1px); }
 .click-row:active, .event-row:active, .action-item:active { background: var(--color-surface-hover); }
 .gantt-row:focus-visible { outline-width: 2px; outline-offset: 2px; }
+
+/* V9: мягкое появление экрана при переходе между разделами. */
+@keyframes screen-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+#view > section, #view > .dashboard, #view > .incidents-screen, #view > .incident-detail, #view > .timeline, #view > .chat-screen, #view > .model-screen { animation: screen-in .18s ease-out; }
+@media (prefers-reduced-motion: reduce) { #view > * { animation: none !important; } }
