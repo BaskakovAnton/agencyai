@@ -3,7 +3,7 @@ import { formatDay, formatStamp } from "../core/timeline.ts";
 import { esc, renderBadge, renderEmptyState, renderPanel, renderPriorityBadge, renderSlaBadge } from "./components.ts";
 import { historicalIndicator } from "./historical.ts";
 import { hrefIncident } from "./router.ts";
-import type { IncidentFilters, IncidentRow } from "./incidents.ts";
+import { filtersHash, type IncidentFilters, type IncidentRow } from "./incidents.ts";
 import { PHASE_TONES, PRIORITY_TONES } from "./overview.ts";
 import { filterChips, renderFilterChips } from "./incidents-chips.ts";
 import { emptyStateFor, renderEmptyIncidents, type EmptyIncidentsState } from "./incidents-empty.ts";
@@ -20,6 +20,8 @@ export interface IncidentsInput {
   readonly departments?: readonly { readonly id: string; readonly name: string }[];
   /** Исторический срез: показывается единый индикатор. */
   readonly historical?: boolean;
+  /** Длина периода событий: больше 1 — режим «события за N дней» (WP-5). */
+  readonly period?: number;
 }
 
 const stageTitle = (row: IncidentRow): string => (row.nodeTitle === "" ? row.nodeId : row.nodeId + " " + row.nodeTitle);
@@ -131,6 +133,10 @@ const slaLegend = (): string =>
 /** Экран «Обращения» по композиции incidents.html. */
 export const renderIncidents = (input: IncidentsInput): string =>
   '<section class="incidents-screen" data-incidents>' + renderToolbar(input) +
+  ((input.period ?? 0) > 1
+    ? '<div class="notice period-mode" data-period-mode>События за ' + input.period + ' дней: обращения, у которых были события периода. ' +
+      '<a class="panel-link" href="' + filtersHash(input.filters, input.day) + '">Показать срез дня →</a></div>'
+    : "") +
   (input.historical === true ? historicalIndicator(input.day, input.days) : "") +
   renderPanel({
     title: "Все обращения",

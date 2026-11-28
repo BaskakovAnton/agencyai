@@ -4,6 +4,7 @@ import { lifecycleStatusOn } from "../core/analytics/snapshot.ts";
 import { slaPhaseOnDay, SLA_PHASES, type SlaPhase } from "../core/sla-at.ts";
 import { slaStateAt } from "../core/sla-at.ts";
 import { addHours, dayOf, historyUpTo, incidentAt, visibleAt } from "../core/timeline.ts";
+import { dayShift } from "../core/periods.ts";
 import { NODE_MESSAGES } from "../data/messages.ts";
 import { ROLE_NAMES } from "../data/roles.ts";
 import { situationById } from "../data/situations.ts";
@@ -112,6 +113,16 @@ const matches = (incident: Incident, situation: string, query: string): boolean 
     .join(" ")
     .toLowerCase();
   return haystack.includes(needle);
+};
+
+/** Обращения, у которых были события в периоде, заканчивающемся днём `day` (Flow, WP-5). */
+export const eventsInPeriod = (incidents: readonly Incident[], day: string, length: number): readonly string[] => {
+  const from = dayShift(day, -(Math.max(length, 1) - 1));
+  return incidents
+    .filter((incident) =>
+      incident.history.some((move) => typeof move.at === "string" && move.at.slice(0, 10) >= from && move.at.slice(0, 10) <= day),
+    )
+    .map((incident) => incident.id);
 };
 
 /** Строки реестра на выбранный день: все поля берутся из модели. */

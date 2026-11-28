@@ -102,7 +102,8 @@ export const renderDashboard = (input: DashboardInput): string => {
   if (overview.kpi.total === 0) {
     return (
       '<section class="dashboard" data-dashboard>' +
-      '<div class="toolbar">' + daySelect(input.days, input.day) + renderPeriodSwitch(period) + "</div>" +
+      '<div class="toolbar">' + daySelect(input.days, input.day) + renderPeriodSwitch(period) +
+      '<a class="panel-link" data-period-events href="' + filtersHash(defaultFilters(), input.day) + "&period=" + period + '">События периода →</a></div>' +
       (input.historical === true ? historicalIndicator(input.day, input.days) : "") +
       renderEmptyState("В этом срезе нет заявок — выберите другую дату.") +
       "</section>"
@@ -138,6 +139,7 @@ export const renderDashboard = (input: DashboardInput): string => {
     '<section class="dashboard" data-dashboard>' +
     '<div class="toolbar">' + daySelect(input.days, input.day) + renderPeriodSwitch(period) +
     '<span class="grow"></span><span class="count">' + overview.kpi.total + " обращений в срезе</span>" +
+    '<a class="panel-link" data-period-events href="' + filtersHash(defaultFilters(), input.day) + "&period=" + period + '">События периода →</a>' +
     '<a class="panel-link" href="' + hrefIncidents(input.day) + '">Все обращения →</a>' +
     '<a class="panel-link" href="' + hrefTimeline(input.day, "git") + '">Хронология →</a></div>' +
     (input.historical === true ? historicalIndicator(input.day, input.days) : "") +

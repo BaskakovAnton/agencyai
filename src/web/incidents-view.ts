@@ -6,7 +6,7 @@ import { hrefIncidents } from "./router.ts";
 import type { Graph } from "../types.ts";
 import { renderIncidents, renderIncidentsLive } from "./incidents-html.ts";
 import { filtersWithout, type ChipKey } from "./incidents-chips.ts";
-import { buildRows, defaultFilters, filtersHash, parseFilters, type IncidentFilters } from "./incidents.ts";
+import { buildRows, defaultFilters, eventsInPeriod, filtersHash, parseFilters, type IncidentFilters } from "./incidents.ts";
 import type { Route } from "./router.ts";
 
 /** Экран «Обращения»: фильтры живут в адресе, таблица перерисовывается без потери фокуса поиска. */
@@ -19,8 +19,17 @@ export const mountIncidents = (root: HTMLElement, graph: Graph, story: Story, ro
   }
   let day = resolved.day;
   let filters = parseFilters(location.hash);
+  // Явный period= в адресе включает режим событий периода (WP-5, вариант A): новых параметров нет.
+  const periodMatch = /[?&]period=(\d+)/.exec(location.hash);
+  const periodLength = periodMatch === null ? 0 : Number(periodMatch[1]);
+  const periodMode = periodLength >= 2;
   const nodes = graph.order.map((id) => ({ id, title: graph.byId[id]?.title ?? id }));
-  const rows = () => buildRows(graph, story.incidents, day, filters, org);
+  const rows = () => {
+    const all = buildRows(graph, story.incidents, day, filters, org);
+    if (!periodMode) return all;
+    const ids = new Set(eventsInPeriod(story.incidents, day, periodLength));
+    return all.filter((row) => ids.has(row.id));
+  };
   const value = (target: HTMLElement): string => (target as HTMLSelectElement | HTMLInputElement).value;
   const live = () => ({
     rows: rows(),
@@ -30,6 +39,7 @@ export const mountIncidents = (root: HTMLElement, graph: Graph, story: Story, ro
     nodes,
     departments: org?.directory.departments ?? [],
     historical: isHistoricalDay(day, days),
+    period: periodMode ? periodLength : 0,
   });
 
   const paint = (): void => {

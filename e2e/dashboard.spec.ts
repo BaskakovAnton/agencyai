@@ -42,4 +42,14 @@ test.describe("Обзор", () => {
     await expect(page.locator("[data-outside-window]")).toContainText("Дата вне доступного периода");
     await expect(page.locator("[data-dashboard]")).toHaveCount(0);
   });
+  test("динамика ведёт в события периода без новых параметров", async ({ page }) => {
+    await page.goto("/#dashboard?at=2026-01-02");
+    const link = page.locator("[data-period-events]");
+    await expect(link).toBeVisible();
+    await expect(link).toHaveAttribute("href", /period=\d+/);
+    await link.click();
+    await expect(page).toHaveURL(/period=\d+/);
+    await expect(page.locator("[data-period-mode]")).toBeVisible();
+    await expect(page.locator("[data-period-mode]")).toContainText("События за");
+  });
 });
