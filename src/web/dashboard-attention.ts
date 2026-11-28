@@ -1,4 +1,4 @@
-import { esc, renderBadge, renderEmptyState, renderSlaBadge } from "./components.ts";
+import { esc, renderEmptyState, renderPriorityBadge, renderSlaBadge } from "./components.ts";
 import { hrefIncident } from "./router.ts";
 import type { Overview } from "./overview.ts";
 
@@ -10,7 +10,7 @@ const tableRows = (overview: Overview): string =>
     : overview.attention.map((item) =>
       '<tr class="click-row" data-attention="' + esc(item.id) + '"><td><div class="case-id">' + esc(item.id) +
       '</div><div class="case-title">' + esc(item.title) + '</div><div class="case-sub">' + esc(item.address) + "</div></td>" +
-      "<td>" + renderBadge(item.priorityTitle, item.priorityTone) + "</td><td>" + esc(department(item.departmentName)) +
+      "<td>" + renderPriorityBadge(item.priorityTitle, item.priorityTone) + "</td><td>" + esc(department(item.departmentName)) +
       '<div class="case-sub">' + esc(item.nodeId + " · " + item.nodeTitle) + "</div></td><td>" +
       renderSlaBadge(item.slaText, item.slaTone) + '</td><td><a class="panel-link" href="' + hrefIncident(item.id, overview.day) + '">Открыть →</a></td></tr>',
     ).join("");

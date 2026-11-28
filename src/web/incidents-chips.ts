@@ -6,7 +6,7 @@
 import { SLA_LEGEND_TITLES } from "../core/sla-at.ts";
 import { formatDay } from "../core/timeline.ts";
 import { PRIORITY_TITLES } from "../data/roles.ts";
-import { esc } from "./components.ts";
+import { esc, renderActiveFilterChip } from "./components.ts";
 import type { IncidentFilters, IncidentViewFilter } from "./incidents.ts";
 
 export type ChipKey = "view" | "department" | "q" | "priority" | "sla" | "node" | "at";
@@ -58,14 +58,7 @@ export const renderFilterChips = (chips: readonly FilterChip[]): string => {
   if (chips.length === 0) return "";
   return (
     '<div class="incident-chips" data-filter-chips role="group" aria-label="Активные фильтры">' +
-    chips
-      .map(
-        (chip) =>
-          '<span class="incident-chip" data-chip="' + chip.key + '">' + esc(chip.label) + ": " + esc(chip.text) +
-          '<button type="button" data-filter-clear="' + chip.key + '" aria-label="Снять фильтр: ' + esc(chip.label) +
-          ' — ' + esc(chip.text) + '">×</button></span>',
-      )
-      .join("") +
+    chips.map((chip) => renderActiveFilterChip(chip)).join("") +
     "</div>"
   );
 };

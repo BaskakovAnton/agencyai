@@ -1,6 +1,6 @@
 import { PRIORITY_TITLES } from "../data/roles.ts";
 import { formatDay, formatStamp } from "../core/timeline.ts";
-import { esc, renderBadge, renderEmptyState, renderPanel, renderSlaBadge } from "./components.ts";
+import { esc, renderBadge, renderEmptyState, renderPanel, renderPriorityBadge, renderSlaBadge } from "./components.ts";
 import { historicalIndicator } from "./historical.ts";
 import { hrefIncident } from "./router.ts";
 import type { IncidentFilters, IncidentRow } from "./incidents.ts";
@@ -59,7 +59,7 @@ export const renderIncidentsBody = (
               '<tr class="click-row" data-incident-row="' + row.id + '">' +
               '<td><div class="case-id">' + row.id + '</div><div class="case-title">' + row.title +
               (row.situation === "" ? "" : '</div><div class="case-sub">' + row.situation) + "</div></td>" +
-              "<td>" + renderBadge(PRIORITY_TITLES[row.priority], PRIORITY_TONES[row.priority]) + "</td>" +
+              "<td>" + renderPriorityBadge(PRIORITY_TITLES[row.priority], PRIORITY_TONES[row.priority]) + "</td>" +
               "<td>" + stageTitle(row) + "</td>" +
               "<td>" + assignee(row) + "</td>" +
               "<td>" + renderSlaBadge(row.slaText, PHASE_TONES[row.phase]) + "</td>" +

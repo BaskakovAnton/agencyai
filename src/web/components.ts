@@ -67,3 +67,23 @@ export const renderReadOnlyNotice = (text = "Только чтение: дейс
 /** Пометка демонстрационных данных. */
 export const renderDemoNotice = (text = "Демо-данные модели процессов"): string =>
   '<span class="demo-notice" data-demo-notice>' + esc(text) + "</span>";
+
+/** Единый бейдж приоритета: экраны не собирают его вручную (этап 1 плана). */
+export const renderPriorityBadge = (text: string, tone: BadgeTone = "gray"): string => renderBadge(text, tone);
+
+/** Чип активного фильтра: одна разметка для всех экранов. */
+export const renderActiveFilterChip = (input: { readonly label: string; readonly text: string; readonly key: string }): string =>
+  '<span class="incident-chip" data-chip="' + input.key + '">' + esc(input.label) + ": " + esc(input.text) +
+  '<button type="button" data-filter-clear="' + input.key + '" aria-label="Снять фильтр: ' + esc(input.label) +
+  " — " + esc(input.text) + '">×</button></span>';
+
+/** Заголовок раздела: единый уровень h2 и подпись для всех экранов. */
+export const renderSectionHeader = (title: string, subtitle = ""): string =>
+  '<div class="section-header"><h2 class="section-title">' + esc(title) + "</h2>" +
+  (subtitle === "" ? "" : '<p class="section-subtitle muted">' + esc(subtitle) + "</p>") +
+  "</div>";
+
+/** Синонимы по плану этапа 1: одно имя на смысл. */
+export const statusBadge = renderSlaBadge;
+export const emptyState = renderEmptyState;
+export const actionCard = renderPanel;
