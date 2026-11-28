@@ -1,13 +1,5 @@
 {
-  "violations": [
-    {
-      "page": "dashboard",
-      "viewport": "mobile",
-      "kind": "unlabeled",
-      "count": 8,
-      "detail": "A.panel-link | A.panel-link | A.panel-link | A.panel-link | A.panel-link"
-    }
-  ],
+  "violations": [],
   "metrics": [
     {
       "page": "dashboard",

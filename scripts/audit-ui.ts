@@ -50,7 +50,7 @@ const auditPage = async (page: Page, name: string, viewport: string): Promise<Fi
     const scope = document.querySelector("#view") ?? document.body;
     const interactive = Array.from(scope.querySelectorAll("button, a, [tabindex], input, select, textarea")).filter((el) => {
       const r = (el as Element).getBoundingClientRect();
-      return r.width > 0 && r.height > 0;
+      return r.width > 0 && r.height > 0 && shown(el);
     });
     const small = interactive.filter((el) => {
       const r = (el as Element).getBoundingClientRect();
