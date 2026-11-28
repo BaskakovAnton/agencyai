@@ -8,6 +8,7 @@ import { linksBlock } from "./incident-actor.ts";
 import { decisionBlock } from "./incident-decision.ts";
 import { durationsBlock } from "./incident-durations.ts";
 import { attributionBlock } from "./incident-attribution.ts";
+import { transfersBlock } from "./incident-transfers.ts";
 
 const daySelect = (days: readonly string[], day: string): string =>
   '<label class="hint">Дата среза: <select data-day-select aria-label="Дата среза">' +
@@ -84,6 +85,7 @@ export const renderIncident = (
       renderReadOnlyNotice("Режим демонстрации: сведения доступны только для просмотра"),
   }) +
   "</div>" +
+  '<div class="section-gap" data-transfers-block>' + transfersBlock(view.transfers) + "</div>" +
   '<div class="section-gap">' +
   renderPanel({ title: "История прохождения", subtitle: "Временная последовательность событий заявки", body: historyBlock(view) }) +
   "</div></div>" +

@@ -12,6 +12,7 @@ import { availableOrgActions, incidentOrgSummary, type IncidentOrgSummary, type 
 import { buildNext, buildParticipants, buildSteps } from "./incident-steps.ts";
 import { durationsOf, type DurationReport } from "../core/analytics/durations.ts";
 import { departmentOn, type Attribution } from "../core/analytics/attribution.ts";
+import type { TransferRow } from "./incident-transfers.ts";
 
 export type { NextOption, NextSteps, Participant, StepRow } from "./incident-steps.ts";
 import type { NextOption, Participant, StepRow } from "./incident-steps.ts";
@@ -58,6 +59,8 @@ export interface IncidentView {
   readonly durations: DurationReport;
   /** Историческая атрибуция подразделения на дату (блок F). */
   readonly attribution: Attribution;
+  /** История ответственных назначений: время и основание. */
+  readonly transfers: readonly TransferRow[];
   /** Доступные операции подтверждения для выбранного пользователя. */
   readonly actions: OrgActions | null;
   /** Текущий пользователь действий и список демонстрационных пользователей. */
@@ -155,6 +158,20 @@ export const buildIncidentView = (
     orgSummary,
     durations: durationsOf({ history: incident.history, lifecycle: org?.lifecycleOf(incident.id) }),
     attribution: departmentOn(org?.assignmentsOf(incident.id) ?? [], incident.id, day),
+    transfers:
+      org === undefined
+        ? []
+        : org
+            .assignmentsOf(incident.id)
+            .filter((item) => item.assignmentType === "accountable")
+            .slice()
+            .sort((a, b) => a.assignedAt.localeCompare(b.assignedAt))
+            .map((item) => ({
+              department: org.directory.departments.find((department) => department.id === item.departmentId)?.name ?? item.departmentId,
+              from: item.assignedAt,
+              to: item.endedAt,
+              reason: item.reason ?? "",
+            })),
     actions: org === undefined ? null : availableOrgActions(org, incident.id, actorUserId),
     actorUserId,
     actorOptions: org === undefined ? [] : org.directory.users.map((user) => ({ id: user.id, label: user.displayName })),
