@@ -1,6 +1,5 @@
 import { chatAt, conversationFor, messagesUpTo } from "../core/conversation.ts";
 import { buildGantt } from "../core/gantt.ts";
-import { buildGitGraph } from "../core/gitgraph.ts";
 import { buildStory } from "../core/story.ts";
 import { daysRange, formatDay, formatStamp, visibleAt, withTimeline } from "../core/timeline.ts";
 import { buildProcessGraph } from "../data/edges.ts";
@@ -9,7 +8,6 @@ import { createDemoOrgRepository } from "../data/org-repository.ts";
 import { mountChat } from "./chat-view.ts";
 import { renderPhone } from "./chat-html.ts";
 import { renderGanttGrid } from "./gantt-grid.ts";
-import { renderGitSvg } from "./git-svg.ts";
 import { hrefChat, hrefTimeline, mountRouter, parseRoute } from "./router.ts";
 import { mountTimeline } from "./timeline-view.ts";
 
@@ -30,17 +28,15 @@ export { HERO_GAPS, HERO_INCIDENT_ID, HERO_ROUTE, HERO_START, HERO_TITLE } from 
 export { SITUATIONS, SITUATION_SECTIONS, nodesForSituation, normalizeSituationId, situationById, situationsForNode } from "../data/situations.ts";
 export { chatAt, conversationFor, messagesUpTo } from "../core/conversation.ts";
 export { buildGantt } from "../core/gantt.ts";
-export { buildGitGraph } from "../core/gitgraph.ts";
+export { dayEvents } from "../core/events.ts";
 export { buildStory, STORY_HOURS_FACTOR, STORY_SWEEPS } from "../core/story.ts";
 export { dayOf, daysRange, formatDay, formatStamp, incidentAt, visibleAt, withTimeline } from "../core/timeline.ts";
 export { pluralize } from "../core/text.ts";
 export { renderGanttGrid } from "./gantt-grid.ts";
-export { renderGitSvg } from "./git-svg.ts";
 export { renderPhone, renderInlineChat, renderMessages } from "./chat-html.ts";
 export { hrefChat, hrefTimeline, parseRoute } from "./router.ts";
 export { mountChat } from "./chat-view.ts";
 export { mountTimeline } from "./timeline-view.ts";
-export { renderNodeCard } from "./node-card.ts";
 export { renderTimeRuler, renderLegends } from "./timeline-html.ts";
 export { SLA_PHASES, SLA_PHASE_TITLES, SLA_LEGEND_TITLES, slaPhaseAt, slaPhaseOf, slaPhaseOnDay, slaStateAt } from "../core/sla-at.ts";
 export { applyAction, createState } from "./session.ts";

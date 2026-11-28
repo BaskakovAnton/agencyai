@@ -15,12 +15,11 @@ const appPages = [
   { name: "dashboard", hash: "#dashboard" },
   { name: "incidents", hash: "#incidents" },
   { name: "incident", hash: "#incident/" + encodeURIComponent("З-015") + "?at=2026-01-02" },
-  { name: "timeline-git", hash: "#timeline?at=2026-01-02&view=git" },
   { name: "timeline-gantt", hash: "#timeline?at=2026-01-02&view=gantt" },
   { name: "chat", hash: "#chat/" + encodeURIComponent("З-015") + "?at=2026-01-02" },
   { name: "model", hash: "#model" },
 ];
-const refPages = ["index", "overview", "incidents", "incident-detail", "timeline-git", "timeline-gantt", "chat", "model"];
+const refPages = ["index", "overview", "incidents", "incident-detail", "timeline-gantt", "chat", "model"];
 
 await mkdir(out, { recursive: true });
 const browser = await chromium.launch();

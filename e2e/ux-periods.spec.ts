@@ -57,7 +57,7 @@ test.describe("UX-3: периоды и динамика KPI", () => {
   });
 
   test("остальные экраны продолжают работать", async ({ page }) => {
-    for (const hash of ["#incidents", "#model", "#timeline?at=2026-01-02&view=git"]) {
+    for (const hash of ["#incidents", "#model", "#timeline?at=2026-01-02&view=gantt"]) {
       await page.goto("/" + hash);
       await expect(page.locator("ui-topbar")).toBeVisible();
       await expect(page.locator(".page-title")).not.toBeEmpty();

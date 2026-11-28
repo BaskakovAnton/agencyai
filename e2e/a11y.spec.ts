@@ -6,7 +6,7 @@ const routes = [
   "#dashboard?at=2026-01-02",
   "#incidents?at=2026-01-02",
   "#incident/" + encodeURIComponent("З-015") + "?at=2026-01-02",
-  "#timeline?at=2026-01-02&view=git",
+  "#timeline?at=2026-01-02&view=gantt",
   "#chat/" + encodeURIComponent("З-015") + "?at=2026-01-02",
   "#model",
 ];
@@ -27,13 +27,13 @@ const blockingViolations = async (page: import("@playwright/test").Page): Promis
 const states = [
   { name: "пустой реестр", hash: "#incidents?at=2026-01-02&q=НЕТ-ТАКОГО" },
   { name: "события периода", hash: "#incidents?period=30&at=2026-01-13" },
-  { name: "начало окна модели", hash: "#timeline?at=2025-12-20&view=git" },
+  { name: "начало окна модели", hash: "#timeline?at=2025-12-20&view=gantt" },
   { name: "переписка до создания", hash: "#chat/" + encodeURIComponent("З-001") + "?at=2025-12-20" },
 ];
 
 test.describe("Клавиатура и подписи", () => {
   test("ползунок времени подписан и озвучивает значение", async ({ page }) => {
-    await page.goto("/#timeline?at=2026-01-02&view=git");
+    await page.goto("/#timeline?at=2026-01-02&view=gantt");
     const slider = page.locator('input[type="range"]');
     // Доступное имя даёт связанный label[for], значение озвучивается через aria-valuetext.
     const named = await slider.evaluate((el) => {
@@ -45,25 +45,18 @@ test.describe("Клавиатура и подписи", () => {
     await expect(slider).toHaveAttribute("aria-valuetext");
   });
 
-  test("коммит графа доступен с клавиатуры и открывает карточку узла", async ({ page }) => {
-    await page.goto("/#timeline?at=2026-01-02&view=git");
-    const commit = page.locator("[data-commit]").first();
-    await expect(commit).toHaveAttribute("role", "button");
-    await expect(commit).toHaveAttribute("tabindex", "0");
-    await expect(commit).toHaveAttribute("aria-label");
-    await commit.focus();
+  test("строка диаграммы доступна с клавиатуры и открывает переписку", async ({ page }) => {
+    await page.goto("/#timeline?at=2026-01-02&view=gantt");
+    const row = page.locator("[data-row]").first();
+    await expect(row).toHaveAttribute("role", "button");
+    await expect(row).toHaveAttribute("tabindex", "0");
+    await row.focus();
     await page.keyboard.press("Enter");
-    const card = page.locator("[data-node-card]").first();
-    await expect(card).toBeVisible();
-    const inView = await card.evaluate((el) => {
-      const r = el.getBoundingClientRect();
-      return r.top < window.innerHeight && r.bottom > 0;
-    });
-    expect(inView).toBe(true);
+    await expect.poll(() => decodeURIComponent(page.url())).toContain("#chat/");
   });
 
   test("прокручиваемые области канваса и чипов подписаны", async ({ page }) => {
-    await page.goto("/#timeline?at=2026-01-02&view=git");
+    await page.goto("/#timeline?at=2026-01-02&view=gantt");
     await expect(page.locator("[data-canvas]")).toHaveAttribute("aria-label");
     await expect(page.locator("[data-canvas]")).toHaveAttribute("tabindex", "0");
     await expect(page.locator("[data-chips]")).toHaveAttribute("aria-label");
@@ -118,7 +111,7 @@ for (const width of [390, 1440]) {
   });
 }
 
-for (const hash of ["#dashboard?at=2026-01-02", "#incidents?at=2026-01-02", "#incident/" + encodeURIComponent("З-015") + "?at=2026-01-02", "#timeline?at=2026-01-02&view=git", "#chat/" + encodeURIComponent("З-015") + "?at=2026-01-02", "#model"]) {
+for (const hash of ["#dashboard?at=2026-01-02", "#incidents?at=2026-01-02", "#incident/" + encodeURIComponent("З-015") + "?at=2026-01-02", "#timeline?at=2026-01-02&view=gantt", "#chat/" + encodeURIComponent("З-015") + "?at=2026-01-02", "#model"]) {
   test.describe("Светлая тема 1440px", () => {
     test.use({ viewport: { width: 1440, height: 900 } });
     test("axe: " + hash, async ({ page }) => {

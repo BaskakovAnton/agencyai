@@ -9,7 +9,6 @@ const pairs: readonly (readonly [string, string, string])[] = [
   ["overview.html", "#dashboard?at=2026-01-02", "dashboard"],
   ["incidents.html", "#incidents", "incidents"],
   ["incident-detail.html", "#incident/" + encodeURIComponent("З-015") + "?at=2026-01-02", "incident"],
-  ["timeline-git.html", "#timeline?at=2026-01-02&view=git", "timeline-git"],
   ["timeline-gantt.html", "#timeline?at=2026-01-02&view=gantt", "timeline-gantt"],
   ["chat.html", "#chat/" + encodeURIComponent("З-015") + "?at=2026-01-02", "chat"],
   ["model.html", "#model", "model"],

@@ -22,7 +22,7 @@ test("хронология и чат сохраняют at и view", () => {
   expect(timeline.name).toBe("timeline");
   expect(timeline.at).toBe("2026-01-02");
   expect(timeline.view).toBe("gantt");
-  expect(parseRoute("#timeline?at=2026-01-02&view=что-то").view).toBe("git");
+  expect(parseRoute("#timeline?at=2026-01-02&view=что-то").view).toBe("gantt");
   const chat = parseRoute("#chat/" + encodeURIComponent("З-015") + "?at=2026-01-02");
   expect(chat.name).toBe("chat");
   expect(chat.incidentId).toBe("З-015");

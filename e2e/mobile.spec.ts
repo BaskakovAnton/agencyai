@@ -4,7 +4,7 @@ const routes = [
   "#dashboard?at=2026-01-02",
   "#incidents?at=2026-01-02",
   "#incident/" + encodeURIComponent("З-015") + "?at=2026-01-02",
-  "#timeline?at=2026-01-02&view=git",
+  "#timeline?at=2026-01-02&view=gantt",
   "#chat/" + encodeURIComponent("З-015") + "?at=2026-01-02",
   "#model",
 ];
@@ -85,8 +85,8 @@ test.describe("Мобильная адаптация", () => {
     expect(page.url()).toBe(before);
   });
 
-  test("хронология 390: явный view=git сразу открывает граф", async ({ page }) => {
-    await page.goto("/#timeline?at=2026-01-02&view=git");
+  test("хронология 390: явный view=gantt сразу открывает граф", async ({ page }) => {
+    await page.goto("/#timeline?at=2026-01-02&view=gantt");
     await expect(page.locator("[data-canvas]")).toBeVisible();
   });
 
@@ -105,11 +105,11 @@ test.describe("Мобильная адаптация", () => {
     });
   }
 
-  test("клик по коммиту после расширения зон открывает карточку узла", async ({ page }) => {
-    await page.goto("/#timeline?at=2026-01-02&view=git");
+  test("клик по строке диаграммы открывает переписку заявки", async ({ page }) => {
+    await page.goto("/#timeline?at=2026-01-02&view=gantt");
     await page.waitForTimeout(500);
-    await page.locator("[data-commit]").first().click();
-    await expect(page.locator("[data-card], [data-node-card]").first()).toBeVisible();
+    await page.locator("[data-row]").first().click();
+    await expect.poll(() => decodeURIComponent(page.url())).toContain("#chat/");
   });
 
   test("планшет 1024px: реестр остаётся таблицей", async ({ page }) => {

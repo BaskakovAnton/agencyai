@@ -80,13 +80,14 @@ test("паритет: история с датами и переписка на 
   expect(snapshot.activeRole).toBe("deputy");
   expect(replies.map((message: any) => message.nodeId)).toEqual(["U1", "U6"]);
 
-  const git = mod.buildGitGraph(graph, page.incidents, "2026-01-02");
-  expect(git.commits.every((commit: any) => commit.day <= "2026-01-02")).toBe(true);
-  expect(git.incidents.length).toBeLessThan(30);
+  const events = mod.dayEvents(graph, page.incidents, "2026-01-02");
+  expect(events.every((event: any) => event.day <= "2026-01-02")).toBe(true);
+  const activeIds = new Set(events.map((event: any) => event.incidentId));
+  expect(activeIds.size).toBeLessThan(30);
 
   const gantt = mod.buildGantt(graph, page.incidents, "2026-01-02");
-  expect(gantt.rows.length).toBe(git.incidents.length);
-  expect(mod.renderGitSvg(git).match(/data-commit=/g)?.length).toBe(git.commits.length);
+  expect(gantt.rows.length).toBe(activeIds.size);
+
   expect(mod.renderPhone({
     incident: hero,
     snapshot,

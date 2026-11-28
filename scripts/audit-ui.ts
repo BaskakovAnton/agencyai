@@ -73,14 +73,9 @@ const auditPage = async (page: Page, name: string, viewport: string): Promise<Fi
       const b = slider.getAttribute("aria-valuetext");
       out.push({ page: name, viewport, kind: "slider-a11y", severity: "metric", detail: "aria-label=" + (a ?? "нет") + "; aria-valuetext=" + (b ?? "нет") });
     }
-    const commit = document.querySelector("[data-commit]");
-    if (commit) {
-      out.push({ page: name, viewport, kind: "commit-a11y", severity: "metric", detail: "role=" + (commit.getAttribute("role") ?? "нет") + "; aria-label=" + (commit.getAttribute("aria-label") ?? "нет") + "; tabindex=" + (commit.getAttribute("tabindex") ?? "нет") });
-    }
-    const card = document.querySelector("[data-node-card]");
-    if (card) {
-      const r = card.getBoundingClientRect();
-      out.push({ page: name, viewport, kind: "card-position", severity: "metric", detail: "top=" + Math.round(r.top) + "px, в окне: " + (r.top < window.innerHeight && r.bottom > 0) });
+    const row = document.querySelector("[data-row]");
+    if (row) {
+      out.push({ page: name, viewport, kind: "row-a11y", severity: "metric", detail: "role=" + (row.getAttribute("role") ?? "нет") + "; tabindex=" + (row.getAttribute("tabindex") ?? "нет") });
     }
     const h = Array.from(document.querySelectorAll("h1, h2, h3")).map((x) => x.tagName + ": " + (x.textContent ?? "").trim().slice(0, 36));
     out.push({ page: name, viewport, kind: "headings", severity: "metric", count: h.length, detail: h.join(" | ") || "(нет)" });
@@ -131,27 +126,16 @@ const run = async (): Promise<void> => {
     await go("#incidents?at=2026-01-02", "incidents", 600);
     await go("#incident/" + encodeURIComponent("З-015") + "?at=2026-01-02", "incident", 600);
     await go("#timeline?at=2026-01-02", "timeline", 900);
-    // WP-3: на мобильном по умолчанию список событий, граф — по view=git; карточку узла проверяем на графе.
-    await go("#timeline?at=2026-01-02&view=git", "timeline-graph", 900);
-    const commit = page.locator('[data-commit][data-incident="З-015"][data-node="U6"]');
-    if ((await commit.count()) > 0) {
-      await commit.click();
-      await page.waitForTimeout(400);
-      report.push(...await auditPage(page, "timeline-card", vp.name));
-      const p = outDir + "/" + vp.name + "-timeline-card.png";
-      await page.screenshot({ path: p, fullPage: true });
-      shots.push(p);
-    }
     await go("#timeline?at=2026-01-02&view=gantt", "gantt");
     await go("#chat/З-015?at=2026-01-02", "chat", 600);
     await go("#model", "model", 600);
-    await page.goto(base + "#timeline?at=2026-01-02&view=git", { waitUntil: "domcontentloaded" });
+    await page.goto(base + "#timeline?at=2026-01-02&view=gantt", { waitUntil: "domcontentloaded" });
     await page.waitForTimeout(800);
-    await page.locator("[data-commit]").first().focus();
+    await page.locator("[data-row]").first().focus();
     await page.keyboard.press("Enter");
     await page.waitForTimeout(300);
-    const cardAfterEnter = await page.locator("[data-node-card]").count();
-    report.push({ page: "keyboard", viewport: vp.name, kind: "enter-on-commit", severity: "metric", detail: cardAfterEnter > 0 ? "карточка открылась" : "Enter не открывает карточку" });
+    const chatAfterEnter = decodeURIComponent(page.url()).includes("#chat/");
+    report.push({ page: "keyboard", viewport: vp.name, kind: "enter-on-row", severity: "metric", detail: chatAfterEnter ? "переписка открылась" : "Enter не открывает карточку" });
     await page.close();
   }
   await browser.close();

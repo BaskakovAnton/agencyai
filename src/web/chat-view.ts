@@ -53,7 +53,7 @@ export const mountChat = (root: HTMLElement, graph: Graph, story: Story, route: 
         activeRole,
         interlocutor,
         overridden: override !== null,
-        backHref: hrefTimeline(day, "git"),
+        backHref: hrefTimeline(day, "gantt"),
         nextDay: nextDay(),
         prevDay: prevDay(),
         nodeTitle: graph.byId[snapshot.nodeId]?.title ?? "",

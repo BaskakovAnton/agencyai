@@ -25,8 +25,9 @@ test.describe("Карточка обращения", () => {
     await page.locator('[data-links] a[href^="#chat/"]').click();
     await expect(page.locator("[data-phone]")).toBeVisible();
     await page.goBack();
-    await page.locator('[data-links] a[href*="view=git"]').click();
-    await expect(page.locator("svg[data-graph]")).toBeVisible();
+    await expect(page.locator('[data-links] a[href^="#timeline"]')).toHaveCount(1);
+    await page.locator('[data-links] a[href^="#timeline"]').click();
+    await expect(page.locator("[data-gantt]")).toBeVisible();
   });
 
   test("смена даты среза пишется в адрес", async ({ page }) => {

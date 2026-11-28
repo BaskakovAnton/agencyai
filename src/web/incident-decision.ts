@@ -8,7 +8,7 @@ export const decisionBlock = (view: IncidentView, day: string): string =>
   renderPanel({
     title: "Следующий шаг по модели",
     subtitle: "Сначала решение оператора, затем полная история",
-    actions: '<a class="panel-link" href="' + hrefTimeline(day, "git") + '">Хронология →</a>',
+    actions: '<a class="panel-link" href="' + hrefTimeline(day, "gantt") + '">Хронология →</a>',
     body:
       '<div class="decision-card" data-decision-card><div><div class="fact-label">Текущий этап</div><b>' + esc(view.nodeId + " · " + view.nodeTitle) +
       '</b></div><div data-current-role><div class="fact-label">Ответственная роль</div><b>' + esc(view.nodeRoleTitle || "Нет данных") +

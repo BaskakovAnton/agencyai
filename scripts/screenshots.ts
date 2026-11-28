@@ -37,7 +37,6 @@ const shot = async (hash: string, name: string, wait: string): Promise<void> => 
   console.log("снято:", name);
 };
 
-await shot("#timeline?at=2026-01-02&view=git", "timeline-git.png", "svg[data-graph]");
 await shot("#timeline?at=2026-01-02&view=gantt", "timeline-gantt.png", "[data-gantt]");
 await shot("#chat/З-015?at=2026-01-02", "chat-2-january.png", "[data-phone]");
 await shot("#chat/З-015?at=2026-01-05", "chat-5-january.png", "[data-phone]");

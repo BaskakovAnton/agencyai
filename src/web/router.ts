@@ -12,7 +12,7 @@ import { bindShell, initTheme, renderShell } from "./shell.ts";
 import { mountTimeline } from "./timeline-view.ts";
 
 export type RouteName = "dashboard" | "incidents" | "incident" | "timeline" | "chat" | "model";
-export type ViewMode = "git" | "gantt";
+export type ViewMode = "gantt";
 
 export interface Route {
   readonly name: RouteName;
@@ -31,7 +31,8 @@ export const parseRoute = (hash: string): Route => {
   const at = query.get("at") ?? "";
   const periodValue = Number(query.get("period") ?? "7");
   const period: PeriodLength = isPeriodLength(periodValue) ? periodValue : 7;
-  const view: ViewMode = query.get("view") === "gantt" ? "gantt" : "git";
+  // Git-граф удалён: единственный вид — диаграмма Ганта, старые ссылки view=git ведут на неё.
+  const view: ViewMode = "gantt";
   if (path.startsWith("chat")) {
     return { name: "chat", incidentId: decodeURIComponent(path.slice(4).replace(/^\//, "")), at, view, period };
   }
@@ -54,7 +55,7 @@ export const hrefDashboard = (at = "", period?: PeriodLength): string => {
 export const hrefIncidents = (at = ""): string => (at === "" ? "#incidents" : "#incidents?at=" + encodeURIComponent(at));
 export const hrefIncident = (id: string, at: string): string =>
   "#incident/" + encodeURIComponent(id) + "?at=" + encodeURIComponent(at);
-export const hrefTimeline = (at: string, view: ViewMode = "git"): string =>
+export const hrefTimeline = (at: string, view: ViewMode = "gantt"): string =>
   "#timeline?at=" + encodeURIComponent(at) + "&view=" + view;
 export const hrefChat = (incidentId: string, at: string): string =>
   "#chat/" + encodeURIComponent(incidentId) + "?at=" + encodeURIComponent(at);

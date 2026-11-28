@@ -7,7 +7,6 @@ import type { IncidentView } from "./incident.ts";
 
 export const linksBlock = (view: IncidentView, day: string): string =>
   '<div class="stack">' +
-  '<a class="button" href="' + hrefTimeline(day, "git") + '">Открыть в хронологии →</a>' +
-  '<a class="button" href="' + hrefTimeline(day, "gantt") + '">Посмотреть сроки в Ганте →</a>' +
+  '<a class="button" href="' + hrefTimeline(day, "gantt") + '">Открыть в хронологии →</a>' +
   '<a class="button" href="' + hrefChat(view.id, day) + '">Открыть переписку →</a>' +
   '<a class="button" href="' + hrefIncidents(day) + '">Все обращения →</a></div>';

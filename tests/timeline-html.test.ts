@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import { buildGantt } from "../src/core/gantt.ts";
-import { buildGitGraph } from "../src/core/gitgraph.ts";
+import { dayEvents } from "../src/core/events.ts";
 import { buildStory } from "../src/core/story.ts";
 import { buildProcessGraph } from "../src/data/edges.ts";
 import {
@@ -21,9 +21,9 @@ const input: TimelinePageInput = {
   day: "2026-01-02",
   days,
   dayIndex: 2,
-  view: "git",
+  view: "gantt",
   filter: "",
-  git: buildGitGraph(graph, story.incidents, "2026-01-02"),
+  events: dayEvents(graph, story.incidents, "2026-01-02"),
   gantt: buildGantt(graph, story.incidents, "2026-01-02"),
   chat: "",
 };
@@ -54,13 +54,13 @@ test("канвас, ползунок и футер доступны и объя�
   expect(header).toContain('aria-valuetext="2 января 2026"');
   expect(header).toContain("data-controls");
   const footer = renderTimelineFooter();
-  expect(footer).toContain("карточк");
+  expect(footer).toContain("переписку");
   expect(footer).not.toContain("открывает мобильный чат");
 });
 
-test("панель управления: переключатель вида, плотность и всегда видимый сброс", () => {
+test("панель управления: плотность и всегда видимый сброс", () => {
   const controls = renderControls(input);
-  expect(controls).toContain("data-view-switch");
+  expect(controls).not.toContain("data-view-switch");
   expect(controls).toContain("data-density-switch");
   expect(controls).toContain('data-density="compact"');
   expect(controls).toContain('data-action="clear"');
@@ -75,9 +75,9 @@ test("страница подсказывает про горизонтальн�
   expect(page).toContain("клавиатур");
 });
 
-test("легенды объясняют цвета SLA и значки развилок и слияний", () => {
+test("легенды объясняют цвета SLA и объём среза", () => {
   const html = renderLegends(input);
-  ["в срок", "вне SLA", "на паузе", "развилка", "слияние"].forEach((label) => expect(html).toContain(label));
+  ["в срок", "вне SLA", "на паузе"].forEach((label) => expect(html).toContain(label));
   expect(html).toContain("data-legend-sla");
-  expect(html).toContain("data-legend-graph");
+  expect(html).toContain("data-legend-counts");
 });

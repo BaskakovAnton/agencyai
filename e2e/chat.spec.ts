@@ -68,7 +68,7 @@ test.describe("Мобильный чат заявки", () => {
     await page.goto("/#chat/З-015?at=2026-01-02");
     await page.locator("[data-back]").click();
     await expect(page).toHaveURL(/at=2026-01-02/);
-    await expect(page.locator("svg[data-graph]")).toBeVisible();
+    await expect(page.locator("[data-gantt]")).toBeVisible();
     await expect(page.locator("[data-day-label]")).toHaveText("2 января 2026");
   });
 });

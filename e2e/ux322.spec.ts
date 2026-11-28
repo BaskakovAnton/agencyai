@@ -58,7 +58,7 @@ test.describe("UX-3.2.2: единое состояние выбранной да
     await page.goto("/#incident/" + encodeURIComponent("З-001") + "?at=" + INSIDE);
     await expect(page.locator("[data-incident-detail]")).toBeVisible();
     await page.goto("/#timeline?at=" + INSIDE);
-    await expect(page.locator("[data-commit]").first()).toBeVisible();
+    await expect(page.locator("[data-row]").first()).toBeVisible();
     await page.goto("/#chat/" + encodeURIComponent("З-015") + "?at=" + INSIDE);
     await expect(page.locator("[data-outside-window]")).toHaveCount(0);
     expect((await page.locator("#shell").innerText()).length).toBeGreaterThan(50); // переписка отрисована

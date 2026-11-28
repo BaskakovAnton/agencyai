@@ -125,7 +125,7 @@ export const renderDashboard = (input: DashboardInput): string => {
     '<span class="grow"></span><span class="count">' + overview.kpi.total + " обращений в срезе</span>" +
     '<a class="panel-link" data-period-events href="' + filtersHash(defaultFilters(), input.day) + "&period=" + period + '">События периода →</a>' +
     '<a class="panel-link" href="' + hrefIncidents(input.day) + '">Все обращения →</a>' +
-    '<a class="panel-link" href="' + hrefTimeline(input.day, "git") + '">Хронология →</a></div>' +
+    '<a class="panel-link" href="' + hrefTimeline(input.day, "gantt") + '">Хронология →</a></div>' +
     (input.historical === true ? historicalIndicator(input.day, input.days) : "") +
     renderActionQueue(overview) +
     kpis +

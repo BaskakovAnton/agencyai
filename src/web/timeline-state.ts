@@ -9,7 +9,6 @@ export interface TimelineState {
   view: ViewMode;
   filter: string;
   override: string | null;
-  selectedId: string | null;
   density: "normal" | "compact";
   /** Мобильный: список событий по умолчанию, граф — по кнопке (в URL не пишется). */
   graphMode: boolean;
@@ -23,7 +22,6 @@ export const initialTimelineState = (route: Route, days: readonly string[]): Tim
   view: route.view,
   filter: "",
   override: null,
-  selectedId: null,
   density: "normal",
   // Явный view= в адресе (ссылка на граф/Гант) сразу включает графический режим.
   graphMode: typeof location !== "undefined" && /[?&]view=/.test(location.hash),

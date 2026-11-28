@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test";
 import { buildGantt } from "../src/core/gantt.ts";
-import { buildGitGraph } from "../src/core/gitgraph.ts";
+import { HERO_INCIDENT_ID } from "../src/data/hero.ts";
+import { dayEvents } from "../src/core/events.ts";
 import { hoursSince, slaPhaseAt, slaPhaseOf, slaPhaseOnDay, slaStateAt } from "../src/core/sla-at.ts";
 import { startSla } from "../src/core/sla.ts";
 import { buildStory } from "../src/core/story.ts";
@@ -39,16 +40,14 @@ test("на одну дату встречаются разные фазы SLA �
   expect(new Set(phases).size).toBeGreaterThan(1);
 });
 
-test("коммиты графа несут фазу SLA, часы в узле и признаки развилки и слияния", () => {
-  const model = buildGitGraph(graph, story.incidents, "2026-01-02");
-  expect(model.commits.every((commit) => ["ok", "paused", "overdue", "none"].includes(commit.slaPhase))).toBe(true);
-  expect(model.commits.every((commit) => commit.hoursInNode > 0)).toBe(true);
-  expect(model.forks).toContain("U9");
-  expect(model.merges).toContain("U10");
-  const heroCommits = model.commits.filter((commit) => commit.isHero);
-  expect(heroCommits.map((commit) => commit.slaPhase)).toEqual(["ok", "overdue"]);
-  expect(model.commits.some((commit) => commit.isFork)).toBe(true);
-  expect(model.commits.some((commit) => commit.isMerge)).toBe(true);
+test("события дня несут фазу SLA и часы в узле", () => {
+  const events = dayEvents(graph, story.incidents, "2026-01-02");
+  expect(events.every((event) => ["ok", "paused", "overdue", "none"].includes(event.slaPhase))).toBe(true);
+  expect(events.every((event) => event.hoursInNode > 0)).toBe(true);
+  const heroEvents = events.filter((event) => event.incidentId === HERO_INCIDENT_ID);
+  expect(heroEvents.map((event) => event.slaPhase)).toEqual(["ok", "overdue"]);
+  expect(events.length).toBeGreaterThan(0);
+  expect(new Set(events.map((event) => event.incidentId)).size).toBeGreaterThan(0);
 });
 
 test("полосы Ганта несут фазу SLA", () => {

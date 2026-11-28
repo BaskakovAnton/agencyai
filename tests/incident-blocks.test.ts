@@ -58,9 +58,11 @@ test("участники: из орг-модели — с типом роли, �
   expect(withoutOrg.length).toBeGreaterThan(0);
 });
 
-test("переходы: четыре ссылки на связанные представления", () => {
+test("переходы: три ссылки на связанные представления", () => {
   const html = linksBlock(view, "2026-01-02");
-  expect((html.match(/<a class="button"/g) ?? []).length).toBe(4);
+  expect((html.match(/<a class="button"/g) ?? []).length).toBe(3);
+  // Хронология теперь одна: дубль ссылки на удалённый вид графа не возвращается.
+  expect((html.match(/href="#timeline/g) ?? []).length).toBe(1);
   expect(html).toContain("Открыть в хронологии");
   expect(html).toContain("Открыть переписку");
   expect(html).toContain("Все обращения");

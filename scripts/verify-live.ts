@@ -26,21 +26,18 @@ const ready = await waitFor("#timeline", "[data-ruler]");
 if (!ready) problems.push("новый бандл (шкала времени) не появился на Pages за отведённое время");
 
 if (ready) {
-  const allDots = await page.locator("[data-commit]").count();
+  const allBars = await page.locator("[data-bar]").count();
   await page.locator('[data-action="jump"][data-day="2026-01-02"]').click();
   await page.waitForTimeout(400);
-  const days = await page.locator("[data-commit]").evaluateAll((nodes) =>
-    nodes.map((node) => (node as HTMLElement).dataset.day ?? ""),
-  );
-  const afterDots = days.length;
-  if (afterDots === 0 || afterDots >= allDots) problems.push("перемотка на 2 января не скрыла будущие события: " + afterDots + " из " + allDots);
-  if (!days.every((day) => day <= "2026-01-02")) problems.push("в графе остались события после 2 января");
+  const afterBars = await page.locator("[data-bar]").count();
+  if (afterBars === 0) problems.push("на 2 января не отрисовано ни одной полосы диаграммы");
+  if (afterBars > allBars) problems.push("перемотка на 2 января показала больше полос, чем было: " + afterBars + " из " + allBars);
   const stats = (await page.locator("[data-stats]").innerText()).trim();
   if (!stats.includes("2 января 2026")) problems.push("подпись даты не переключилась: " + stats);
 
-  if ((await page.locator("[data-ruler]").count()) === 0) problems.push("нет шкалы времени над графом");
+  if ((await page.locator("[data-ruler]").count()) === 0) problems.push("нет шкалы времени над диаграммой");
   if ((await page.locator("[data-ruler-hour]").count()) !== 24) problems.push("на шкале не 24 часа");
-  if ((await page.locator("[data-legends]").count()) === 0) problems.push("нет легенд SLA и развилок");
+  if ((await page.locator("[data-legends]").count()) === 0) problems.push("нет легенд SLA");
   if ((await page.locator("[data-legend-sla]").count()) !== 4) problems.push("в легенде SLA не 4 фазы");
   if ((await page.locator("[data-scroll-hint]").count()) === 0) problems.push("нет подсказки про прокрутку");
   if ((await page.locator('[data-action="clear"]').count()) !== 1) problems.push("нет всегда видимого сброса фильтра");
@@ -54,27 +51,17 @@ if (ready) {
     if (!decodeURIComponent(page.url()).includes("at=2026-01-05")) problems.push("перемотка дня не обновила адрес: " + page.url());
   }
 
-  const commit = page.locator('[data-commit][data-incident="З-015"][data-node="U6"]');
-  if ((await commit.count()) > 0) {
-    await commit.click();
+  await page.goto(base + "?v=" + Date.now() + "#timeline?at=2026-01-02&view=gantt");
+  await page.waitForSelector("[data-gantt]");
+  const row = page.locator('[data-row="З-015"]');
+  if ((await row.count()) > 0) {
+    await row.click();
     await page.waitForTimeout(400);
+    if (!decodeURIComponent(page.url()).includes("#chat/З-015")) problems.push("клик по строке диаграммы не открыл переписку: " + page.url());
   } else {
-    problems.push("на графе нет коммита З-015/U6");
+    problems.push("в диаграмме нет строки З-015");
   }
-  if ((await page.locator("[data-node-card]").count()) === 0) problems.push("клик по коммиту не открыл карточку узла");
-  else {
-    const card = (await page.locator("[data-node-card]").innerText()).trim();
-    if (!card.includes("ответственный")) problems.push("в карточке узла нет ответственного: " + card.slice(0, 120));
-    if (!card.includes("Депутат-диспетчер")) problems.push("в карточке узла нет роли депутата-диспетчера");
-    if (!card.includes("SLA")) problems.push("в карточке узла нет SLA");
-  }
-
-  const ganttBtn = page.locator('[data-view="gantt"]');
-  if ((await ganttBtn.count()) > 0) {
-    await ganttBtn.click();
-    if ((await page.locator("[data-gantt]").count()) === 0) problems.push("fallback-Гант не отрисовался");
-  } else {
-    problems.push("нет переключателя на Гант");
+  if ((await page.locator("[data-gantt]").count()) === 0) problems.push("диаграмма Ганта не отрисовалась");
   }
 
   await page.goto(base + "?v=" + Date.now() + "#chat/З-015?at=2026-01-02");

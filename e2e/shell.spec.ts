@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 test.describe("Оболочка редизайна", () => {
   test("desktop: сайдбар, активный пункт, переключатель темы запоминается", async ({ page }) => {
-    await page.goto("/#timeline?at=2026-01-02&view=git");
+    await page.goto("/#timeline?at=2026-01-02&view=gantt");
     await expect(page.locator("[data-sidebar]")).toBeVisible();
     await expect(page.locator('[data-nav="timeline"]')).toHaveAttribute("aria-current", "page");
     await expect(page.locator("[data-theme-toggle]")).toBeVisible();
@@ -31,8 +31,8 @@ test.describe("Оболочка редизайна", () => {
   });
 
   test("старые маршруты показывают своё содержимое внутри оболочки", async ({ page }) => {
-    await page.goto("/#timeline?at=2026-01-02&view=git");
-    await expect(page.locator("svg[data-graph]")).toBeVisible();
+    await page.goto("/#timeline?at=2026-01-02&view=gantt");
+    await expect(page.locator("[data-gantt]")).toBeVisible();
     await page.goto("/#chat/" + encodeURIComponent("З-015") + "?at=2026-01-02");
     await expect(page.locator("[data-phone]")).toBeVisible();
     await page.goto("/#model");
@@ -52,7 +52,7 @@ test.describe("Оболочка редизайна", () => {
 
   test("mobile: сайдбар скрыт, открывается кнопкой меню", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto("/#timeline?at=2026-01-02&view=git");
+    await page.goto("/#timeline?at=2026-01-02&view=gantt");
     await expect(page.locator("[data-menu]")).toBeVisible();
     await expect(page.locator("[data-sidebar]")).toBeHidden();
     await page.locator("[data-menu]").click();

@@ -31,14 +31,6 @@
     {
       "page": "timeline",
       "viewport": "wide",
-      "kind": "canvas-scroll",
-      "severity": "metric",
-      "detail": "canvas 1150/1438 (auto)",
-      "note": "канвас прокручивается намеренно: область подписана и доступна с клавиатуры"
-    },
-    {
-      "page": "timeline",
-      "viewport": "wide",
       "kind": "slider-a11y",
       "severity": "metric",
       "detail": "aria-label=нет; aria-valuetext=2 января 2026",
@@ -47,10 +39,10 @@
     {
       "page": "timeline",
       "viewport": "wide",
-      "kind": "commit-a11y",
+      "kind": "row-a11y",
       "severity": "metric",
-      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0",
-      "note": "снимок роли, подписи и фокуса коммита графа"
+      "detail": "role=button; tabindex=0",
+      "note": "справочная метрика"
     },
     {
       "page": "timeline",
@@ -58,81 +50,7 @@
       "kind": "headings",
       "severity": "metric",
       "count": 4,
-      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды",
-      "note": "снимок иерархии заголовков экрана для сверки"
-    },
-    {
-      "page": "timeline-graph",
-      "viewport": "wide",
-      "kind": "canvas-scroll",
-      "severity": "metric",
-      "detail": "canvas 1150/1438 (auto)",
-      "note": "канвас прокручивается намеренно: область подписана и доступна с клавиатуры"
-    },
-    {
-      "page": "timeline-graph",
-      "viewport": "wide",
-      "kind": "slider-a11y",
-      "severity": "metric",
-      "detail": "aria-label=нет; aria-valuetext=2 января 2026",
-      "note": "снимок подписи и озвучки ползунка времени"
-    },
-    {
-      "page": "timeline-graph",
-      "viewport": "wide",
-      "kind": "commit-a11y",
-      "severity": "metric",
-      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0",
-      "note": "снимок роли, подписи и фокуса коммита графа"
-    },
-    {
-      "page": "timeline-graph",
-      "viewport": "wide",
-      "kind": "headings",
-      "severity": "metric",
-      "count": 4,
-      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды",
-      "note": "снимок иерархии заголовков экрана для сверки"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "wide",
-      "kind": "canvas-scroll",
-      "severity": "metric",
-      "detail": "canvas 1150/1438 (auto)",
-      "note": "канвас прокручивается намеренно: область подписана и доступна с клавиатуры"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "wide",
-      "kind": "slider-a11y",
-      "severity": "metric",
-      "detail": "aria-label=нет; aria-valuetext=2 января 2026",
-      "note": "снимок подписи и озвучки ползунка времени"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "wide",
-      "kind": "commit-a11y",
-      "severity": "metric",
-      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0",
-      "note": "снимок роли, подписи и фокуса коммита графа"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "wide",
-      "kind": "card-position",
-      "severity": "metric",
-      "detail": "top=460px, в окне: true",
-      "note": "снимок положения карточки узла в окне"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "wide",
-      "kind": "headings",
-      "severity": "metric",
-      "count": 4,
-      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды",
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Принцип визуального отображения SLA | H2: Связанные виды",
       "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
@@ -142,6 +60,14 @@
       "severity": "metric",
       "detail": "aria-label=нет; aria-valuetext=2 января 2026",
       "note": "снимок подписи и озвучки ползунка времени"
+    },
+    {
+      "page": "gantt",
+      "viewport": "wide",
+      "kind": "row-a11y",
+      "severity": "metric",
+      "detail": "role=button; tabindex=0",
+      "note": "справочная метрика"
     },
     {
       "page": "gantt",
@@ -173,10 +99,10 @@
     {
       "page": "keyboard",
       "viewport": "wide",
-      "kind": "enter-on-commit",
+      "kind": "enter-on-row",
       "severity": "metric",
-      "detail": "карточка открылась",
-      "note": "проверка открытия карточки узла клавишей Enter"
+      "detail": "переписка открылась",
+      "note": "справочная метрика"
     },
     {
       "page": "dashboard",
@@ -208,14 +134,6 @@
     {
       "page": "timeline",
       "viewport": "desktop",
-      "kind": "canvas-scroll",
-      "severity": "metric",
-      "detail": "canvas 780/1438 (auto)",
-      "note": "канвас прокручивается намеренно: область подписана и доступна с клавиатуры"
-    },
-    {
-      "page": "timeline",
-      "viewport": "desktop",
       "kind": "chips-scroll",
       "severity": "metric",
       "detail": "1122/1471",
@@ -232,10 +150,10 @@
     {
       "page": "timeline",
       "viewport": "desktop",
-      "kind": "commit-a11y",
+      "kind": "row-a11y",
       "severity": "metric",
-      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0",
-      "note": "снимок роли, подписи и фокуса коммита графа"
+      "detail": "role=button; tabindex=0",
+      "note": "справочная метрика"
     },
     {
       "page": "timeline",
@@ -243,97 +161,7 @@
       "kind": "headings",
       "severity": "metric",
       "count": 4,
-      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды",
-      "note": "снимок иерархии заголовков экрана для сверки"
-    },
-    {
-      "page": "timeline-graph",
-      "viewport": "desktop",
-      "kind": "canvas-scroll",
-      "severity": "metric",
-      "detail": "canvas 780/1438 (auto)",
-      "note": "канвас прокручивается намеренно: область подписана и доступна с клавиатуры"
-    },
-    {
-      "page": "timeline-graph",
-      "viewport": "desktop",
-      "kind": "chips-scroll",
-      "severity": "metric",
-      "detail": "1122/1471",
-      "note": "лента заявок прокручивается намеренно: подписана, доступна с клавиатуры"
-    },
-    {
-      "page": "timeline-graph",
-      "viewport": "desktop",
-      "kind": "slider-a11y",
-      "severity": "metric",
-      "detail": "aria-label=нет; aria-valuetext=2 января 2026",
-      "note": "снимок подписи и озвучки ползунка времени"
-    },
-    {
-      "page": "timeline-graph",
-      "viewport": "desktop",
-      "kind": "commit-a11y",
-      "severity": "metric",
-      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0",
-      "note": "снимок роли, подписи и фокуса коммита графа"
-    },
-    {
-      "page": "timeline-graph",
-      "viewport": "desktop",
-      "kind": "headings",
-      "severity": "metric",
-      "count": 4,
-      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды",
-      "note": "снимок иерархии заголовков экрана для сверки"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "desktop",
-      "kind": "canvas-scroll",
-      "severity": "metric",
-      "detail": "canvas 780/1438 (auto)",
-      "note": "канвас прокручивается намеренно: область подписана и доступна с клавиатуры"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "desktop",
-      "kind": "chips-scroll",
-      "severity": "metric",
-      "detail": "1122/1471",
-      "note": "лента заявок прокручивается намеренно: подписана, доступна с клавиатуры"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "desktop",
-      "kind": "slider-a11y",
-      "severity": "metric",
-      "detail": "aria-label=нет; aria-valuetext=2 января 2026",
-      "note": "снимок подписи и озвучки ползунка времени"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "desktop",
-      "kind": "commit-a11y",
-      "severity": "metric",
-      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0",
-      "note": "снимок роли, подписи и фокуса коммита графа"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "desktop",
-      "kind": "card-position",
-      "severity": "metric",
-      "detail": "top=549px, в окне: true",
-      "note": "снимок положения карточки узла в окне"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "desktop",
-      "kind": "headings",
-      "severity": "metric",
-      "count": 4,
-      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды",
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Принцип визуального отображения SLA | H2: Связанные виды",
       "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
@@ -351,6 +179,14 @@
       "severity": "metric",
       "detail": "aria-label=нет; aria-valuetext=2 января 2026",
       "note": "снимок подписи и озвучки ползунка времени"
+    },
+    {
+      "page": "gantt",
+      "viewport": "desktop",
+      "kind": "row-a11y",
+      "severity": "metric",
+      "detail": "role=button; tabindex=0",
+      "note": "справочная метрика"
     },
     {
       "page": "gantt",
@@ -382,10 +218,10 @@
     {
       "page": "keyboard",
       "viewport": "desktop",
-      "kind": "enter-on-commit",
+      "kind": "enter-on-row",
       "severity": "metric",
-      "detail": "карточка открылась",
-      "note": "проверка открытия карточки узла клавишей Enter"
+      "detail": "переписка открылась",
+      "note": "справочная метрика"
     },
     {
       "page": "dashboard",
@@ -417,14 +253,6 @@
     {
       "page": "timeline",
       "viewport": "tablet",
-      "kind": "canvas-scroll",
-      "severity": "metric",
-      "detail": "canvas 736/1438 (auto)",
-      "note": "канвас прокручивается намеренно: область подписана и доступна с клавиатуры"
-    },
-    {
-      "page": "timeline",
-      "viewport": "tablet",
       "kind": "chips-scroll",
       "severity": "metric",
       "detail": "738/1471",
@@ -441,10 +269,10 @@
     {
       "page": "timeline",
       "viewport": "tablet",
-      "kind": "commit-a11y",
+      "kind": "row-a11y",
       "severity": "metric",
-      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0",
-      "note": "снимок роли, подписи и фокуса коммита графа"
+      "detail": "role=button; tabindex=0",
+      "note": "справочная метрика"
     },
     {
       "page": "timeline",
@@ -452,97 +280,7 @@
       "kind": "headings",
       "severity": "metric",
       "count": 4,
-      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды",
-      "note": "снимок иерархии заголовков экрана для сверки"
-    },
-    {
-      "page": "timeline-graph",
-      "viewport": "tablet",
-      "kind": "canvas-scroll",
-      "severity": "metric",
-      "detail": "canvas 736/1438 (auto)",
-      "note": "канвас прокручивается намеренно: область подписана и доступна с клавиатуры"
-    },
-    {
-      "page": "timeline-graph",
-      "viewport": "tablet",
-      "kind": "chips-scroll",
-      "severity": "metric",
-      "detail": "738/1471",
-      "note": "лента заявок прокручивается намеренно: подписана, доступна с клавиатуры"
-    },
-    {
-      "page": "timeline-graph",
-      "viewport": "tablet",
-      "kind": "slider-a11y",
-      "severity": "metric",
-      "detail": "aria-label=нет; aria-valuetext=2 января 2026",
-      "note": "снимок подписи и озвучки ползунка времени"
-    },
-    {
-      "page": "timeline-graph",
-      "viewport": "tablet",
-      "kind": "commit-a11y",
-      "severity": "metric",
-      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0",
-      "note": "снимок роли, подписи и фокуса коммита графа"
-    },
-    {
-      "page": "timeline-graph",
-      "viewport": "tablet",
-      "kind": "headings",
-      "severity": "metric",
-      "count": 4,
-      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды",
-      "note": "снимок иерархии заголовков экрана для сверки"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "tablet",
-      "kind": "canvas-scroll",
-      "severity": "metric",
-      "detail": "canvas 736/1438 (auto)",
-      "note": "канвас прокручивается намеренно: область подписана и доступна с клавиатуры"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "tablet",
-      "kind": "chips-scroll",
-      "severity": "metric",
-      "detail": "738/1471",
-      "note": "лента заявок прокручивается намеренно: подписана, доступна с клавиатуры"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "tablet",
-      "kind": "slider-a11y",
-      "severity": "metric",
-      "detail": "aria-label=нет; aria-valuetext=2 января 2026",
-      "note": "снимок подписи и озвучки ползунка времени"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "tablet",
-      "kind": "commit-a11y",
-      "severity": "metric",
-      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0",
-      "note": "снимок роли, подписи и фокуса коммита графа"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "tablet",
-      "kind": "card-position",
-      "severity": "metric",
-      "detail": "top=473px, в окне: true",
-      "note": "снимок положения карточки узла в окне"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "tablet",
-      "kind": "headings",
-      "severity": "metric",
-      "count": 4,
-      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды",
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Принцип визуального отображения SLA | H2: Связанные виды",
       "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
@@ -560,6 +298,14 @@
       "severity": "metric",
       "detail": "aria-label=нет; aria-valuetext=2 января 2026",
       "note": "снимок подписи и озвучки ползунка времени"
+    },
+    {
+      "page": "gantt",
+      "viewport": "tablet",
+      "kind": "row-a11y",
+      "severity": "metric",
+      "detail": "role=button; tabindex=0",
+      "note": "справочная метрика"
     },
     {
       "page": "gantt",
@@ -591,10 +337,10 @@
     {
       "page": "keyboard",
       "viewport": "tablet",
-      "kind": "enter-on-commit",
+      "kind": "enter-on-row",
       "severity": "metric",
-      "detail": "карточка открылась",
-      "note": "проверка открытия карточки узла клавишей Enter"
+      "detail": "переписка открылась",
+      "note": "справочная метрика"
     },
     {
       "page": "dashboard",
@@ -626,14 +372,6 @@
     {
       "page": "timeline",
       "viewport": "portrait",
-      "kind": "canvas-scroll",
-      "severity": "metric",
-      "detail": "canvas 738/1438 (auto)",
-      "note": "канвас прокручивается намеренно: область подписана и доступна с клавиатуры"
-    },
-    {
-      "page": "timeline",
-      "viewport": "portrait",
       "kind": "chips-scroll",
       "severity": "metric",
       "detail": "740/1471",
@@ -650,10 +388,10 @@
     {
       "page": "timeline",
       "viewport": "portrait",
-      "kind": "commit-a11y",
+      "kind": "row-a11y",
       "severity": "metric",
-      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0",
-      "note": "снимок роли, подписи и фокуса коммита графа"
+      "detail": "role=button; tabindex=0",
+      "note": "справочная метрика"
     },
     {
       "page": "timeline",
@@ -661,97 +399,7 @@
       "kind": "headings",
       "severity": "metric",
       "count": 4,
-      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды",
-      "note": "снимок иерархии заголовков экрана для сверки"
-    },
-    {
-      "page": "timeline-graph",
-      "viewport": "portrait",
-      "kind": "canvas-scroll",
-      "severity": "metric",
-      "detail": "canvas 738/1438 (auto)",
-      "note": "канвас прокручивается намеренно: область подписана и доступна с клавиатуры"
-    },
-    {
-      "page": "timeline-graph",
-      "viewport": "portrait",
-      "kind": "chips-scroll",
-      "severity": "metric",
-      "detail": "740/1471",
-      "note": "лента заявок прокручивается намеренно: подписана, доступна с клавиатуры"
-    },
-    {
-      "page": "timeline-graph",
-      "viewport": "portrait",
-      "kind": "slider-a11y",
-      "severity": "metric",
-      "detail": "aria-label=нет; aria-valuetext=2 января 2026",
-      "note": "снимок подписи и озвучки ползунка времени"
-    },
-    {
-      "page": "timeline-graph",
-      "viewport": "portrait",
-      "kind": "commit-a11y",
-      "severity": "metric",
-      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0",
-      "note": "снимок роли, подписи и фокуса коммита графа"
-    },
-    {
-      "page": "timeline-graph",
-      "viewport": "portrait",
-      "kind": "headings",
-      "severity": "metric",
-      "count": 4,
-      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды",
-      "note": "снимок иерархии заголовков экрана для сверки"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "portrait",
-      "kind": "canvas-scroll",
-      "severity": "metric",
-      "detail": "canvas 738/1438 (auto)",
-      "note": "канвас прокручивается намеренно: область подписана и доступна с клавиатуры"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "portrait",
-      "kind": "chips-scroll",
-      "severity": "metric",
-      "detail": "740/1471",
-      "note": "лента заявок прокручивается намеренно: подписана, доступна с клавиатуры"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "portrait",
-      "kind": "slider-a11y",
-      "severity": "metric",
-      "detail": "aria-label=нет; aria-valuetext=2 января 2026",
-      "note": "снимок подписи и озвучки ползунка времени"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "portrait",
-      "kind": "commit-a11y",
-      "severity": "metric",
-      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0",
-      "note": "снимок роли, подписи и фокуса коммита графа"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "portrait",
-      "kind": "card-position",
-      "severity": "metric",
-      "detail": "top=602px, в окне: true",
-      "note": "снимок положения карточки узла в окне"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "portrait",
-      "kind": "headings",
-      "severity": "metric",
-      "count": 4,
-      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды",
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Принцип визуального отображения SLA | H2: Связанные виды",
       "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
@@ -769,6 +417,14 @@
       "severity": "metric",
       "detail": "aria-label=нет; aria-valuetext=2 января 2026",
       "note": "снимок подписи и озвучки ползунка времени"
+    },
+    {
+      "page": "gantt",
+      "viewport": "portrait",
+      "kind": "row-a11y",
+      "severity": "metric",
+      "detail": "role=button; tabindex=0",
+      "note": "справочная метрика"
     },
     {
       "page": "gantt",
@@ -800,10 +456,10 @@
     {
       "page": "keyboard",
       "viewport": "portrait",
-      "kind": "enter-on-commit",
+      "kind": "enter-on-row",
       "severity": "metric",
-      "detail": "карточка открылась",
-      "note": "проверка открытия карточки узла клавишей Enter"
+      "detail": "переписка открылась",
+      "note": "справочная метрика"
     },
     {
       "page": "dashboard",
@@ -851,10 +507,10 @@
     {
       "page": "timeline",
       "viewport": "mobile",
-      "kind": "commit-a11y",
+      "kind": "row-a11y",
       "severity": "metric",
-      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0",
-      "note": "снимок роли, подписи и фокуса коммита графа"
+      "detail": "role=button; tabindex=0",
+      "note": "справочная метрика"
     },
     {
       "page": "timeline",
@@ -862,97 +518,7 @@
       "kind": "headings",
       "severity": "metric",
       "count": 4,
-      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды",
-      "note": "снимок иерархии заголовков экрана для сверки"
-    },
-    {
-      "page": "timeline-graph",
-      "viewport": "mobile",
-      "kind": "canvas-scroll",
-      "severity": "metric",
-      "detail": "canvas 364/1794 (auto)",
-      "note": "канвас прокручивается намеренно: область подписана и доступна с клавиатуры"
-    },
-    {
-      "page": "timeline-graph",
-      "viewport": "mobile",
-      "kind": "chips-scroll",
-      "severity": "metric",
-      "detail": "366/1471",
-      "note": "лента заявок прокручивается намеренно: подписана, доступна с клавиатуры"
-    },
-    {
-      "page": "timeline-graph",
-      "viewport": "mobile",
-      "kind": "slider-a11y",
-      "severity": "metric",
-      "detail": "aria-label=нет; aria-valuetext=2 января 2026",
-      "note": "снимок подписи и озвучки ползунка времени"
-    },
-    {
-      "page": "timeline-graph",
-      "viewport": "mobile",
-      "kind": "commit-a11y",
-      "severity": "metric",
-      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0",
-      "note": "снимок роли, подписи и фокуса коммита графа"
-    },
-    {
-      "page": "timeline-graph",
-      "viewport": "mobile",
-      "kind": "headings",
-      "severity": "metric",
-      "count": 4,
-      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды",
-      "note": "снимок иерархии заголовков экрана для сверки"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "mobile",
-      "kind": "canvas-scroll",
-      "severity": "metric",
-      "detail": "canvas 364/1794 (auto)",
-      "note": "канвас прокручивается намеренно: область подписана и доступна с клавиатуры"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "mobile",
-      "kind": "chips-scroll",
-      "severity": "metric",
-      "detail": "366/1471",
-      "note": "лента заявок прокручивается намеренно: подписана, доступна с клавиатуры"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "mobile",
-      "kind": "slider-a11y",
-      "severity": "metric",
-      "detail": "aria-label=нет; aria-valuetext=2 января 2026",
-      "note": "снимок подписи и озвучки ползунка времени"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "mobile",
-      "kind": "commit-a11y",
-      "severity": "metric",
-      "detail": "role=button; aria-label=З-001 · U1 Подача обращения · 20 декабря 2025 · Житель · SLA: в срок · 1 ч; tabindex=0",
-      "note": "снимок роли, подписи и фокуса коммита графа"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "mobile",
-      "kind": "card-position",
-      "severity": "metric",
-      "detail": "top=388px, в окне: true",
-      "note": "снимок положения карточки узла в окне"
-    },
-    {
-      "page": "timeline-card",
-      "viewport": "mobile",
-      "kind": "headings",
-      "severity": "metric",
-      "count": 4,
-      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Как читать граф | H2: Связанные виды",
+      "detail": "H1: Хронология | H2: События 2 января 2026 | H2: Принцип визуального отображения SLA | H2: Связанные виды",
       "note": "снимок иерархии заголовков экрана для сверки"
     },
     {
@@ -970,6 +536,14 @@
       "severity": "metric",
       "detail": "aria-label=нет; aria-valuetext=2 января 2026",
       "note": "снимок подписи и озвучки ползунка времени"
+    },
+    {
+      "page": "gantt",
+      "viewport": "mobile",
+      "kind": "row-a11y",
+      "severity": "metric",
+      "detail": "role=button; tabindex=0",
+      "note": "справочная метрика"
     },
     {
       "page": "gantt",
@@ -1001,10 +575,10 @@
     {
       "page": "keyboard",
       "viewport": "mobile",
-      "kind": "enter-on-commit",
+      "kind": "enter-on-row",
       "severity": "metric",
-      "detail": "карточка открылась",
-      "note": "проверка открытия карточки узла клавишей Enter"
+      "detail": "переписка открылась",
+      "note": "справочная метрика"
     }
   ],
   "shots": [
@@ -1012,8 +586,6 @@
     "docs/screenshots/audit/wide-incidents.png",
     "docs/screenshots/audit/wide-incident.png",
     "docs/screenshots/audit/wide-timeline.png",
-    "docs/screenshots/audit/wide-timeline-graph.png",
-    "docs/screenshots/audit/wide-timeline-card.png",
     "docs/screenshots/audit/wide-gantt.png",
     "docs/screenshots/audit/wide-chat.png",
     "docs/screenshots/audit/wide-model.png",
@@ -1021,8 +593,6 @@
     "docs/screenshots/audit/desktop-incidents.png",
     "docs/screenshots/audit/desktop-incident.png",
     "docs/screenshots/audit/desktop-timeline.png",
-    "docs/screenshots/audit/desktop-timeline-graph.png",
-    "docs/screenshots/audit/desktop-timeline-card.png",
     "docs/screenshots/audit/desktop-gantt.png",
     "docs/screenshots/audit/desktop-chat.png",
     "docs/screenshots/audit/desktop-model.png",
@@ -1030,8 +600,6 @@
     "docs/screenshots/audit/tablet-incidents.png",
     "docs/screenshots/audit/tablet-incident.png",
     "docs/screenshots/audit/tablet-timeline.png",
-    "docs/screenshots/audit/tablet-timeline-graph.png",
-    "docs/screenshots/audit/tablet-timeline-card.png",
     "docs/screenshots/audit/tablet-gantt.png",
     "docs/screenshots/audit/tablet-chat.png",
     "docs/screenshots/audit/tablet-model.png",
@@ -1039,8 +607,6 @@
     "docs/screenshots/audit/portrait-incidents.png",
     "docs/screenshots/audit/portrait-incident.png",
     "docs/screenshots/audit/portrait-timeline.png",
-    "docs/screenshots/audit/portrait-timeline-graph.png",
-    "docs/screenshots/audit/portrait-timeline-card.png",
     "docs/screenshots/audit/portrait-gantt.png",
     "docs/screenshots/audit/portrait-chat.png",
     "docs/screenshots/audit/portrait-model.png",
@@ -1048,8 +614,6 @@
     "docs/screenshots/audit/mobile-incidents.png",
     "docs/screenshots/audit/mobile-incident.png",
     "docs/screenshots/audit/mobile-timeline.png",
-    "docs/screenshots/audit/mobile-timeline-graph.png",
-    "docs/screenshots/audit/mobile-timeline-card.png",
     "docs/screenshots/audit/mobile-gantt.png",
     "docs/screenshots/audit/mobile-chat.png",
     "docs/screenshots/audit/mobile-model.png"

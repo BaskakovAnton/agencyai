@@ -11,7 +11,7 @@ OUT = os.path.join(BASE, "docs", "screenshots", "acceptance")
 os.makedirs(OUT, exist_ok=True)
 
 PAIRS = [("dashboard", "overview"), ("incidents", "incidents"), ("incident", "incident-detail"),
-         ("timeline-git", "timeline-git"), ("timeline-gantt", "timeline-gantt"),
+         ("timeline-gantt", "timeline-gantt"),
          ("chat", "chat"), ("model", "model")]
 WIDTHS = ["1440", "390"]
 ACCENTS = {"primary": (37, 99, 235), "ink": (23, 32, 51)}

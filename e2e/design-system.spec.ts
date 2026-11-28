@@ -35,7 +35,7 @@ test.describe("Дизайн-система и оболочка", () => {
   });
 
   test("все шесть маршрутов живут в новой оболочке", async ({ page }) => {
-    for (const hash of ["#dashboard", "#incidents", "#incident/" + encodeURIComponent("З-015") + "?at=2026-01-02", "#timeline?at=2026-01-02&view=git", "#timeline?at=2026-01-02&view=gantt", "#chat/" + encodeURIComponent("З-015") + "?at=2026-01-02", "#model"]) {
+    for (const hash of ["#dashboard", "#incidents", "#incident/" + encodeURIComponent("З-015") + "?at=2026-01-02", "#timeline?at=2026-01-02&view=gantt", "#timeline?at=2026-01-02&view=gantt", "#chat/" + encodeURIComponent("З-015") + "?at=2026-01-02", "#model"]) {
       await page.goto("/" + hash);
       await expect(page.locator("ui-sidebar")).toBeVisible();
       await expect(page.locator("ui-topbar")).toBeVisible();

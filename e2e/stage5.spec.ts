@@ -4,8 +4,8 @@ const ROUTES: readonly (readonly [string, string])[] = [
   ["dashboard", "/#dashboard?at=2026-01-02"],
   ["incidents", "/#incidents?at=2026-01-02"],
   ["incident", "/#incident/" + encodeURIComponent("З-015") + "?at=2026-01-02"],
-  ["timeline-git", "/#timeline?at=2026-01-02&view=git"],
-  ["timeline-gantt", "/#timeline?at=2026-01-02&view=gantt"],
+
+  ["timeline", "/#timeline?at=2026-01-02&view=gantt"],
   ["chat", "/#chat/" + encodeURIComponent("З-015") + "?at=2026-01-02"],
   ["model", "/#model"],
 ];
@@ -69,10 +69,10 @@ test.describe("Выпускная регрессия", () => {
     });
     expect(outline).not.toBe("");
     expect(outline).not.toContain("none");
-    await openAll(page, "/#timeline?at=2026-01-02&view=git");
-    const commit = page.locator("[data-commit]").first();
-    await commit.focus();
+    await openAll(page, "/#timeline?at=2026-01-02&view=gantt");
+    const row = page.locator("[data-row]").first();
+    await row.focus();
     await page.keyboard.press("Enter");
-    await expect(page.locator("[data-node-card]")).toBeVisible();
+    await expect.poll(() => decodeURIComponent(page.url())).toContain("#chat/");
   });
 });
