@@ -15,6 +15,21 @@ test.describe("Оболочка редизайна", () => {
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   });
 
+  test("сохранённая светлая тема применяется до загрузки приложения (без вспышки)", async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem("agencyai-theme", "light"));
+    await page.route("**/app.js", (route) => route.abort());
+    await page.goto("/#dashboard");
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+    await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute("content", "#f4f6fa");
+  });
+
+  test("без сохранённой темы до загрузки приложения действует тёмная", async ({ page }) => {
+    await page.route("**/app.js", (route) => route.abort());
+    await page.goto("/#dashboard");
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+    await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute("content", "#0f1115");
+  });
+
   test("старые маршруты показывают своё содержимое внутри оболочки", async ({ page }) => {
     await page.goto("/#timeline?at=2026-01-02&view=git");
     await expect(page.locator("svg[data-graph]")).toBeVisible();

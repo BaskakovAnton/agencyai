@@ -4,6 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0f1115">
+<script>
+  /* Тема применяется до первой отрисовки: сохранённая светлая не даёт вспышки тёмной. */
+  try {
+    var saved = localStorage.getItem("agencyai-theme");
+    if (saved === "light" || saved === "dark") {
+      document.documentElement.dataset.theme = saved;
+      document.querySelector('meta[name="theme-color"]').setAttribute("content", saved === "light" ? "#f4f6fa" : "#0f1115");
+    }
+  } catch (error) {
+    /* приватный режим: остаётся тема по умолчанию */
+  }
+</script>
 <title>ДЕПУТАТ 360° · Приёмная депутата</title>
 <link rel="stylesheet" href="./tokens.css">
 <link rel="stylesheet" href="./components.css">

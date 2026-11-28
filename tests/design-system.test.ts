@@ -35,6 +35,9 @@ test("токены соответствуют утверждённому referen
 test("тёмная тема — основная: HTML и токены согласованы", () => {
   expect(index).toContain('data-theme="dark"');
   expect(index).toContain('content="#0f1115"');
+  // Тема применяется до загрузки приложения: сохранённая светлая не даёт вспышки тёмной.
+  expect(index).toContain("agencyai-theme");
+  expect(index.indexOf("agencyai-theme")).toBeLessThan(index.indexOf("app.js"));
   const darkBlock = tokens.split('[data-theme="dark"]')[1] ?? "";
   expect(darkBlock.replace(/\s+/g, "")).toContain("--color-bg:#0f1115");
   expect(darkBlock).toContain("color-scheme: dark");
