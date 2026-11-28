@@ -8,7 +8,7 @@ import { NODE_MESSAGES } from "../data/messages.ts";
 import { ROLE_NAMES } from "../data/roles.ts";
 import { situationById } from "../data/situations.ts";
 import { slaTextFor } from "./overview.ts";
-import { incidentDepartmentName } from "./org-integration.ts";
+import { incidentAssigneeName, incidentDepartmentName } from "./org-integration.ts";
 import { departmentFilterActive, matchesDepartment, matchesView } from "./incidents-view-filter.ts";
 import type { OrgQuery } from "../core/org/repository.ts";
 import type { Graph, Incident, Priority } from "../types.ts";
@@ -43,6 +43,8 @@ export interface IncidentRow {
   readonly roleTitle: string;
   /** Ответственное подразделение; пусто, если орг-модель не подключена. */
   readonly departmentName: string;
+  /** Ответственный сотрудник; пусто, если данных нет. */
+  readonly assigneeName: string;
   readonly slaText: string;
 }
 
@@ -141,6 +143,7 @@ export const buildRows = (
         dueDay: sla.dueAt > 0 ? dayOf(addHours("2025-12-20T09:00:00.000Z", sla.dueAt)) : "",
         roleTitle: roleOf(asOf.nodeId),
         departmentName: org === undefined ? "" : incidentDepartmentName(org, incident.id),
+        assigneeName: org === undefined ? "" : incidentAssigneeName(org, incident.id),
         slaText: slaTextFor(incident, day),
       };
     })

@@ -47,6 +47,13 @@ export interface IncidentOrgSummary {
   readonly participants: readonly OrgParticipant[];
 }
 
+/** Ответственный сотрудник по активному назначению; пусто, если модель не даёт человека. */
+export const incidentAssigneeName = (org: OrgQuery, incidentId: string): string => {
+  const assignment = org.accountableOf(incidentId);
+  if (assignment === undefined || assignment.employeeId === null) return "";
+  return org.directory.employees.find((employee) => employee.id === assignment.employeeId)?.fullName ?? "";
+};
+
 export interface OrgFacts {
   readonly departments: readonly DepartmentSlice[];
   readonly waitingForReview: number;

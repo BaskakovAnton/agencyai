@@ -25,11 +25,15 @@ export interface IncidentsInput {
 const stageTitle = (row: IncidentRow): string => (row.nodeTitle === "" ? row.nodeId : row.nodeId + " " + row.nodeTitle);
 
 /** Ответственное подразделение обращения (UX-4); «Нет данных», если модель не подключена. */
-const assignee = (row: IncidentRow): string =>
-  row.departmentName === ""
-    ? '<span class="muted">Нет данных</span>'
-    : '<div class="assignee"><span class="mini-avatar" aria-hidden="true">' + esc(row.departmentName.slice(0, 2)) +
-      '</span><span class="assignee-name">' + esc(row.departmentName) + "</span></div>";
+const assignee = (row: IncidentRow): string => {
+  const person = row.assigneeName === "" ? '<span class="muted">Без ответственного</span>' : esc(row.assigneeName);
+  const department =
+    row.departmentName === ""
+      ? '<span class="muted">Нет данных</span>'
+      : '<div class="assignee"><span class="mini-avatar" aria-hidden="true">' + esc(row.departmentName.slice(0, 2)) +
+        '</span><span class="assignee-name">' + esc(row.departmentName) + "</span></div>";
+  return department + '<div class="case-sub" data-assignee>' + person + "</div>";
+};
 
 /** Тело таблицы реестра: одна строка — одна заявка. */
 export const renderIncidentsBody = (

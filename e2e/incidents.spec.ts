@@ -36,6 +36,14 @@ test.describe("Обращения", () => {
     await expect(page.locator("[data-incident-row]")).toHaveCount(1);
   });
 
+  test("строка показывает ответственного сотрудника или текст «Без ответственного»", async ({ page }) => {
+    const cells = page.locator("[data-incident-row] [data-assignee]");
+    expect(await cells.count()).toBe(30);
+    const text = ((await cells.first().textContent()) ?? "").trim();
+    expect(text.length).toBeGreaterThan(0);
+    await expect(page.locator('[data-incident-row="З-015"] [data-assignee]')).not.toBeEmpty();
+  });
+
   test("строка ведёт в карточку обращения", async ({ page }) => {
     await page.locator("[data-incident-row]").first().locator("a").first().click();
     await expect.poll(() => decodeURIComponent(page.url())).toContain("#incident/");

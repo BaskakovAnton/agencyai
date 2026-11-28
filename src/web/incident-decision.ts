@@ -1,3 +1,4 @@
+import { NODE_HOURS } from "../data/sla.ts";
 import { esc, renderPanel } from "./components.ts";
 import { hrefTimeline } from "./router.ts";
 import type { IncidentView } from "./incident.ts";
@@ -15,6 +16,15 @@ export const decisionBlock = (view: IncidentView, day: string): string =>
       '<div class="decision-next"><div class="fact-label">Допустимые переходы</div>' +
       (view.next.length === 0
         ? '<p class="muted">Процесс завершён: следующих узлов нет.</p>'
-        : '<ul class="next-list">' + view.next.map((option) => "<li><b>" + option.to + "</b> " + esc(option.title) + (option.percent === 0 ? "" : ' <span class="muted">' + option.percent + "%</span>") + "</li>").join("") + "</ul>") +
+        : '<ul class="next-list">' + view.next
+          .map(
+            (option) =>
+              "<li><b>" + option.to + "</b> " + esc(option.title) + (option.percent === 0 ? "" : ' <span class="muted">' + option.percent + "%</span>") +
+              ' <span class="muted" data-next-norm>срок: ' +
+              (NODE_HOURS[option.to] === undefined ? "Нет данных" : NODE_HOURS[option.to] + " ч") +
+              "</span></li>",
+          )
+          .join("") +
+        "</ul>") +
       "</div>",
   });

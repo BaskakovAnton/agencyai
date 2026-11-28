@@ -12,6 +12,7 @@ test.describe("Карточка обращения", () => {
     await expect(page.locator("[data-decision-card]")).toBeVisible();
     await expect(page.locator("[data-durations]")).toBeVisible();
     await expect(page.locator("[data-duration-stage]")).toContainText("ч");
+    await expect(page.locator("[data-next-norm]").first()).toContainText("срок:");
     await expect(page.locator("[data-current-role]")).toContainText("Депутат-диспетчер");
   });
 
