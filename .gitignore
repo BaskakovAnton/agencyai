@@ -34,3 +34,4 @@ docs/spec-*.md
 
 # Локальный комплект дизайн-кита (копия уже лежит в docs/redesign-reference)
 agencyai-redesign-kit/
+coverage/

@@ -14,7 +14,8 @@
     "screenshots": "bun run scripts/screenshots.ts",
     "audit": "bun run scripts/audit-ui.ts",
     "typecheck": "tsc --noEmit",
-    "verify:demo": "bun run scripts/verify-demo-sync.ts"
+    "verify:demo": "bun run scripts/verify-demo-sync.ts",
+    "coverage:gate": "bun run scripts/coverage-gate.ts"
   },
   "devDependencies": {
     "@playwright/test": "^1.65.1",
