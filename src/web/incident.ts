@@ -10,6 +10,7 @@ import { PHASE_TITLES, PHASE_TONES, slaHoursLeft, type Tone } from "./overview.t
 import type { OrgQuery } from "../core/org/repository.ts";
 import { availableOrgActions, incidentOrgSummary, type IncidentOrgSummary, type OrgActions } from "./org-integration.ts";
 import { buildNext, buildParticipants, buildSteps } from "./incident-steps.ts";
+import { durationsOf, type DurationReport } from "../core/analytics/durations.ts";
 
 export type { NextOption, NextSteps, Participant, StepRow } from "./incident-steps.ts";
 import type { NextOption, Participant, StepRow } from "./incident-steps.ts";
@@ -52,6 +53,8 @@ export interface IncidentView {
   readonly participants: readonly Participant[];
   /** Орг-модель (UX-4): ответственное подразделение, участники и состояние подтверждения. */
   readonly orgSummary: IncidentOrgSummary | null;
+  /** Два потока времени: этапы процесса и жизненный цикл подтверждения. */
+  readonly durations: DurationReport;
   /** Доступные операции подтверждения для выбранного пользователя. */
   readonly actions: OrgActions | null;
   /** Текущий пользователь действий и список демонстрационных пользователей. */
@@ -147,6 +150,7 @@ export const buildIncidentView = (
     branched: next.branched,
     participants: buildParticipants(role, incident, beforeCreation, day),
     orgSummary,
+    durations: durationsOf({ history: incident.history, lifecycle: org?.lifecycleOf(incident.id) }),
     actions: org === undefined ? null : availableOrgActions(org, incident.id, actorUserId),
     actorUserId,
     actorOptions: org === undefined ? [] : org.directory.users.map((user) => ({ id: user.id, label: user.displayName })),

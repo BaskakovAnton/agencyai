@@ -6,6 +6,7 @@ import { confirmationBlock } from "./incident-confirmation.ts";
 import { participantsBlock } from "./incident-org.ts";
 import { linksBlock } from "./incident-actor.ts";
 import { decisionBlock } from "./incident-decision.ts";
+import { durationsBlock } from "./incident-durations.ts";
 
 const daySelect = (days: readonly string[], day: string): string =>
   '<label class="hint">Дата среза: <select data-day-select aria-label="Дата среза">' +
@@ -69,6 +70,7 @@ export const renderIncident = (
   '<div class="detail-grid">' +
   "<div>" +
   decisionBlock(view, day) +
+  '<div class="section-gap" data-durations-block>' + durationsBlock(view.durations) + "</div>" +
   '<div class="section-gap">' +
   renderPanel({
     title: view.title,
