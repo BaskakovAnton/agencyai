@@ -52,7 +52,14 @@ span.chip { border: 1px solid var(--color-border); color: var(--color-text-muted
 .timeline { display: grid; grid-template-columns: minmax(0, 1fr) 330px; grid-template-areas: "head head" "time time" "chips chips" "ruler ruler" "legends legends" "canvas chat" "event event" "card card" "foot foot"; gap: 10px; }
 .timeline .top { grid-area: head; }
 .timebar { grid-area: time; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.timebar input[type="range"] { flex: 1 1 320px; height: 24px; accent-color: var(--color-primary-strong); }
+/* Ползунок без заливки: дорожка нейтральная, «прогресс» не подкрашивается. */
+.timebar input[type="range"] { flex: 1 1 320px; height: 24px; appearance: none; -webkit-appearance: none; background: transparent; cursor: pointer; }
+.timebar input[type="range"]::-webkit-slider-runnable-track { height: 6px; border-radius: 999px; background: var(--color-neutral-bg); border: 1px solid var(--color-border); }
+.timebar input[type="range"]::-webkit-slider-thumb { appearance: none; -webkit-appearance: none; width: 18px; height: 18px; margin-top: -7px; border-radius: 50%; background: var(--color-surface); border: 2px solid var(--color-primary); box-shadow: 0 1px 3px rgba(0, 0, 0, .28); }
+.timebar input[type="range"]::-moz-range-track { height: 6px; border-radius: 999px; background: var(--color-neutral-bg); border: 1px solid var(--color-border); }
+.timebar input[type="range"]::-moz-range-progress { background: transparent; }
+.timebar input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: var(--color-surface); border: 2px solid var(--color-primary); }
+.timebar input[type="range"]:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
 .chips { grid-area: chips; display: flex; gap: 4px; overflow-x: auto; padding-bottom: 2px; }
 .chip.on { border-color: var(--color-warning); color: var(--color-warning); }
 .graph-wrap { grid-area: canvas; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
@@ -161,3 +168,14 @@ button:active:not(:disabled), a.button:active, .panel-link:active, .chip:active 
 @keyframes screen-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 #view > section, #view > .dashboard, #view > .incidents-screen, #view > .incident-detail, #view > .timeline, #view > .chat-screen, #view > .model-screen { animation: screen-in .18s ease-out; }
 @media (prefers-reduced-motion: reduce) { #view > * { animation: none !important; } }
+/* Диаграмма Ганта: полосы-«пилюли» с мягким объёмом, чередование строк и подсветка героя. */
+.gantt-bar { background-color: var(--bar-bg, var(--color-neutral-bg)); background-image: linear-gradient(180deg, rgba(255, 255, 255, .20), rgba(0, 0, 0, .14)); border-radius: 999px; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), 0 1px 2px rgba(0, 0, 0, .20); }
+.gantt-bar span { text-shadow: 0 1px 1px rgba(0, 0, 0, .22); letter-spacing: .2px; }
+.gantt-bar:hover { filter: brightness(1.08); }
+.gantt-body > .gantt-row { border-radius: 6px; }
+.gantt-body > .gantt-row:nth-child(even) { background: color-mix(in srgb, var(--color-neutral-bg) 55%, transparent); }
+.gantt-body > .gantt-row:hover { background: var(--color-surface-hover); }
+.gantt-body > .gantt-row + .gantt-row { border-top: 1px solid color-mix(in srgb, var(--color-border) 55%, transparent); }
+.gantt-row.hero { background: color-mix(in srgb, var(--color-warning-bg) 45%, transparent); }
+.gantt-row.head { border-bottom: 1px solid var(--color-border); padding-bottom: 4px; }
+.gantt-day { border-left: 1px dashed color-mix(in srgb, var(--color-border) 65%, transparent); }

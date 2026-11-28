@@ -41,7 +41,7 @@ await shot("#timeline?at=2026-01-02&view=git", "timeline-git.png", "svg[data-gra
 await shot("#timeline?at=2026-01-02&view=gantt", "timeline-gantt.png", "[data-gantt]");
 await shot("#chat/З-015?at=2026-01-02", "chat-2-january.png", "[data-phone]");
 await shot("#chat/З-015?at=2026-01-05", "chat-5-january.png", "[data-phone]");
-await shot("#", "model.png", '[data-action="select"]');
+await shot("#model", "model.png", '[data-action="select"]');
 
 await browser.close();
 server.stop(true);

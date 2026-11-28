@@ -26,7 +26,7 @@ export const renderGanttGrid = (model: GanttModel, filter = ""): string => {
             '" data-from="' + segment.fromDay + '" data-to="' + segment.toDay +
             '" data-sla="' + segment.slaPhase + '" data-hours="' + segment.hours +
             '" style="grid-column:' + (segment.fromColumn + 2) + " / span " + span +
-            ";background:" + ROLE_COLORS[segment.role] + ";border-color:" + SLA_COLORS[segment.slaPhase] + '" title="' +
+            ";--bar-bg:" + ROLE_COLORS[segment.role] + ";border-color:" + SLA_COLORS[segment.slaPhase] + '" title="' +
             escapeHtml(
               segment.nodeId + " · " + segment.title + " · " + formatDay(segment.fromDay) + " · " +
               SLA_PHASE_TITLES[segment.slaPhase] + " · " + segment.hours + " ч",
@@ -46,5 +46,5 @@ export const renderGanttGrid = (model: GanttModel, filter = ""): string => {
     })
     .join("");
 
-  return '<div class="gantt-wrap"><div class="gantt" data-gantt>' + head + body + "</div></div>";
+  return '<div class="gantt-wrap"><div class="gantt" data-gantt>' + head + '<div class="gantt-body">' + body + "</div></div></div>";
 };

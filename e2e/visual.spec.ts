@@ -94,3 +94,49 @@ test.describe("Печать и движение", () => {
     expect(off).toBe("none");
   });
 });
+
+test.describe("Ползунок и диаграмма", () => {
+  test("ползунок без заливки: без accent-color и с прозрачным фоном", async ({ page }) => {
+    await page.goto("/#timeline?at=2026-01-02");
+    const slider = page.locator("[data-slider]");
+    await expect(slider).toBeVisible();
+    const style = await slider.evaluate((el) => {
+      const s = getComputedStyle(el);
+      return { accent: s.accentColor, appearance: s.appearance, background: s.backgroundColor, progressFill: s.getPropertyValue("--o-fill") };
+    });
+    expect(style.accent).toBe("auto");
+    expect(style.appearance).toBe("none");
+    expect(style.background).toBe("rgba(0, 0, 0, 0)");
+  });
+
+  test("столбцы Ганта оформлены: скругление, градиент, тень", async ({ page }) => {
+    await page.goto("/#timeline?at=2026-01-02&view=gantt");
+    const bar = page.locator(".gantt-bar").first();
+    await expect(bar).toBeVisible();
+    const style = await bar.evaluate((el) => {
+      const s = getComputedStyle(el);
+      return { radius: Number.parseFloat(s.borderTopLeftRadius), image: s.backgroundImage, shadow: s.boxShadow, bg: s.backgroundColor };
+    });
+    expect(style.radius).toBeGreaterThanOrEqual(8);
+    expect(style.image).toContain("gradient");
+    expect(style.shadow).not.toBe("none");
+    expect(style.bg).not.toBe("rgba(0, 0, 0, 0)");
+  });
+
+  test("строки Ганта чередуются, строка героя выделена", async ({ page }) => {
+    await page.goto("/#timeline?at=2026-01-02&view=gantt");
+    const tones = await page.evaluate(() => {
+      const rows = [...document.querySelectorAll(".gantt-body > .gantt-row")].slice(0, 3);
+      return {
+        tones: rows.map((row) => getComputedStyle(row).backgroundColor),
+        hero: (() => {
+          const hero = document.querySelector(".gantt-row.hero") as HTMLElement | null;
+          const plain = document.querySelector(".gantt-body > .gantt-row:not(.hero)") as HTMLElement | null;
+          return { hero: hero ? getComputedStyle(hero).backgroundColor : "", plain: plain ? getComputedStyle(plain).backgroundColor : "" };
+        })(),
+      };
+    });
+    expect(tones.tones[0]).not.toBe(tones.tones[1]);
+    expect(tones.hero.hero).not.toBe(tones.hero.plain);
+  });
+});
