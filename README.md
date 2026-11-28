@@ -4,9 +4,15 @@
 **житель → депутат-диспетчер → подрядчик** — роли и права, SLA с паузами и эскалацией,
 аудит действий, отчётность. Основа — «раздел 8» регламента: 37 ситуаций и 30 узлов процесса.
 
-**Статус:** сайт опубликован — **https://baskakovanton.github.io/agencyai/** (4 страницы прототипа,
-копия байт-в-байт; GitHub Pages, ветка `main`). Демо-приложение редизайна **опубликовано**:
-**https://baskakovanton.github.io/agencyai/demo/** — проверено живым верификатором 17.11.2026 (LIVE OK).
+**Статус (28.11.2026):** демо-приложение **опубликовано** — **https://baskakovanton.github.io/agencyai/demo/**;
+прогоны: `bun test` — 416/0, `bun run e2e` — 156/0, `bun run audit` — нарушений 0.
+Бренд **«ДЕПУТАТ 360° · ПРИЁМНАЯ ДЕПУТАТА»**, **тёмная тема — основная**, светлая равноправна.
+Прототипные страницы `deput` в корне сохранены как исторический артефакт.
+
+**Планы и отчёты:** единый план интерфейса — [interface-roadmap.md](docs/design/interface-roadmap.md) (выполнен);
+план закрытия остатков — [project-closeout-plan.md](docs/specifications/project-closeout-plan.md);
+отчёты выпусков — [UX-3.4](docs/reports/ux-3-4-release-report.md), [UX-3.5](docs/reports/ux-3-5-release-report.md);
+чек-лист пиксельной приёмки — [pixel-acceptance-checklist.md](docs/design/pixel-acceptance-checklist.md).
 
 **Редизайн по утверждённому каталогу goshva (24.11.2026):** этапы 0–5 — палитра и компоненты кита
 (`#2563eb`, тёмная основа `#0f1115`, светлая `#f4f6fa`, сайдбар 250, топбар 68), оболочка на `ui-sidebar`/`ui-topbar`,
