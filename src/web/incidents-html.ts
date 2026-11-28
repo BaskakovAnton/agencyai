@@ -52,7 +52,7 @@ export const renderIncidentsBody = (
     rows.length === 0
       ? '<tr><td colspan="7">' +
         (empty === undefined || empty === null
-          ? renderEmptyState("Ничего не найдено — измените фильтры или сбросьте их.")
+          ? renderEmptyState("Ничего не найдено — измените фильтры или сбросьте их.", "", "⌕")
           : renderEmptyIncidents(empty)) +
         "</td></tr>"
       : rows

@@ -6,7 +6,7 @@ const department = (value: string): string => value === "" ? "Нет данны�
 
 const tableRows = (overview: Overview): string =>
   overview.attention.length === 0
-    ? '<tr><td colspan="5">' + renderEmptyState("Нет обращений, требующих внимания") + "</td></tr>"
+    ? '<tr><td colspan="5">' + renderEmptyState("Нет обращений, требующих внимания", "", "✓") + "</td></tr>"
     : overview.attention.map((item) =>
       '<tr class="click-row" data-attention="' + esc(item.id) + '"><td><div class="case-id">' + esc(item.id) +
       '</div><div class="case-title">' + esc(item.title) + '</div><div class="case-sub">' + esc(item.address) + "</div></td>" +
@@ -17,7 +17,7 @@ const tableRows = (overview: Overview): string =>
 
 const cards = (overview: Overview): string =>
   overview.attention.length === 0
-    ? renderEmptyState("Нет обращений, требующих внимания")
+    ? renderEmptyState("Нет обращений, требующих внимания", "", "✓")
     : overview.attention.map((item) =>
       '<details class="attention-card" data-attention-card="' + esc(item.id) + '"><summary><span class="attention-brief"><b>' +
       esc(item.id) + " · " + esc(item.title) + '</b><span>' + esc(item.nodeId + " · " + item.nodeTitle) +

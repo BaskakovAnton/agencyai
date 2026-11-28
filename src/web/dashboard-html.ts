@@ -105,7 +105,7 @@ export const renderDashboard = (input: DashboardInput): string => {
       '<div class="toolbar">' + daySelect(input.days, input.day) + renderPeriodSwitch(period) +
       '<a class="panel-link" data-period-events href="' + filtersHash(defaultFilters(), input.day) + "&period=" + period + '">События периода →</a></div>' +
       (input.historical === true ? historicalIndicator(input.day, input.days) : "") +
-      renderEmptyState("В этом срезе нет заявок — выберите другую дату.") +
+      renderEmptyState("В этом срезе нет заявок — выберите другую дату.", "", "∅") +
       "</section>"
     );
   }

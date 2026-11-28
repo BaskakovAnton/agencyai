@@ -6,6 +6,7 @@ test("единые компоненты экспортированы и дают
   expect(renderPriorityBadge("авария", "red")).toContain("авария");
   expect(statusBadge("Просрочено", "red")).toContain("Просрочено");
   expect(emptyState("Ничего нет")).toContain("Ничего нет");
+  expect(emptyState("Ничего нет", "", "⌕")).toContain("empty-glyph");
   expect(actionCard({ title: "Панель", body: "тело" })).toContain("Панель");
   expect(renderSectionHeader("Раздел", "Подпись")).toContain("<h2");
 });

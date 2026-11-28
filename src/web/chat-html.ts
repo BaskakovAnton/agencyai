@@ -35,7 +35,7 @@ const initials = (name: string): string =>
 /** Сообщения по композиции chat.html: пузыри с мини-аватаром, мета и системные пометки. */
 export const renderMessages = (snapshot: ChatSnapshot, activeRole: RoleId): string => {
   if (snapshot.messages.length === 0) {
-    return renderEmptyState("На эту дату переписки ещё нет — заявка появится позже.", " data-empty");
+    return renderEmptyState("На эту дату переписки ещё нет — заявка появится позже.", " data-empty", "✉");
   }
   let previousDay = "";
   return snapshot.messages

@@ -2,7 +2,7 @@
  * Контекстные пустые состояния реестра (UX-3.2.4, блок D): причина определяется по
  * фактическому состоянию фильтров и результату построения списка, а не по наличию параметра.
  */
-import { renderEmptyState } from "./components.ts";
+import { renderEmptyStateRich } from "./components.ts";
 import type { ChipKey } from "./incidents-chips.ts";
 import type { IncidentFilters } from "./incidents.ts";
 
@@ -35,6 +35,15 @@ const TITLES: Readonly<Record<EmptyReason, readonly [string, string]>> = {
   unassigned: ["Обращений без ответственного нет", "У всех обращений на эту дату есть активный ответственный."],
   view: ["В этом представлении пусто", "Ни одно обращение не подходит под выбранное представление."],
   search: ["По запросу ничего не найдено", "Проверьте формулировку или очистите поиск."],
+};
+
+const GLYPHS: Readonly<Record<EmptyReason, string>> = {
+  "no-data": "∅",
+  combination: "⚙",
+  department: "⌂",
+  unassigned: "⚑",
+  view: "◫",
+  search: "⌕",
 };
 
 const ACTION_LABELS: Readonly<Record<ChipKey, string>> = {
@@ -73,7 +82,7 @@ export const emptyStateFor = (filters: IncidentFilters, rowsCount: number): Empt
 /** Разметка пустого состояния; действие снимает только нужный фильтр. */
 export const renderEmptyIncidents = (state: EmptyIncidentsState): string =>
   '<div data-incidents-empty="' + state.reason + '">' +
-  renderEmptyState('<b>' + state.title + "</b> " + state.note) +
+  renderEmptyStateRich({ title: state.title, note: state.note, glyph: GLYPHS[state.reason] }) +
   (state.action === undefined
     ? ""
     : '<p class="hint">' +

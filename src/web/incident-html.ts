@@ -102,5 +102,5 @@ export const renderIncident = (
 export const renderIncidentMissing = (ref: string, day: string, days: readonly string[]): string =>
   '<section class="incident-detail" data-incident-missing>' +
   '<div class="toolbar">' + daySelect(days, day) + "</div>" +
-  renderEmptyState("Заявка «" + ref + "» не найдена в демонстрационной модели.") +
+  renderEmptyState("Заявка «" + ref + "» не найдена в демонстрационной модели.", "", "⚠") +
   '<p class="section-gap"><a class="button" href="' + hrefIncidents(day) + '">Вернуться к списку обращений</a></p></section>';

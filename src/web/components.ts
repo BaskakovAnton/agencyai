@@ -57,8 +57,10 @@ export const renderSlaBadge = (text: string, tone: BadgeTone = "gray"): string =
   '<ui-sla class="sla ' + tone + '">' + esc(text) + "</ui-sla>";
 
 /** Пустой результат. */
-export const renderEmptyState = (text: string, extra = ""): string =>
-  '<div class="empty-state" data-empty-state' + extra + ">" + esc(text) + "</div>";
+export const renderEmptyState = (text: string, extra = "", glyph = ""): string =>
+  '<div class="empty-state" data-empty-state' + extra + ">" +
+  (glyph === "" ? "" : '<span class="empty-glyph" aria-hidden="true">' + glyph + "</span>") +
+  '<span class="empty-text">' + esc(text) + "</span></div>";
 
 /** Напоминание, что экран только для чтения. */
 export const renderReadOnlyNotice = (text = "Только чтение: действия недоступны"): string =>
@@ -87,3 +89,15 @@ export const renderSectionHeader = (title: string, subtitle = ""): string =>
 export const statusBadge = renderSlaBadge;
 export const emptyState = renderEmptyState;
 export const actionCard = renderPanel;
+
+/** Пустое состояние с жирным заголовком и пояснением: части экранируются по отдельности. */
+export const renderEmptyStateRich = (input: {
+  readonly title: string;
+  readonly note?: string;
+  readonly glyph?: string;
+  readonly extra?: string;
+}): string =>
+  '<div class="empty-state" data-empty-state' + (input.extra ?? "") + ">" +
+  (input.glyph === undefined ? "" : '<span class="empty-glyph" aria-hidden="true">' + input.glyph + "</span>") +
+  '<span class="empty-text"><b>' + esc(input.title) + "</b>" +
+  (input.note === undefined || input.note === "" ? "" : " " + esc(input.note)) + "</span></div>";

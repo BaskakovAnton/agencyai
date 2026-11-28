@@ -190,3 +190,7 @@ ui-chat-message, ui-process-node { display: block; }
 .period-notes { margin-top: 12px; }
 .period-notes ul { margin: 6px 0 0; padding-left: 18px; }
 .period-notes li { margin-bottom: 4px; font-size: 12px; }
+
+/* V6: пустое состояние с иконкой и текстом — единый вид на всех экранах. */
+.empty-state .empty-glyph { display: block; margin-bottom: 6px; font-size: 22px; line-height: 1; color: var(--color-text-muted); }
+.empty-state .empty-text { display: block; }

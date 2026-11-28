@@ -32,3 +32,34 @@ test.describe("Визуальная полировка", () => {
     expect(style).toEqual({ width: "2px", kind: "solid" });
   });
 });
+
+test.describe("Плотность и ориентирование", () => {
+  test("мобильная карточка укладывается в 230 px, видно две", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/#incidents?at=2026-01-02");
+    const row = page.locator("[data-incident-row]").first();
+    expect(await row.evaluate((el) => Math.round(el.getBoundingClientRect().height))).toBeLessThanOrEqual(230);
+    const visible = await page.evaluate(() => [...document.querySelectorAll("[data-incident-row]")].filter((el) => { const r = el.getBoundingClientRect(); return r.top < window.innerHeight && r.bottom > 0; }).length);
+    expect(visible).toBeGreaterThanOrEqual(2);
+  });
+
+  test("десктопный реестр: шапка липкая, строки различаются по чётности", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/#incidents?at=2026-01-13");
+    await expect(page.locator("[data-incidents-table] thead th").first()).toHaveCSS("position", "sticky");
+    const tones = await page.evaluate(() => {
+      const rows = [...document.querySelectorAll("[data-incident-row]")].slice(0, 2) as HTMLElement[];
+      return rows.map((row) => getComputedStyle(row).backgroundColor);
+    });
+    expect(tones[0]).not.toBe(tones[1]);
+    const scroll = await page.locator("[data-incidents-body]").evaluate((el) => el.scrollHeight > el.clientHeight);
+    expect(scroll).toBe(true);
+  });
+
+  test("пустое состояние показывает иконку и текст", async ({ page }) => {
+    await page.goto("/#incidents?at=2026-01-02&q=НЕТ-ТАКОГО");
+    await expect(page.locator("[data-empty-state]").first()).toBeVisible();
+    await expect(page.locator("[data-empty-state] .empty-glyph").first()).toBeVisible();
+    await expect(page.locator("[data-empty-state] .empty-text").first()).not.toBeEmpty();
+  });
+});
