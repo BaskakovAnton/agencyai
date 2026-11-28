@@ -4,13 +4,18 @@
  */
 import { isFinished } from "./incident.ts";
 import { SLA_PROFILES } from "../data/sla.ts";
-import { DEMO_ORIGIN, incidentAt } from "./timeline.ts";
+import { incidentAt } from "./timeline.ts";
 import { hoursSince, slaPhaseOnDay, slaStateAt } from "./sla-at.ts";
 import type { Graph, Incident } from "../types.ts";
 
-/** Остаток норматива в часах на конец дня (может быть отрицательным — срок нарушен). */
+/**
+ * Остаток норматива в часах на конец дня (может быть отрицательным — срок нарушен).
+ * Дедлайн в модели отсчитывается от создания заявки, поэтому и часы берём оттуда же:
+ * раньше здесь вычитались часы от начала демонстрации, из-за чего у заявок «в срок»
+ * остаток выходил отрицательным и одинаковым для всех.
+ */
 export const slaHoursLeft = (incident: Incident, day: string): number =>
-  Math.round(slaStateAt(incident, day).dueAt - hoursSince(DEMO_ORIGIN, day + "T23:59:59.999Z"));
+  Math.round(slaStateAt(incident, day).dueAt - hoursSince(incident.createdAt ?? day, day + "T23:59:59.999Z"));
 
 /** Просрочка или в срок, но остаток не больше суток. */
 export const slaIsAtRisk = (incident: Incident, day: string): boolean => {
