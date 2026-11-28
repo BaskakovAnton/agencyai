@@ -58,7 +58,11 @@ export const renderChips = (input: TimelinePageInput): string => {
         '<button class="chip' + (input.filter === id ? " on" : "") + '" data-incident-filter="' + id + '">' + id + "</button>",
     )
     .join("");
-  return '<div class="chips" data-chips>' + chips + "</div>";
+  return (
+    '<div class="chips" data-chips role="group" tabindex="0" aria-label="Заявки на дату: прокручивается по горизонтали">' +
+    chips +
+    "</div>"
+  );
 };
 
 /** Только картинка (граф или Гант) — её перерисовывают при движении ползунка. */

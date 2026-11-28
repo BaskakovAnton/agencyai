@@ -13,6 +13,58 @@ const routes = [
 
 interface Violation { readonly id: string; readonly impact: string | null; readonly nodes: number }
 
+test.describe("Клавиатура и подписи", () => {
+  test("ползунок времени подписан и озвучивает значение", async ({ page }) => {
+    await page.goto("/#timeline?at=2026-01-02&view=git");
+    const slider = page.locator('input[type="range"]');
+    // Доступное имя даёт связанный label[for], значение озвучивается через aria-valuetext.
+    const named = await slider.evaluate((el) => {
+      if (el.hasAttribute("aria-label")) return true;
+      const id = el.getAttribute("id") ?? "";
+      return id !== "" && document.querySelector('label[for="' + id + '"]') !== null;
+    });
+    expect(named).toBe(true);
+    await expect(slider).toHaveAttribute("aria-valuetext");
+  });
+
+  test("коммит графа доступен с клавиатуры и открывает карточку узла", async ({ page }) => {
+    await page.goto("/#timeline?at=2026-01-02&view=git");
+    const commit = page.locator("[data-commit]").first();
+    await expect(commit).toHaveAttribute("role", "button");
+    await expect(commit).toHaveAttribute("tabindex", "0");
+    await expect(commit).toHaveAttribute("aria-label");
+    await commit.focus();
+    await page.keyboard.press("Enter");
+    const card = page.locator("[data-node-card]").first();
+    await expect(card).toBeVisible();
+    const inView = await card.evaluate((el) => {
+      const r = el.getBoundingClientRect();
+      return r.top < window.innerHeight && r.bottom > 0;
+    });
+    expect(inView).toBe(true);
+  });
+
+  test("прокручиваемые области канваса и чипов подписаны", async ({ page }) => {
+    await page.goto("/#timeline?at=2026-01-02&view=git");
+    await expect(page.locator("[data-canvas]")).toHaveAttribute("aria-label");
+    await expect(page.locator("[data-canvas]")).toHaveAttribute("tabindex", "0");
+    await expect(page.locator("[data-chips]")).toHaveAttribute("aria-label");
+    await expect(page.locator("[data-chips]")).toHaveAttribute("tabindex", "0");
+  });
+
+  test("на каждом экране один h1 и нет пропуска уровней", async ({ page }) => {
+    for (const hash of routes) {
+      await page.goto("/" + hash);
+      await page.waitForTimeout(300);
+      const levels = await page.evaluate(() =>
+        Array.from(document.querySelectorAll("#view h1, #view h2, #view h3, #view h4")).map((el) => Number(el.tagName.slice(1))),
+      );
+      expect(levels.filter((level) => level === 1).length).toBeLessThanOrEqual(1);
+      for (let i = 1; i < levels.length; i += 1) expect((levels[i] ?? 0) - (levels[i - 1] ?? 0)).toBeLessThanOrEqual(1);
+    }
+  });
+});
+
 for (const width of [390, 1440]) {
   test.describe("Доступность " + width + "px", () => {
     test.use({ viewport: { width, height: 900 } });

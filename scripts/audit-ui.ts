@@ -18,11 +18,11 @@ const viewports = [
 /** Минимальная зона нажатия: телефон и планшет-портрет 44 px, широкие экраны 36 px. */
 const MIN_TARGET: Readonly<Record<string, number>> = { wide: 36, desktop: 36, tablet: 36, portrait: 44, mobile: 44 };
 
-interface Finding { page: string; viewport: string; kind: string; detail: string; count?: number }
+interface Finding { page: string; viewport: string; kind: string; detail: string; count?: number; severity?: "violation" | "metric" }
 
 const auditPage = async (page: Page, name: string, viewport: string): Promise<Finding[]> =>
   page.evaluate(({ name, viewport, minTarget }) => {
-    const out: { page: string; viewport: string; kind: string; detail: string; count?: number }[] = [];
+    const out: { page: string; viewport: string; kind: string; detail: string; count?: number; severity?: "violation" | "metric" }[] = [];
     const lum = (rgb: number[]): number => {
       const f = (v: number): number => {
         const s = v / 255;
@@ -40,6 +40,11 @@ const auditPage = async (page: Page, name: string, viewport: string): Promise<Fi
       return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
     };
     const doc = document.documentElement;
+    /** Закрытые details и display:none не участвуют в проверках доступности. */
+    const shown = (el: Element): boolean => {
+      const node = el as HTMLElement & { checkVisibility?: (options?: object) => boolean };
+      return typeof node.checkVisibility === "function" ? node.checkVisibility({ checkVisibilityCSS: true, checkOpacity: true }) : true;
+    };
     if (doc.scrollWidth > doc.clientWidth + 1) out.push({ page: name, viewport, kind: "overflow-x", detail: doc.scrollWidth + " > " + doc.clientWidth });
     // Зоны нажатия считаются только в рабочей области: оболочка и скрытые контролы не в счёте.
     const scope = document.querySelector("#view") ?? document.body;
@@ -75,27 +80,27 @@ const auditPage = async (page: Page, name: string, viewport: string): Promise<Fi
     if (canvas) {
       const cs = getComputedStyle(canvas);
       const overflow = canvas.scrollWidth > canvas.clientWidth + 1;
-      if (overflow) out.push({ page: name, viewport, kind: "canvas-scroll", detail: "canvas " + canvas.clientWidth + "/" + canvas.scrollWidth + " (" + cs.overflowX + ")" });
+      if (overflow) out.push({ page: name, viewport, kind: "canvas-scroll", severity: "metric", detail: "canvas " + canvas.clientWidth + "/" + canvas.scrollWidth + " (" + cs.overflowX + ")" });
     }
     const chips = document.querySelector("[data-chips]");
-    if (chips && chips.scrollWidth > chips.clientWidth + 1) out.push({ page: name, viewport, kind: "chips-scroll", detail: chips.clientWidth + "/" + chips.scrollWidth });
+    if (chips && chips.scrollWidth > chips.clientWidth + 1) out.push({ page: name, viewport, kind: "chips-scroll", severity: "metric", detail: chips.clientWidth + "/" + chips.scrollWidth });
     const slider = document.querySelector('input[type="range"]');
     if (slider) {
       const a = slider.getAttribute("aria-label");
       const b = slider.getAttribute("aria-valuetext");
-      out.push({ page: name, viewport, kind: "slider-a11y", detail: "aria-label=" + (a ?? "нет") + "; aria-valuetext=" + (b ?? "нет") });
+      out.push({ page: name, viewport, kind: "slider-a11y", severity: "metric", detail: "aria-label=" + (a ?? "нет") + "; aria-valuetext=" + (b ?? "нет") });
     }
     const commit = document.querySelector("[data-commit]");
     if (commit) {
-      out.push({ page: name, viewport, kind: "commit-a11y", detail: "role=" + (commit.getAttribute("role") ?? "нет") + "; aria-label=" + (commit.getAttribute("aria-label") ?? "нет") + "; tabindex=" + (commit.getAttribute("tabindex") ?? "нет") });
+      out.push({ page: name, viewport, kind: "commit-a11y", severity: "metric", detail: "role=" + (commit.getAttribute("role") ?? "нет") + "; aria-label=" + (commit.getAttribute("aria-label") ?? "нет") + "; tabindex=" + (commit.getAttribute("tabindex") ?? "нет") });
     }
     const card = document.querySelector("[data-node-card]");
     if (card) {
       const r = card.getBoundingClientRect();
-      out.push({ page: name, viewport, kind: "card-position", detail: "top=" + Math.round(r.top) + "px, в окне: " + (r.top < window.innerHeight && r.bottom > 0) });
+      out.push({ page: name, viewport, kind: "card-position", severity: "metric", detail: "top=" + Math.round(r.top) + "px, в окне: " + (r.top < window.innerHeight && r.bottom > 0) });
     }
     const h = Array.from(document.querySelectorAll("h1, h2, h3")).map((x) => x.tagName + ": " + (x.textContent ?? "").trim().slice(0, 36));
-    out.push({ page: name, viewport, kind: "headings", count: h.length, detail: h.join(" | ") || "(нет)" });
+    out.push({ page: name, viewport, kind: "headings", severity: "metric", count: h.length, detail: h.join(" | ") || "(нет)" });
     const low: string[] = [];
     for (const el of Array.from(document.querySelectorAll("p, span, b, small, text, div, a, button")).slice(0, 500)) {
       const t = (el.textContent ?? "").trim();
@@ -174,12 +179,14 @@ const run = async (): Promise<void> => {
     await page.keyboard.press("Enter");
     await page.waitForTimeout(300);
     const cardAfterEnter = await page.locator("[data-node-card]").count();
-    report.push({ page: "keyboard", viewport: vp.name, kind: "enter-on-commit", detail: cardAfterEnter > 0 ? "карточка открылась" : "Enter не открывает карточку" });
+    report.push({ page: "keyboard", viewport: vp.name, kind: "enter-on-commit", severity: "metric", detail: cardAfterEnter > 0 ? "карточка открылась" : "Enter не открывает карточку" });
     await page.close();
   }
   await browser.close();
-  await writeFile(outDir + "/audit.json", JSON.stringify({ report, shots }, null, 2));
-  console.log(JSON.stringify({ findings: report.length, shots: shots.length }, null, 2));
+  const violations = report.filter((item) => item.severity !== "metric");
+  const metrics = report.filter((item) => item.severity === "metric");
+  await writeFile(outDir + "/audit.json", JSON.stringify({ violations, metrics, shots }, null, 2));
+  console.log(JSON.stringify({ violations: violations.length, metrics: metrics.length, shots: shots.length }, null, 2));
 };
 
 await run();
