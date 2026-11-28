@@ -5,15 +5,16 @@ import { renderShell } from "../src/web/shell.ts";
 import { renderBadge, renderEmptyState, renderKpi, renderPanel, renderReadOnlyNotice, renderSlaBadge } from "../src/web/components.ts";
 
 const read = (p: string) => readFile(p, "utf8");
-const [tokens, components, shell, style, screens, index] = await Promise.all([
+const [tokens, components, shell, style, screens, mobile, index] = await Promise.all([
   read("src/web/tokens.css"),
   read("src/web/components.css"),
   read("src/web/shell.css"),
   read("src/web/style.css"),
   read("src/web/screens.css"),
+  read("src/web/mobile.css"),
   read("src/web/index.html"),
 ]);
-const all = tokens + components + shell + style + screens;
+const all = tokens + components + shell + style + screens + mobile;
 const compact = tokens.replace(/\s+/g, "");
 
 test("токены соответствуют утверждённому reference.css", () => {

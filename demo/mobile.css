@@ -1,0 +1,137 @@
+/* Мобильная адаптация (< 768 px): карточки реестра, компактные фильтры, зоны касания, список событий. */
+
+@media (max-width: 700px) {
+  .card-pad, .panel { padding: 12px; }
+  .card-head { align-items: flex-start; flex-direction: column; gap: 6px; }
+  .dashboard-head { align-items: flex-start; gap: 8px; }
+  .kpis { grid-template-columns: minmax(0, 1fr); }
+  .weeks { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .operations { grid-template-columns: minmax(0, 1fr); }
+  .chart-wrap { height: 150px; }
+  .detail-grid { grid-template-columns: minmax(0, 1fr); }
+  .detail-grid [data-history], .detail-grid [data-next], .detail-grid [data-links] { grid-column: span 1; }
+  .filters { gap: 8px; padding: 10px; }
+  .filters input[type="search"], .filters select, .filters button { min-height: 40px; }
+  .filters select { flex: 1 1 calc(50% - 4px); min-width: 0; }
+  .filters input[type="search"] { flex-basis: 100%; }
+  .table-wrap { margin: 0 -12px; padding: 0 12px 4px; overscroll-behavior-inline: contain; }
+  .attention-desktop { display: none; }
+  .attention-mobile { display: grid; gap: 8px; }
+  .attention-card { border: 1px solid var(--color-border); border-radius: 10px; background: var(--color-surface); overflow: clip; }
+  .attention-card summary { display: grid; grid-template-columns: minmax(0, 1fr) auto 18px; align-items: center; gap: 8px; min-height: 56px; padding: 9px 10px 9px 12px; cursor: pointer; list-style: none; }
+  .attention-card summary::-webkit-details-marker { display: none; }
+  .attention-card summary::after { content: "+"; color: var(--color-primary-strong); font-size: 20px; line-height: 1; text-align: center; }
+  .attention-card[open] summary { border-bottom: 1px solid var(--color-line-2); background: var(--color-surface-muted); }
+  .attention-card[open] summary::after { content: "−"; }
+  .attention-brief { min-width: 0; display: grid; gap: 2px; }
+  .attention-brief b, .attention-brief span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .attention-brief b { font-size: 13px; }
+  .attention-brief span { color: var(--color-text-muted); font-size: 12px; }
+  .attention-tile { padding: 10px 12px 12px; }
+  .attention-tile dl { display: grid; gap: 8px; margin: 0 0 10px; }
+  .attention-tile dl div { display: grid; gap: 1px; }
+  .attention-tile dt { color: var(--color-text-muted); font-size: 12px; }
+  .attention-tile dd { margin: 0; overflow-wrap: anywhere; font-size: 13px; }
+}
+
+
+/* Мобильный реестр: строка таблицы превращается в карточку (UX-3.3, DEC-UX33-02). */
+@media (max-width: 767px) {
+  .table-wrap[data-incidents-body] { overflow-x: visible; overscroll-behavior-inline: auto; }
+  [data-incidents-table] { display: block; min-width: 0; }
+  [data-incidents-table] thead { display: none; }
+  [data-incidents-table] tbody { display: grid; gap: 10px; }
+  [data-incidents-table] tbody tr.click-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 4px 10px;
+    padding: 10px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+  }
+  [data-incidents-table] tbody tr.click-row > td { display: block; min-width: 0; padding: 0; border: 0; }
+  [data-incidents-table] tbody tr.click-row > td::before { display: inline; margin-right: 6px; color: var(--color-text-muted); font-size: 12px; }
+  [data-incidents-table] tbody tr.click-row > td:nth-child(1) { grid-column: 1 / -1; }
+  [data-incidents-table] tbody tr.click-row > td:nth-child(1) .case-title,
+  [data-incidents-table] tbody tr.click-row > td:nth-child(1) .case-sub { overflow: visible; white-space: normal; }
+  [data-incidents-table] tbody tr.click-row > td:nth-child(2) { grid-column: 1; grid-row: 2; }
+  [data-incidents-table] tbody tr.click-row > td:nth-child(2)::before { content: "Приоритет"; }
+  [data-incidents-table] tbody tr.click-row > td:nth-child(3) { grid-column: 1 / -1; }
+  [data-incidents-table] tbody tr.click-row > td:nth-child(3)::before { content: "Текущий этап"; }
+  [data-incidents-table] tbody tr.click-row > td:nth-child(4) { grid-column: 1; }
+  [data-incidents-table] tbody tr.click-row > td:nth-child(4)::before { content: "Подразделение"; }
+  [data-incidents-table] tbody tr.click-row > td:nth-child(5) { grid-column: 2; grid-row: 2; justify-self: end; text-align: right; }
+  [data-incidents-table] tbody tr.click-row > td:nth-child(5)::before { content: "Срок SLA"; }
+  [data-incidents-table] tbody tr.click-row { position: relative; }
+  /* «Изменено» остаётся в таблице и в полной карточке; на карточке списка не дублируем. */
+  [data-incidents-table] tbody tr.click-row > td:nth-child(6) { display: none; }
+  [data-incidents-table] tbody tr.click-row > td:nth-child(6)::before { content: "Изменено"; }
+  [data-incidents-table] tbody tr.click-row > td:nth-child(7) { grid-column: 2; justify-self: end; }
+  /* Ссылка растянута на всю карточку: касание в любом месте открывает обращение, вложенных элементов нет. */
+  [data-incidents-table] tbody tr.click-row > td:nth-child(7) a { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; }
+  [data-incidents-table] tbody tr.click-row > td:nth-child(7) a::after { content: ""; position: absolute; inset: 0; border-radius: var(--radius); }
+  [data-incidents-table] tbody tr.click-row:has(a:focus-visible) { border-color: var(--color-primary); box-shadow: var(--focus-ring); }
+  [data-incidents-table] tbody tr.click-row > td:nth-child(7) a:focus-visible { outline: none; }
+  [data-incidents-table] tbody tr.click-row:active { background: var(--color-surface-muted); }
+  [data-incidents-table] tbody tr:not(.click-row) { display: block; }
+  [data-incidents-table] tbody tr:not(.click-row) > td { display: block; padding: 12px 0; }
+}
+
+
+/* WP-1: компактная панель фильтров на мобильном — второстепенные контролы за «Параметры». */
+@media (max-width: 767px) {
+  [data-incidents-filters] { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; padding: 10px; }
+  [data-incidents-filters] input[type="search"] { grid-column: 1 / -1; flex: none; min-height: 44px; }
+  [data-incidents-filters] select { width: 100%; min-height: 44px; }
+  [data-incidents-filters] button { min-height: 44px; }
+  [data-incidents-filters] .hint-label { display: none; }
+  [data-incidents-filters] .grow { display: none; }
+  [data-incidents-filters] .count { grid-column: 1 / -1; }
+  .filters-more { display: contents; }
+  .filters-toggle { font: inherit; }
+  .filters-more[data-open="true"] .filters-toggle::after { content: " ▴"; }
+  .filters-more[data-open="false"] .filters-toggle::after { content: " ▾"; }
+  .filters-more-body { display: none; grid-column: 1 / -1; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
+  .filters-more[data-open="true"] .filters-more-body { display: grid; }
+}
+
+
+/* WP-2: на мобильном все интерактивные зоны хронологии не меньше 44 px. */
+@media (max-width: 767px) {
+  #view button, #view input, #view select, #view a.button, #view .chip, #view .ruler-day, #view .gantt-row { min-height: 44px; }
+  #view .chip { display: inline-flex; align-items: center; }
+  #view .ruler-day { display: inline-flex; align-items: center; justify-content: center; }
+  #view .gantt-row { align-items: center; }
+}
+@media (max-width: 767px) {
+  .ruler-scroll { overflow-x: auto; overscroll-behavior-inline: contain; }
+  .ruler-track { min-width: max-content; }
+  .ruler-hours { width: 100%; }
+  #view .ruler-day { flex: 0 0 44px; min-width: 44px; }
+}
+@media (max-width: 767px) {
+  .graph-toggle { display: inline-flex; align-items: center; min-height: 44px; }
+  .timeline:not([data-graph-mode="true"]) .graph-wrap { display: none; }
+  .timeline[data-graph-mode="true"] .event-list { display: none; }
+  .event-list { display: block; }
+  .event-list-title { margin: 0 0 8px; font-size: 15px; }
+  .events { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .event-row { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 2px 10px; padding: 10px 12px; border: 1px solid var(--color-border); border-radius: var(--radius); background: var(--color-surface); }
+  .event-row time { font-variant-numeric: tabular-nums; font-weight: 700; }
+  .event-meta { grid-column: 2; color: var(--color-text-muted); font-size: 12px; }
+}
+
+@media (max-width: 700px) {
+  .kpi-grid { grid-template-columns: minmax(0, 1fr); }
+  .legend { grid-template-columns: 1fr; }
+}
+@media (max-width: 700px) { .timeline-controls { gap: 8px; } }
+@media (max-width: 700px) { .node-grid { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 767px) {
+  [data-incidents-filters] { gap: 8px; }
+  [data-incidents-filters] select { flex: 1 1 44%; min-width: 0; }
+  [data-incidents-filters] input[type="search"] { flex: 1 1 100%; }
+  [data-incidents-filters] .count { flex: 1 1 100%; }
+  .incident-chips { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; }
+}

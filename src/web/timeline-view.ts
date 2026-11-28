@@ -10,13 +10,13 @@ import { hrefChat, hrefTimeline, type Route } from "./router.ts";
 import {
   renderCanvas,
   renderChips,
-  renderEventList,
   renderControls,
   renderStats,
   renderTimeRuler,
   renderTimelinePage,
   type TimelinePageInput,
 } from "./timeline-html.ts";
+import { renderEventList } from "./timeline-events.ts";
 import { createClickHandler, createKeydownHandler, registerHoverHandlers } from "./timeline-interactions.ts";
 import { nearestDay, renderOutsideWindow, resolveDay } from "./day-window.ts";
 import { activeFilter, chatIncidentOf, initialTimelineState } from "./timeline-state.ts";

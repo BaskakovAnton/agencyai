@@ -96,10 +96,7 @@ ui-chat-message, ui-process-node { display: block; }
   .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .two-col { grid-template-columns: minmax(0, 1fr); }
 }
-@media (max-width: 700px) {
-  .kpi-grid { grid-template-columns: minmax(0, 1fr); }
-  .legend { grid-template-columns: 1fr; }
-}
+
 /* Карточка обращения: факты, шаги, SLA, участники (по incident-detail.html). */
 .detail-grid { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(270px, .85fr); gap: 15px; align-items: start; }
 .detail-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 10px; }
@@ -138,7 +135,7 @@ ui-chat-message, ui-process-node { display: block; }
 .gantt-head { font-size: 12px; color: var(--color-text-muted); }
 .gantt-name { font-weight: 700; }
 .gantt-bar { border-style: solid; border-width: 1px; }
-@media (max-width: 700px) { .timeline-controls { gap: 8px; } }
+
 /* Переписка и модель: классы кита. */
 .chat-layout { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(260px, .8fr); gap: 15px; align-items: start; }
 .chat-window { border: 1px solid var(--color-border); border-radius: var(--radius); background: var(--color-surface); box-shadow: var(--shadow); overflow: hidden; }
@@ -175,7 +172,7 @@ ui-chat-message, ui-process-node { display: block; }
 .permission.deny { background: var(--color-danger-bg); color: var(--color-danger-text); }
 .permission.na { background: var(--color-neutral-bg); color: var(--color-text-muted); }
 @media (max-width: 1180px) { .chat-layout { grid-template-columns: minmax(0, 1fr); } .node-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 700px) { .node-grid { grid-template-columns: minmax(0, 1fr); } }
+
 /* UX-3: динамика периода в KPI и панель по дням. */
 .kpi-delta { margin-top: 6px; font-size: 12px; font-weight: 750; }
 .kpi-delta-good { color: var(--color-success-text); }
@@ -193,20 +190,3 @@ ui-chat-message, ui-process-node { display: block; }
 .period-notes { margin-top: 12px; }
 .period-notes ul { margin: 6px 0 0; padding-left: 18px; }
 .period-notes li { margin-bottom: 4px; font-size: 12px; }
-/* UX-3.1.2: единый индикатор исторического среза (Dashboard и реестр). */
-.historical-indicator { display: flex; align-items: center; gap: 6px; margin: 0 0 14px; padding: 9px 12px; border: 1px solid var(--color-warning-bg); border-radius: var(--radius-sm); background: var(--color-warning-bg); color: var(--color-warning-text); font-size: 12px; font-weight: 650; }
-.historical-indicator b { font-weight: 800; }
-
-/* UX-3.2.4: панель активных фильтров реестра и адаптация строки фильтров. */
-.incident-chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 2px 0 6px; }
-.incident-chip { display: inline-flex; align-items: center; gap: 2px; border: 1px solid var(--color-border); border-radius: 999px; padding: 1px 1px 1px 10px; font-size: 12px; background: var(--color-surface-muted); color: var(--color-text-muted); }
-.incident-chip button { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border: none; background: transparent; border-radius: 50%; font: inherit; font-size: 15px; line-height: 1; cursor: pointer; color: inherit; }
-.incident-chip button:hover { background: var(--color-border); }
-.notice[data-f5-notice] { margin: 6px 0 0; }
-@media (max-width: 767px) {
-  [data-incidents-filters] { gap: 8px; }
-  [data-incidents-filters] select { flex: 1 1 44%; min-width: 0; }
-  [data-incidents-filters] input[type="search"] { flex: 1 1 100%; }
-  [data-incidents-filters] .count { flex: 1 1 100%; }
-  .incident-chips { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; }
-}
