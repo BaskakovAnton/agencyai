@@ -27,4 +27,15 @@ test.describe("Мобильная адаптация", () => {
       expect(box?.height).toBeGreaterThanOrEqual(40);
     }
   });
+
+  test("внимание открывается компактной плиткой без горизонтального ухода", async ({ page }) => {
+    await page.goto("/#dashboard?at=2026-01-02");
+    const card = page.locator("[data-attention-card]").first();
+    await expect(card).toBeVisible();
+    await expect(card.locator("[data-attention-tile]")).toBeHidden();
+    await card.locator("summary").click();
+    await expect(card.locator("[data-attention-tile]")).toBeVisible();
+    await expect(card.locator("[data-attention-tile]")).toContainText("Подразделение");
+    await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
+  });
 });

@@ -32,7 +32,7 @@ export const initTheme = (): void => {
   } catch {
     saved = null;
   }
-  applyTheme(saved === "dark" ? "dark" : "light");
+  applyTheme(saved === "light" ? "light" : "dark");
 };
 
 /** Оболочка по утверждённому эталону: ui-sidebar 250 px, ui-topbar 68 px, H1 в топбаре. */

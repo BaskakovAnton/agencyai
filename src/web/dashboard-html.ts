@@ -1,11 +1,12 @@
 import { formatDay } from "../core/timeline.ts";
 import { defaultFilters, filtersHash } from "./incidents.ts";
-import { esc, renderBadge, renderEmptyState, renderKpi, renderPanel, renderSlaBadge, type KpiDeltaView } from "./components.ts";
+import { esc, renderBadge, renderEmptyState, renderKpi, renderPanel, type KpiDeltaView } from "./components.ts";
 import { renderPeriodNotes, renderPeriodPanel, renderPeriodSwitch } from "./dashboard-period.ts";
 import { historicalIndicator } from "./historical.ts";
 import { periodEndingAt } from "./periods-reexport.ts";
 import { hrefIncident, hrefIncidents, hrefTimeline } from "./router.ts";
 import { renderActionQueue } from "./dashboard-queue.ts";
+import { renderAttention } from "./dashboard-attention.ts";
 import type { Overview } from "./overview.ts";
 
 export interface DashboardInput {
@@ -40,21 +41,6 @@ const deltaFor = (overview: Overview, id: string): KpiDeltaView | undefined => {
 
 const kpiIcon = (glyph: string, tone: string): string =>
   '<span class="kpi-icon' + (tone === "" ? "" : " " + tone) + '" aria-hidden="true">' + glyph + "</span>";
-
-const attentionRows = (overview: Overview): string =>
-  overview.attention.length === 0
-    ? '<tr><td colspan="4">' + renderEmptyState("Нет обращений, требующих внимания") + "</td></tr>"
-    : overview.attention
-        .map((item) =>
-          '<tr class="click-row" data-attention="' + item.id + '"><td><div class="case-id">' + item.id +
-          '</div><div class="case-title">' + item.title + '</div><div class="case-sub">' + item.address + "</div></td>" +
-          "<td>" + renderBadge(item.priorityTitle, item.priorityTone) + "</td>" +
-          "<td>" + (item.departmentName === "" ? '<span class="muted">Нет данных</span>' : item.departmentName) +
-          '<div class="case-sub">' + item.nodeId + " · " + item.nodeTitle + "</div></td>" +
-          "<td>" + renderSlaBadge(item.slaText, item.slaTone) + "</td>" +
-          '<td><a class="panel-link" href="' + hrefIncident(item.id, overview.day) + '">Открыть →</a></td></tr>',
-        )
-        .join("");
 
 const activityRows = (overview: Overview): string =>
   overview.events.length === 0
@@ -146,11 +132,7 @@ export const renderDashboard = (input: DashboardInput): string => {
     ) +
     "</div>";
 
-  const attention =
-    '<div class="table-wrap" tabindex="0" role="region" aria-label="Требуют внимания: таблица прокручивается по горизонтали">' +
-    '<table class="data-table"><caption class="sr-only">Обращения, требующие внимания</caption><thead><tr>' +
-    '<th scope="col">Обращение</th><th scope="col">Приоритет</th><th scope="col">Подразделение</th><th scope="col">SLA</th><th scope="col">Карточка</th>' +
-    "</tr></thead><tbody>" + attentionRows(overview) + "</tbody></table></div>";
+  const attention = renderAttention(overview);
 
   return (
     '<section class="dashboard" data-dashboard>' +

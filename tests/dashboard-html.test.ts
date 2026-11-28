@@ -84,6 +84,15 @@ test("очередь действий стоит до KPI и ведёт в ка�
   expect(html).toContain('href="#incident/%D0%97-009?at=2026-01-02"');
 });
 
+test("мобильный список внимания сворачивает второстепенные данные в раскрываемую плитку", () => {
+  expect(html).toContain('class="attention-mobile"');
+  expect(html).toContain('data-attention-card="З-009"');
+  expect(html).toContain('data-attention-tile="З-009"');
+  expect(html).toContain("ул. Школьная");
+  expect(html).toContain("Назначение подрядчика");
+  expect(html).toContain('href="#incident/%D0%97-009?at=2026-01-02"');
+});
+
 test("пустой поток дней даёт состояние «недостаточно данных для динамики»", () => {
   const quiet = buildPeriodAnalytics({ graph: fixtureGraph, incidents: fixtureIncidents, lifecycles, assignments }, "2026-01-16", 7);
   expect(quiet.flow.created).toBe(0);

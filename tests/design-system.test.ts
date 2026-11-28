@@ -5,12 +5,13 @@ import { renderShell } from "../src/web/shell.ts";
 import { renderBadge, renderEmptyState, renderKpi, renderPanel, renderReadOnlyNotice, renderSlaBadge } from "../src/web/components.ts";
 
 const read = (p: string) => readFile(p, "utf8");
-const [tokens, components, shell, style, screens] = await Promise.all([
+const [tokens, components, shell, style, screens, index] = await Promise.all([
   read("src/web/tokens.css"),
   read("src/web/components.css"),
   read("src/web/shell.css"),
   read("src/web/style.css"),
   read("src/web/screens.css"),
+  read("src/web/index.html"),
 ]);
 const all = tokens + components + shell + style + screens;
 const compact = tokens.replace(/\s+/g, "");
@@ -29,6 +30,14 @@ test("токены соответствуют утверждённому referen
   expect(compact).toContain("--sidebar-w:250px");
   expect(compact).toContain("--topbar-h:68px");
   expect(compact).toContain("--radius:13px");
+});
+
+test("тёмная тема — основная: HTML и токены согласованы", () => {
+  expect(index).toContain('data-theme="dark"');
+  expect(index).toContain('content="#0f1115"');
+  const darkBlock = tokens.split('[data-theme="dark"]')[1] ?? "";
+  expect(darkBlock.replace(/\s+/g, "")).toContain("--color-bg:#0f1115");
+  expect(darkBlock).toContain("color-scheme: dark");
 });
 
 test("наши доработки доступности на месте", () => {

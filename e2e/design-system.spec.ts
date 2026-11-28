@@ -1,12 +1,14 @@
 import { expect, test } from "@playwright/test";
 
 test.describe("Дизайн-система и оболочка", () => {
-  test("оболочка: светлый сайдбар 250 и топбар 68 по эталону", async ({ page }) => {
+  test("оболочка: тёмный сайдбар 250 и топбар 68 по эталону", async ({ page }) => {
     await page.goto("/#dashboard?at=2026-01-02");
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+    await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute("content", "#0f1115");
     const sidebar = page.locator("ui-sidebar[data-sidebar]");
     await expect(sidebar).toBeVisible();
     const bg = await sidebar.evaluate((el) => getComputedStyle(el).backgroundColor);
-    expect(bg).toBe("rgb(255, 255, 255)");
+    expect(bg).toBe("rgb(23, 26, 33)");
     const width = await sidebar.evaluate((el) => Math.round(el.getBoundingClientRect().width));
     expect(width).toBe(250);
     const top = await page.locator("ui-topbar[data-topbar]").evaluate((el) => Math.round(el.getBoundingClientRect().height));
@@ -18,7 +20,7 @@ test.describe("Дизайн-система и оболочка", () => {
     const title = await page.locator(".page-title").evaluate((el) => getComputedStyle(el).fontSize);
     expect(title).toBe("28px");
     const bodyBg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
-    expect(bodyBg).toBe("rgb(244, 246, 250)");
+    expect(bodyBg).toBe("rgb(15, 17, 21)");
   });
 
   test("на экранах нет кеглей меньше 12 px и нет инлайновых цветов", async ({ page }) => {

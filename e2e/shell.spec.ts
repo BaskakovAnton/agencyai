@@ -6,13 +6,13 @@ test.describe("Оболочка редизайна", () => {
     await expect(page.locator("[data-sidebar]")).toBeVisible();
     await expect(page.locator('[data-nav="timeline"]')).toHaveAttribute("aria-current", "page");
     await expect(page.locator("[data-theme-toggle]")).toBeVisible();
-    await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
-    await page.locator("[data-theme-toggle]").click();
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+    await page.locator("[data-theme-toggle]").click();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
     await page.reload();
-    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
-    await page.locator("[data-theme-toggle]").click();
     await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+    await page.locator("[data-theme-toggle]").click();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   });
 
   test("старые маршруты показывают своё содержимое внутри оболочки", async ({ page }) => {
