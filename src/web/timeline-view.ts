@@ -59,7 +59,7 @@ export const mountTimeline = (root: HTMLElement, graph: Graph, story: Story, rou
       ["[data-controls]", renderControls(page)],
       ["[data-chips]", renderChips(page)],
       ["[data-ruler]", renderTimeRuler(page)],
-      ["[data-canvas]", renderCanvas(page)],
+      ["[data-graph-wrap]", renderCanvas(page)],
       ["[data-event-list]", renderEventList(page)],
       ["[data-inline-chat]", page.chat],
       ["[data-node-card-slot]", '<div class="node-card-slot" data-node-card-slot>' + (page.card ?? "") + "</div>"],

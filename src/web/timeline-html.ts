@@ -48,7 +48,7 @@ const escapeHtml = (value: string): string =>
 /** Только картинка (граф или Гант) — её перерисовывают при движении ползунка.
  *  Тултип живёт в body (position: fixed): внутри прокручиваемой области он менял бы раскладку. */
 export const renderCanvas = (input: TimelinePageInput): string =>
-  '<div class="graph-wrap"><div class="canvas graph-canvas" data-canvas tabindex="0" role="region" aria-label="' +
+  '<div class="graph-wrap" data-graph-wrap>' + renderScrollHint() + '<div class="canvas graph-canvas" data-canvas tabindex="0" role="region" aria-label="' +
   (input.view === "gantt" ? "Диаграмма Ганта: заявки по дням" : "Git-граф заявок: узлы по колонкам, дни по строкам") +
   '">' +
   (input.view === "gantt" ? renderGanttGrid(input.gantt, input.filter) : renderGitSvg(input.git, input.filter, gitOptions())) +
@@ -142,7 +142,7 @@ export const renderTimelineHelp = (input: TimelinePageInput): string =>
   "</div>";
 
 export const renderTimelinePage = (input: TimelinePageInput): string =>
-  renderTimelineHeader(input) + renderTimeRuler(input) + renderLegends(input) + renderScrollHint() +
+  renderTimelineHeader(input) + renderTimeRuler(input) + renderLegends(input) +
   renderBody(input) + renderTimelineFooter() + renderTimelineHelp(input);
 
 export const tooltipText = (commit: { incidentId: string; nodeId: string; title?: string; day: string; role: string; text: string }, nodeTitle: string): string =>

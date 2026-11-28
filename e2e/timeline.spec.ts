@@ -147,3 +147,48 @@ test.describe("Хронология: Git-граф и перемотка врем
     await expect(tip).toContainText("Назначаю подрядчика");
   });
 });
+
+test.describe("Раскладка хронологии", () => {
+  test("граф и чат стоят в одной строке на широком экране", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 950 });
+    await page.goto("/#timeline?at=2026-01-02");
+    await page.waitForTimeout(600);
+    const box = await page.evaluate(() => {
+      const rect = (selector: string) => {
+        const el = document.querySelector(selector) as HTMLElement | null;
+        if (el === null) return null;
+        const r = el.getBoundingClientRect();
+        return { top: Math.round(r.top), left: Math.round(r.left), bottom: Math.round(r.bottom), width: Math.round(r.width) };
+      };
+      return { graph: rect(".graph-wrap"), chat: rect("[data-inline-chat]"), list: rect("[data-event-list]"), hint: rect(".scroll-hint") };
+    });
+    expect(box.graph, "граф не найден").not.toBeNull();
+    expect(box.chat, "чат не найден").not.toBeNull();
+    // Одна строка: верх совпадает, граф слева от чата.
+    expect(Math.abs((box.graph as { top: number }).top - (box.chat as { top: number }).top)).toBeLessThanOrEqual(4);
+    expect((box.graph as { left: number }).left).toBeLessThan((box.chat as { left: number }).left);
+    // Граф не уехал под чат.
+    expect((box.graph as { top: number }).top).toBeLessThan((box.chat as { bottom: number }).bottom);
+    // Подсказка о прокрутке не занимает ячейку графа.
+    expect((box.hint as { width: number } | null)?.width ?? 0).toBeLessThanOrEqual((box.graph as { width: number }).width);
+    // Список событий — ниже строки графа и чата.
+    expect((box.list as { top: number }).top).toBeGreaterThanOrEqual((box.chat as { bottom: number }).bottom);
+  });
+
+  test("при смене дня обёртка графа не вкладывается сама в себя", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 950 });
+    await page.goto("/#timeline?at=2026-01-02");
+    await page.waitForTimeout(500);
+    const slider = page.locator("[data-slider]");
+    for (const value of ["0", "5", "10", "15", "19"]) {
+      await slider.fill(value);
+      await page.waitForTimeout(250);
+    }
+    const nesting = await page.evaluate(() => ({
+      wrappers: document.querySelectorAll(".graph-wrap").length,
+      nested: document.querySelectorAll(".graph-wrap .graph-wrap").length,
+      hints: document.querySelectorAll("[data-scroll-hint]").length,
+    }));
+    expect(nesting).toEqual({ wrappers: 1, nested: 0, hints: 1 });
+  });
+});

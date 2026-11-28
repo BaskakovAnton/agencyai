@@ -123,7 +123,7 @@
       "viewport": "wide",
       "kind": "card-position",
       "severity": "metric",
-      "detail": "top=416px, в окне: true",
+      "detail": "top=460px, в окне: true",
       "note": "снимок положения карточки узла в окне"
     },
     {
@@ -324,7 +324,7 @@
       "viewport": "desktop",
       "kind": "card-position",
       "severity": "metric",
-      "detail": "top=351px, в окне: true",
+      "detail": "top=549px, в окне: true",
       "note": "снимок положения карточки узла в окне"
     },
     {
@@ -533,7 +533,7 @@
       "viewport": "tablet",
       "kind": "card-position",
       "severity": "metric",
-      "detail": "top=261px, в окне: true",
+      "detail": "top=473px, в окне: true",
       "note": "снимок положения карточки узла в окне"
     },
     {
@@ -742,7 +742,7 @@
       "viewport": "portrait",
       "kind": "card-position",
       "severity": "metric",
-      "detail": "top=389px, в окне: true",
+      "detail": "top=602px, в окне: true",
       "note": "снимок положения карточки узла в окне"
     },
     {
@@ -943,7 +943,7 @@
       "viewport": "mobile",
       "kind": "card-position",
       "severity": "metric",
-      "detail": "top=240px, в окне: true",
+      "detail": "top=388px, в окне: true",
       "note": "снимок положения карточки узла в окне"
     },
     {

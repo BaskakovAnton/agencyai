@@ -140,7 +140,7 @@
 
 /* Адаптив экранов: перенесено из style.css (B4, лимит строк). */
 @media (max-width: 1100px) {
-  .timeline { grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "time" "chips" "ruler" "legends" "canvas" "card" "foot"; }
+  .timeline { grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "time" "chips" "ruler" "legends" "canvas" "event" "card" "foot"; }
   .inline-chat { display: none; }
   .cols { grid-template-columns: minmax(0, 1fr); }
   .chat-screen { grid-template-columns: minmax(0, 1fr); }
