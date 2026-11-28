@@ -73,6 +73,17 @@ test("без данных день показывает корректное с�
   expect(emptyOverview.analytics.snapshot.hasData).toBe(false);
 });
 
+test("очередь действий стоит до KPI и ведёт в карточку на выбранную дату", () => {
+  const html = renderDashboard({ overview, days, day, historical: true });
+  const queueAt = html.indexOf('data-action-queue');
+  const kpiAt = html.indexOf('class="kpi-grid"');
+  expect(queueAt).toBeGreaterThan(-1);
+  expect(queueAt).toBeLessThan(kpiAt);
+  expect(html).toContain("Следующие действия");
+  expect(html).toContain('data-action-item="З-009"');
+  expect(html).toContain('href="#incident/%D0%97-009?at=2026-01-02"');
+});
+
 test("пустой поток дней даёт состояние «недостаточно данных для динамики»", () => {
   const quiet = buildPeriodAnalytics({ graph: fixtureGraph, incidents: fixtureIncidents, lifecycles, assignments }, "2026-01-16", 7);
   expect(quiet.flow.created).toBe(0);

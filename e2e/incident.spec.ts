@@ -9,6 +9,8 @@ test.describe("Карточка обращения", () => {
     await expect(page.locator("[data-sla]")).toContainText("SLA");
     await expect(page.locator("[data-history-row]")).toHaveCount(1);
     await expect(page.locator("[data-next]")).toBeVisible();
+    await expect(page.locator("[data-decision-card]")).toBeVisible();
+    await expect(page.locator("[data-current-role]")).toContainText("Депутат-диспетчер");
   });
 
   test("ссылки ведут в чат и хронологию с той же датой", async ({ page }) => {

@@ -15,6 +15,9 @@ test("оболочка: сайдбар, топбар, контент и пере
   expect(html).toContain('id="view"');
   expect(html).toContain("Хронология");
   expect(html).toContain("Git-граф и Гант");
+  expect(html).toContain("ДЕПУТАТ 360°");
+  expect(html).toContain("ПРИЁМНАЯ ДЕПУТАТА");
+  expect(html).not.toContain("<b>agencyai</b>");
   expect(html).toContain("<p>тело</p>");
   expect((html.match(/data-nav=/g) ?? []).length).toBe(NAV_ITEMS.length);
 });

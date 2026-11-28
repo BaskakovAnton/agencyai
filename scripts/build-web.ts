@@ -45,6 +45,7 @@ export const buildWeb = async (options: BuildOptions): Promise<readonly string[]
     ["src/web/shell.css", "shell.css"],
     ["src/web/screens.css", "screens.css"],
     ["src/web/style.css", "style.css"],
+    ["src/web/operations.css", "operations.css"],
   ];
   const copied = [bundlePath];
   for (const [from, to] of assets) {

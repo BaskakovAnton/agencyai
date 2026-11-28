@@ -5,6 +5,7 @@ import type { IncidentView, StepRow } from "./incident.ts";
 import { confirmationBlock } from "./incident-confirmation.ts";
 import { participantsBlock } from "./incident-org.ts";
 import { linksBlock } from "./incident-actor.ts";
+import { decisionBlock } from "./incident-decision.ts";
 
 const daySelect = (days: readonly string[], day: string): string =>
   '<label class="hint">Дата среза: <select data-day-select aria-label="Дата среза">' +
@@ -67,6 +68,8 @@ export const renderIncident = (
   '<div class="toolbar">' + daySelect(days, day) + '<span class="grow"></span><a class="panel-link" href="' + hrefIncidents(day) + '">Все обращения →</a></div>' +
   '<div class="detail-grid">' +
   "<div>" +
+  decisionBlock(view, day) +
+  '<div class="section-gap">' +
   renderPanel({
     title: view.title,
     subtitle: view.category + " · создано " + view.createdLabel,
@@ -76,6 +79,7 @@ export const renderIncident = (
       '<div class="section-gap"><div class="fact-label">Описание</div><p class="muted">' + esc(view.description) + "</p></div>" +
       renderReadOnlyNotice("Режим демонстрации: сведения доступны только для просмотра"),
   }) +
+  "</div>" +
   '<div class="section-gap">' +
   renderPanel({ title: "История прохождения", subtitle: "Временная последовательность событий заявки", body: historyBlock(view) }) +
   "</div></div>" +

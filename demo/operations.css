@@ -1,0 +1,24 @@
+/* Оперативный слой: следующая задача первичнее отчётности; значения остаются из модели. */
+.action-queue { display: grid; gap: 2px; }
+.action-item { display: grid; grid-template-columns: 5px minmax(0, 1fr) auto; align-items: center; gap: 10px; min-height: 58px; padding: 8px 0; border-top: 1px solid var(--color-line-2); color: var(--color-text); }
+.action-item:first-child { border-top: 0; padding-top: 0; }
+.action-item:last-child { padding-bottom: 0; }
+.action-item:hover { color: var(--color-primary-strong); }
+.action-item:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; border-radius: 4px; }
+.action-risk { width: 5px; height: 32px; border-radius: var(--radius-pill); background: var(--color-primary); }
+.action-risk.red { background: var(--color-danger); }
+.action-risk.amber { background: var(--color-warning); }
+.action-risk.green { background: var(--color-success); }
+.action-risk.gray { background: var(--color-border-strong); }
+.action-copy { min-width: 0; display: grid; gap: 3px; }
+.action-copy b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; }
+.action-copy span { color: var(--color-text-muted); font-size: 12px; }
+.decision-card { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 12px; background: var(--color-primary-pale); border: 1px solid var(--color-primary-soft); border-radius: var(--radius-md); }
+.decision-card b { display: block; margin-top: 3px; font-size: 14px; }
+.decision-next { margin-top: 14px; }
+.decision-next .next-list { margin-top: 7px; }
+@media (max-width: 700px) {
+  .action-item { min-height: 64px; }
+  .action-copy b { white-space: normal; }
+  .decision-card { grid-template-columns: minmax(0, 1fr); }
+}

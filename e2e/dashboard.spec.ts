@@ -14,6 +14,14 @@ test.describe("Обзор", () => {
     await expect(page.locator("[data-day-select]")).toHaveValue("2026-01-02");
   });
 
+  test("оперативная очередь расположена до KPI и открывает карточку", async ({ page }) => {
+    await expect(page.locator("[data-action-queue]")).toBeVisible();
+    const link = page.locator("[data-action-item]").first();
+    await expect(link).toContainText("Проверить следующий шаг");
+    await link.click();
+    await expect(page.locator("[data-decision-card]")).toBeVisible();
+  });
+
   test("блок внимания ведёт в карточку обращения на выбранную дату", async ({ page }) => {
     const link = page.locator("[data-attention] a").first();
     await expect(link).toBeVisible();

@@ -5,6 +5,7 @@ import { renderPeriodNotes, renderPeriodPanel, renderPeriodSwitch } from "./dash
 import { historicalIndicator } from "./historical.ts";
 import { periodEndingAt } from "./periods-reexport.ts";
 import { hrefIncident, hrefIncidents, hrefTimeline } from "./router.ts";
+import { renderActionQueue } from "./dashboard-queue.ts";
 import type { Overview } from "./overview.ts";
 
 export interface DashboardInput {
@@ -158,6 +159,7 @@ export const renderDashboard = (input: DashboardInput): string => {
     '<a class="panel-link" href="' + hrefIncidents(input.day) + '">Все обращения →</a>' +
     '<a class="panel-link" href="' + hrefTimeline(input.day, "git") + '">Хронология →</a></div>' +
     (input.historical === true ? historicalIndicator(input.day, input.days) : "") +
+    renderActionQueue(overview) +
     kpis +
     renderPanel({
       title: "Требуют внимания",

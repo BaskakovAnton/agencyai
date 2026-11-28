@@ -2,8 +2,8 @@
 .app { min-height: 100vh; }
 .sidebar { position: fixed; inset: 0 auto 0 0; z-index: 20; width: var(--sidebar-w); display: flex; flex-direction: column; padding: 22px 15px 16px; background: var(--nav-bg); border-right: 1px solid var(--nav-line); }
 .brand { display: flex; align-items: center; gap: 11px; padding: 3px 10px 25px; }
-.brand-mark { width: 37px; height: 37px; flex: none; display: grid; place-items: center; border-radius: 11px; color: #fff; background: linear-gradient(145deg, #3478f6, #1748bb); box-shadow: 0 5px 12px rgba(37, 99, 235, .22); font-size: 17px; font-weight: 800; }
-.brand b { display: block; font-size: 17px; font-weight: 780; letter-spacing: -.45px; }
+.brand-mark { width: 37px; height: 37px; flex: none; display: grid; place-items: center; border-radius: 11px; color: #fff; background: linear-gradient(145deg, #3478f6, #1748bb); box-shadow: 0 5px 12px rgba(37, 99, 235, .22); font-size: 12px; font-weight: 800; }
+.brand b { display: block; font-size: 15px; font-weight: 780; letter-spacing: -.45px; }
 .brand i { font-style: normal; display: block; margin-top: 1px; color: var(--color-subtle); font-size: 12px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; }
 .nav-label { padding: 12px 11px 8px; color: var(--nav-subtle); font-size: 12px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; }
 .nav { display: grid; gap: 4px; }

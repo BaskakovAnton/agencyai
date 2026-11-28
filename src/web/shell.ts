@@ -42,8 +42,8 @@ export const renderShell = (input: ShellInput): string => {
     '<a class="skip-link" href="#view">К содержанию</a>' +
     '<div class="app" data-app>' +
     '<ui-sidebar class="sidebar" data-sidebar role="complementary" aria-label="Основная навигация">' +
-    '<div class="brand"><span class="brand-mark" aria-hidden="true">A</span>' +
-    "<span><b>agencyai</b><i>Приёмная депутата</i></span></div>" +
+    '<div class="brand"><span class="brand-mark" aria-hidden="true">360</span>' +
+    "<span><b>ДЕПУТАТ 360°</b><i>ПРИЁМНАЯ ДЕПУТАТА</i></span></div>" +
     '<p class="nav-label">Разделы</p>' +
     renderNav(input.route) +
     '<div class="sidebar-status"><span><i class="live-dot" aria-hidden="true"></i>Демо-данные модели</span>' +

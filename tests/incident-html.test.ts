@@ -42,6 +42,17 @@ test("связанные представления ведут в хроноло
   expect(html).toContain("data-read-only");
 });
 
+test("карточка выводит решение оператора перед полной историей", () => {
+  const html = renderIncident(view, day, days, { historical: true });
+  const decisionAt = html.indexOf("data-decision-card");
+  const historyAt = html.indexOf("История прохождения");
+  expect(decisionAt).toBeGreaterThan(-1);
+  expect(decisionAt).toBeLessThan(historyAt);
+  expect(html).toContain("Следующий шаг по модели");
+  expect(html).toContain('data-current-role');
+  expect(html).toContain("Депутат-диспетчер");
+});
+
 test("неизвестный id: понятное сообщение и возврат к списку", () => {
   const missing = renderIncidentMissing("З-999", day, days);
   expect(missing).toContain("data-incident-missing");
