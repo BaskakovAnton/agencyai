@@ -57,8 +57,8 @@ export const renderSlaBadge = (text: string, tone: BadgeTone = "gray"): string =
   '<ui-sla class="sla ' + tone + '">' + esc(text) + "</ui-sla>";
 
 /** Пустой результат. */
-export const renderEmptyState = (text: string): string =>
-  '<div class="empty-state" data-empty-state>' + esc(text) + "</div>";
+export const renderEmptyState = (text: string, extra = ""): string =>
+  '<div class="empty-state" data-empty-state' + extra + ">" + esc(text) + "</div>";
 
 /** Напоминание, что экран только для чтения. */
 export const renderReadOnlyNotice = (text = "Только чтение: действия недоступны"): string =>

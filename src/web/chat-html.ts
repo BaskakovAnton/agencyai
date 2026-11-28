@@ -4,6 +4,7 @@ import { ROLE_NAMES } from "../data/roles.ts";
 import { formatDay, formatStamp } from "../core/timeline.ts";
 import type { Incident, Priority, RoleId } from "../types.ts";
 import { ROLE_COLORS, ROLE_SHORT, SLA_COLORS } from "./theme.ts";
+import { renderEmptyState } from "./components.ts";
 
 export interface PhoneInput {
   readonly incident: Incident;
@@ -34,7 +35,7 @@ const initials = (name: string): string =>
 /** Сообщения по композиции chat.html: пузыри с мини-аватаром, мета и системные пометки. */
 export const renderMessages = (snapshot: ChatSnapshot, activeRole: RoleId): string => {
   if (snapshot.messages.length === 0) {
-    return '<p class="empty-state" data-empty>На эту дату переписки ещё нет — заявка появится позже.</p>';
+    return renderEmptyState("На эту дату переписки ещё нет — заявка появится позже.", " data-empty");
   }
   let previousDay = "";
   return snapshot.messages

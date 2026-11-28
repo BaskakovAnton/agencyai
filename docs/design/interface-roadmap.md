@@ -88,3 +88,14 @@
 2. Закрытая работа переносится в раздел 2 с номером коммита и прогоном.
 3. Изменения решений фиксируются в журнале (`docs/journal.md`) и в таблице решений спецификации UX-3.3.
 4. Документ обновляется тем же коммитом, что и закрываемая работа, — отдельного «коммита документации» не требуется.
+
+## 7. Локальные документы (вне Git по решению OD-1=B)
+
+| Документ | Причина |
+|---|---|
+| `docs/reports/ux-3-2-*-discovery.md`, `ux-3-2-implementation-spec.md` | черновики исследования |
+| `docs/reports/ux-3-2-1-review-report.md`, `ux-3-3-final-design-review.md`, `ux-3-3-preflight-report.md` | промежуточные ревью |
+| `docs/reports/ux-3-2-*-implementation-report.md`, `ux-3-2-4-2a-acceptance-fix-report.md` | промежуточные отчёты о реализации |
+| `docs/reports/ux-3-3-design-report.md`, `ux-3-3-specification-report.md` | рабочие отчёты этапов |
+
+В Git: `docs/specifications/`, `docs/design/`, `docs/reports/*release*.md`, `docs/reports/ux-3-5-release-report.md`.

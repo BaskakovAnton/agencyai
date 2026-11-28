@@ -1,5 +1,5 @@
 import { formatDay } from "../core/timeline.ts";
-import { esc, renderBadge, renderPanel, renderReadOnlyNotice, renderSlaBadge } from "./components.ts";
+import { esc, renderBadge, renderEmptyState, renderPanel, renderReadOnlyNotice, renderSlaBadge } from "./components.ts";
 import { hrefIncidents } from "./router.ts";
 import type { IncidentView, StepRow } from "./incident.ts";
 import { confirmationBlock } from "./incident-confirmation.ts";
@@ -102,5 +102,5 @@ export const renderIncident = (
 export const renderIncidentMissing = (ref: string, day: string, days: readonly string[]): string =>
   '<section class="incident-detail" data-incident-missing>' +
   '<div class="toolbar">' + daySelect(days, day) + "</div>" +
-  '<div class="empty-state">Заявка «' + esc(ref) + '» не найдена в демонстрационной модели.</div>' +
+  renderEmptyState("Заявка «" + ref + "» не найдена в демонстрационной модели.") +
   '<p class="section-gap"><a class="button" href="' + hrefIncidents(day) + '">Вернуться к списку обращений</a></p></section>';
