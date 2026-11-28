@@ -63,7 +63,7 @@ test.describe("Плотность и ориентирование", () => {
   test("пустое состояние показывает иконку и текст", async ({ page }) => {
     await page.goto("/#incidents?at=2026-01-02&q=НЕТ-ТАКОГО");
     await expect(page.locator("[data-empty-state]").first()).toBeVisible();
-    await expect(page.locator("[data-empty-state] .empty-glyph").first()).toBeVisible();
+    await expect(page.locator("[data-empty-state] .empty-art").first()).toBeVisible();
     await expect(page.locator("[data-empty-state] .empty-text").first()).not.toBeEmpty();
   });
 });

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0f1115">
+<title>ДЕПУТАТ 360° — о продукте</title>
+<meta name="description" content="Рабочая система приёмной депутата: реестр обращений, карточка, хронология, SLA и отчётность.">
+<style>
+  :root { color-scheme: dark; --bg:#0f1115; --surface:#171a21; --line:#2a2f3a; --text:#e7ebf2; --muted:#98a2b3; --accent:#3478f6; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.55 Inter, "Segoe UI", system-ui, sans-serif; }
+  main { max-width: 960px; margin: 0 auto; padding: 48px 20px 64px; }
+  .brand { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
+  .mark { width: 56px; height: 56px; display: grid; place-items: center; border-radius: 16px; color: #fff; background: linear-gradient(145deg, #3478f6, #1748bb); font-weight: 800; }
+  h1 { margin: 0; font-size: 26px; letter-spacing: -.4px; }
+  .tag { margin: 4px 0 0; color: var(--muted); font-size: 13px; letter-spacing: 1.2px; text-transform: uppercase; }
+  .lead { max-width: 62ch; color: var(--text); }
+  .cards { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin: 28px 0 32px; }
+  .card { display: flex; flex-direction: column; gap: 8px; padding: 18px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+  .card b { font-size: 17px; }
+  .card p { margin: 0; color: var(--muted); font-size: 14px; }
+  .card a { margin-top: auto; display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 16px; border-radius: 10px; background: var(--accent); color: #fff; font-weight: 700; text-decoration: none; }
+  .card a.ghost { background: transparent; border: 1px solid var(--line); font-weight: 600; }
+  .note { color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); padding-top: 16px; margin-top: 24px; }
+  a:focus-visible, .card a:focus-visible { outline: 2px solid #4da3ff; outline-offset: 2px; }
+</style>
+</head>
+<body>
+<main>
+  <div class="brand">
+    <span class="mark" aria-hidden="true">360</span>
+    <div>
+      <h1>ДЕПУТАТ 360°</h1>
+      <p class="tag">Приёмная депутата</p>
+    </div>
+  </div>
+
+  <p class="lead">Рабочая система учёта обращений жителей: реестр с фильтрами, карточка обращения с историей передач и SLA,
+  хронология процессов, переписка по ролям и отчётность по периодам. Данные — демонстрационная модель регламента «раздел 8».</p>
+
+  <div class="cards">
+    <div class="card">
+      <b>Рабочая система</b>
+      <p>Обзор, реестр, карточка обращения, хронология, переписка и модель процесса. Тёмная тема, мобильная вёрстка, выгрузка CSV/JSON.</p>
+      <a href="./demo/">Открыть демо →</a>
+    </div>
+    <div class="card">
+      <b>Прототип регламента</b>
+      <p>Исходные страницы с 37 ситуациями и 30 узлами процесса: лендинг, список ситуаций, плеер шагов и матрица ролей.</p>
+      <a class="ghost" href="./index.html">Смотреть прототип</a>
+    </div>
+    <div class="card">
+      <b>Модель процесса</b>
+      <p>Матрица прав семи ролей, группы узлов и легенда переходов — справочник для оператора и аудитора.</p>
+      <a class="ghost" href="./demo/#model">Открыть модель</a>
+    </div>
+  </div>
+
+  <p class="note">Персональные данные жителей не используются: обращения обезличены, модель публичная и демонстрационная.
+  Проверки проекта: unit 429, e2e 190, кросс-браузерные прогоны и живая проверка публикации.</p>
+</main>
+</body>
+</html>

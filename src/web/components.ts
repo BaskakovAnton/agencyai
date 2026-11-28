@@ -95,9 +95,11 @@ export const renderEmptyStateRich = (input: {
   readonly title: string;
   readonly note?: string;
   readonly glyph?: string;
+  /** Готовая SVG-иллюстрация (C2); приоритетнее текстового глифа. */
+  readonly art?: string;
   readonly extra?: string;
 }): string =>
   '<div class="empty-state" data-empty-state' + (input.extra ?? "") + ">" +
-  (input.glyph === undefined ? "" : '<span class="empty-glyph" aria-hidden="true">' + input.glyph + "</span>") +
+  (input.art ?? (input.glyph === undefined ? "" : '<span class="empty-glyph" aria-hidden="true">' + input.glyph + "</span>")) +
   '<span class="empty-text"><b>' + esc(input.title) + "</b>" +
   (input.note === undefined || input.note === "" ? "" : " " + esc(input.note)) + "</span></div>";

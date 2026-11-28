@@ -117,3 +117,16 @@ for (const width of [390, 1440]) {
     });
   });
 }
+
+for (const hash of ["#dashboard?at=2026-01-02", "#incidents?at=2026-01-02", "#incident/" + encodeURIComponent("З-015") + "?at=2026-01-02", "#timeline?at=2026-01-02&view=git", "#chat/" + encodeURIComponent("З-015") + "?at=2026-01-02", "#model"]) {
+  test.describe("Светлая тема 1440px", () => {
+    test.use({ viewport: { width: 1440, height: 900 } });
+    test("axe: " + hash, async ({ page }) => {
+      await page.addInitScript(() => localStorage.setItem("agencyai-theme", "light"));
+      await page.goto("/" + hash);
+      await page.waitForTimeout(700);
+      const blocking = await blockingViolations(page);
+      expect(blocking, JSON.stringify(blocking)).toEqual([]);
+    });
+  });
+}

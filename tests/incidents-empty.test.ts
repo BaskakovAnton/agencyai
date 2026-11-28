@@ -18,7 +18,9 @@ test("пустое состояние собрано без литерально
     const html = renderEmptyIncidents(state!);
     expect(html, reason).not.toContain("&lt;b&gt;");
     expect(html, reason).toContain("<b>");
-    expect(html, reason).toContain("empty-glyph");
+    expect(html, reason).toContain("empty-art");
+    expect(html, reason).toContain("<svg");
+    expect(html, reason).not.toContain("http");
     expect(html, reason).toContain("data-incidents-empty");
   }
 });

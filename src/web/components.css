@@ -166,3 +166,6 @@ ui-chat-message, ui-process-node { display: block; }
 /* V6: пустое состояние с иконкой и текстом — единый вид на всех экранах. */
 .empty-state .empty-glyph { display: block; margin-bottom: 6px; font-size: 22px; line-height: 1; color: var(--color-text-muted); }
 .empty-state .empty-text { display: block; }
+
+/* C2: иллюстрация пустого состояния — тонкий контур, наследует цвет текста. */
+.empty-state .empty-art { display: block; margin: 0 auto 8px; color: var(--color-text-muted); opacity: .9; }

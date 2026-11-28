@@ -28,6 +28,21 @@ test("печатные стили подключены и скрывают об�
   expect(css).toContain("ui-topbar");
 });
 
+test("лендинг ведёт в демо, прототип и модель (C1)", async () => {
+  const html = await readFile("start.html", "utf8");
+  expect(html).toContain("ДЕПУТАТ 360°");
+  expect(html).toContain('href="./demo/"');
+  expect(html).toContain('href="./index.html"');
+  expect(html).toContain('href="./demo/#model"');
+  expect(html).not.toContain("http://");
+  expect(html).not.toContain("https://");
+});
+
+test("баннер на корне ведёт и на лендинг", async () => {
+  const html = await readFile("index.html", "utf8");
+  expect(html).toContain('href="./start.html"');
+});
+
 test("index.html остаётся полноценной страницей-источником", async () => {
   const html = await readFile("index.html", "utf8");
   expect(html.length).toBeGreaterThan(10_000);

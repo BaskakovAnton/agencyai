@@ -3,6 +3,7 @@
  * фактическому состоянию фильтров и результату построения списка, а не по наличию параметра.
  */
 import { renderEmptyStateRich } from "./components.ts";
+import { artFor } from "./empty-art.ts";
 import type { ChipKey } from "./incidents-chips.ts";
 import type { IncidentFilters } from "./incidents.ts";
 
@@ -82,7 +83,7 @@ export const emptyStateFor = (filters: IncidentFilters, rowsCount: number): Empt
 /** Разметка пустого состояния; действие снимает только нужный фильтр. */
 export const renderEmptyIncidents = (state: EmptyIncidentsState): string =>
   '<div data-incidents-empty="' + state.reason + '">' +
-  renderEmptyStateRich({ title: state.title, note: state.note, glyph: GLYPHS[state.reason] }) +
+  renderEmptyStateRich({ title: state.title, note: state.note, art: artFor(state.reason) }) +
   (state.action === undefined
     ? ""
     : '<p class="hint">' +
