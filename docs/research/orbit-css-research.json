@@ -1,0 +1,398 @@
+{
+  "project": "orbit-css-research",
+  "last_updated": "2026-11-28",
+  "scope": "Мобильная веб-разработка: два разных проекта с именем Orbit CSS. Не смешивать.",
+  "entries": [
+    {
+      "id": "orbit-zumer",
+      "type": "radial-ui-library",
+      "package": "@zumer/orbit",
+      "version": "2.3.1",
+      "version_status": "VERIFIED",
+      "last_release": "2026-11-12",
+      "last_release_status": "VERIFIED",
+      "repo": "https://github.com/zumerlab/orbit",
+      "repo_status": "VERIFIED",
+      "default_branch": "main",
+      "license": "MIT",
+      "stars": 775,
+      "archived": false,
+      "repo_last_push": "2026-11-13",
+      "docs": "https://zumerlab.com/orbit/",
+      "docs_note": "адрес zumerlab.com/orbit-docs отдаёт заглушку 445 байт; канонические доки — zumerlab.com/orbit/",
+      "docs_status": "VERIFIED",
+      "cdn": {
+        "unpkg_css": "https://unpkg.com/@zumer/orbit/dist/orbit.min.css",
+        "unpkg_js": "https://unpkg.com/@zumer/orbit/dist/orbit.min.js",
+        "jsdelivr_css": "https://cdn.jsdelivr.net/npm/@zumer/orbit@2.3.1/dist/orbit.min.css",
+        "jsdelivr_js": "https://cdn.jsdelivr.net/npm/@zumer/orbit@2.3.1/dist/orbit.min.js",
+        "status": "VERIFIED",
+        "note": "unpkg-ссылки документированы в README; наличие файлов в jsDelivr подтверждено data.jsdelivr.com"
+      },
+      "install": {
+        "npm": "npm install @zumer/orbit",
+        "imports": [
+          "import '@zumer/orbit/style'",
+          "import '@zumer/orbit'"
+        ],
+        "status": "VERIFIED"
+      },
+      "html_structure": "<div class=\"gauge bigbang\"><div class=\"gravity-spot\"><div class=\"orbit-10\" style=\"--o-size-ratio: 2\"><o-progress value=\"72\" shape=\"rounded\" role=\"progressbar\" aria-label=\"…\" aria-valuenow=\"72\" aria-valuemin=\"0\" aria-valuemax=\"100\"></o-progress></div></div></div>",
+      "html_structure_status": "VERIFIED",
+      "key_classes": [
+        ".bigbang",
+        ".gravity-spot",
+        ".orbit-0 … .orbit-12",
+        ".satellite",
+        ".capsule",
+        ".vector",
+        ".side",
+        ".ripple",
+        ".depth",
+        ".layer-front",
+        ".theme-cyan",
+        "dev-orbit"
+      ],
+      "key_classes_status": "VERIFIED",
+      "custom_elements": [
+        "<o-arc>",
+        "<o-progress>"
+      ],
+      "custom_elements_attributes": {
+        "o-arc": [
+          "value",
+          "max",
+          "shape",
+          "interactive",
+          "hit-width",
+          "start",
+          "text-anchor",
+          "flip",
+          "fit-range",
+          "range"
+        ],
+        "o-progress": [
+          "value",
+          "max",
+          "shape",
+          "interactive",
+          "hit-width",
+          "variant"
+        ]
+      },
+      "custom_elements_status": "VERIFIED",
+      "custom_properties_registered": [
+        "--o-dir-x",
+        "--o-dir-y",
+        "--o-value-angle",
+        "--o-ellipse-x",
+        "--o-ellipse-y"
+      ],
+      "custom_properties_status": "VERIFIED",
+      "themes": [
+        "default (zero specificity)",
+        "theme-cyan"
+      ],
+      "themes_status": "VERIFIED",
+      "dev_mode": "dev-orbit — показать, где стоят кольца и что перекрывается; сочетается с theme-cyan",
+      "dev_mode_status": "VERIFIED",
+      "typescript": true,
+      "react_types": true,
+      "react_types_usage": "import type {} from '@zumer/orbit/react'",
+      "vscode_custom_data": "./node_modules/@zumer/orbit/dist/vscode.html-custom-data.json (npm export: @zumer/orbit/vscode.html-custom-data.json)",
+      "custom_elements_manifest": "@zumer/orbit/custom-elements.json",
+      "types_status": "VERIFIED",
+      "runtime_api": [
+        "Orbit.ready()",
+        "Orbit.refresh(target)",
+        "Orbit.resize(target)",
+        "событие o-rendered"
+      ],
+      "runtime_api_status": "VERIFIED",
+      "browser_support": {
+        "required_css": [
+          "sin()",
+          "cos()",
+          "container query units",
+          ":has()",
+          ":nth-child(… of …)",
+          "@property"
+        ],
+        "css_baseline": {
+          "sin": "MDN: Baseline widely available",
+          "has": "MDN: Baseline widely available",
+          "property": "MDN: Baseline 2024"
+        },
+        "no_js_fallback": "CSS-фолбэк размещает простые раскладки до 24 колец и 60 детей на тип, но требует :has() и :nth-child(… of …); <o-arc> и <o-progress> всегда требуют рантайма",
+        "status": "VERIFIED (README + MDN); точные минимальные версии браузеров — UNVERIFIED"
+      },
+      "mobile_notes": {
+        "touch": "hit-width расширяет область касания дуги (например, hit-width=\"8\")",
+        "reduced_motion": "глубина отключается при prefers-reduced-motion",
+        "viewport": ".bigbang — size container и содержащий блок для position: fixed; прямо в <body> ограничен высотой вьюпорта, а не растянут на неё",
+        "status": "VERIFIED (README)",
+        "webview_rn_flutter": "официальных утверждений нет: библиотека браузерная (custom elements + рантайм + современный CSS). Работа в React Native/Flutter возможна только через WebView; нативная работа без DOM — INFERENCE, требует проверки",
+        "webview_rn_flutter_status": "UNVERIFIED"
+      },
+      "sources": [
+        {
+          "url": "https://registry.npmjs.org/@zumer%2Forbit/latest",
+          "status": "VERIFIED"
+        },
+        {
+          "url": "https://data.jsdelivr.com/v1/package/npm/@zumer/orbit",
+          "status": "VERIFIED"
+        },
+        {
+          "url": "https://data.jsdelivr.com/v1/package/npm/@zumer/orbit@2.3.1/flat",
+          "status": "VERIFIED"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/zumerlab/orbit/main/README.md",
+          "status": "VERIFIED"
+        },
+        {
+          "url": "https://api.github.com/repos/zumerlab/orbit",
+          "status": "VERIFIED"
+        },
+        {
+          "url": "https://api.github.com/repos/zumerlab/orbit/releases/latest",
+          "status": "VERIFIED"
+        },
+        {
+          "url": "https://cdn.jsdelivr.net/npm/@zumer/orbit@2.3.1/dist/custom-elements.json",
+          "status": "VERIFIED"
+        },
+        {
+          "url": "https://cdn.jsdelivr.net/npm/@zumer/orbit@2.3.1/dist/orbit-properties.css",
+          "status": "VERIFIED"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/zumerlab/orbit/main/src/scss/_themes.scss",
+          "status": "VERIFIED"
+        },
+        {
+          "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/sin",
+          "status": "VERIFIED"
+        },
+        {
+          "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/:has",
+          "status": "VERIFIED"
+        },
+        {
+          "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/@property",
+          "status": "VERIFIED"
+        }
+      ]
+    },
+    {
+      "id": "orbitcss-flexbox",
+      "type": "flexbox-framework",
+      "package": "orbitcss",
+      "version": "2.0.0",
+      "version_status": "VERIFIED",
+      "last_release": "2021-10-27",
+      "last_release_status": "VERIFIED",
+      "repo": "https://github.com/OrbitCSS/orbitcss",
+      "repo_status": "VERIFIED",
+      "default_branch": "master",
+      "license": "MIT",
+      "stars": 15,
+      "archived": true,
+      "archived_note": "репозиторий архивирован; последний push 2023-05-30 — проект не поддерживается",
+      "repo_last_push": "2023-05-30",
+      "docs": "https://orbitcss.com/documentation",
+      "docs_status": "VERIFIED (страница отвечает, но контент рисуется клиентским React — часть текста недоступна без браузера)",
+      "examples": "https://orbitcss.com/examples",
+      "cdn": {
+        "jsdelivr_css": "https://cdn.jsdelivr.net/npm/orbitcss/css/orbit.min.css",
+        "jsdelivr_css_uncompressed": "https://cdn.jsdelivr.net/npm/orbitcss/css/orbit.css",
+        "jsdelivr_css_pinned": "https://cdn.jsdelivr.net/npm/orbitcss@2.0.0/css/orbit.min.css",
+        "status": "VERIFIED"
+      },
+      "install": {
+        "npm": "npm install orbitcss",
+        "npm_note": "пакет — исходники Sass + собранный CSS; main: orbit.scss",
+        "status": "VERIFIED"
+      },
+      "html_structure": "БЭМ-подобные блоки: <div class=\"card\"><div class=\"card__header\">…</div><div class=\"card__content\">…</div><div class=\"card__footer\">…</div></div>; сетка: <div class=\"grid\"><div class=\"column is-half\">…</div></div>",
+      "html_structure_status": "VERIFIED (по SCSS и собранному CSS)",
+      "key_classes": [
+        "grid",
+        "column",
+        "card",
+        "card__header",
+        "card__image",
+        "card__content",
+        "card__footer",
+        "button",
+        "alert",
+        "dropdown",
+        "has-dropdown",
+        "menu",
+        "tabs",
+        "accordion",
+        "table",
+        "tag",
+        "progress",
+        "panel",
+        "modal",
+        "hero",
+        "pagination",
+        "top",
+        "image"
+      ],
+      "modifiers": [
+        "is-primary",
+        "is-secondary",
+        "is-success",
+        "is-warning",
+        "is-danger",
+        "is-info",
+        "is-outline",
+        "is-active",
+        "is-loading",
+        "is-expandable",
+        "is-input-group",
+        "is-mobile-responsive",
+        "is-tablet-responsive",
+        "has-error",
+        "is-black",
+        "is-dark",
+        "is-night",
+        "is-white",
+        "is-light",
+        "is-light-grey",
+        "is-dark-grey",
+        "is-{экран}-{размер}",
+        "is-offset{экран}-{размер}"
+      ],
+      "grid": {
+        "max_columns": 12,
+        "sizes": [
+          "one-quarter 25%",
+          "half 50%",
+          "three-quarters 75%",
+          "one-third 33.33%",
+          "two-thirds 66.67%",
+          "full 100%",
+          "one-fifth 20%",
+          "two-fifths 40%",
+          "…"
+        ],
+        "breakpoints_px": [
+          767,
+          768,
+          922,
+          1200
+        ]
+      },
+      "key_classes_status": "VERIFIED",
+      "sass_variables": [
+        "$max-cols",
+        "$col-padding",
+        "$col-margin-top",
+        "$col-margin-bottom",
+        "$grid-sizes",
+        "$card-border-color",
+        "$card-border-width",
+        "$card-shadow",
+        "$card-radius",
+        "$card-header-background",
+        "$card-header-color",
+        "$card-header-padding",
+        "$card-content-padding",
+        "$card-footer-padding",
+        "$button-background",
+        "$button-border-color",
+        "$button-border-width",
+        "$button-color",
+        "$button-font-size",
+        "$button-line-height",
+        "$button-padding",
+        "$button-radius",
+        "$button-transition",
+        "$button-hover-*",
+        "$button-type-sizes"
+      ],
+      "sass_variables_status": "VERIFIED",
+      "build": "sass --style expanded orbit.scss css/orbit.css → autoprefixer → cleancss",
+      "build_status": "VERIFIED",
+      "typescript": false,
+      "react_types": false,
+      "vscode_custom_data": "нет данных",
+      "types_status": "VERIFIED (в package.json нет поля types; main — SCSS)",
+      "browser_support": {
+        "findings": "в собранном CSS 17 правил с префиксом -ms- (наследие эпохи IE); официальной страницы поддержки найти не удалось",
+        "status": "UNVERIFIED",
+        "note": "проект архивирован в 2023, релиз 2021 — новых исправлений совместимости ждать не стоит"
+      },
+      "mobile_notes": {
+        "responsive": "модификаторы is-mobile-responsive / is-tablet-responsive и брейкпоинты 767/768, 922, 1200 px",
+        "status": "VERIFIED",
+        "webview_rn_flutter": "обычный CSS без JS — работает в любом WebView и в каркасах, где есть CSS; для React Native нужен WebView (INFERENCE)",
+        "webview_rn_flutter_status": "UNVERIFIED"
+      },
+      "sources": [
+        {
+          "url": "https://registry.npmjs.org/orbitcss/latest",
+          "status": "VERIFIED"
+        },
+        {
+          "url": "https://cdn.jsdelivr.net/npm/orbitcss@2.0.0/package.json",
+          "status": "VERIFIED"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/OrbitCSS/orbitcss/master/README.md",
+          "status": "VERIFIED"
+        },
+        {
+          "url": "https://api.github.com/repos/OrbitCSS/orbitcss",
+          "status": "VERIFIED"
+        },
+        {
+          "url": "https://api.github.com/repos/OrbitCSS/orbitcss/releases/latest",
+          "status": "VERIFIED"
+        },
+        {
+          "url": "https://cdn.jsdelivr.net/npm/orbitcss@2.0.0/css/orbit.css",
+          "status": "VERIFIED"
+        },
+        {
+          "url": "https://cdn.jsdelivr.net/npm/orbitcss@2.0.0/scss/elements/_card.scss",
+          "status": "VERIFIED"
+        },
+        {
+          "url": "https://cdn.jsdelivr.net/npm/orbitcss@2.0.0/scss/elements/_button.scss",
+          "status": "VERIFIED"
+        },
+        {
+          "url": "https://cdn.jsdelivr.net/npm/orbitcss@2.0.0/scss/layout/_grid.scss",
+          "status": "VERIFIED"
+        },
+        {
+          "url": "https://orbitcss.com/documentation",
+          "status": "UNVERIFIED (контент клиентский)"
+        }
+      ]
+    }
+  ],
+  "conflicts": [
+    {
+      "id": "CONFLICT-docs-url",
+      "about": "адрес документации @zumer/orbit",
+      "detail": "в задании указан zumerlab.com/orbit-docs (отдаёт 445-байтовую заглушку), README и GitHub homepage ссылаются на https://zumerlab.com/orbit/",
+      "resolution": "считать каноническим https://zumerlab.com/orbit/",
+      "status": "CONFLICT"
+    }
+  ],
+  "open_questions": [
+    "Orbit (@zumer): точные минимальные версии браузеров по каждому свойству (container query units, :nth-child(… of …), @property) — MDN подтвердил Baseline для sin()/:has() (widely available) и @property (Baseline 2024), остальное не проверено.",
+    "Orbit (@zumer): официального заявления о WebView, React Native и Flutter нет; работа через WebView — вывод, требует эмпирической проверки.",
+    "Orbit (@zumer): полный список тем не проверен — найдены default и theme-cyan; файл _themes.scss может содержать больше.",
+    "Orbit (@zumer): что именно рисует dev-orbit (только описано словами «see where»), детали визуализации не проверены.",
+    "OrbitCSS: официальная страница поддержки браузеров недоступна (React SPA); поддержка IE выводится лишь из наличия -ms- префиксов.",
+    "OrbitCSS: полная карта классов не снята — из собранного CSS извлечено 355 уникальных имён, приведены частотные; полный перечень — в SCSS-партиалах.",
+    "OrbitCSS: проект архивирован (2023) и не получает обновлений — применимость в новом мобильном проекте ограничена."
+  ]
+}

@@ -111,6 +111,8 @@ SHA256 перенесённых файлов (сверены с источник
 
 **План интерфейса (28.11.2026):** единый канонический план работ — [`docs/design/interface-roadmap.md`](docs/design/interface-roadmap.md): он задаёт порядок и критерии готовности, объединяя «модернизацию интерфейса 2026» и дизайн-спецификацию UX-3.3. Спецификация остатка — [`docs/specifications/ux-3-4-implementation-specification.md`](docs/specifications/ux-3-4-implementation-specification.md) (пакеты WP-1…WP-11), план тестирования — [`docs/specifications/ux-3-4-test-plan.md`](docs/specifications/ux-3-4-test-plan.md). Бренд «ДЕПУТАТ 360°» и тёмная тема как основная утверждены владельцем 28.11.2026 (DEC-UX33-07).
 
+**Исследования (28.11.2026):** Orbit CSS — два разных проекта (радиальная библиотека `@zumer/orbit` 2.3.1 и Flexbox-фреймворк `orbitcss` 2.0.0). Факты, статусы проверки и открытые вопросы — `docs/research/orbit-css-research.md` и `docs/research/orbit-css-research.json`.
+
 **Ещё открыто:**
 
 1. **Расхождения данных в четырёх страницах-копиях** (§3): решение OD-7=B — сводим к одной странице-источнику, остальные получают редирект (пакет C8 плана `docs/specifications/project-closeout-plan.md`).
